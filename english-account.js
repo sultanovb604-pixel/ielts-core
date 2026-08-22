@@ -1221,6 +1221,39 @@
         setDiag('Mcq', mcqAcc, mcqMistakes);
         setDiag('Completion', compAcc, compMistakes);
         setDiag('Listening', listAcc, listMistakes);
+
+        const avgDuration = results.reduce((s, r) => s + (Number(r.durationSeconds) || 3200), 0) / results.length;
+        const pacingMins = Math.round(avgDuration / 60);
+        const speedFill = document.getElementById('diagFillSpeed');
+        const speedPct = document.getElementById('diagPctSpeed');
+        const speedMist = document.getElementById('diagMistakeSpeed');
+        const speedStat = document.getElementById('diagStatusSpeed');
+        if (speedPct) speedPct.textContent = `${pacingMins} min`;
+        if (speedFill) speedFill.style.width = `${Math.min(100, Math.round((pacingMins / 60) * 100))}%`;
+        if (speedMist) speedMist.innerHTML = `<i class="material-symbols-outlined" style="font-size:13px;">timer</i> <strong>${Math.round(pacingMins / 3)} min</strong> / passage`;
+        if (speedStat) {
+          speedStat.textContent = pacingMins <= 55 ? '⚡ Optimal tezlik' : '⚠️ Sekin';
+          speedStat.className = pacingMins <= 55 ? 'diag-status-tag tag-good' : 'diag-status-tag tag-focus';
+        }
+      } else {
+        ['Tfng', 'Headings', 'Mcq', 'Completion', 'Listening'].forEach(key => {
+          const fill = document.getElementById(`diagFill${key}`);
+          const pct = document.getElementById(`diagPct${key}`);
+          const mist = document.getElementById(`diagMistake${key}`);
+          const stat = document.getElementById(`diagStatus${key}`);
+          if (fill) { fill.style.width = '0%'; fill.className = 'diag-fill'; }
+          if (pct) pct.textContent = '—';
+          if (mist) mist.innerHTML = '<span style="color:#94a3b8;font-size:12px;">Hali test ishlanmagan</span>';
+          if (stat) { stat.textContent = 'Maʼlumot yoʻq'; stat.className = 'diag-status-tag tag-mid'; }
+        });
+        const speedFill = document.getElementById('diagFillSpeed');
+        const speedPct = document.getElementById('diagPctSpeed');
+        const speedMist = document.getElementById('diagMistakeSpeed');
+        const speedStat = document.getElementById('diagStatusSpeed');
+        if (speedFill) speedFill.style.width = '0%';
+        if (speedPct) speedPct.textContent = '—';
+        if (speedMist) speedMist.innerHTML = '<span style="color:#94a3b8;font-size:12px;">Test topshirilmagan</span>';
+        if (speedStat) { speedStat.textContent = 'Maʼlumot yoʻq'; speedStat.className = 'diag-status-tag tag-mid'; }
       }
 
       // Print Diagnostic Report Button (use .onclick to avoid duplicates on reload)
