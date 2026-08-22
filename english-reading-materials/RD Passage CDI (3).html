@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading - Albert Einstein’s Brain</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg-color: #f5f7fa;
+            --container-bg: white;
+            --text-color: #2c3e50;
+            --title-color: #2c5282;
+            --border-color: #e8f4f8;
+            --button-bg: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            --button-hover-bg: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --reset-bg: linear-gradient(135deg, #ed64a6 0%, #d53f8c 100%);
+            --section-bg: linear-gradient(135deg, #f8fbff 0%, #fefefe 100%);
+            --question-bg: #f8f9fa;
+            --correct-bg: #f0fff4;
+            --correct-border: #38a169;
+            --incorrect-bg: #fff5f5;
+            --incorrect-border: #e53e3e;
+            --input-bg: white;
+            --input-border: #e2e8f0;
+            --input-focus-border: #4299e1;
+            --toggle-bg: #e6f3ff;
+            --toggle-border: #4299e1;
+            --toggle-header-bg: #4299e1;
+            --toggle-header-hover: #3182ce;
+            --toggle-text: white;
+            --instructions-bg: #f7fafc;
+            --instructions-text: #4a5568;
+            --score-bg: #e6f3ff;
+        }
+        .night-mode {
+            --bg-color: #1a202c;
+            --container-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --title-color: #63b3ed;
+            --border-color: #4a5568;
+            --button-bg: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            --button-hover-bg: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            --reset-bg: linear-gradient(135deg, #9f7aea 0%, #7c3aed 100%);
+            --section-bg: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --question-bg: #4a5568;
+            --correct-bg: #2f855a;
+            --correct-border: #38a169;
+            --incorrect-bg: #c53030;
+            --incorrect-border: #e53e3e;
+            --input-bg: #4a5568;
+            --input-border: #4a5568;
+            --input-focus-border: #63b3ed;
+            --toggle-bg: #2d3748;
+            --toggle-border: #63b3ed;
+            --toggle-header-bg: #2b6cb0;
+            --toggle-header-hover: #2c5282;
+            --toggle-text: #e2e8f0;
+            --instructions-bg: #2d3748;
+            --instructions-text: #cbd5e0;
+            --score-bg: #2d3748;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.4s;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .mode-toggle, .highlight-toggle {
+            position: absolute;
+            top: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .mode-toggle { right: 15px; }
+        .highlight-toggle { right: 150px; }
+        .passage-section, .questions-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+        .passage-section { border-right: 2px solid var(--border-color); background: var(--section-bg); }
+        .questions-section { background: var(--section-bg); }
+        .passage-title {
+            color: var(--title-color);
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 3px solid var(--input-focus-border);
+            padding-bottom: 10px;
+        }
+        .passage-subtitle {
+            color: var(--text-color);
+            font-size: 16px;
+            font-style: italic;
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .passage-content {
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        .passage-content p {
+            margin-bottom: 18px;
+            text-indent: 20px;
+        }
+        .questions-title {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            background: var(--question-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--input-focus-border);
+            margin-bottom: 20px;
+        }
+        .question-group {
+            margin-bottom: 30px;
+            background: var(--question-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--correct-border);
+        }
+        .question-group h3 {
+            color: var(--text-color);
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: var(--container-bg);
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tfng-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .tfng-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            cursor: pointer;
+        }
+        .tfng-option:hover { background: var(--toggle-bg); }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+        select:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+        .multiple-options label {
+            display: block;
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .multiple-options label:hover { background: var(--toggle-bg); }
+        .submit-btn, .reset-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn { background: var(--button-bg); color: white; }
+        .reset-btn { background: var(--reset-bg); color: white; }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--instructions-bg);
+            border-radius: 10px;
+            display: none;
+        }
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+        }
+        .result-item.correct { background: var(--correct-bg); border-left-color: var(--correct-border); }
+        .result-item.incorrect { background: var(--incorrect-bg); border-left-color: var(--incorrect-border); }
+        .score {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--score-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .timer-controller {
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .timer-controller h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+        #timer-display {
+            font-size: 2.0rem;
+            font-weight: 700;
+            color: var(--text-color);
+            background: var(--container-bg);
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin: 10px auto;
+            display: inline-block;
+            min-width: 180px;
+        }
+        .timer-input {
+            width: 60px;
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid var(--input-border);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .timer-btn {
+            padding: 8px 16px;
+            margin: 5px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .timer-btn:hover { background: var(--button-hover-bg); }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+        @keyframes ripple { to { transform: scale(2.5); opacity: 0; } }
+        @media (max-width: 768px) {
+            .container { flex-direction: column; height: auto; }
+            .passage-section, .questions-section { width: 100%; padding: 15px; }
+            .passage-section { border-right: none; border-bottom: 2px solid var(--border-color); max-height: 50vh; }
+        }
+        .highlight-yellow { background-color: #ffff99 !important; cursor: pointer; }
+        .highlight-green { background-color: #90ee90 !important; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle">🌙 Night Mode</button>
+    <button class="highlight-toggle" id="highlightToggle">Switch to Green</button>
+
+    <div class="container">
+        <!-- Passage -->
+        <div class="passage-section">
+            <h1 class="passage-title">Albert Einstein’s brain: What have scientists discovered?</h1>
+            <p class="passage-subtitle">You should spend about 20 minutes on Questions 1–13, which are based on the reading passage below.</p>
+            <div class="passage-content">
+                <p>For decades, scientists have sought to understand the biological foundations of genius by examining the physical characteristics of Albert Einstein’s brain. Various studies indicate that while his brain weighed a normal amount, it possessed distinct anatomical features and enhanced connectivity that may have contributed to his extraordinary cognitive abilities. These findings offer a glimpse into the potential neural substrates of his mathematical and visuospatial prowess.</p>
+                <p>Albert Einstein is widely recognized as one of the most influential physicists in history. In 1905, often referred to as his annus mirabilis or miraculous year, he published four groundbreaking papers that fundamentally altered the scientific understanding of the universe. These works addressed the photoelectric effect, Brownian motion, special relativity, and the equivalence of mass and energy. He later developed the general theory of relativity, cementing his reputation as a scientific revolutionary.</p>
+                <p>Because of his immense intellectual achievements, significant curiosity surrounded the source of his genius. Researchers and the public alike questioned whether his abilities stemmed from his environment and education or if he possessed a unique biological advantage. This debate regarding nature versus nurture prompted a desire to analyze his physical brain for clues. Einstein died on April 18, 1955, at Princeton Hospital due to a ruptured abdominal aortic aneurysm. During the autopsy, the pathologist Thomas Harvey removed Einstein’s brain for scientific study. Harvey weighed the organ, photographed it from multiple angles, and preserved it using formalin. He subsequently sectioned the brain into approximately 240 blocks and prepared histological slides, which are microscopic slices of tissue used for studying cellular structure.</p>
+                <p>In 1999, Sandra Witelson and her team at McMaster University published a study in The Lancet that focused on the gross anatomy of the brain. They compared Einstein’s brain with those of a control group. While the brain’s weight was not exceptional, the parietal lobes were about 15 percent wider than average.</p>
+                <p>Additionally, researchers discovered an unusual pattern in the Sylvian fissure. In most brains, this structure divides a region called the supramarginal gyrus. However, in Einstein’s brain, this division did not occur, potentially allowing for more efficient neural connections. This region is associated with visuospatial reasoning and mathematical thinking.</p>
+                <p>Later research in 2009 by Dean Falk identified a distinct knob-like structure in the motor cortex, an area responsible for voluntary movement. This feature is often observed in musicians and was likely linked to Einstein’s lifelong violin playing. The finding supports the idea of brain plasticity, meaning that the brain can change in response to repeated activity.</p>
+                <p>Further studies in 2013 examined the corpus callosum, which connects the two hemispheres of the brain. Researchers found that this structure was thicker than average, suggesting greater communication between the left and right hemispheres. This enhanced connectivity may have enabled Einstein to integrate analytical and creative thinking more effectively.</p>
+            </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="questions-section">
+            <div class="timer-controller">
+                <h3>Timer (set your time)</h3>
+                <div id="timer-display">20:00</div>
+                <input type="number" id="timer-min" class="timer-input" min="0" value="20">
+                <input type="number" id="timer-sec" class="timer-input" min="0" max="59" value="00">
+                <button id="set-timer" class="timer-btn">Set</button>
+                <button id="start-timer" class="timer-btn">Start</button>
+                <button id="pause-timer" class="timer-btn">Pause</button>
+                <button id="reset-timer" class="timer-btn">Reset</button>
+            </div>
+
+            <h2 class="questions-title">Questions 1–13</h2>
+
+            <!-- 1-5 Multiple Choice -->
+            <div class="question-group">
+                <h3>Questions 1–5: Multiple Choice</h3>
+                <div class="question">
+                    <label>1. What is the main focus of the passage?</label>
+                    <div class="multiple-options">
+                        <label><input type="radio" name="q1" value="A"> A. Einstein’s life achievements</label>
+                        <label><input type="radio" name="q1" value="B"> B. The debate about intelligence</label>
+                        <label><input type="radio" name="q1" value="C"> C. Scientific studies on Einstein’s brain</label>
+                        <label><input type="radio" name="q1" value="D"> D. The history of neuroscience</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>2. What was normal about Einstein’s brain?</label>
+                    <div class="multiple-options">
+                        <label><input type="radio" name="q2" value="A"> A. Its shape</label>
+                        <label><input type="radio" name="q2" value="B"> B. Its weight</label>
+                        <label><input type="radio" name="q2" value="C"> C. Its structure</label>
+                        <label><input type="radio" name="q2" value="D"> D. Its size</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>3. Why were scientists interested in Einstein’s brain?</label>
+                    <div class="multiple-options">
+                        <label><input type="radio" name="q3" value="A"> A. To compare it with animals</label>
+                        <label><input type="radio" name="q3" value="B"> B. To understand the origin of genius</label>
+                        <label><input type="radio" name="q3" value="C"> C. To preserve it for museums</label>
+                        <label><input type="radio" name="q3" value="D"> D. To test medical equipment</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>4. What did Witelson’s study reveal?</label>
+                    <div class="multiple-options">
+                        <label><input type="radio" name="q4" value="A"> A. Einstein’s brain was heavier</label>
+                        <label><input type="radio" name="q4" value="B"> B. His motor cortex was larger</label>
+                        <label><input type="radio" name="q4" value="C"> C. His parietal lobes were wider</label>
+                        <label><input type="radio" name="q4" value="D"> D. His brain had fewer neurons</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>5. What is suggested about the corpus callosum?</label>
+                    <div class="multiple-options">
+                        <label><input type="radio" name="q5" value="A"> A. It was smaller than average</label>
+                        <label><input type="radio" name="q5" value="B"> B. It limited brain function</label>
+                        <label><input type="radio" name="q5" value="C"> C. It enhanced communication between hemispheres</label>
+                        <label><input type="radio" name="q5" value="D"> D. It was damaged</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6-9 True / False / Not Given -->
+            <div class="question-group">
+                <h3>Questions 6–9: True / False / Not Given</h3>
+                <div class="question">
+                    <label>6. Einstein’s brain was removed immediately after his death for research purposes.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q6" value="TRUE"> TRUE</label>
+                        <label class="tfng-option"><input type="radio" name="q6" value="FALSE"> FALSE</label>
+                        <label class="tfng-option"><input type="radio" name="q6" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>7. All scientists agree that Einstein’s intelligence was purely genetic.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q7" value="TRUE"> TRUE</label>
+                        <label class="tfng-option"><input type="radio" name="q7" value="FALSE"> FALSE</label>
+                        <label class="tfng-option"><input type="radio" name="q7" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>8. The Sylvian fissure in Einstein’s brain divided the supramarginal gyrus normally.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q8" value="TRUE"> TRUE</label>
+                        <label class="tfng-option"><input type="radio" name="q8" value="FALSE"> FALSE</label>
+                        <label class="tfng-option"><input type="radio" name="q8" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>9. Einstein began playing the violin only in adulthood.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q9" value="TRUE"> TRUE</label>
+                        <label class="tfng-option"><input type="radio" name="q9" value="FALSE"> FALSE</label>
+                        <label class="tfng-option"><input type="radio" name="q9" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10-13 Short Answer -->
+            <div class="question-group">
+                <h3>Questions 10–13: Short Answer (NO MORE THAN THREE WORDS)</h3>
+                <div class="question">
+                    <label>10. In which year did Einstein publish four important papers?</label>
+                    <input type="text" name="q10" placeholder="Answer here">
+                </div>
+                <div class="question">
+                    <label>11. What term is used to describe Einstein’s “miraculous year”?</label>
+                    <input type="text" name="q11" placeholder="Answer here">
+                </div>
+                <div class="question">
+                    <label>12. Approximately how many blocks was Einstein’s brain divided into?</label>
+                    <input type="text" name="q12" placeholder="Answer here">
+                </div>
+                <div class="question">
+                    <label>13. What structure connects the two hemispheres of the brain?</label>
+                    <input type="text" name="q13" placeholder="Answer here">
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submitBtn">Submit Test</button>
+            <button class="reset-btn" id="resetBtn">Reset Test</button>
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        const correctAnswers = {
+            q1: 'C',
+            q2: 'B',
+            q3: 'B',
+            q4: 'C',
+            q5: 'C',
+            q6: 'TRUE',
+            q7: 'NOT GIVEN',
+            q8: 'FALSE',
+            q9: 'FALSE',
+            q10: '1905',
+            q11: 'annus mirabilis',
+            q12: '240',
+            q13: 'corpus callosum'
+        };
+
+        // Highlighting (Safari + Chrome)
+        let currentHighlightClass = 'highlight-yellow';
+        document.addEventListener('selectionchange', () => {
+            const sel = window.getSelection();
+            if (sel.rangeCount === 0 || sel.isCollapsed) return;
+            const range = sel.getRangeAt(0);
+            if (range.commonAncestorContainer.closest('input, select, button')) return;
+            const span = document.createElement('span');
+            span.className = currentHighlightClass;
+            try { range.surroundContents(span); } catch (e) {
+                const frag = range.extractContents();
+                span.appendChild(frag);
+                range.insertNode(span);
+            }
+            sel.removeAllRanges();
+        });
+        document.addEventListener('click', e => {
+            let t = e.target;
+            while (t && !t.classList.contains('highlight-yellow') && !t.classList.contains('highlight-green')) t = t.parentElement;
+            if (t) {
+                const p = t.parentNode;
+                while (t.firstChild) p.insertBefore(t.firstChild, t);
+                p.removeChild(t);
+                p.normalize();
+            }
+        });
+        document.getElementById('highlightToggle').addEventListener('click', function() {
+            currentHighlightClass = currentHighlightClass === 'highlight-yellow' ? 'highlight-green' : 'highlight-yellow';
+            this.textContent = currentHighlightClass === 'highlight-yellow' ? 'Switch to Green' : 'Switch to Yellow';
+        });
+
+        // Night mode
+        document.getElementById('modeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('night-mode');
+            this.textContent = document.body.classList.contains('night-mode') ? '☀️ Day Mode' : '🌙 Night Mode';
+        });
+
+        // Timer
+        let initialTime = 1200;
+        let timerTime = initialTime;
+        let timerInterval = null;
+        function updateTimerDisplay() {
+            const m = Math.floor(timerTime / 60);
+            const s = timerTime % 60;
+            document.getElementById('timer-display').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+        document.getElementById('set-timer').addEventListener('click', () => {
+            const min = parseInt(document.getElementById('timer-min').value) || 0;
+            const sec = parseInt(document.getElementById('timer-sec').value) || 0;
+            initialTime = min * 60 + sec;
+            timerTime = initialTime;
+            updateTimerDisplay();
+        });
+        document.getElementById('start-timer').addEventListener('click', () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    if (timerTime > 0) {
+                        timerTime--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        alert('Time is up!');
+                    }
+                }, 1000);
+            }
+        });
+        document.getElementById('pause-timer').addEventListener('click', () => clearInterval(timerInterval));
+        document.getElementById('reset-timer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerTime = initialTime;
+            updateTimerDisplay();
+        });
+        updateTimerDisplay();
+
+        // Submit
+        function submitTest() {
+            let score = 0;
+            let html = '';
+            const resultsDiv = document.getElementById('results');
+
+            // MCQ 1-5
+            for (let i = 1; i <= 5; i++) {
+                const val = document.querySelector(`input[name="q${i}"]:checked`) ? document.querySelector(`input[name="q${i}"]:checked`).value : '';
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">Q${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correct})</div>`;
+            }
+
+            // TFNG 6-9
+            for (let i = 6; i <= 9; i++) {
+                const val = document.querySelector(`input[name="q${i}"]:checked`) ? document.querySelector(`input[name="q${i}"]:checked`).value : '';
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">Q${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correct})</div>`;
+            }
+
+            // Short answer 10-13
+            for (let i = 10; i <= 13; i++) {
+                const val = (document.querySelector(`input[name="q${i}"]`) ? document.querySelector(`input[name="q${i}"]`).value.trim() : '').toLowerCase();
+                const correct = (correctAnswers[`q${i}`] || '').toLowerCase();
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">Q${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correctAnswers[`q${i}`]})</div>`;
+            }
+
+            html = `<div class="score">Your Score: ${score}/13</div>` + html;
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetTest() {
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            document.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+            document.getElementById('results').style.display = 'none';
+        }
+
+        // Ripple
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const circle = document.createElement('span');
+                const d = Math.max(btn.clientWidth, btn.clientHeight);
+                const r = d / 2;
+                circle.style.width = circle.style.height = d + 'px';
+                circle.style.left = e.clientX - btn.getBoundingClientRect().left - r + 'px';
+                circle.style.top = e.clientY - btn.getBoundingClientRect().top - r + 'px';
+                circle.classList.add('ripple');
+                btn.appendChild(circle);
+                setTimeout(() => circle.remove(), 600);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('submitBtn').addEventListener('click', submitTest);
+            document.getElementById('resetBtn').addEventListener('click', resetTest);
+        });
+    </script>
+</body>
+</html>

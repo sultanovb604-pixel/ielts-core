@@ -1,0 +1,2870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Test - Offline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ielts-red': '#DC2626',
+                        'ielts-gray': '#F3F4F6',
+                        'ielts-border': '#E5E7EB'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .highlight {
+            background-color: rgb(254 240 138);
+        }
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Enhanced bullet points for flow chart */
+        .flow-chart-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .flow-chart-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .flow-chart-list li:before {
+            content: '●';
+            color: #DC2626;
+            font-size: 16px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-white font-sans">
+    <!-- Welcome Modal -->
+    <div id="welcome-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-4 text-center transform transition-all">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-3xl font-bold text-blue-600 mb-4">Welcome!</h2>
+            <p class="text-gray-700 text-lg mb-6">Hey thank you for trusting my materials and being active. You deserve the best)</p>
+            <button id="start-test-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full text-lg transition-all duration-200 shadow-lg hover:shadow-xl">
+                Let's Start! ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Test Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-1 sticky top-0 z-50 shadow-sm">
+        <div class="w-full flex items-center justify-between">
+            <!-- Left section - Logo and Test taker ID -->
+            <div class="flex items-center space-x-8 flex-1 justify-start min-w-0">
+                <h1 class="text-red-600 font-bold text-2xl tracking-wide whitespace-nowrap" data-testid="ielts-logo">IELTS</h1>
+                <span class="text-gray-500 text-sm font-medium whitespace-nowrap" data-testid="test-taker-id">Test taker ID</span>
+            </div>
+
+            <!-- Center section - Telegram link -->
+            <div class="flex-1 flex justify-center px-4">
+                <a href="https://t.me/ielts_material_full" target="_blank" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Full Exam Materials</a>
+            </div>
+
+            <!-- Right section - Timer and navigation icons -->
+            <div class="flex items-center space-x-3 flex-1 justify-end min-w-0">
+                <!-- Timer -->
+                <div class="flex items-center space-x-2 bg-gray-50 px-3 py-1 rounded-lg whitespace-nowrap" data-testid="timer-display">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12,6 12,12 16,14"></polyline>
+                    </svg>
+                    <div id="timer-section" class="flex items-center space-x-1">
+                        <button id="timer-text" class="text-sm font-mono font-semibold text-gray-700 hover:text-gray-900 cursor-pointer transition-colors duration-200" data-testid="timer-text" title="Click to edit time">
+                            60:00
+                        </button>
+                        <button id="timer-toggle" class="p-0.5 hover:bg-gray-200 rounded transition-colors duration-200">
+                            <svg id="play-icon" class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <polygon points="5,3 19,12 5,21"></polygon>
+                            </svg>
+                            <svg id="pause-icon" class="w-3 h-3 text-gray-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="6" y="4" width="4" height="16"></rect>
+                                <rect x="14" y="4" width="4" height="16"></rect>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Navigation icons -->
+                <div class="flex items-center space-x-1">
+                    <button class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200" title="Connection status">
+                        <svg class="w-5 h-5 text-gray-500 hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                            <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                        </svg>
+                    </button>
+                    <button class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200" title="Notifications">
+                        <svg class="w-5 h-5 text-gray-500 hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </button>
+                    <button class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200" title="Menu">
+                        <svg class="w-5 h-5 text-gray-500 hover:text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="main-container" class="flex-1 flex relative" style="height: calc(100vh - 100px);">
+        <!-- Left Panel - Passage -->
+        <div id="left-panel" class="overflow-auto" style="width: 50%;">
+            <div class="flex-1 p-6 overflow-auto">
+                <div id="part-header" class="bg-gray-100 p-4 rounded mb-6">
+                    <h2 id="part-title" class="font-bold mb-2">Part 1</h2>
+                    <p id="part-instructions" class="text-sm text-gray-700">You should spend about 20 minutes on Questions 1-13 which are based on Reading Passage 1.</p>
+                </div>
+
+                <div class="prose max-w-none">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 id="passage-title" class="text-lg font-bold">CLARENCE BIRDSEYE AND THE DEVELOPMENT OF FROZEN FOOD</h3>
+                        <div class="flex items-center space-x-2 text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-full">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9,12l2,2 4,-4"></path>
+                            </svg>
+                            <span>Full Exam Materials</span>
+                        </div>
+                    </div>
+                    <div id="passage-content" class="text-justify leading-relaxed space-y-4">
+                        <!-- Content will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resize Handle -->
+        <div id="resize-handle" class="w-2 bg-gray-200 hover:bg-gray-300 cursor-col-resize transition-colors flex-shrink-0">
+            <div class="w-full h-full flex items-center justify-center">
+                <div class="w-1 h-8 bg-gray-400 rounded-full"></div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Questions -->
+        <div id="right-panel" class="overflow-auto flex-1" style="width: 50%;">
+            <div id="questions-container" class="flex-1 p-6 bg-white overflow-auto">
+                <!-- Questions will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Footer -->
+
+  <footer class="bg-white border-t border-gray-200 sticky bottom-0" data-testid="test-footer">
+    <div class="flex justify-between items-center px-4 py-0.5">
+        <!-- Navigation arrows -->
+        <div class="flex items-center space-x-4 mr-6">
+            <button id="prev-part-btn" class="w-8 h-8 bg-red-600 hover:bg-red-700 rounded-full text-white disabled:opacity-50 flex items-center justify-center" disabled>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+            </button>
+            <button id="next-part-btn" class="w-8 h-8 bg-red-600 hover:bg-red-700 rounded-full text-white flex items-center justify-center">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <polyline points="9,18 15,12 9,6"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Part indicators -->
+        <div id="parts-container" class="flex-1 flex flex-wrap justify-between items-center gap-2 relative">
+            <!-- Part indicators will be loaded dynamically -->
+        </div>
+
+        <!-- Submit button -->
+        <button id="submit-test-btn" class="bg-red-600 text-white px-3 py-1 font-medium hover:bg-red-700 h-8 text-sm rounded ml-4">
+            Submit Test
+        </button>
+    </div>
+
+</footer>
+
+    <!-- Highlight Buttons -->
+    <div id="highlight-button" class="fixed x-50 bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-3 py-1 rounded shadow-lg cursor-pointer text-sm font-medium transition colors hidden">
+        Highlight
+    </div>
+
+    <div id="clear-highlight-button" class="fixed z-50 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 px-3 py-1 rounded shadow-lg cursor-pointer text-sm font-medium transition-colors hidden">
+        Clear Highlight
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div id="submit-confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h2 class="text-xl font-bold mb-4 text-center">Submit Test</h2>
+            <div class="mb-6">
+                <p class="text-gray-700 text-center">
+                    Are you sure you want to submit your test?
+                </p>
+                <p class="text-sm text-gray-500 text-center mt-2">
+                    Once submitted, you will see the answers and cannot continue the test.
+                </p>
+            </div>
+            <div class="flex gap-3 justify-center">
+                <button id="cancel-submit" class="px-6 py-2 border border-gray-300 rounded hover:bg-gray-50 font-medium">
+                    Cancel
+                </button>
+                <button id="confirm-submit" class="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-medium">
+                    Submit Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] flex flex-col">
+            <h2 class="text-2xl font-bold mb-4">Test Results</h2>
+            <div class="flex-1 overflow-y-auto min-h-0">
+                <div id="results-content">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+            <button id="close-results" class="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 flex-shrink-0">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Test Data
+        const testData = {
+            "id": "ielts-reading-test-3",
+            "title": "IELTS Reading Test 3",
+            "duration": 60,
+            "parts": [
+                {
+                    "id": 1,
+                    "title": "Passage-1",
+                    "instructions": "You should spend about 20 minutes on Questions 1-13 which are based on Reading Passage 1.",
+                    "questionRange": "1–13",
+                    "passage": {
+                        "title": "A Brief Introduction to Pepper",
+                        "content": "Pepper, the spice, comes from the berries of a plant that is a woody climbing vine. In the botanical world, pepper belongs to a genus of plants called Piper. This genus was created in 1753 by Carl Linnaeus, the Swedish botanist whose system for classifying plants is still in use today. He placed seventeen species in the piper genus and probably used the ancient Greek name for black pepper, Peperi, as the basis for the group.\n\nPepper isn't a fast-maturing plant. It takes several years for the branching woody vines to mature, and during their growth the vines can reach up to thirty feet. The pepper berries - which grow in clusters and dangle from the vines - are picked by hand when they are ready for harvesting, which usually begins two or three years after the vine is first planted. Black pepper is picked when the berries are still green, while white pepper is picked later, when the berries have turned from green to red. Preparing the berries for sale involves a lengthy process of drying, cleaning and sorting. Once the berries have been dried, they are then referred to as peppercorns, and these are what are used in food preparation around the world.\n\nThe pepper plant loves the warm, humid, rainy tropics, in a narrow band around the equator. Pepper also requires well-drained soils, and its preferred habitat is forests. Unshaded plants which are exposed too long to the sun will not yield many berries. The colourful mixes of whole peppercorns seen in many markets today contain green and black peppercorns. Although there are pink peppercorns, the ripest berries, these are more fragile and are therefore more costly than other kinds. This is why there are few of them in a peppercorn mix.\n\nNo one knows when the first human bit into a peppercorn and decided it would taste good on a piece of meat or in a vegetable stew, but in the West it was the ancient Romans who apparently first made pepper an essential part of their meals. Food was only part of the reason for pepper's popularity; health played an equally important role.\n\nIn the Roman Empire, pepper was employed to relieve the pain that was a common consequence of numerous medical conditions and complaints. If you showed signs of a fever, it was common practice to be given a liquid that had some pepper in it.\n\nThe Romans were not the first to embrace pepper as a medicine. Belief in the spice's considerable usefulness is reflected in India's ancient Ayurvedic system of medicine, which is more than three thousand years old. In Sanskrit (a language of ancient India), black pepper is known as maricha or marica, meaning an ability to get rid of poison, which suggests it was used in patients for this purpose. Pepper was also believed by the Indians to have other qualities as well. For example, physicians would frequently apply pepper-based lotions to reduce the effects of decay in teeth, which made it an extremely popular remedy.\n\nIn the Middle Ages (5th-15th centuries) black pepper's renown made it a must-have item for the European wealthy, who loved the spice. At that time, pepper was guarded by servants in royal households and kept in the private wardrobes of the rich. It was considered a privilege to cook with pepper and many of the recipes from the period called for substantial quantities of pepper, which might be considered very unappetising today. But for most people, pepper was too expensive. In the year 1439, a pound of pepper was roughly equal to more than two days' pay in England. Meanwhile, pepper could be exchanged for gold, and also became a form of payment for people's work. In some of the larger cities, it was even possible to use pepper as rent in some kinds of accommodation. Employees in the pepper industry were not allowed to have pockets in their jackets or trousers so that this valuable commodity would not be stolen.\n\nThe huge demand for pepper and the money it could bring encouraged people to risk adventure on foreign oceans and in foreign lands, and it is within this context that the story of pepper really begins."
+                    },
+                    "questions": [
+                        { "id": 1, "type": "TRUE_FALSE_NOT_GIVEN", "text": "Carl Linnaeus's method for categorising plants has been replaced by a better one.", "options": [{ "value": "true", "label": "TRUE" }, { "value": "false", "label": "FALSE" }, { "value": "not-given", "label": "NOT GIVEN" }], "correctAnswer": "false", "explanation": "FALSE - The passage states his system for classifying plants 'is still in use today', meaning it has NOT been replaced." },
+                        { "id": 2, "type": "TRUE_FALSE_NOT_GIVEN", "text": "The ancient Greeks originally took the word for pepper from another language.", "options": [{ "value": "true", "label": "TRUE" }, { "value": "false", "label": "FALSE" }, { "value": "not-given", "label": "NOT GIVEN" }], "correctAnswer": "not-given", "explanation": "NOT GIVEN - The passage mentions the ancient Greek name 'Peperi' but does not say whether the Greeks took this word from another language." },
+                        { "id": 3, "type": "TRUE_FALSE_NOT_GIVEN", "text": "Machines are used to harvest pepper berries.", "options": [{ "value": "true", "label": "TRUE" }, { "value": "false", "label": "FALSE" }, { "value": "not-given", "label": "NOT GIVEN" }], "correctAnswer": "false", "explanation": "FALSE - The passage states pepper berries 'are picked by hand', not by machines." },
+                        { "id": 4, "type": "TRUE_FALSE_NOT_GIVEN", "text": "White pepper berries are riper than black pepper berries when they are picked.", "options": [{ "value": "true", "label": "TRUE" }, { "value": "false", "label": "FALSE" }, { "value": "not-given", "label": "NOT GIVEN" }], "correctAnswer": "true", "explanation": "TRUE - The passage states 'Black pepper is picked when the berries are still green, while white pepper is picked later, when the berries have turned from green to red', showing white pepper is riper." },
+                        { "id": 5, "type": "TRUE_FALSE_NOT_GIVEN", "text": "Pepper vines need a lot of sunlight to produce a large harvest of berries.", "options": [{ "value": "true", "label": "TRUE" }, { "value": "false", "label": "FALSE" }, { "value": "not-given", "label": "NOT GIVEN" }], "correctAnswer": "false", "explanation": "FALSE - The passage states 'Unshaded plants which are exposed too long to the sun will not yield many berries', meaning too much sun reduces the harvest." },
+                        { "id": 6, "type": "TRUE_FALSE_NOT_GIVEN", "text": "Pink peppercorns are more expensive to buy than other varieties.", "options": [{ "value": "true", "label": "TRUE" }, { "value": "false", "label": "FALSE" }, { "value": "not-given", "label": "NOT GIVEN" }], "correctAnswer": "true", "explanation": "TRUE - The passage states pink peppercorns 'are more fragile and are therefore more costly than other kinds.'" },
+                        { "id": 7, "type": "NOTE_COMPLETION", "text": "The Romans used pepper to reduce __(7)__ caused by many health issues", "correctAnswer": "pain", "explanation": "pain - The passage states 'pepper was employed to relieve the pain that was a common consequence of numerous medical conditions.'" },
+                        { "id": 8, "type": "NOTE_COMPLETION", "text": "__(8)__ containing pepper was used as medicine to bring down high temperatures", "correctAnswer": "liquid", "explanation": "liquid - The passage states 'If you showed signs of a fever, it was common practice to be given a liquid that had some pepper in it.'" },
+                        { "id": 9, "type": "NOTE_COMPLETION", "text": "Pepper was thought to be able to extract __(9)__ from people, as indicated by its name in Sanskrit", "correctAnswer": "poison", "explanation": "poison - The passage states the Sanskrit name means 'an ability to get rid of poison, which suggests it was used in patients for this purpose.'" },
+                        { "id": 10, "type": "NOTE_COMPLETION", "text": "Pepper was used to treat problems with people's __(10)__", "correctAnswer": "teeth", "explanation": "teeth - The passage states 'physicians would frequently apply pepper-based lotions to reduce the effects of decay in teeth.'" },
+                        { "id": 11, "type": "NOTE_COMPLETION", "text": "In wealthy households, pepper was stored in __(11)__", "correctAnswer": "wardrobes", "explanation": "wardrobes - The passage states pepper was 'kept in the private wardrobes of the rich.'" },
+                        { "id": 12, "type": "NOTE_COMPLETION", "text": "__(12)__ written at that time required large amounts of pepper", "correctAnswer": "recipes", "explanation": "recipes - The passage states 'many of the recipes from the period called for substantial quantities of pepper.'" },
+                        { "id": 13, "type": "NOTE_COMPLETION", "text": "People who worked with pepper had to wear clothes without __(13)__ to discourage theft", "correctAnswer": "pockets", "explanation": "pockets - The passage states 'Employees in the pepper industry were not allowed to have pockets in their jackets or trousers so that this valuable commodity would not be stolen.'" }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "title": "Passage-2",
+                    "instructions": "You should spend about 20 minutes on Questions 14-26 which are based on Reading Passage 2.",
+                    "questionRange": "14-26",
+                    "passage": {
+                        "title": "Australian Parrots and Their Adaptation to Habitat Change",
+                        "content": "<strong>A</strong> Parrots are found across the tropics and in all southern hemisphere continents except Antarctica, but nowhere do they display such a richness of diversity and form as in Australia. One-sixth of the world's 345 parrot species are found there, and Australia has long been renowned for the number and variety of its parrots.\n\n<strong>B</strong> In the 16th century, the German cartographer Mercator made a world map that included a place, somewhere near present-day Australia, that he named Terra Psittacorum - the Land of Parrots - and the first European settlers in Australia often referred to the country as Parrot Land. In 1865, the celebrated British naturalist and wildlife artist John Gould said: \"No group of birds gives Australia so tropical and benign an air as the numerous species of this great family by which it is tenanted.\"\n\n<strong>C</strong> Parrots are descendants of an ancient line. Due to their great diversity, and since most species inhabit Africa, Australia and South America, it seems almost certain that parrots originated millions of years ago on the ancient southern continent of Gondwana, before it broke up into the separate southern hemisphere continents we know today. Much of Gondwana comprised vast rainforests intersected by huge slow-flowing rivers and expansive lakes, but by eight million years ago, great changes were underway. The centre of the continent of Australia had begun to dry out, and the rainforests that once covered it gradually contracted to the continental margins, where, to a limited extent, they still exist today.\n\n<strong>D</strong> The creatures that remained in those shrinking rainforests had to adapt to the drier conditions or face extinction. Reacting to these desperate circumstances, the parrot family, typically found in jungles in other parts of the world, has populated some of Australia's harshest environments. The parrots spread from ancestral forests through eucalypt woodlands to colonise the central deserts of Australia, and as a consequence they diversified into a wide range of species with adaptations that reflect the many changes animals and plants had to make to survive in these areas.\n\n<strong>E</strong> These evolutionary pressures helped mould keratin, the substance from which beaks are made, into a range of tools capable of gathering the new food types favoured by various species of parrot. The size of a parrot's short, blunt beak and the length of that beak's curved upper section are related to the type of food each species eats. Some have comparatively long beaks that are perfect for extracting seeds from fruit; others have broader and stronger beaks that are designed for cracking hard seeds.\n\n<strong>F</strong> Differently shaped beaks are not the only adaptations that have been made during the developing relationship between parrots and their food plants. Like all of Australia's many honey-eating birds, the rainbow-coloured lorikeets and the flowers on which they feed have long co-evolved with features such as the shape and colour of the flowers adapted to the bird's particular needs, and physical adaptations in the birds themselves. For example, red is the most attractive colour to birds, and thus flowers which depend on birds for pollination are more often red, and lorikeets' tongues have bristles which help them to collect as much pollen as possible.\n\n<strong>G</strong> Today, most of Australia's parrots inhabit woodland and open forest, and their numbers decline towards both deserts and wetter areas. The majority are nomadic to some degree, moving around to take advantage of feeding and breeding places. Two of the dry country parrots, the pink and grey galah and the pink, white and yellow corella have expanded their ranges in recent years. They are among the species that have adapted well to the changes brought about by European settlement - forest clearing created grasslands where galahs and corellas thrive.\n\n<strong>H</strong> But other parrot species did not fare so well when their environments were altered. The clearing of large areas of rainforest is probably responsible for the disappearance of the double-eyed fig parrot, and numbers of ground parrots declined when a great part of their habitat was destroyed by the draining of coastal swamps. Even some parrot species that benefited from forest clearing at first are now confronted by a shortage of nesting sites due to further man-made changes.\n\n<strong>I</strong> New conditions also sometimes favour an incoming species over one that originally inhabited the area. For example, after farmers cleared large areas of forest on Kangaroo Island off the coast of South Australia, the island was colonised by galahs. They were soon going down holes and destroying black cockatoo eggs in order to take the hole for their own use. Their success precipitated a partial collapse in the black cockatoo population when the latter lost the struggle for scarce nesting hollows.\n\n<strong>J</strong> There may be no final answer to ensuring an equitable balance between parrot species. Nest box programmes help ease the shortage of nesting sites in some places, but there are not enough, they are expensive and they are not an adequate substitute for large, old trees, such as the habitat they represent and the nectar, pollen and seeds they provide. Competition between parrots for nest sites is a result of the changes we humans have made to the Earth. We are the most widespread and dangerous competitors that parrots have ever had to face, but we also have the knowledge and skill to maintain the wonderfully rich diversity of Australia's parrots. All we need is the will to do so."
+                    },
+                    "questions": [
+                        { "id": 14, "type": "PARAGRAPH_INFO_MATCHING", "text": "An example of how one parrot species may survive at the expense of another", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }, { "value": "G", "label": "G" }, { "value": "H", "label": "H" }, { "value": "I", "label": "I" }, { "value": "J", "label": "J" }], "correctAnswer": "I", "explanation": "I - Paragraph I describes how galahs colonised Kangaroo Island and destroyed black cockatoo eggs to take their nesting holes, causing a decline in the black cockatoo population." },
+                        { "id": 15, "type": "PARAGRAPH_INFO_MATCHING", "text": "A description of how plants may adapt to attract birds", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }, { "value": "G", "label": "G" }, { "value": "H", "label": "H" }, { "value": "I", "label": "I" }, { "value": "J", "label": "J" }], "correctAnswer": "F", "explanation": "F - Paragraph F explains that 'flowers which depend on birds for pollination are more often red' because red is attractive to birds." },
+                        { "id": 16, "type": "PARAGRAPH_INFO_MATCHING", "text": "Examples of two parrot species which benefited from changes to the environment", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }, { "value": "G", "label": "G" }, { "value": "H", "label": "H" }, { "value": "I", "label": "I" }, { "value": "J", "label": "J" }], "correctAnswer": "G", "explanation": "G - Paragraph G mentions that the galah and corella 'have expanded their ranges' and 'adapted well to the changes brought about by European settlement.'" },
+                        { "id": 17, "type": "PARAGRAPH_INFO_MATCHING", "text": "How the varied Australian landscape resulted in a great variety of parrot species", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }, { "value": "G", "label": "G" }, { "value": "H", "label": "H" }, { "value": "I", "label": "I" }, { "value": "J", "label": "J" }], "correctAnswer": "D", "explanation": "D - Paragraph D explains that parrots 'diversified into a wide range of species with adaptations' as they spread across different Australian environments." },
+                        { "id": 18, "type": "PARAGRAPH_INFO_MATCHING", "text": "A reason why most parrot species are native to the southern hemisphere", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }, { "value": "G", "label": "G" }, { "value": "H", "label": "H" }, { "value": "I", "label": "I" }, { "value": "J", "label": "J" }], "correctAnswer": "C", "explanation": "C - Paragraph C states that parrots 'originated millions of years ago on the ancient southern continent of Gondwana' which later became the southern hemisphere continents." },
+                        { "id": 19, "type": "PARAGRAPH_INFO_MATCHING", "text": "An example of a parrot species which did not survive changes to its habitat", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }, { "value": "G", "label": "G" }, { "value": "H", "label": "H" }, { "value": "I", "label": "I" }, { "value": "J", "label": "J" }], "correctAnswer": "H", "explanation": "H - Paragraph H mentions 'the disappearance of the double-eyed fig parrot' due to rainforest clearing." },
+                        { "id": 20, "type": "MULTIPLE_CHOICE", "text": "The writer believes that most parrot species", "options": [{ "value": "A", "label": "A moved from Africa and South America to Australia" }, { "value": "B", "label": "B had ancestors in either Africa, Australia or South America" }, { "value": "C", "label": "C had ancestors in a continent which later split up" }, { "value": "D", "label": "D came from a continent now covered by water" }], "correctAnswer": "C", "explanation": "C - Paragraph C states parrots 'originated millions of years ago on the ancient southern continent of Gondwana, before it broke up into the separate southern hemisphere continents.'" },
+                        { "id": 21, "type": "MULTIPLE_CHOICE", "text": "What does the writer say about parrot's beaks?", "options": [{ "value": "A", "label": "A They are longer than those of other birds" }, { "value": "B", "label": "B They are made of a unique material" }, { "value": "C", "label": "C They are used more efficiently than those of other species" }, { "value": "D", "label": "D They are specially adapted to suit the diet" }], "correctAnswer": "D", "explanation": "D - Paragraph E explains that beak size and shape 'are related to the type of food each species eats' showing adaptation to diet." },
+                        { "id": 22, "type": "MULTIPLE_CHOICE", "text": "Which of the following is NOT mentioned by the writer as a disadvantage of nesting boxes?", "options": [{ "value": "A", "label": "A They cost too much" }, { "value": "B", "label": "B They need to be maintained" }, { "value": "C", "label": "C They provide only shelter, not food" }, { "value": "D", "label": "D There are too few of them" }], "correctAnswer": "B", "explanation": "B - Paragraph J mentions they are 'not enough' (D), 'expensive' (A), and 'not an adequate substitute' for trees that provide food (C). Maintenance (B) is NOT mentioned." },
+                        { "id": 23, "type": "SUMMARY_COMPLETION", "text": "There are 345 varieties of parrot in existence and, of these, __(23)__ live in Australia.", "correctAnswer": "one-sixth", "explanation": "one-sixth - Paragraph A states 'One-sixth of the world's 345 parrot species are found there.'" },
+                        { "id": 24, "type": "SUMMARY_COMPLETION", "text": "As early as the __(24)__, the mapmaker Mercator recognized that parrots lived in that part of the world.", "correctAnswer": "16th century", "explanation": "16th century - Paragraph B states 'In the 16th century, the German cartographer Mercator made a world map' naming the area 'Land of Parrots.'" },
+                        { "id": 25, "type": "SUMMARY_COMPLETION", "text": "As early as the 16th century, the mapmaker __(25)__ recognized that parrots lived in that part of the world.", "correctAnswer": "Mercator", "explanation": "Mercator - Paragraph B states 'In the 16th century, the German cartographer Mercator made a world map' naming the area 'Land of Parrots.'" },
+                        { "id": 26, "type": "SUMMARY_COMPLETION", "text": "__(26)__, the famous painter of animals and birds, commented on the size and beauty of the Australian parrot family.", "correctAnswer": "John Gould", "explanation": "John Gould - Paragraph C mentions 'John Gould, the famous nineteenth-century painter of animals and birds, remarked on the size and beauty of the Australian parrot family.'" }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "title": "Passage-3 ",
+                    "instructions": "You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage 3.",
+                    "questionRange": "27-40",
+                    "passage": {
+                        "title": "Insect-inspired Robots",
+                        "intro": "A recent conference reports on developments in biorobotics",
+                        "content": "<strong>A</strong> A tiny insect navigates its way across featureless salt-pans. A cockroach successfully works out how to scramble over an obstacle. The mantis shrimp scans its aquatic world through hyperspectral eyes. Using the most basic of equipment and brains tinier than a pinhead, insects constantly solve complex problems of movement, vision and navigation - processing data that would challenge a supercomputer. How they do it is driving one of the most exciting new fields of technology - biomimetics and biorobotics, the imitation of insect systems to control man-made machines. Delegates at a recent conference presented some outcomes of their work in this area.\n\n<strong>B</strong> Dr Alex Zelinsky suggested that the method by which wasps use landmarks to find their way back to the nest may one day be part of a system for navigating cars that 'know' where to go. A research team led by Dr Zelinsky has shown that a robot can navigate its way among 50 different landmarks by recognising them individually using a panoramic camera. 'The inspiration came from biology, where wasps use a practice called \"turn back and look\" to orient themselves as they emerge from the nest. By flying to and fro, they lock in images of the nest from different angles and perspectives, so they can recognise it again,' he explained. The robot's panoramic camera logs the surrounding area and its key landmarks, which are then sorted in its computer according to how reliable they are as navigational aids. The landmarks are then scaled, from small to large, so that the robot can recognise whether it is getting closer to or further away from them. Their location is built into a map in its 'mind', which operates at different scales and instructs the robot whether to turn left or right at a particular mark. The technology provides a general way for a machine to navigate an unknown landscape.\n\n<strong>C</strong> For three decades, Professor Ruediger Wehner has journeyed from Switzerland to the Sahara desert where Cataglyphis, a tiny ant with a brain weighing just 0.1 mg, performs acts of navigational genius when it leaves its nest, forages for food and returns successfully. Cataglyphis uses polarised light, caused when air molecules scatter light, to orient and steer itself. Wehner's team found the ant has a set of specialised photoreceptors along the upper rim of its eyes that detect polarised light, while other receptors perform different navigational tasks. As the sun moves, the ant notes its direction each time it leaves the nest and updates its internal compass. Using other eye receptors it stores a 'snapshot' image of landmarks close to the nest entrance in its eyes and compares this with what it sees as it returns. The ant also has a way of measuring distance travelled, while a 'path integrator' periodically informs the ant of its current position relative to its point of departure. Rather than integrate all the information it receives in its brain, the ant actually performs a number of complex calculations in different organs. Like a supercomputer, the ant has many separate subroutines going on simultaneously. Using the ant's ability to steer by polarised light and to store and reuse landscape images, Wehner and colleagues have built 'Sahabot', a small vehicle that uses polarisers and a digital CCD camera to store 360 degree images of its surroundings. It navigates by using polarised sunlight and comparing the current images of landmarks to the ones in its memory.\n\n<strong>D</strong> Professor Robert Michelson had a different desert challenge - to design a flying robot that can not only navigate but also stay aloft and hover in the thin atmosphere of Mars. Drawing inspiration from insect flight, he has gone beyond nature to devise a completely new concept for a flying machine. The 'Entomopter' is a sort of double-ended dragonfly whose wings beat reciprocally. Michelson says that the flapping-wing design gives the craft unusually high lift compared with a fixed-wing flyer, enabling it to fly slowly or hover in the thin Martian air - whereas a fixed-wing craft would have to move at more than 400 km/h and could not stop to explore.\n\n<strong>E</strong> Engineer Roger Quinn and entomologist Professor Roy Ritzmann are taking their inspiration from cockroaches. According to Quinn and Ritzmann, the ability of cockroaches to run very fast over rough terrain may one day give rise to a completely new all-terrain vehicle with six legs, or maybe even wheel-like legs called 'whegs'. The key to the cockroach's remarkable cross-country performance lies partly in the fact that its legs do a lot of the 'thinking' without having to consult the brain. Quinn and Ritzmann are drawing on cockroach skills to create robotic walkers and control strategies that capture the remarkable capacity of these insects to traverse complex terrain and navigate safely toward goals while avoiding obstacles. The team has already designed a series of robots that run on six legs or on whegs, enabling them to handle surprisingly rugged terrain.\n\n<strong>F</strong> International experts believe there are tremendous opportunities in biorobotics. However, delegates at the conference had differing visions for the future of the science. While some were concerned that the initial applications of biorobotics may be military, others, such as Dr Barbara Webb, predicted swarms of tiny, cheap, insect-like robots as society's cleaners and collectors. Sonja Kleinlogel hoped the study of the hyperspectral eyes of the mantis shrimp might yield remote sensors that keep watch over the environmental health of our oceans. Several delegates were concerned about the ethical implications of biorobotics, and urged that close attention be paid to this as the science and technologies develop."
+                    },
+                    "questions": [
+                        { "id": 27, "type": "PARAGRAPH_INFO_MATCHING", "text": "Positive and negative possibilities for the use of insect-inspired robots", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }], "correctAnswer": "F", "explanation": "F - Paragraph F discusses both positive uses (cleaners, environmental monitoring) and concerns (military applications, ethical implications)." },
+                        { "id": 28, "type": "PARAGRAPH_INFO_MATCHING", "text": "How perceived size is used as an aid to navigation", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }], "correctAnswer": "B", "explanation": "B - Paragraph B explains that landmarks 'are then scaled, from small to large, so that the robot can recognise whether it is getting closer to or further away from them.'" },
+                        { "id": 29, "type": "PARAGRAPH_INFO_MATCHING", "text": "An example of decision-making taking place in the limbs", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }], "correctAnswer": "E", "explanation": "E - Paragraph E states that a cockroach's 'legs do a lot of the thinking without having to consult the brain.'" },
+                        { "id": 30, "type": "PARAGRAPH_INFO_MATCHING", "text": "A description of a potential aid in space exploration", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }], "correctAnswer": "D", "explanation": "D - Paragraph D describes the 'Entomopter' designed to 'stay aloft and hover in the thin atmosphere of Mars.'" },
+                        { "id": 31, "type": "PARAGRAPH_INFO_MATCHING", "text": "The range of skills that have inspired biorobotics", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }], "correctAnswer": "A", "explanation": "A - Paragraph A lists insect abilities that inspire biorobotics: navigation, obstacle handling, vision, 'movement, vision and navigation - processing data.'" },
+                        { "id": 32, "type": "PARAGRAPH_INFO_MATCHING", "text": "How a variety of navigational methods operate at the same time", "options": [{ "value": "A", "label": "A" }, { "value": "B", "label": "B" }, { "value": "C", "label": "C" }, { "value": "D", "label": "D" }, { "value": "E", "label": "E" }, { "value": "F", "label": "F" }], "correctAnswer": "C", "explanation": "C - Paragraph C explains how the ant uses multiple systems simultaneously: 'many separate subroutines going on simultaneously' including polarised light, landmarks, distance, and path integration." },
+                        { "id": 33, "type": "SHORT_ANSWER", "text": "Which creature sees particularly well under water?", "correctAnswer": "mantis shrimp", "explanation": "mantis shrimp - Paragraph A mentions 'The mantis shrimp scans its aquatic world through hyperspectral eyes.'" },
+                        { "id": 34, "type": "SHORT_ANSWER", "text": "In addition to a computer, what technical equipment is fitted in Dr Zelinsky's robot?", "correctAnswer": "panoramic camera", "explanation": "panoramic camera - Paragraph B states 'a robot can navigate its way among 50 different landmarks by recognising them individually using a panoramic camera.'" },
+                        { "id": 35, "type": "SHORT_ANSWER", "text": "Where is the Cataglyphis ant found?", "correctAnswer": "the Sahara desert", "explanation": "the Sahara desert - Paragraph C states 'Professor Ruediger Wehner has journeyed from Switzerland to the Sahara desert where Cataglyphis' is found." },
+                        { "id": 36, "type": "SHORT_ANSWER", "text": "What atmospheric effect helps the Cataglyphis ant to know its direction?", "correctAnswer": "polarised light", "explanation": "polarised light - Paragraph C states 'Cataglyphis uses polarised light, caused when air molecules scatter light, to orient and steer itself.'" },
+                        { "id": 37, "type": "MATCHING", "text": "Dr Alex Zelinsky", "options": [{ "value": "A", "label": "A a robot that makes use of light as well as stored images for navigational purposes" }, { "value": "B", "label": "B a robot that can contribute to environmental health" }, { "value": "C", "label": "C a robot that can move over difficult surfaces" }, { "value": "D", "label": "D a robot that categorises information from the environment according to its usefulness" }, { "value": "E", "label": "E a robot that can be used to clean surfaces and collect rubbish" }, { "value": "F", "label": "F a robot that has improved on the ability of the insect on which it is based" }, { "value": "G", "label": "G a robot that can replace soldiers in war" }], "correctAnswer": "D", "explanation": "D - Paragraph B explains that Zelinsky's robot sorts landmarks 'according to how reliable they are as navigational aids' - categorising information by usefulness." },
+                        { "id": 38, "type": "MATCHING", "text": "Professor Ruediger Wehner", "options": [{ "value": "A", "label": "A a robot that makes use of light as well as stored images for navigational purposes" }, { "value": "B", "label": "B a robot that can contribute to environmental health" }, { "value": "C", "label": "C a robot that can move over difficult surfaces" }, { "value": "D", "label": "D a robot that categorises information from the environment according to its usefulness" }, { "value": "E", "label": "E a robot that can be used to clean surfaces and collect rubbish" }, { "value": "F", "label": "F a robot that has improved on the ability of the insect on which it is based" }, { "value": "G", "label": "G a robot that can replace soldiers in war" }], "correctAnswer": "A", "explanation": "A - Paragraph C describes 'Sahabot' which 'uses polarisers and a digital CCD camera to store 360 degree images' and 'navigates by using polarised sunlight and comparing the current images of landmarks.'" },
+                        { "id": 39, "type": "MATCHING", "text": "Professor Robert Michelson", "options": [{ "value": "A", "label": "A a robot that makes use of light as well as stored images for navigational purposes" }, { "value": "B", "label": "B a robot that can contribute to environmental health" }, { "value": "C", "label": "C a robot that can move over difficult surfaces" }, { "value": "D", "label": "D a robot that categorises information from the environment according to its usefulness" }, { "value": "E", "label": "E a robot that can be used to clean surfaces and collect rubbish" }, { "value": "F", "label": "F a robot that has improved on the ability of the insect on which it is based" }, { "value": "G", "label": "G a robot that can replace soldiers in war" }], "correctAnswer": "F", "explanation": "F - Paragraph D states Michelson 'has gone beyond nature to devise a completely new concept' - the Entomopter has improved on natural insect flight." },
+                        { "id": 40, "type": "MATCHING", "text": "Roger Quinn and Professor Roy Ritzmann", "options": [{ "value": "A", "label": "A a robot that makes use of light as well as stored images for navigational purposes" }, { "value": "B", "label": "B a robot that can contribute to environmental health" }, { "value": "C", "label": "C a robot that can move over difficult surfaces" }, { "value": "D", "label": "D a robot that categorises information from the environment according to its usefulness" }, { "value": "E", "label": "E a robot that can be used to clean surfaces and collect rubbish" }, { "value": "F", "label": "F a robot that has improved on the ability of the insect on which it is based" }, { "value": "G", "label": "G a robot that can replace soldiers in war" }], "correctAnswer": "C", "explanation": "C - Paragraph E describes their robots that can 'traverse complex terrain' and 'handle surprisingly rugged terrain' - moving over difficult surfaces." }
+                    ]
+                }
+            ]
+        };
+
+        // Application State
+        let currentPart = 1;
+        let answers = {};
+        let leftPanelWidth = 50;
+        let isDragging = false;
+        let highlights = {}; // Store highlights per part: { partId: [highlights] }
+        let highlightButton = { show: false, x: 0, y: 0, selectedRange: null };
+        let clearHighlightButton = { show: false, x: 0, y: 0, highlightId: null };
+
+        // Timer State
+        let timeRemaining = testData.duration * 60; // in seconds
+        let isTimerRunning = false;
+        let timerInterval = null;
+
+        // Timer Functions
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timer-text').textContent = formatTime(timeRemaining);
+        }
+
+        function startTimer() {
+            isTimerRunning = true;
+            updateTimerIcons();
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 0) {
+                    stopTimer();
+                    alert("Time's up! Your test will be submitted automatically.");
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            isTimerRunning = false;
+            updateTimerIcons();
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function toggleTimer() {
+            if (isTimerRunning) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function updateTimerIcons() {
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+
+            if (isTimerRunning) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        }
+
+        // Panel Resizing
+        function handleMouseDown(e) {
+            isDragging = true;
+            e.preventDefault();
+        }
+
+        function handleMouseMove(e) {
+            if (!isDragging) return;
+
+            const container = document.getElementById('main-container');
+            const containerRect = container.getBoundingClientRect();
+            const newWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+
+            // Constrain between 20% and 80%
+            const constrainedWidth = Math.max(20, Math.min(80, newWidth));
+            leftPanelWidth = constrainedWidth;
+
+            document.getElementById('left-panel').style.width = `${leftPanelWidth}%`;
+            document.getElementById('right-panel').style.width = `${100 - leftPanelWidth}%`;
+        }
+
+        function handleMouseUp() {
+            isDragging = false;
+        }
+
+        // Text Highlighting
+        function addHighlight() {
+            if (!highlightButton.selectedRange) return;
+
+            const targetRange = highlightButton.selectedRange;
+            const selectedText = targetRange.toString().trim();
+
+            if (selectedText.length === 0) {
+                hideHighlightButton();
+                return;
+            }
+
+            if (targetRange.startContainer !== targetRange.endContainer) {
+                hideHighlightButton();
+                return;
+            }
+
+            if (targetRange.startContainer.nodeType !== Node.TEXT_NODE) {
+                hideHighlightButton();
+                return;
+            }
+
+            const highlightId = `highlight-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+            try {
+                const highlightSpan = document.createElement('span');
+                highlightSpan.setAttribute('data-highlight-id', highlightId);
+                highlightSpan.id = highlightId;
+                highlightSpan.className = 'bg-yellow-300 cursor-pointer';
+
+                // Add click event to show clear button (same as restored highlights)
+                highlightSpan.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showClearHighlightButton(e.pageX, e.pageY, highlightId);
+                });
+
+                highlightSpan.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    showClearHighlightButton(e.clientX + 10, e.clientY - 35, highlightId);
+                });
+
+                // Add double-click to remove highlight directly
+                highlightSpan.addEventListener('dblclick', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeHighlight(highlightId);
+                });
+
+                const contents = targetRange.extractContents();
+                highlightSpan.appendChild(contents);
+                targetRange.insertNode(highlightSpan);
+
+                // Store highlight data per part
+                if (!highlights[currentPart]) {
+                    highlights[currentPart] = [];
+                }
+
+                // Find where this highlight belongs
+                const passageContent = document.getElementById('passage-content');
+                const questionsContainer = document.getElementById('questions-container');
+                let isInPassage = false;
+                let isInQuestions = false;
+                let elementIndex = -1;
+
+                // Check if it's in the passage content
+                let paragraph = targetRange.startContainer;
+                while (paragraph && paragraph.tagName !== 'P' && paragraph.parentElement) {
+                    paragraph = paragraph.parentElement;
+                }
+
+                if (paragraph && paragraph.tagName === 'P' && passageContent.contains(paragraph)) {
+                    isInPassage = true;
+                    elementIndex = Array.from(passageContent.children).indexOf(paragraph);
+                } else if (questionsContainer.contains(targetRange.startContainer)) {
+                    // For questions, find any parent element that contains the text
+                    let element = targetRange.startContainer;
+                    while (element && element !== questionsContainer && element.parentElement) {
+                        if (element.parentElement === questionsContainer || 
+                            (element.children && element.children.length > 0)) {
+                            isInQuestions = true;
+                            // Store the text content as identifier for questions
+                            elementIndex = selectedText; // Use the selected text as the identifier for questions
+                            break;
+                        }
+                        element = element.parentElement;
+                    }
+                }
+
+                if (!isInPassage && !isInQuestions) {
+                    throw new Error('Highlighting not supported in this area');
+                }
+
+                // Create separate storage for question highlights
+                if (!highlights[currentPart]) {
+                    highlights[currentPart] = [];
+                }
+                if (!window.questionHighlights) {
+                    window.questionHighlights = {};
+                }
+                if (!window.questionHighlights[currentPart]) {
+                    window.questionHighlights[currentPart] = [];
+                }
+
+                if (isInPassage) {
+                    highlights[currentPart].push({
+                        id: highlightId,
+                        text: selectedText,
+                        paragraphIndex: elementIndex
+                    });
+                } else if (isInQuestions) {
+                    window.questionHighlights[currentPart].push({
+                        id: highlightId,
+                        text: selectedText,
+                        identifier: elementIndex
+                    });
+                }
+
+                window.getSelection()?.removeAllRanges();
+                hideHighlightButton();
+            } catch (error) {
+                console.warn('Could not highlight selected text:', error);
+                hideHighlightButton();
+            }
+        }
+
+        function removeHighlight(highlightId) {
+            const highlightElement = document.getElementById(highlightId);
+            
+            if (highlightElement) {
+                const parent = highlightElement.parentNode;
+                if (parent) {
+                    const textNode = document.createTextNode(highlightElement.textContent || '');
+                    parent.replaceChild(textNode, highlightElement);
+                    parent.normalize();
+                }
+            }
+
+            // Remove highlight from passage highlights
+            if (highlights[currentPart]) {
+                highlights[currentPart] = highlights[currentPart].filter(h => h.id !== highlightId);
+            }
+
+            // Remove highlight from question highlights
+            if (window.questionHighlights && window.questionHighlights[currentPart]) {
+                window.questionHighlights[currentPart] = window.questionHighlights[currentPart].filter(h => h.id !== highlightId);
+            }
+
+            hideClearHighlightButton();
+        }
+
+        function showHighlightButton(x, y, range) {
+            const button = document.getElementById('highlight-button');
+            button.style.left = `${Math.max(10, Math.min(window.innerWidth - 110, x))}px`;
+            button.style.top = `${Math.max(10, y)}px`;
+            button.classList.remove('hidden');
+
+            highlightButton = { show: true, x, y, selectedRange: range };
+        }
+
+        function hideHighlightButton() {
+            document.getElementById('highlight-button').classList.add('hidden');
+            highlightButton = { show: false, x: 0, y: 0, selectedRange: null };
+        }
+
+        function showClearHighlightButton(x, y, highlightId) {
+            const button = document.getElementById('clear-highlight-button');
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+            button.classList.remove('hidden');
+
+            clearHighlightButton = { show: true, x, y, highlightId };
+        }
+
+        function hideClearHighlightButton() {
+            document.getElementById('clear-highlight-button').classList.add('hidden');
+            clearHighlightButton = { show: false, x: 0, y: 0, highlightId: null };
+        }
+
+        function restoreHighlights() {
+            // Wait a brief moment for DOM to be ready
+            setTimeout(() => {
+                // Restore passage highlights
+                restorePassageHighlights();
+                // Restore question highlights
+                restoreQuestionHighlights();
+            }, 200);
+        }
+
+        function restorePassageHighlights() {
+            const passageContent = document.getElementById('passage-content');
+            if (!highlights[currentPart] || highlights[currentPart].length === 0) {
+                return;
+            }
+
+            // Group highlights by paragraph
+            const highlightsByParagraph = {};
+            highlights[currentPart].forEach(highlight => {
+                if (!highlightsByParagraph[highlight.paragraphIndex]) {
+                    highlightsByParagraph[highlight.paragraphIndex] = [];
+                }
+                highlightsByParagraph[highlight.paragraphIndex].push(highlight);
+            });
+
+            const paragraphs = Array.from(passageContent.children);
+
+            // Process each paragraph that has highlights
+            Object.keys(highlightsByParagraph).forEach(paragraphIndex => {
+                const paragraphHighlights = highlightsByParagraph[paragraphIndex];
+                const paraIndex = parseInt(paragraphIndex);
+
+                if (paraIndex >= 0 && paraIndex < paragraphs.length) {
+                    const paragraph = paragraphs[paraIndex];
+                    let text = paragraph.textContent;
+
+                    // Sort highlights by their position in the text (earliest first)
+                    const sortedHighlights = paragraphHighlights
+                        .map(h => ({ ...h, index: text.indexOf(h.text) }))
+                        .filter(h => h.index !== -1)
+                        .sort((a, b) => a.index - b.index);
+
+                    if (sortedHighlights.length > 0) {
+                        paragraph.innerHTML = '';
+                        let currentPosition = 0;
+
+                        sortedHighlights.forEach((highlight, i) => {
+                            // Add text before highlight
+                            if (highlight.index > currentPosition) {
+                                const beforeText = text.substring(currentPosition, highlight.index);
+                                paragraph.appendChild(document.createTextNode(beforeText));
+                            }
+
+                            // Add highlighted span
+                            const highlightSpan = document.createElement('span');
+                            highlightSpan.className = 'bg-yellow-300 cursor-pointer';
+                            highlightSpan.textContent = highlight.text;
+                            highlightSpan.id = highlight.id;
+
+                            highlightSpan.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                showClearHighlightButton(e.pageX, e.pageY, highlight.id);
+                            });
+
+                            // Add double-click to remove highlight directly
+                            highlightSpan.addEventListener('dblclick', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                removeHighlight(highlight.id);
+                            });
+
+                            paragraph.appendChild(highlightSpan);
+                            currentPosition = highlight.index + highlight.text.length;
+                        });
+
+                        // Add remaining text after last highlight
+                        if (currentPosition < text.length) {
+                            const remainingText = text.substring(currentPosition);
+                            paragraph.appendChild(document.createTextNode(remainingText));
+                        }
+                    }
+                }
+            });
+        }
+
+        function restoreQuestionHighlights() {
+            const questionsContainer = document.getElementById('questions-container');
+            if (!window.questionHighlights || !window.questionHighlights[currentPart] || 
+                window.questionHighlights[currentPart].length === 0) {
+                return;
+            }
+
+            // Get all text nodes in the questions container
+            const walker = document.createTreeWalker(
+                questionsContainer,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+
+            window.questionHighlights[currentPart].forEach(highlight => {
+                // Search for the highlight text in the questions container
+                walker.currentNode = questionsContainer;
+                let textNode;
+
+                while (textNode = walker.nextNode()) {
+                    const text = textNode.textContent;
+                    const index = text.indexOf(highlight.text);
+
+                    if (index !== -1) {
+                        // Found the text - create highlight
+                        const beforeText = text.substring(0, index);
+                        const afterText = text.substring(index + highlight.text.length);
+
+                        const highlightSpan = document.createElement('span');
+                        highlightSpan.className = 'bg-yellow-300 cursor-pointer';
+                        highlightSpan.textContent = highlight.text;
+                        highlightSpan.id = highlight.id;
+
+                        highlightSpan.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            showClearHighlightButton(e.pageX, e.pageY, highlight.id);
+                        });
+
+                        // Add double-click to remove highlight directly
+                        highlightSpan.addEventListener('dblclick', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            removeHighlight(highlight.id);
+                        });
+
+                        // Replace the text node with before + highlight + after
+                        const parentNode = textNode.parentNode;
+                        if (beforeText) {
+                            parentNode.insertBefore(document.createTextNode(beforeText), textNode);
+                        }
+                        parentNode.insertBefore(highlightSpan, textNode);
+                        if (afterText) {
+                            parentNode.insertBefore(document.createTextNode(afterText), textNode);
+                        }
+                        parentNode.removeChild(textNode);
+
+                        // Reset walker since we modified the DOM
+                        break;
+                    }
+                }
+            });
+        }
+
+        // Content Loading
+        function loadPart(partId) {
+            const part = testData.parts.find(p => p.id === partId);
+            if (!part) return;
+
+            // Update currentPart
+            currentPart = partId;
+
+            // Update header
+            document.getElementById('part-title').textContent = part.title;
+            document.getElementById('part-instructions').textContent = part.instructions;
+            document.getElementById('passage-title').textContent = part.passage.title;
+
+            // Update passage content
+            const passageContent = document.getElementById('passage-content');
+            passageContent.innerHTML = '';
+
+            // Add intro text if present (Part 3 has intro)
+            if (part.passage.intro) {
+                const introP = document.createElement('p');
+                introP.className = 'mb-4 italic text-gray-700';
+                introP.innerHTML = part.passage.intro;
+                passageContent.appendChild(introP);
+            }
+
+            const paragraphs = part.passage.content.split('\n\n');
+            paragraphs.forEach((paragraph, index) => {
+                if (paragraph.trim()) {
+                    const p = document.createElement('p');
+                    p.className = 'mb-4';
+                    p.innerHTML = paragraph;
+                    passageContent.appendChild(p);
+                }
+            });
+
+            // Restore highlights for this part
+            restoreHighlights();
+
+            // Load questions
+            loadQuestions(part);
+
+            // Update navigation
+            updateNavigation();
+        }
+
+        function loadQuestions(part) {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            // Special handling for Part 1: Pepper passage with T/F/NG (1-6) and Note Completion (7-13)
+            if (part.id === 1) {
+                // Questions 1-6: TRUE/FALSE/NOT GIVEN
+                const tfSection = document.createElement('div');
+                tfSection.className = 'mb-6';
+                tfSection.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 1-6</h3>
+                    <p class="text-sm text-gray-700 mb-2">Do the following statements agree with the information given in Reading Passage 1?</p>
+                    <p class="text-sm text-gray-700 mb-4">Write <strong>TRUE</strong> if the statement agrees with the information, <strong>FALSE</strong> if the statement contradicts the information, or <strong>NOT GIVEN</strong> if there is no information on this.</p>
+                `;
+
+                const tfQuestionsDiv = document.createElement('div');
+                tfQuestionsDiv.className = 'space-y-4 mt-4';
+
+                // Get TRUE_FALSE_NOT_GIVEN questions (1-6)
+                const tfQuestions = part.questions.filter(q => q.type === 'TRUE_FALSE_NOT_GIVEN').sort((a, b) => a.id - b.id);
+
+                tfQuestions.forEach(question => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'flex items-start space-x-3';
+                    questionDiv.id = `question-${question.id}`;
+
+                    questionDiv.innerHTML = `
+                        <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                            ${question.id}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm mb-2">${question.text}</p>
+                            <div class="flex space-x-4">
+                                ${question.options.map(option => `
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="radio" name="question-${question.id}" value="${option.value}" 
+                                               ${answers[question.id] === option.value ? 'checked' : ''} 
+                                               class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
+                                        <span class="text-sm">${option.label}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+
+                    questionDiv.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            answers[question.id] = radio.value;
+                            updateQuestionIndicators();
+                        });
+                    });
+
+                    tfQuestionsDiv.appendChild(questionDiv);
+                });
+
+                tfSection.appendChild(tfQuestionsDiv);
+                container.appendChild(tfSection);
+
+                // Questions 7-13: Note Completion
+                const noteSection = document.createElement('div');
+                noteSection.className = 'mb-6';
+                noteSection.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 7-13</h3>
+                    <p class="text-sm text-gray-700 mb-2">Complete the notes below.</p>
+                    <p class="text-sm text-gray-700 mb-4">Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    
+                    <div class="bg-gray-50 p-4 mb-4">
+                        <h4 class="text-center font-bold mb-3">The Many Uses of Pepper</h4>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <p class="font-semibold italic">Ancient Rome</p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li>the Romans used pepper to reduce <span class="note-box" data-question="7"></span> caused by many health issues</li>
+                                    <li><span class="note-box" data-question="8"></span> containing pepper was used as medicine to bring down high temperatures</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p class="font-semibold italic">India</p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li>pepper has been used in Ayurvedic medicine for thousands of years</li>
+                                    <li>pepper was thought to be able to extract <span class="note-box" data-question="9"></span> from people, as indicated by its name in Sanskrit</li>
+                                    <li>pepper was used to treat problems with people's <span class="note-box" data-question="10"></span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p class="font-semibold italic">Uses in Europe in the Middle Ages</p>
+                                <ul class="list-disc list-inside ml-4 space-y-1">
+                                    <li>in wealthy households, pepper was stored in <span class="note-box" data-question="11"></span></li>
+                                    <li><span class="note-box" data-question="12"></span> written at that time required large amounts of pepper</li>
+                                    <li>rent could be paid in the form of pepper in city areas</li>
+                                    <li>people who worked with pepper had to wear clothes without <span class="note-box" data-question="13"></span> to discourage theft</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(noteSection);
+                
+                // Process note completion boxes for questions 7-13
+                noteSection.querySelectorAll('.note-box').forEach(span => {
+                    const questionId = parseInt(span.dataset.question);
+                    span.id = `question-${questionId}`;
+                    
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'inline-block relative';
+                    
+                    const numberLabel = document.createElement('span');
+                    numberLabel.className = 'note-number absolute inset-0 flex items-center justify-center text-gray-400 pointer-events-none';
+                    numberLabel.textContent = questionId;
+                    numberLabel.id = `number-${questionId}`;
+                    
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'w-32 h-8 border-2 border-gray-400 bg-white text-center focus:border-blue-500 focus:outline-none rounded px-2';
+                    input.value = answers[questionId] || '';
+                    
+                    input.addEventListener('input', (e) => {
+                        answers[questionId] = e.target.value;
+                        if (e.target.value.length > 0) {
+                            numberLabel.classList.add('hidden');
+                        } else {
+                            numberLabel.classList.remove('hidden');
+                        }
+                        updateQuestionIndicators();
+                    });
+                    
+                    if (input.value.length > 0) {
+                        numberLabel.classList.add('hidden');
+                    }
+                    
+                    wrapper.appendChild(input);
+                    wrapper.appendChild(numberLabel);
+                    span.parentNode.insertBefore(wrapper, span);
+                    span.parentNode.removeChild(span);
+                });
+                
+                return; // Exit early for Part 1
+            }
+                
+
+            // Group questions by type
+            const flowChartQuestions = part.questions.filter(q => q.type === "FLOW_CHART");
+            const trueFalseQuestions = part.questions.filter(q => q.type === "TRUE_FALSE_NOT_GIVEN");
+            const multipleChoiceQuestions = part.questions.filter(q => q.type === "MULTIPLE_CHOICE");
+            const multipleChoiceMultiQuestions = part.questions.filter(q => q.type === "MULTIPLE_CHOICE_MULTI");
+            const virtualMultiQuestions = part.questions.filter(q => q.type === "VIRTUAL_MULTI");
+            const summaryQuestions = part.questions.filter(q => q.type === "SUMMARY_COMPLETION");
+            const gapFillQuestions = part.questions.filter(q => q.type === "GAP_FILL");
+            const paragraphMatchingQuestions = part.questions.filter(q => q.type === "PARAGRAPH_MATCHING");
+            const matchingQuestions = part.questions.filter(q => q.type === "MATCHING");
+            const dropdownQuestions = part.questions.filter(q => q.type === "DROPDOWN");
+            const headingMatchingQuestions = part.questions.filter(q => q.type === "HEADING_MATCHING");
+            const placeMatchingQuestions = part.questions.filter(q => q.type === "PLACE_MATCHING");
+
+            // Flow Chart Questions
+            if (flowChartQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions ${flowChartQuestions[0].id}–${flowChartQuestions[flowChartQuestions.length - 1].id}</h3>
+                    <p class="text-sm text-gray-700 mb-4">Complete the flow-chart below. Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</p>
+                    <p class="text-sm text-gray-700 mb-4">Write your answers in boxes 1-5 on your answer sheet.</p>
+
+                    <div class="bg-gray-50 p-6 mb-4">
+                        <div class="text-left space-y-3">
+                            <div class="bg-white p-3 text-center">
+                                <strong>Clarence Birdseye and the Frozen Food Industry</strong>
+                            </div>
+                            <div class="text-xl text-center">↓</div>
+                            <div class="bg-white p-3">
+                                <strong>Early adventures</strong>
+                                <ul class="flow-chart-list mt-3 text-sm">
+                                    <li>Birdseye grew up hunting and selling animals</li>
+                                    <li>he left <span class="inline-input" data-question="1"></span> for financial reasons</li>
+                                    <li>his work in Montana was a factor in finding the cause of a widespread <span class="inline-input" data-question="2"></span></li>
+                                    <li>he moved to Labrador, where he bought furs for a New York company</li>
+                                    <li>he enjoyed the <span class="inline-input" data-question="3"></span> of living in such a harsh environment</li>
+                                </ul>
+                            </div>
+                            <div class="text-xl text-center">↓</div>
+                            <div class="bg-white p-3">
+                                <strong>A better way to freeze food</strong>
+                                <ul class="flow-chart-list mt-3 text-sm">
+                                    <li>Birdseye realised that the process of freezing and thawing food changed its taste and texture</li>
+                                    <li>while fishing with the Inuit, he made a <span class="inline-input" data-question="4"></span> that could improve frozen food</li>
+                                    <li>in the early 20th century, the quality of frozen food was so poor that even some <span class="inline-input" data-question="5"></span> couldn't serve it</li>
+                                    <li>Birdseye found that when food was flash-frozen, the <span class="inline-input" data-question="6"></span> of the cells were kept intact</li>
+                                    <li>taking out bones from whole fish minimised the air content of the packaging</li>
+                                    <li>Birdseye also created a new kind of <span class="inline-input" data-question="7"></span> and glue for packaging</li>
+                                    <li>because supermarkets and kitchens lacked freezers, frozen food was not part of the typical American diet before the late 1940s.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(section);
+
+                // Add input fields for flow chart
+                section.querySelectorAll('.inline-input').forEach(span => {
+                    const questionId = parseInt(span.dataset.question);
+
+                    // Add ID to the span for navigation
+                    span.id = `question-${questionId}`;
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'inline-block min-w-32 h-7 border-2 border-gray-400 text-center text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-2';
+                    input.placeholder = questionId.toString();
+                    input.value = answers[questionId] || '';
+                    input.addEventListener('input', (e) => {
+                        answers[questionId] = e.target.value;
+                        updateQuestionIndicators();
+                    });
+                    span.appendChild(input);
+                });
+            }
+
+            // Gap Fill Questions (1-5) - Carnivorous Plants Notes
+            if (gapFillQuestions.filter(q => q.id >= 1 && q.id <= 5).length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 1-5</h3>
+                    <p class="text-sm text-gray-700 mb-4">Complete the notes below.</p>
+                    <p class="text-sm text-gray-700 mb-4">Write <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    
+                    <div class="bg-gray-50 p-6 mb-4">
+                        <div class="text-center mb-4">
+                            <h4 class="font-bold text-base">Carnivorous Plants</h4>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="font-semibold text-sm mb-2 underline">Darwin's experiments:</p>
+                            
+                            <div class="ml-4 mb-3">
+                                <p class="font-medium text-sm mb-1">Drosera</p>
+                                <ul class="list-disc ml-6 text-sm space-y-1">
+                                    <li>He put insects and small amounts of meat onto leaves and observed what happened.</li>
+                                    <li>He was amazed that one human hair triggered a response.</li>
+                                    <li>He understood why the plant did not respond to <span class="inline-input" data-question="1"></span></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="ml-4 mb-3">
+                                <p class="font-medium text-sm mb-1">Venus Flytrap</p>
+                                <ul class="list-disc ml-6 text-sm space-y-1">
+                                    <li>He demonstrated how leaves close and then, for a short period, act like a <span class="inline-input" data-question="2"></span></li>
+                                    <li>He noted the structure of leaves ensures small insects are released.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="font-semibold text-sm mb-2 underline">Biology today:</p>
+                            
+                            <div class="ml-4 mb-3">
+                                <p class="font-medium text-sm mb-1">Venus Flytrap</p>
+                                <ul class="list-disc ml-6 text-sm space-y-1">
+                                    <li>The charge enters fluid-filled tunnels, causing <span class="inline-input" data-question="3"></span> in the cell walls to open.</li>
+                                    <li>Water moves between cells and then the leaf changes from convex to concave, trapping the insect inside.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="ml-4 mb-3">
+                                <p class="font-medium text-sm mb-1">Bladderwort</p>
+                                <ul class="list-disc ml-6 text-sm space-y-1">
+                                    <li>When water is pumped out of bladder cells, a <span class="inline-input" data-question="4"></span> builds up inside.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="ml-4">
+                                <p class="font-medium text-sm mb-1">Pitcher Plants</p>
+                                <ul class="list-disc ml-6 text-sm space-y-1">
+                                    <li>The plants have tube-shaped leaves that insects fall into.</li>
+                                    <li>Some plants are big enough to capture and eat <span class="inline-input" data-question="5"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(section);
+
+                // Add event listeners for gap fill inputs
+                const inputs = section.querySelectorAll('.inline-input');
+                inputs.forEach(span => {
+                    const input = document.createElement('input');
+                    const questionId = parseInt(span.getAttribute('data-question'));
+                    input.type = 'text';
+                    input.className = 'inline-block min-w-32 h-7 border-2 border-gray-400 text-center text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-2';
+                    input.placeholder = questionId.toString();
+                    input.value = answers[questionId] || '';
+                    input.addEventListener('input', (e) => {
+                        answers[questionId] = e.target.value;
+                        updateQuestionIndicators();
+                    });
+                    span.appendChild(input);
+                });
+            }
+
+
+            // Special handling for Part 2 - Biophilic Design: Paragraph Info Matching (14-19), Sentence Completion (20-24), Multiple Choice Two (25-26)
+            if (part.id === 2) {
+                // Questions 14-19: Paragraph Information Matching
+                const paragraphInfoQuestions = part.questions.filter(q => q.type === "PARAGRAPH_INFO_MATCHING");
+                if (paragraphInfoQuestions.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions 14–19</h3>
+                        <p class="text-sm text-gray-700 mb-2"><em>Reading Passage 2 has ten paragraphs, <strong>A-J</strong>.</em></p>
+                        <p class="text-sm text-gray-700 mb-2"><em>Which paragraph contains the following information?</em></p>
+                        <p class="text-sm text-gray-700 mb-4"><em>Write the correct letter, <strong>A-J</strong>, in boxes <strong>14-19</strong> on your answer sheet.</em></p>
+                        <div class="space-y-3" id="paragraph-info-questions"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#paragraph-info-questions');
+                    paragraphInfoQuestions.forEach(question => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'flex items-start';
+                        questionDiv.id = `question-${question.id}`;
+                        
+                        const questionHtml = `
+                            <div class="flex-shrink-0 w-8">
+                                <span class="inline-flex items-center justify-center w-7 h-7 bg-red-600 text-white rounded-full font-bold text-sm">${question.id}</span>
+                            </div>
+                            <div class="flex-grow ml-3">
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-800 mr-3">${question.text}</span>
+                                    <select class="border-2 border-gray-400 rounded px-2 py-1 text-sm bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 w-16" data-question="${question.id}">
+                                        <option value=""></option>
+                                        ${question.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                        `;
+                        questionDiv.innerHTML = questionHtml;
+                        
+                        const select = questionDiv.querySelector('select');
+                        select.value = answers[question.id] || '';
+                        select.addEventListener('change', (e) => {
+                            answers[question.id] = e.target.value;
+                            updateQuestionIndicators();
+                        });
+                        
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+
+                // Questions 20-22: Multiple Choice
+                const multipleChoiceQs = part.questions.filter(q => q.type === "MULTIPLE_CHOICE");
+                if (multipleChoiceQs.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions 20–22</h3>
+                        <p class="text-sm text-gray-700 mb-4"><em>Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.</em></p>
+                        <div class="space-y-6" id="multiple-choice-questions-part2"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#multiple-choice-questions-part2');
+                    multipleChoiceQs.forEach(question => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'mb-4';
+                        questionDiv.id = `question-${question.id}`;
+                        
+                        questionDiv.innerHTML = `
+                            <div class="flex items-start mb-2">
+                                <span class="inline-flex items-center justify-center w-7 h-7 bg-red-600 text-white rounded-full font-bold text-sm mr-3">${question.id}</span>
+                                <span class="text-sm text-gray-800 font-medium">${question.text}</span>
+                            </div>
+                            <div class="ml-10 space-y-2" id="options-${question.id}"></div>
+                        `;
+                        
+                        const optionsDiv = questionDiv.querySelector(`#options-${question.id}`);
+                        question.options.forEach(option => {
+                            const optionDiv = document.createElement('div');
+                            optionDiv.className = 'flex items-center';
+                            
+                            const radio = document.createElement('input');
+                            radio.type = 'radio';
+                            radio.name = `q${question.id}`;
+                            radio.value = option.value;
+                            radio.id = `q${question.id}-${option.value}`;
+                            radio.className = 'mr-2';
+                            radio.checked = answers[question.id] === option.value;
+                            radio.addEventListener('change', () => {
+                                answers[question.id] = option.value;
+                                updateQuestionIndicators();
+                            });
+                            
+                            const label = document.createElement('label');
+                            label.htmlFor = `q${question.id}-${option.value}`;
+                            label.className = 'text-sm text-gray-800 cursor-pointer';
+                            label.textContent = option.label;
+                            
+                            optionDiv.appendChild(radio);
+                            optionDiv.appendChild(label);
+                            optionsDiv.appendChild(optionDiv);
+                        });
+                        
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+
+                // Questions 23-26: Summary Completion (Parrots in Australia)
+                const section2326 = document.createElement('div');
+                section2326.className = 'mb-6';
+                section2326.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 23–26</h3>
+                    <p class="text-sm text-gray-700 mb-2"><em>Complete the summary below.</em></p>
+                    <p class="text-sm text-gray-700 mb-4"><em>Choose <strong>NO MORE THAN TWO WORDS AND/OR A NUMBER</strong> from the passage for each answer.</em></p>
+                    <div id="question-23"></div>
+                    <div id="question-24"></div>
+                    <div id="question-25"></div>
+                    <div id="question-26"></div>
+                    <div class="bg-gray-50 p-4 border border-gray-300 rounded">
+                        <h4 class="text-center font-bold mb-4">Parrots in Australia</h4>
+                        <p class="text-sm text-gray-800 leading-relaxed">
+                            There are 345 varieties of parrot in existence and, of these, <span class="inline-input-box-part2" data-question="23"></span> live in Australia. As early as the <span class="inline-input-box-part2" data-question="24"></span>, the mapmaker <span class="inline-input-box-part2" data-question="25"></span> recognized that parrots lived in that part of the world. <span class="inline-input-box-part2" data-question="26"></span>, the famous painter of animals and birds, commented on the size and beauty of the Australian parrot family.
+                        </p>
+                    </div>
+                `;
+                container.appendChild(section2326);
+
+                // Add input boxes for Q23-26
+                const inputSpans2326 = section2326.querySelectorAll('.inline-input-box-part2');
+                inputSpans2326.forEach(span => {
+                    const questionId = parseInt(span.getAttribute('data-question'));
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'inline-block min-w-28 h-7 border-2 border-gray-400 text-center text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-2 mx-1';
+                    input.placeholder = questionId.toString();
+                    input.value = answers[questionId] || '';
+                    input.addEventListener('input', (e) => {
+                        answers[questionId] = e.target.value;
+                        updateQuestionIndicators();
+                    });
+                    span.appendChild(input);
+                });
+                
+                return; // Exit early for Part 2
+            }
+
+            // Special handling for Part 2 - render in specific order: Multiple Choice, True/False, Dropdown
+            if (part.id === 2 && false) {
+                // Multiple Choice Questions (14-16) - FIRST
+                if (multipleChoiceQuestions.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions ${multipleChoiceQuestions[0].id}–${multipleChoiceQuestions[multipleChoiceQuestions.length - 1].id}</h3>
+                        <p class="text-sm text-gray-700 mb-4">Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.</p>
+                        <div class="space-y-6" id="multiple-choice-questions"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#multiple-choice-questions');
+                    multipleChoiceQuestions.forEach(question => {
+                        const questionDiv = createMultipleChoiceQuestion(question);
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+
+                // True/False Questions (17-21) - SECOND
+                if (trueFalseQuestions.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions ${trueFalseQuestions[0].id}–${trueFalseQuestions[trueFalseQuestions.length - 1].id}</h3>
+                        <p class="text-sm text-gray-700 mb-4">Do the following statements agree with the claims of the writer in Reading Passage?</p>
+                        <p class="text-sm text-gray-700 mb-4">
+                            On your answer sheet please write<br/>
+                            <strong>TRUE</strong> if the statement agrees with the writer<br/>
+                            <strong>FALSE</strong> if the statement contradicts with the writer<br/>
+                            <strong>NOT GIVEN</strong> if there is no information about this in the passage.
+                        </p>
+                        <div class="space-y-4" id="true-false-questions"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#true-false-questions');
+                    trueFalseQuestions.forEach(question => {
+                        const questionDiv = createTrueFalseQuestion(question);
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+
+                // Dropdown Questions (22-26) - THIRD
+                if (dropdownQuestions.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions ${dropdownQuestions[0].id}–${dropdownQuestions[dropdownQuestions.length - 1].id}</h3>
+                        <p class="text-sm text-gray-700 mb-4">Complete each sentence with the correct ending, <strong>A-F</strong>, below.</p>
+                        
+                        <div class="bg-gray-100 p-4 mb-4">
+                            <h4 class="font-bold mb-3">Choose from the following options:</h4>
+                            <div class="space-y-2 text-sm">
+                                <div><strong>A</strong> are not applicable to all societies.</div>
+                                <div><strong>B</strong> provides a hopeful perspective.</div>
+                                <div><strong>C</strong> is embodied in physical structures.</div>
+                                <div><strong>D</strong> is potentially both positive and negative.</div>
+                                <div><strong>E</strong> will not address current issues directly.</div>
+                                <div><strong>F</strong> have increased compared to the past.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4" id="dropdown-questions"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#dropdown-questions');
+                    dropdownQuestions.forEach(question => {
+                        const questionDiv = createDropdownQuestion(question);
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+                return; // Exit early for Part 2
+            }
+
+            // Special handling for Part 3 - Insect-inspired Robots: Section Matching (27-32), Short Answer (33-36), Matching (37-40)
+            if (part.id === 3) {
+                // Questions 27-32: Section Matching
+                const paragraphInfoQuestions = part.questions.filter(q => q.type === "PARAGRAPH_INFO_MATCHING");
+                if (paragraphInfoQuestions.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions 27–32</h3>
+                        <p class="text-sm text-gray-700 mb-2"><em>Reading Passage 3 has six sections, <strong>A-F</strong>.</em></p>
+                        <p class="text-sm text-gray-700 mb-2"><em>Which section contains the following information?</em></p>
+                        <p class="text-sm text-gray-700 mb-4"><em>Write the correct letter, <strong>A-F</strong>, in boxes <strong>27-32</strong> on your answer sheet.</em></p>
+                        <div class="space-y-3" id="paragraph-info-questions-part3"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#paragraph-info-questions-part3');
+                    paragraphInfoQuestions.forEach(question => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'flex items-start';
+                        questionDiv.id = `question-${question.id}`;
+                        
+                        const questionHtml = `
+                            <div class="flex-shrink-0 w-8">
+                                <span class="inline-flex items-center justify-center w-7 h-7 bg-red-600 text-white rounded-full font-bold text-sm">${question.id}</span>
+                            </div>
+                            <div class="flex-grow ml-3">
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-800 mr-3">${question.text}</span>
+                                    <select class="border-2 border-gray-400 rounded px-2 py-1 text-sm bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 w-16" data-question="${question.id}">
+                                        <option value=""></option>
+                                        ${question.options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                        `;
+                        questionDiv.innerHTML = questionHtml;
+                        
+                        const select = questionDiv.querySelector('select');
+                        select.value = answers[question.id] || '';
+                        select.addEventListener('change', (e) => {
+                            answers[question.id] = e.target.value;
+                            updateQuestionIndicators();
+                        });
+                        
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+
+                // Questions 33-36: Short Answer
+                const shortAnswerQuestions = part.questions.filter(q => q.type === "SHORT_ANSWER");
+                if (shortAnswerQuestions.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions 33–36</h3>
+                        <p class="text-sm text-gray-700 mb-2"><em>Answer the questions below.</em></p>
+                        <p class="text-sm text-gray-700 mb-4"><em>Choose <strong>NO MORE THAN THREE WORDS</strong> from the passage for each answer.</em></p>
+                        <div class="space-y-4" id="short-answer-questions-part3"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#short-answer-questions-part3');
+                    shortAnswerQuestions.forEach(question => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'flex items-start';
+                        questionDiv.id = `question-${question.id}`;
+                        
+                        questionDiv.innerHTML = `
+                            <div class="flex-shrink-0 w-8">
+                                <span class="inline-flex items-center justify-center w-7 h-7 bg-red-600 text-white rounded-full font-bold text-sm">${question.id}</span>
+                            </div>
+                            <div class="flex-grow ml-3">
+                                <p class="text-sm text-gray-800 mb-2">${question.text}</p>
+                                <input type="text" class="w-full max-w-sm h-8 border-2 border-gray-400 text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-3" data-question="${question.id}" placeholder="Your answer" value="${answers[question.id] || ''}">
+                            </div>
+                        `;
+                        
+                        const input = questionDiv.querySelector('input');
+                        input.addEventListener('input', (e) => {
+                            answers[question.id] = e.target.value;
+                            updateQuestionIndicators();
+                        });
+                        
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+
+                // Questions 37-40: Matching
+                const matchingQuestions = part.questions.filter(q => q.type === "MATCHING");
+                if (matchingQuestions.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'mb-6';
+                    section.innerHTML = `
+                        <h3 class="font-bold mb-4">Questions 37–40</h3>
+                        <p class="text-sm text-gray-700 mb-2"><em>Look at the following people and the list of robots below.</em></p>
+                        <p class="text-sm text-gray-700 mb-4"><em>Match each person or people with the correct robot, <strong>A-G</strong>.</em></p>
+                        
+                        <div class="bg-gray-50 p-4 mb-4 rounded border border-gray-200">
+                            <h4 class="font-bold mb-2 text-sm">List of Robots</h4>
+                            <div class="text-sm space-y-1">
+                                <div><strong>A</strong> a robot that makes use of light as well as stored images for navigational purposes</div>
+                                <div><strong>B</strong> a robot that can contribute to environmental health</div>
+                                <div><strong>C</strong> a robot that can move over difficult surfaces</div>
+                                <div><strong>D</strong> a robot that categorises information from the environment according to its usefulness</div>
+                                <div><strong>E</strong> a robot that can be used to clean surfaces and collect rubbish</div>
+                                <div><strong>F</strong> a robot that has improved on the ability of the insect on which it is based</div>
+                                <div><strong>G</strong> a robot that can replace soldiers in war</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3" id="matching-questions-part3"></div>
+                    `;
+                    container.appendChild(section);
+
+                    const questionsDiv = section.querySelector('#matching-questions-part3');
+                    matchingQuestions.forEach(question => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'flex items-start';
+                        questionDiv.id = `question-${question.id}`;
+                        
+                        questionDiv.innerHTML = `
+                            <div class="flex-shrink-0 w-8">
+                                <span class="inline-flex items-center justify-center w-7 h-7 bg-red-600 text-white rounded-full font-bold text-sm">${question.id}</span>
+                            </div>
+                            <div class="flex-grow ml-3">
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-800 mr-3">${question.text}</span>
+                                    <select class="border-2 border-gray-400 rounded px-2 py-1 text-sm bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 w-16" data-question="${question.id}">
+                                        <option value=""></option>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                        <option value="E">E</option>
+                                        <option value="F">F</option>
+                                        <option value="G">G</option>
+                                    </select>
+                                </div>
+                            </div>
+                        `;
+                        
+                        const select = questionDiv.querySelector('select');
+                        select.value = answers[question.id] || '';
+                        select.addEventListener('change', (e) => {
+                            answers[question.id] = e.target.value;
+                            updateQuestionIndicators();
+                        });
+                        
+                        questionsDiv.appendChild(questionDiv);
+                    });
+                }
+                return; // Exit early for Part 3
+            }
+
+            // Default rendering for other parts
+            // True/False Questions
+            if (trueFalseQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions ${trueFalseQuestions[0].id}–${trueFalseQuestions[trueFalseQuestions.length - 1].id}</h3>
+                    <p class="text-sm text-gray-700 mb-4">Do the following statements agree with the claims of the writer in Reading Passage?</p>
+                    <p class="text-sm text-gray-700 mb-4">
+                        On your answer sheet please write<br/>
+                        <strong>TRUE</strong> if the statement agrees with the writer<br/>
+                        <strong>FALSE</strong> if the statement contradicts with the writer<br/>
+                        <strong>NOT GIVEN</strong> if there is no information about this in the passage.
+                    </p>
+                    <div class="space-y-4" id="true-false-questions"></div>
+                `;
+                container.appendChild(section);
+
+                const questionsDiv = section.querySelector('#true-false-questions');
+                trueFalseQuestions.forEach(question => {
+                    const questionDiv = createTrueFalseQuestion(question);
+                    questionsDiv.appendChild(questionDiv);
+                });
+            }
+
+            // Multiple Choice Questions (exclude question 40 for Part 3 as it has its own section)
+            const filteredMultipleChoice = part.id === 3 ? multipleChoiceQuestions.filter(q => q.id !== 40) : multipleChoiceQuestions;
+            if (filteredMultipleChoice.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions ${filteredMultipleChoice[0].id}–${filteredMultipleChoice[filteredMultipleChoice.length - 1].id}</h3>
+                    <p class="text-sm text-gray-700 mb-4">Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.</p>
+                    <div class="space-y-6" id="multiple-choice-questions"></div>
+                `;
+                container.appendChild(section);
+
+                const questionsDiv = section.querySelector('#multiple-choice-questions');
+                filteredMultipleChoice.forEach(question => {
+                    const questionDiv = createMultipleChoiceQuestion(question);
+                    questionsDiv.appendChild(questionDiv);
+                });
+            }
+
+            // Summary Drag-and-Drop Questions (32-36) for Part 3
+            const summaryDragDropQuestions = part.questions.filter(q => q.type === 'SUMMARY_DRAG_DROP');
+            if (summaryDragDropQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 32-36</h3>
+                    <p class="text-sm text-gray-700 mb-4">Complete the summary using the list of words, <strong>A-I</strong>, below.</p>
+                    
+                    <div class="bg-gray-50 p-6 mb-4">
+                        <div class="text-center mb-4">
+                            <h4 class="font-bold text-base">Piaget's Theories on Children's Cognitive Development</h4>
+                        </div>
+                        
+                        <div class="text-sm leading-relaxed">
+                            <p class="mb-4">
+                                Piaget maintained that children's mental processes were far more <span class="inline-drop-zone border border-dashed border-gray-400 bg-gray-50 text-gray-600 px-2 py-1 min-w-16 rounded inline-block text-center text-sm" data-question="32">32</span> than they might 
+                                appear. He encouraged the view that a child was not a blank state waiting to be filled with 
+                                information, but rather a systematic builder of knowledge who regularly tries to hit or her own 
+                                <span class="inline-drop-zone border border-dashed border-gray-400 bg-gray-50 text-gray-600 px-2 py-1 min-w-16 rounded inline-block text-center text-sm" data-question="33">33</span> about the world. Piaget's impact on the area of <span class="inline-drop-zone border border-dashed border-gray-400 bg-gray-50 text-gray-600 px-2 py-1 min-w-16 rounded inline-block text-center text-sm" data-question="34">34</span> could well outlast 
+                                that of more celebrated pioneers of this discipline. Despite doubts cast on his ideas by the current 
+                                fashion associating knowledge exclusively with the <span class="inline-drop-zone border border-dashed border-gray-400 bg-gray-50 text-gray-600 px-2 py-1 min-w-16 rounded inline-block text-center text-sm" data-question="35">35</span>, the effects of his work are still 
+                                strong today. His principles are still widely used in the professional development of <span class="inline-drop-zone border border-dashed border-gray-400 bg-gray-50 text-gray-600 px-2 py-1 min-w-16 rounded inline-block text-center text-sm" data-question="36">36</span>.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 mb-6 border-2 border-dashed border-gray-300">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="A"><span class="font-bold mr-2">A</span>correct</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="B"><span class="font-bold mr-2">B</span>theories</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="C"><span class="font-bold mr-2">C</span>brain</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="D"><span class="font-bold mr-2">D</span>simple</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="E"><span class="font-bold mr-2">E</span>teachers</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="F"><span class="font-bold mr-2">F</span>psychology</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="G"><span class="font-bold mr-2">G</span>logical</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="H"><span class="font-bold mr-2">H</span>thought</div>
+                            <div class="draggable-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="I"><span class="font-bold mr-2">I</span>philosophers</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(section);
+
+                // Initialize drag and drop functionality for summary
+                initializeSummaryDragDrop();
+            }
+
+            // YES/NO/NOT GIVEN Questions (37-40) for Part 3
+            const yesNoNotGivenQuestions = part.questions.filter(q => q.type === 'YES_NO_NOT_GIVEN');
+            if (yesNoNotGivenQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 37-40</h3>
+                    <p class="text-sm text-gray-700 mb-2">Do the following statements agree with writer's view in Reading Passage 3?</p>
+                    <p class="text-sm text-gray-700 mb-4">Write</p>
+                    <div class="ml-4 text-sm text-gray-700 mb-6">
+                        <p><strong>YES</strong> if the statement agrees with the writer's opinion</p>
+                        <p><strong>NO</strong> if the statement contradicts the writer's opinion</p>
+                        <p><strong>NOT GIVEN</strong> if there is no information on this</p>
+                    </div>
+                `;
+                
+                const questionsDiv = document.createElement('div');
+                questionsDiv.className = 'space-y-4';
+                
+                yesNoNotGivenQuestions.forEach(question => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'flex items-start space-x-3';
+                    questionDiv.innerHTML = `
+                        <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                            ${question.id}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm mb-2">${question.text}</p>
+                            <div class="flex space-x-4">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="question-${question.id}" value="YES" 
+                                           ${answers[question.id] === 'YES' ? 'checked' : ''} 
+                                           class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
+                                    <span class="text-sm">YES</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="question-${question.id}" value="NO" 
+                                           ${answers[question.id] === 'NO' ? 'checked' : ''} 
+                                           class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
+                                    <span class="text-sm">NO</span>
+                                </label>
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="radio" name="question-${question.id}" value="NOT GIVEN" 
+                                           ${answers[question.id] === 'NOT GIVEN' ? 'checked' : ''} 
+                                           class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
+                                    <span class="text-sm">NOT GIVEN</span>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+
+                    // Add event listeners for radio buttons
+                    questionDiv.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.addEventListener('change', () => {
+                            answers[question.id] = radio.value;
+                            updateQuestionIndicators();
+                        });
+                    });
+                    
+                    questionsDiv.appendChild(questionDiv);
+                });
+                
+                section.appendChild(questionsDiv);
+                container.appendChild(section);
+            }
+
+            // Summary Completion Questions (11-13)
+            if (summaryQuestions.filter(q => q.id >= 11 && q.id <= 13).length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 11-13</h3>
+                    <p class="text-sm text-gray-700 mb-4">Complete the following summary of the paragraphs of Reading Passage 1, using <strong>NO MORE THAN TWO WORDS</strong> from the Reading Passage for each answer.</p>
+                    <p class="text-sm text-gray-700 mb-4">Write your answers in boxes 11-13 on your answer sheet.</p>
+
+                    <div class="bg-gray-50 p-4 mb-4">
+                        <p class="text-sm leading-relaxed">
+                            While experts outperform novices and machines in pattern recognition and problem solving, expert predictions of future behavior or events are seldom as accurate as simple actuarial tables. Why? Some have tried to explain that experts differ when using cognitive <span class="inline-input" data-question="11"></span> to forecast. Researchers believe it is due to <span class="inline-input" data-question="12"></span>. However attempting endeavour of finding answers did not yet produce <span class="inline-input" data-question="13"></span>.
+                        </p>
+                    </div>
+                `;
+                container.appendChild(section);
+
+                // Add input fields
+                section.querySelectorAll('.inline-input').forEach(span => {
+                    const questionId = parseInt(span.dataset.question);
+
+                    // Add ID to the span for navigation
+                    span.id = `question-${questionId}`;
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'inline-block min-w-32 h-7 border-2 border-gray-400 text-center text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-2';
+                    input.placeholder = questionId.toString();
+                    input.value = answers[questionId] || '';
+                    input.addEventListener('input', (e) => {
+                        answers[questionId] = e.target.value;
+                        updateQuestionIndicators();
+                    });
+                    span.appendChild(input);
+                });
+            }
+
+
+            // Matching Questions
+            if (matchingQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions ${matchingQuestions[0].id}–${matchingQuestions[matchingQuestions.length - 1].id}</h3>
+                    <p class="text-sm text-gray-700 mb-4">Matching the <strong>each correct year</strong> to the <strong>historical event</strong> in the passage,</p>
+                    <p class="text-sm text-gray-700 mb-4">and write the correct answer into box of 27-31 in the answer sheet</p>
+                    <div id="matching-questions"></div>
+                `;
+                container.appendChild(section);
+
+                const matchingDiv = section.querySelector('#matching-questions');
+                createMatchingQuestions(matchingDiv, matchingQuestions);
+            }
+
+            // Paragraph Matching Questions (14-17)
+            if (paragraphMatchingQuestions.filter(q => q.id >= 14 && q.id <= 17).length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 14-17</h3>
+                    <p class="text-sm text-gray-700 mb-4">The passage has paragraphs as A-G; which paragraph contains the following information?</p>
+                    <p class="text-sm text-gray-700 mb-4">Write the appropriate letter A-G for box 14-17 on your answer sheet.</p>
+                    <p class="text-sm text-gray-700 mb-4"><strong>NB</strong> You may use any letter more than once.</p>
+                    <div class="space-y-4" id="summary-14-17"></div>
+                `;
+                container.appendChild(section);
+
+                const summaryDiv = section.querySelector('#summary-14-17');
+                paragraphMatchingQuestions.filter(q => q.id >= 14 && q.id <= 17).forEach(question => {
+                    const questionDiv = createParagraphMatchingQuestion(question);
+                    summaryDiv.appendChild(questionDiv);
+                });
+            }
+
+            // Gap Filling Questions (18-24)
+            if (gapFillQuestions.filter(q => q.id >= 18 && q.id <= 24).length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 18-24</h3>
+                    <p class="text-sm text-gray-700 mb-4">Complete the sentences below.</p>
+                    <p class="text-sm text-gray-700 mb-4">Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    <p class="text-sm text-gray-700 mb-4"><em>Write your answers in boxes 18-24 below.</em></p>
+
+                    <div class="bg-gray-50 p-4 mb-4">
+                        <p class="text-sm leading-relaxed">
+                            It appears that placebos can treat or reduce the <span class="inline-input" data-question="18"></span> of a wide range of conditions. The placebo effect happens when our <span class="inline-input" data-question="19"></span> has an effect on how our body feels.
+                        </p>
+                        <p class="text-sm leading-relaxed mt-3">
+                            Doctors have long believed it to be their responsibility not only to treat patients' medical conditions, but also to improve their <span class="inline-input" data-question="20"></span>. An example of a situation where a placebo has little or no effect is if a patient has an <span class="inline-input" data-question="21"></span>.
+                        </p>
+                        <p class="text-sm leading-relaxed mt-3">
+                            It has been shown that patients will feel <span class="inline-input" data-question="22"></span> in their muscles if they are given a placebo called a muscle stimulator. A related phenomenon, known as the <span class="inline-input" data-question="23"></span> effect, convinces people that a treatment will do them harm.
+                        </p>
+                        <p class="text-sm leading-relaxed mt-3">
+                            Two factors which influence the effectiveness of a placebo pill are its <span class="inline-input" data-question="24"></span> and its size.
+                        </p>
+                    </div>
+                `;
+                container.appendChild(section);
+
+                // Add input fields for gap filling
+                section.querySelectorAll('.inline-input').forEach(span => {
+                    const questionId = parseInt(span.dataset.question);
+
+                    // Add ID to the span for navigation
+                    span.id = `question-${questionId}`;
+
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'inline-block min-w-16 h-6 border-2 border-gray-400 text-center text-xs bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-1';
+                    input.placeholder = questionId.toString();
+                    input.value = answers[questionId] || '';
+                    input.addEventListener('input', (e) => {
+                        answers[questionId] = e.target.value;
+                        updateQuestionIndicators();
+                    });
+                    span.appendChild(input);
+                });
+            }
+
+            // Multiple Choice Multi Questions (25-26)
+            if (multipleChoiceMultiQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 25-26</h3>
+                    <p class="text-sm text-gray-700 mb-4">Choose <strong>TWO</strong> letters, <strong>A-E</strong>.</p>
+                    <p class="text-sm text-gray-700 mb-4">Which <strong>TWO</strong> findings were observed in the Harvard Medical School study?</p>
+                    <p class="text-sm text-gray-700 mb-4"><em>Write your answers in boxes 25-26 on your answer sheet.</em></p>
+                    <div class="space-y-4" id="multi-choice-25-26"></div>
+                `;
+                container.appendChild(section);
+
+                const multiDiv = section.querySelector('#multi-choice-25-26');
+                // Only render question 25, but it handles both 25 and 26 answers
+                const question25 = multipleChoiceMultiQuestions.find(q => q.id === 25);
+                if (question25) {
+                    const questionDiv = createMultipleChoiceMultiQuestion(question25);
+                    multiDiv.appendChild(questionDiv);
+                }
+            }
+
+            // Heading Matching Questions (27-31)
+            if (headingMatchingQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 27-31</h3>
+                    <p class="text-sm text-gray-700 mb-4">Reading Passage 3 has five sections.</p>
+                    <p class="text-sm text-gray-700 mb-4">Choose the correct heading for each section from the list of headings below.</p>
+                    <p class="text-sm text-gray-700 mb-4">Choose the correct number, <strong>i-vi</strong>, in boxes 27-31.</p>
+                    
+                    <div class="bg-gray-50 p-4 mb-6 border-2 border-dashed border-gray-300">
+                        <h4 class="font-bold mb-3 text-center">List of headings.</h4>
+                        <div class="space-y-2" id="heading-options">
+                            <div class="heading-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="i">
+                                <span class="font-bold mr-3">i</span>Evidence of outdoor dwellings
+                            </div>
+                            <div class="heading-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="ii">
+                                <span class="font-bold mr-3">ii</span>Learning to make fire
+                            </div>
+                            <div class="heading-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="iii">
+                                <span class="font-bold mr-3">iii</span>A perfect place to live
+                            </div>
+                            <div class="heading-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="iv">
+                                <span class="font-bold mr-3">iv</span>Examining the cave contents
+                            </div>
+                            <div class="heading-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="v">
+                                <span class="font-bold mr-3">v</span>Contrasting two types of home
+                            </div>
+                            <div class="heading-option bg-white py-1 px-2 border border-gray-300 rounded cursor-move shadow-sm hover:shadow-md transition-shadow duration-200" draggable="true" data-value="vi">
+                                <span class="font-bold mr-3">vi</span>A vital source of power
+                            </div>
+                        </div>
+                    </div>
+                    
+                `;
+                container.appendChild(section);
+
+                // Add drag and drop functionality
+                initializeHeadingDragDrop();
+            }
+
+            // Place Matching Questions (32-36)
+            if (placeMatchingQuestions.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 32-36</h3>
+                    <p class="text-sm text-gray-700 mb-4">Look at the following findings (Questions 32-36) and the list of places below.</p>
+                    <p class="text-sm text-gray-700 mb-4">Match each finding with the correct place <strong>A-E</strong>.</p>
+                    <p class="text-sm text-gray-700 mb-4"><strong>NB</strong> You may use any letter more than once.</p>
+                    
+                    <div class="bg-gray-50 p-4 mb-6 border-2 border-gray-300">
+                        <h4 class="font-bold mb-3 text-center">List of Places</h4>
+                        <div class="space-y-1 text-sm text-left">
+                            <div><strong>A</strong> The Périgord region</div>
+                            <div><strong>B</strong> Moldova</div>
+                            <div><strong>C</strong> The Grotte du Lazaret</div>
+                            <div><strong>D</strong> The cave of Baume-Bonne</div>
+                            <div><strong>E</strong> Krapina</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4" id="place-matching-questions"></div>
+                `;
+                container.appendChild(section);
+
+                const questionsDiv = section.querySelector('#place-matching-questions');
+                placeMatchingQuestions.forEach(question => {
+                    const questionDiv = createPlaceMatchingQuestion(question);
+                    questionsDiv.appendChild(questionDiv);
+                });
+            }
+
+            // Gap Fill Summary Questions (37-39)
+            if (gapFillQuestions.filter(q => q.id >= 37 && q.id <= 39).length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Questions 37-39</h3>
+                    <p class="text-sm text-gray-700 mb-4">Complete the summary below.</p>
+                    <p class="text-sm text-gray-700 mb-4">Write <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</p>
+                    
+                    <div class="bg-gray-50 p-6 mb-4">
+                        <div class="text-center mb-4">
+                            <h4 class="font-bold text-base">Piaget's approach to understanding children</h4>
+                        </div>
+                        
+                        <div class="text-sm leading-relaxed">
+                            <p class="mb-4">
+                                Piaget believed that children are not empty vessels to be filled with knowledge but active builders of knowledge who constantly create and test their own 
+                                <span class="inline-input" data-question="37"></span> about the world. 
+                                In one famous experiment, when asked 'What makes the wind?' five-year-old Julia replied 'The 
+                                <span class="inline-input" data-question="38"></span>'. 
+                                Piaget recognized that such beliefs demonstrate <span class="inline-input" data-question="39"></span> within the framework of the child's way of knowing.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(section);
+
+                // Add input fields for gap filling
+                section.querySelectorAll('.inline-input').forEach(span => {
+                    const questionId = parseInt(span.dataset.question);
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'w-40 mx-1 px-2 py-0 border-2 border-gray-400 bg-white text-center focus:border-blue-500 focus:outline-none rounded h-7';
+                    input.placeholder = questionId.toString();
+                    input.value = answers[questionId] || '';
+                    
+                    input.addEventListener('input', (e) => {
+                        answers[questionId] = e.target.value;
+                        updateQuestionIndicators();
+                    });
+                    
+                    span.parentNode.insertBefore(input, span);
+                    span.parentNode.removeChild(span);
+                });
+            }
+
+            // Multiple Choice Question (40)
+            if (multipleChoiceQuestions.filter(q => q.id === 40).length > 0) {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="font-bold mb-4">Question 40</h3>
+                    <p class="text-sm text-gray-700 mb-4">Choose the correct answer.</p>
+                    <div class="space-y-6" id="question-40"></div>
+                `;
+                container.appendChild(section);
+
+                const questionsDiv = section.querySelector('#question-40');
+                const question40 = multipleChoiceQuestions.find(q => q.id === 40);
+                if (question40) {
+                    const questionDiv = createMultipleChoiceQuestion(question40);
+                    questionsDiv.appendChild(questionDiv);
+                }
+            }
+        }
+
+        function createTrueFalseQuestion(question) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = `question-${question.id}`;
+            div.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                        ${question.id}
+                    </div>
+                    <div class="flex-1">
+                        <p class="mb-3 text-sm">${question.text}</p>
+                        <div class="flex space-x-6" id="options-${question.id}"></div>
+                    </div>
+                </div>
+            `;
+
+            const optionsDiv = div.querySelector(`#options-${question.id}`);
+            question.options.forEach(option => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center space-x-2 cursor-pointer';
+                label.innerHTML = `
+                    <input type="radio" name="q${question.id}" value="${option.value}" class="w-4 h-4 text-red-600" ${answers[question.id] === option.value ? 'checked' : ''}>
+                    <span class="text-sm">${option.label}</span>
+                `;
+                label.querySelector('input').addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        answers[question.id] = e.target.value;
+                        updateQuestionIndicators();
+                    }
+                });
+                optionsDiv.appendChild(label);
+            });
+
+            return div;
+        }
+
+        function createDropdownQuestion(question) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = `question-${question.id}`;
+            div.innerHTML = `
+                <div class="flex items-center justify-between py-2">
+                    <div class="flex items-start space-x-3 flex-1">
+                        <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                            ${question.id}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm">${question.text}</p>
+                        </div>
+                    </div>
+                    <select class="border border-gray-400 rounded px-2 py-1 text-sm w-14 bg-white ml-4" id="dropdown-${question.id}">
+                        <option value="">${question.id}</option>
+                        ${question.options.map(option => 
+                            `<option value="${option.value}">${option.value}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+            `;
+
+            const select = div.querySelector(`#dropdown-${question.id}`);
+            select.addEventListener('change', function() {
+                answers[question.id] = this.value;
+                updateQuestionIndicators();
+            });
+
+            // Set saved answer if exists
+            if (answers[question.id]) {
+                select.value = answers[question.id];
+            }
+
+            return div;
+        }
+
+        function createMultipleChoiceMultiQuestion(question) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = `question-${question.id}`;
+            div.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="flex space-x-1 flex-shrink-0">
+                        <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                            25
+                        </div>
+                        <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                            26
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <p class="mb-3 text-sm">${question.text}</p>
+                        <div class="space-y-2" id="options-${question.id}"></div>
+                    </div>
+                </div>
+            `;
+
+            const optionsDiv = div.querySelector(`#options-${question.id}`);
+            question.options.forEach(option => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center space-x-2 cursor-pointer';
+                const currentAnswers = answers[question.id] || [];
+                const isChecked = Array.isArray(currentAnswers) && currentAnswers.includes(option.value);
+                label.innerHTML = `
+                    <input type="checkbox" value="${option.value}" class="w-4 h-4 text-red-600" ${isChecked ? 'checked' : ''}>
+                    <span class="text-sm">${option.label}</span>
+                `;
+                optionsDiv.appendChild(label);
+
+                label.querySelector('input').addEventListener('change', (e) => {
+                    // For questions 25-26, sync both question answers
+                    const questionsToSync = question.id === 25 || question.id === 26 ? [25, 26] : [question.id];
+
+                    questionsToSync.forEach(qId => {
+                        if (!answers[qId]) {
+                            answers[qId] = [];
+                        }
+                        if (!Array.isArray(answers[qId])) {
+                            answers[qId] = [];
+                        }
+
+                        if (e.target.checked) {
+                            // Limit to exactly 2 selections for multi-choice questions
+                            if (answers[qId].length >= 2) {
+                                // If already have 2 selections, remove the first one
+                                answers[qId].shift();
+                            }
+                            if (!answers[qId].includes(option.value)) {
+                                answers[qId].push(option.value);
+                            }
+                        } else {
+                            answers[qId] = answers[qId].filter(val => val !== option.value);
+                        }
+
+                        // Update checkbox states to reflect current selection
+                        const allCheckboxes = div.querySelectorAll('input[type="checkbox"]');
+                        allCheckboxes.forEach(cb => {
+                            cb.checked = answers[qId] && answers[qId].includes(cb.value);
+                        });
+                    });
+
+                    updateQuestionIndicators();
+                });
+            });
+
+            return div;
+        }
+
+        function createMultipleChoiceQuestion(question) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = `question-${question.id}`;
+            div.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                        ${question.id}
+                    </div>
+                    <div class="flex-1">
+                        <p class="mb-3 text-sm">${question.text}</p>
+                        <div class="space-y-2" id="options-${question.id}"></div>
+                    </div>
+                </div>
+            `;
+
+            const optionsDiv = div.querySelector(`#options-${question.id}`);
+            question.options.forEach(option => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center space-x-2 cursor-pointer';
+                const firstChar = option.label.charAt(0);
+                const restOfLabel = option.label.substring(1);
+                label.innerHTML = `
+                    <input type="radio" name="q${question.id}" value="${option.value}" class="w-4 h-4 text-red-600" ${answers[question.id] === option.value ? 'checked' : ''}>
+                    <span class="text-sm"><strong>${firstChar}</strong>${restOfLabel}</span>
+                `;
+                label.querySelector('input').addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        answers[question.id] = e.target.value;
+                        updateQuestionIndicators();
+                    }
+                });
+                optionsDiv.appendChild(label);
+            });
+
+            return div;
+        }
+
+        function createSummaryQuestion(question) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = `question-${question.id}`;
+            div.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                        ${question.id}
+                    </div>
+                    <div class="flex-1 flex items-center space-x-3">
+                        <p class="text-sm flex-1">${question.text}</p>
+                        <input type="text" value="${answers[question.id] || ''}" class="w-72 h-10 border-2 border-gray-400 text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-3" placeholder="${question.id}">
+                    </div>
+                </div>
+            `;
+
+            div.querySelector('input').addEventListener('input', (e) => {
+                answers[question.id] = e.target.value;
+                updateQuestionIndicators();
+            });
+
+            return div;
+        }
+
+        function createPlaceMatchingQuestion(question) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = `question-${question.id}`;
+            div.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                        ${question.id}
+                    </div>
+                    <div class="flex-1 flex items-center space-x-3">
+                        <p class="text-sm flex-1">${question.text}</p>
+                        <select class="w-16 h-8 border-2 border-gray-400 text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-1">
+                            <option value="">${question.id}</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+
+            // Set saved answer if exists
+            if (answers[question.id]) {
+                div.querySelector('select').value = answers[question.id];
+            }
+
+            div.querySelector('select').addEventListener('change', (e) => {
+                answers[question.id] = e.target.value;
+                updateQuestionIndicators();
+            });
+
+            return div;
+        }
+
+        function createParagraphMatchingQuestion(question) {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.id = `question-${question.id}`;
+            div.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <div class="w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold mt-1">
+                        ${question.id}
+                    </div>
+                    <div class="flex-1 flex items-center space-x-3">
+                        <p class="text-sm flex-1">${question.text}</p>
+                        <select value="${answers[question.id] || ''}" class="w-20 h-8 border-2 border-gray-400 text-sm bg-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded px-1">
+                            <option value="">${question.id}</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                            <option value="I">I</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+
+            div.querySelector('select').addEventListener('change', (e) => {
+                answers[question.id] = e.target.value;
+                updateQuestionIndicators();
+            });
+
+            return div;
+        }
+
+        function initializeHeadingDragDrop() {
+            const headingOptions = document.querySelectorAll('.heading-option');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            // Add drag event listeners to heading options
+            headingOptions.forEach(option => {
+                option.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', option.dataset.value);
+                    e.dataTransfer.setData('text/html', option.innerHTML);
+                    option.style.opacity = '0.5';
+                });
+                
+                option.addEventListener('dragend', (e) => {
+                    option.style.opacity = '1';
+                });
+            });
+            
+            // Add drop event listeners to drop zones
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('border-blue-500', 'bg-blue-50');
+                });
+                
+                zone.addEventListener('dragleave', (e) => {
+                    zone.classList.remove('border-blue-500', 'bg-blue-50');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('border-blue-500', 'bg-blue-50');
+                    
+                    const headingValue = e.dataTransfer.getData('text/plain');
+                    const headingHTML = e.dataTransfer.getData('text/html');
+                    const questionId = zone.dataset.question;
+                    
+                    if (headingValue && questionId) {
+                        // Clear previous content and add the dropped heading
+                        zone.innerHTML = '';
+                        zone.classList.remove('border-dashed', 'border-gray-400', 'bg-gray-50', 'text-gray-600');
+                        zone.classList.add('border-solid', 'border-green-500', 'bg-green-50');
+                        
+                        // Create a styled display of the dropped heading
+                        const headingDisplay = document.createElement('div');
+                        headingDisplay.className = 'flex items-center justify-between w-full';
+                        headingDisplay.innerHTML = `
+                            <div class="flex items-center">
+                                <span class="font-bold mr-2">${questionId}</span>
+                                <span class="text-green-700">${headingHTML}</span>
+                            </div>
+                            <button class="text-red-600 hover:text-red-800 text-sm font-bold ml-2" onclick="clearHeadingAnswer('${questionId}')">✕</button>
+                        `;
+                        zone.appendChild(headingDisplay);
+                        
+                        // Save the answer
+                        answers[questionId] = headingValue;
+                        updateQuestionIndicators();
+                        
+                        // Hide the used heading option
+                        const usedOption = document.querySelector(`[data-value="${headingValue}"]`);
+                        if (usedOption) {
+                            usedOption.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        }
+
+        function initializeSummaryDragDrop() {
+            const draggableOptions = document.querySelectorAll('.draggable-option');
+            const dropZones = document.querySelectorAll('.inline-drop-zone');
+            
+            // Add drag event listeners to draggable options
+            draggableOptions.forEach(option => {
+                option.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', option.dataset.value);
+                    e.dataTransfer.setData('text/html', option.textContent.trim());
+                    option.style.opacity = '0.5';
+                });
+                
+                option.addEventListener('dragend', (e) => {
+                    option.style.opacity = '1';
+                });
+            });
+            
+            // Add drop event listeners to drop zones
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('border-green-500', 'bg-green-50');
+                });
+                
+                zone.addEventListener('dragleave', (e) => {
+                    zone.classList.remove('border-green-500', 'bg-green-50');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('border-green-500', 'bg-green-50');
+                    
+                    const optionValue = e.dataTransfer.getData('text/plain');
+                    const optionText = e.dataTransfer.getData('text/html');
+                    const questionId = parseInt(zone.dataset.question);
+                    
+                    if (optionValue && questionId) {
+                        // Clear any previous answer for this question
+                        clearSummaryAnswer(questionId);
+                        
+                        // Update the drop zone appearance
+                        zone.classList.remove('border-dashed', 'border-blue-400');
+                        zone.classList.add('border-solid', 'border-green-500', 'bg-green-100');
+                        zone.textContent = optionText;
+                        
+                        // Save the answer
+                        answers[questionId] = optionValue;
+                        updateQuestionIndicators();
+                        
+                        // Hide the used option
+                        const usedOption = document.querySelector(`[data-value="${optionValue}"]`);
+                        if (usedOption) {
+                            usedOption.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Add click event to clear answer
+                zone.addEventListener('click', (e) => {
+                    if (answers[parseInt(zone.dataset.question)]) {
+                        clearSummaryAnswer(parseInt(zone.dataset.question));
+                    }
+                });
+            });
+        }
+
+        function clearSummaryAnswer(questionId) {
+            const zone = document.querySelector(`[data-question="${questionId}"]`);
+            const currentAnswer = answers[questionId];
+            
+            if (zone && currentAnswer) {
+                // Reset the drop zone
+                zone.classList.remove('border-solid', 'border-green-500', 'bg-green-100');
+                zone.classList.add('border-dashed', 'border-blue-400', 'bg-white');
+                zone.textContent = questionId.toString();
+                
+                // Show the previously used option
+                const usedOption = document.querySelector(`[data-value="${currentAnswer}"]`);
+                if (usedOption) {
+                    usedOption.style.display = 'block';
+                }
+                
+                // Clear the answer
+                delete answers[questionId];
+                updateQuestionIndicators();
+            }
+        }
+
+        function clearHeadingAnswer(questionId) {
+            const zone = document.querySelector(`[data-question="${questionId}"]`);
+            const currentAnswer = answers[questionId];
+            
+            if (zone && currentAnswer) {
+                // Reset the drop zone
+                zone.innerHTML = `<span class="font-bold mr-2">${questionId}</span>Drop heading here`;
+                zone.classList.remove('border-solid', 'border-green-500', 'bg-green-50');
+                zone.classList.add('border-dashed', 'border-gray-400', 'bg-gray-50', 'text-gray-600');
+                
+                // Show the heading option again
+                const headingOption = document.querySelector(`[data-value="${currentAnswer}"]`);
+                if (headingOption) {
+                    headingOption.style.display = 'block';
+                }
+                
+                // Clear the answer
+                delete answers[questionId];
+                updateQuestionIndicators();
+            }
+        }
+
+        function clearSummaryAnswer(questionId) {
+            const zone = document.querySelector(`[data-question="${questionId}"]`);
+            const currentAnswer = answers[questionId];
+            
+            if (zone && currentAnswer) {
+                // Reset the drop zone - just show the number
+                zone.innerHTML = questionId;
+                zone.classList.remove('border-solid', 'border-green-500', 'bg-green-50', 'inline-flex', 'items-center');
+                zone.classList.add('border-dashed', 'border-gray-400', 'bg-gray-50', 'text-gray-600');
+                
+                // Show the option again in the options station
+                const summaryOption = document.querySelector(`[data-value="${currentAnswer}"]`);
+                if (summaryOption) {
+                    summaryOption.style.display = 'block';
+                }
+                
+                // Clear the answer
+                delete answers[questionId];
+                updateQuestionIndicators();
+            }
+        }
+
+        function createMatchingQuestions(container, questions) {
+            // Options box
+            const optionsBox = document.createElement('div');
+            optionsBox.className = 'border-2 border-gray-400 p-4 bg-gray-50 mb-6';
+            optionsBox.innerHTML = `
+                <h4 class="font-bold mb-3">Choose from the following options:</h4>
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="bg-white border-2 border-gray-300 rounded px-2 py-1 text-center cursor-move hover:bg-blue-50 hover:border-blue-400 transition-colors select-none" data-value="A">
+                        <div class="font-bold text-sm">A</div>
+                        <div class="text-xs">1753</div>
+                    </div>
+                    <div class="bg-white border-2 border-gray-300 rounded px-2 py-1 text-center cursor-move hover:bg-blue-50 hover:border-blue-400 transition-colors select-none" data-value="B">
+                        <div class="font-bold text-sm">B</div>
+                        <div class="text-xs">1806</div>
+                    </div>
+                    <div class="bg-white border-2 border-gray-300 rounded px-2 py-1 text-center cursor-move hover:bg-blue-50 hover:border-blue-400 transition-colors select-none" data-value="C">
+                        <div class="font-bold text-sm">C</div>
+                        <div class="text-xs">1816</div>
+                    </div>
+                    <div class="bg-white border-2 border-gray-300 rounded px-2 py-1 text-center cursor-move hover:bg-blue-50 hover:border-blue-400 transition-colors select-none" data-value="D">
+                        <div class="font-bold text-sm">D</div>
+                        <div class="text-xs">1823</div>
+                    </div>
+                    <div class="bg-white border-2 border-gray-300 rounded px-2 py-1 text-center cursor-move hover:bg-blue-50 hover:border-blue-400 transition-colors select-none" data-value="E">
+                        <div class="font-bold text-sm">E</div>
+                        <div class="text-xs">1825</div>
+                    </div>
+                    <div class="bg-white border-2 border-gray-300 rounded px-2 py-1 text-center cursor-move hover:bg-blue-50 hover:border-blue-400 transition-colors select-none" data-value="F">
+                        <div class="font-bold text-sm">F</div>
+                        <div class="text-xs">1837</div>
+                    </div>
+                    <div class="bg-white border-2 border-gray-300 rounded px-2 py-1 text-center cursor-move hover:bg-blue-50 hover:border-blue-400 transition-colors select-none" data-value="G">
+                        <div class="font-bold text-sm">G</div>
+                        <div class="text-xs">1843</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(optionsBox);
+
+            // Questions
+            const questionsDiv = document.createElement('div');
+            questionsDiv.className = 'space-y-4';
+
+            questions.forEach(question => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'flex items-center space-x-4';
+                questionDiv.id = `question-${question.id}`;
+                questionDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                        ${question.id}
+                    </div>
+                    <div class="flex-1 text-sm">
+                        ${question.text}
+                    </div>
+                    <div class="drop-zone h-8 border-2 border-gray-400 rounded flex items-center justify-center text-sm bg-white transition-colors border-dashed hover:border-blue-400 hover:bg-blue-50 min-w-16" data-question="${question.id}">
+                        ${answers[question.id] ? `<span class="font-bold text-sm">${answers[question.id]} <button class="text-red-500 hover:text-red-700 text-xs ml-1">×</button></span>` : ''}
+                    </div>
+                `;
+                questionsDiv.appendChild(questionDiv);
+
+                // Add drag and drop functionality
+                const dropZone = questionDiv.querySelector('.drop-zone');
+
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'copy';
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const droppedValue = e.dataTransfer.getData('text/plain');
+                    answers[question.id] = droppedValue;
+                    updateMatchingDisplay(question.id, droppedValue);
+                    updateQuestionIndicators();
+                });
+
+                // Add click functionality for clear button
+                dropZone.addEventListener('click', (e) => {
+                    if (e.target.textContent === '×') {
+                        answers[question.id] = '';
+                        updateMatchingDisplay(question.id, '');
+                        updateQuestionIndicators();
+                    }
+                });
+            });
+
+            container.appendChild(questionsDiv);
+
+            // Add drag functionality to options
+            optionsBox.querySelectorAll('[data-value]').forEach(option => {
+                option.draggable = true;
+                option.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', e.target.dataset.value);
+                    e.dataTransfer.effectAllowed = 'copy';
+                });
+            });
+        }
+
+        function updateMatchingDisplay(questionId, value) {
+            const dropZone = document.querySelector(`[data-question="${questionId}"]`);
+            if (value && value.trim() !== '') {
+                // Find the matching option to get the label
+                const matchingOption = document.querySelector(`[data-value="${value}"]`);
+                let displayText = value; // Default fallback
+                
+                // For summary drag-drop questions, extract just the descriptive text without the letter
+                if (matchingOption) {
+                    const boldSpan = matchingOption.querySelector('span.font-bold');
+                    if (boldSpan) {
+                        // Clone and remove the bold span to get clean text
+                        const clone = matchingOption.cloneNode(true);
+                        const cloneBoldSpan = clone.querySelector('span.font-bold');
+                        if (cloneBoldSpan) {
+                            cloneBoldSpan.remove();
+                            displayText = clone.textContent.trim();
+                        }
+                    } else {
+                        displayText = matchingOption.textContent.trim();
+                    }
+                }
+                
+                // Clear previous content and style like heading matching
+                dropZone.innerHTML = '';
+                dropZone.classList.remove('border-dashed', 'border-gray-400', 'bg-gray-50', 'text-gray-600');
+                dropZone.classList.add('border-solid', 'border-green-500', 'bg-green-50', 'inline-flex', 'items-center');
+                
+                // Create inline content to avoid layout issues - show just the descriptive text
+                dropZone.innerHTML = `
+                    <span class="font-bold mr-2">${questionId}</span>
+                    <span class="text-green-700">${displayText}</span>
+                    <button class="text-red-600 hover:text-red-800 text-sm font-bold ml-2" onclick="clearSummaryAnswer('${questionId}')">✕</button>
+                `;
+            } else {
+                // Reset to empty state - just show the number
+                dropZone.innerHTML = questionId;
+                dropZone.classList.remove('border-solid', 'border-green-500', 'bg-green-50', 'inline-flex', 'items-center');
+                dropZone.classList.add('border-dashed', 'border-gray-400', 'bg-gray-50', 'text-gray-600');
+            }
+        }
+
+        // Navigation
+        function updateNavigation() {
+            // Update navigation buttons
+            document.getElementById('prev-part-btn').disabled = currentPart === 1;
+            document.getElementById('next-part-btn').disabled = currentPart === testData.parts.length;
+
+            // Update part indicators
+            updatePartIndicators();
+        }
+
+        function updatePartIndicators() {
+            const container = document.getElementById('parts-container');
+            container.innerHTML = '';
+
+            testData.parts.forEach((part, index) => {
+                const isActive = currentPart === part.id;
+
+                const partDiv = document.createElement('div');
+                partDiv.className = 'flex items-center min-w-0 relative';
+
+                const partButton = document.createElement('button');
+                partButton.className = `text-base font-medium whitespace-nowrap flex-shrink-0 ${isActive ? 'text-black font-medium' : 'text-gray-400'}`;
+                partButton.textContent = `Part ${part.id}`;
+                partButton.addEventListener('click', () => {
+                    currentPart = part.id;
+                    loadPart(currentPart);
+                });
+
+                partDiv.appendChild(partButton);
+
+                // Add question indicators if this is the active part
+                if (isActive) {
+                    const questionsDiv = document.createElement('div');
+                    questionsDiv.className = 'flex items-center flex-wrap gap-1 justify-center ml-2';
+
+                    part.questions.forEach((question, qIndex) => {
+                        const questionBtn = document.createElement('button');
+                        const answer = answers[question.id];
+                        const isAnswered = answer && (Array.isArray(answer) ? answer.length > 0 : answer.trim() !== '');
+
+                        questionBtn.className = `w-6 h-6 text-sm font-medium border rounded flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-pointer ${
+                            isAnswered
+                                ? 'bg-red-600 text-white border-red-600 hover:bg-red-700'
+                                : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                        }`;
+                        questionBtn.textContent = question.id;
+                        questionBtn.style.animationDelay = `${qIndex * 20}ms`;
+                        questionBtn.style.animation = `fadeInScale 0.3s ease-out ${qIndex * 20}ms both`;
+
+                        questionBtn.addEventListener('click', () => {
+                            const element = document.getElementById(`question-${question.id}`);
+                            if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        });
+
+                        questionsDiv.appendChild(questionBtn);
+                    });
+
+                    partDiv.appendChild(questionsDiv);
+                }
+
+                container.appendChild(partDiv);
+            });
+        }
+
+        function updateQuestionIndicators() {
+            updatePartIndicators();
+        }
+
+        function goToPreviousPart() {
+            if (currentPart > 1) {
+                currentPart--;
+                loadPart(currentPart);
+            }
+        }
+
+        function goToNextPart() {
+            if (currentPart < testData.parts.length) {
+                currentPart++;
+                loadPart(currentPart);
+            }
+        }
+
+        // Test Submission
+        function submitTest() {
+            stopTimer();
+
+            // Synchronize Q26 with Q25 (MULTIPLE_CHOICE_TWO questions share the same answer)
+            if (answers[25]) {
+                answers[26] = answers[25];
+            }
+
+            // Calculate results
+            let correctAnswers = 0;
+            let totalQuestions = 0;
+            const results = [];
+
+            testData.parts.forEach(part => {
+                part.questions.forEach(question => {
+                    totalQuestions++;
+                    const userAnswer = answers[question.id] || '';
+                    let isCorrect = false;
+
+                    if (question.type === "VIRTUAL_MULTI") {
+                        // Virtual question - check if the specific answer for this question is selected
+                        const linkedAnswer = answers[question.linkedTo] || [];
+                        if (Array.isArray(linkedAnswer)) {
+                            // Q25 gets 1 point if B is selected, Q26 gets 1 point if C is selected
+                            isCorrect = linkedAnswer.includes(question.correctAnswer);
+                        }
+                    } else if (question.type === "MULTIPLE_CHOICE_TWO") {
+                        // Q25-26: Each correct answer selected = 1 point
+                        // Q25 checks if B is selected, Q26 checks if D is selected
+                        if (Array.isArray(userAnswer)) {
+                            if (question.id === 25) {
+                                isCorrect = userAnswer.includes("B");
+                            } else if (question.id === 26) {
+                                isCorrect = userAnswer.includes("D");
+                            }
+                        }
+                    } else if (Array.isArray(userAnswer) && !Array.isArray(question.correctAnswer)) {
+                        // Multi-select question with single correct answer (Q25: check if B is selected)
+                        isCorrect = userAnswer.includes(question.correctAnswer);
+                    } else if (Array.isArray(question.correctAnswer) && Array.isArray(userAnswer)) {
+                        // Multi-select questions - check if arrays have same elements
+                        const sortedCorrect = question.correctAnswer.slice().sort();
+                        const sortedUser = userAnswer.slice().sort();
+                        isCorrect = sortedCorrect.length === sortedUser.length && 
+                                   sortedCorrect.every((val, i) => val === sortedUser[i]);
+                    } else if (Array.isArray(question.correctAnswer) && !Array.isArray(userAnswer)) {
+                        // Question with multiple acceptable answers (e.g. "colour" or "color")
+                        isCorrect = question.correctAnswer.some(correctOption => 
+                            userAnswer.toString().toLowerCase().trim() === correctOption.toString().toLowerCase().trim()
+                        );
+                    } else {
+                        // Single answer questions
+                        const userAnswerStr = Array.isArray(userAnswer) ? userAnswer.join(', ') : userAnswer.toString();
+                        const correctAnswerStr = Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer.toString();
+                        isCorrect = userAnswerStr.toLowerCase().trim() === correctAnswerStr.toLowerCase().trim();
+                    }
+
+                    if (isCorrect) {
+                        correctAnswers++;
+                    }
+
+                    
+                    results.push({
+                        questionId: question.id,
+                        questionText: question.text,
+                        questionType: question.type,
+                        userAnswer: question.type === "VIRTUAL_MULTI" ? 
+                                   (Array.isArray(answers[question.linkedTo]) ? answers[question.linkedTo].join(', ') : '') :
+                                   (Array.isArray(userAnswer) ? userAnswer.join(', ') : userAnswer),
+                        correctAnswer: Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer,
+                        isCorrect: isCorrect,
+                        explanation: question.explanation || null
+                    });
+                });
+            });
+
+            const score = Math.round((correctAnswers / totalQuestions) * 100);
+            const timeSpent = (testData.duration * 60) - timeRemaining;
+            
+            // Sort results by question ID for proper order
+            results.sort((a, b) => a.questionId - b.questionId);
+
+            showResults(score, correctAnswers, totalQuestions, timeSpent, results);
+        }
+
+        function showSubmitConfirmation() {
+            const modal = document.getElementById('submit-confirmation-modal');
+            modal.classList.remove('hidden');
+            // Prevent background scrolling
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideSubmitConfirmation() {
+            const modal = document.getElementById('submit-confirmation-modal');
+            modal.classList.add('hidden');
+            // Restore background scrolling
+            document.body.style.overflow = 'auto';
+        }
+
+        function formatUserAnswer(answer, questionType) {
+            if (!answer) return '(No answer)';
+            
+            // Convert True/False answers to display format
+            if (questionType === "TRUE_FALSE_NOT_GIVEN") {
+                if (answer === "true") return "TRUE";
+                if (answer === "false") return "FALSE";
+                if (answer === "not-given") return "NOT GIVEN";
+            }
+            
+            return answer;
+        }
+
+        function showResults(score, correctAnswers, totalQuestions, timeSpent, results) {
+            const modal = document.getElementById('results-modal');
+            const content = document.getElementById('results-content');
+
+            content.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="text-4xl font-bold text-red-600 mb-2">${score}%</div>
+                    <div class="text-lg text-gray-700">${correctAnswers} out of ${totalQuestions} correct</div>
+                    <div class="text-sm text-gray-500">Time spent: ${Math.floor(timeSpent / 60)}:${(timeSpent % 60).toString().padStart(2, '0')}</div>
+                </div>
+
+                <div class="flex-1 min-h-0 overflow-y-auto">
+                    <h3 class="font-bold mb-4">Answer Sheet</h3>
+                    <div class="space-y-2">
+                        ${results.map(result => `
+                            <div class="py-3 px-3 rounded ${result.isCorrect ? 'bg-green-50' : 'bg-red-50'} mb-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="font-medium">Q${result.questionId}</span>
+                                    <div class="text-sm">
+                                        <span class="text-gray-600">Your answer: </span>
+                                        <span class="${result.isCorrect ? 'text-green-600' : 'text-red-600'}">${formatUserAnswer(result.userAnswer, result.questionType)}</span>
+                                        ${!result.isCorrect ? `<span class="text-gray-600"> | Correct: </span><span class="text-green-600">${result.correctAnswer}</span>` : ''}
+                                    </div>
+                                </div>
+                                ${result.explanation ? `<div class="text-sm text-gray-700 bg-white/50 rounded px-2 py-1 mt-2"><strong>Explanation:</strong> ${result.explanation}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            // Prevent background scrolling
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize
+            loadPart(currentPart);
+            updateTimerDisplay();
+
+            // Timer controls
+            document.getElementById('timer-toggle').addEventListener('click', toggleTimer);
+
+            // Panel resizing
+            document.getElementById('resize-handle').addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            // Navigation
+            document.getElementById('prev-part-btn').addEventListener('click', goToPreviousPart);
+            document.getElementById('next-part-btn').addEventListener('click', goToNextPart);
+            document.getElementById('submit-test-btn').addEventListener('click', function() {
+                // Show custom confirmation modal
+                showSubmitConfirmation();
+            });
+
+            // Highlighting
+            document.getElementById('highlight-button').addEventListener('click', addHighlight);
+            document.getElementById('clear-highlight-button').addEventListener('click', () => {
+                if (clearHighlightButton.highlightId) {
+                    removeHighlight(clearHighlightButton.highlightId);
+                    hideClearHighlightButton();
+                }
+            });
+
+            // Text selection for highlighting
+            document.addEventListener('mouseup', (e) => {
+                // Don't hide buttons if clicking on them
+                if (e.target.closest('#highlight-button') || e.target.closest('#clear-highlight-button')) {
+                    return;
+                }
+
+                const selection = window.getSelection();
+                if (selection && !selection.isCollapsed) {
+                    const selectedText = selection.toString().trim();
+                    if (selectedText.length > 0) {
+                        const range = selection.getRangeAt(0);
+                        const x = e.clientX + 10;
+                        const y = e.clientY - 35;
+                        const clonedRange = range.cloneRange();
+                        showHighlightButton(x, y, clonedRange);
+                    }
+                } else {
+                    hideHighlightButton();
+                }
+
+                if (e.button !== 2) {
+                    hideClearHighlightButton();
+                }
+            });
+
+            document.addEventListener('mousedown', (e) => {
+                if (!e.target.closest('#highlight-button') && !e.target.closest('#clear-highlight-button')) {
+                    hideHighlightButton();
+                    hideClearHighlightButton();
+                }
+            });
+
+            // Submit confirmation modal
+            document.getElementById('cancel-submit').addEventListener('click', () => {
+                hideSubmitConfirmation();
+            });
+            document.getElementById('confirm-submit').addEventListener('click', () => {
+                hideSubmitConfirmation();
+                submitTest();
+            });
+
+            // Results modal
+            document.getElementById('close-results').addEventListener('click', () => {
+                document.getElementById('results-modal').classList.add('hidden');
+                // Restore background scrolling
+                document.body.style.overflow = 'auto';
+            });
+
+            // Welcome modal
+            document.getElementById('start-test-btn').addEventListener('click', () => {
+                document.getElementById('welcome-modal').classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

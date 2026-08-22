@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Practice - William Gilbert and Magnetism</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg-color: #f5f7fa;
+            --container-bg: white;
+            --text-color: #2c3e50;
+            --title-color: #2c5282;
+            --border-color: #e8f4f8;
+            --button-bg: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            --button-hover-bg: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --reset-bg: linear-gradient(135deg, #ed64a6 0%, #d53f8c 100%);
+            --reset-hover-bg: linear-gradient(135deg, #d53f8c 0%, #b83280 100%);
+            --section-bg: linear-gradient(135deg, #f8fbff 0%, #fefefe 100%);
+            --question-bg: #f8f9fa;
+            --correct-bg: #f0fff4;
+            --correct-border: #38a169;
+            --incorrect-bg: #fff5f5;
+            --incorrect-border: #e53e3e;
+            --table-border: #e2e8f0;
+            --table-header-bg: #f7fafc;
+            --input-bg: white;
+            --input-border: #e2e8f0;
+            --input-focus-border: #4299e1;
+            --toggle-bg: #e6f3ff;
+            --toggle-border: #4299e1;
+            --toggle-header-bg: #4299e1;
+            --toggle-header-hover: #3182ce;
+            --toggle-text: white;
+            --instructions-bg: #f7fafc;
+            --instructions-text: #4a5568;
+            --score-bg: #e6f3ff;
+            --result-reference: #edf2f7;
+            --link-color: #4299e1;
+        }
+        .night-mode {
+            --bg-color: #1a202c;
+            --container-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --title-color: #63b3ed;
+            --border-color: #4a5568;
+            --button-bg: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            --button-hover-bg: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            --reset-bg: linear-gradient(135deg, #9f7aea 0%, #7c3aed 100%);
+            --reset-hover-bg: linear-gradient(135deg, #7c3aed 0%, #6b46c1 100%);
+            --section-bg: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --question-bg: #4a5568;
+            --correct-bg: #2f855a;
+            --correct-border: #38a169;
+            --incorrect-bg: #c53030;
+            --incorrect-border: #e53e3e;
+            --table-border: #4a5568;
+            --table-header-bg: #2d3748;
+            --input-bg: #4a5568;
+            --input-border: #4a5568;
+            --input-focus-border: #63b3ed;
+            --toggle-bg: #2d3748;
+            --toggle-border: #63b3ed;
+            --toggle-header-bg: #2b6cb0;
+            --toggle-header-hover: #2c5282;
+            --toggle-text: #e2e8f0;
+            --instructions-bg: #2d3748;
+            --instructions-text: #cbd5e0;
+            --score-bg: #2d3748;
+            --result-reference: #4a5568;
+            --link-color: #63b3ed;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .mode-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .highlight-toggle {
+            position: absolute;
+            top: 15px;
+            right: 150px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .highlight-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .passage-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            border-right: 2px solid var(--border-color);
+            background: var(--section-bg);
+        }
+        .questions-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: var(--section-bg);
+        }
+        .passage-title {
+            color: var(--title-color);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 3px solid var(--input-focus-border);
+            padding-bottom: 10px;
+        }
+        .passage-subtitle {
+            color: var(--text-color);
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 25px;
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .passage-content {
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        .passage-content p {
+            margin-bottom: 18px;
+            text-indent: 20px;
+        }
+        .passage-content h3 {
+            color: var(--title-color);
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .questions-title {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            background: var(--question-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--input-focus-border);
+        }
+        .question-group {
+            margin-bottom: 30px;
+            background: var(--question-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--correct-border);
+        }
+        .question-group h3 {
+            color: var(--text-color);
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .question-group p {
+            margin-bottom: 10px;
+            font-style: italic;
+            color: var(--instructions-text);
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: var(--container-bg);
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tfng-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .tfng-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            cursor: pointer;
+        }
+        .tfng-option:hover {
+            background: var(--toggle-bg);
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        select:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+        .submit-btn, .reset-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .reset-btn {
+            background: var(--reset-bg);
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--instructions-bg);
+            border-radius: 10px;
+            display: none;
+        }
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+        }
+        .result-item.correct {
+            background: var(--correct-bg);
+            border-left-color: var(--correct-border);
+        }
+        .result-item.incorrect {
+            background: var(--incorrect-bg);
+            border-left-color: var(--incorrect-border);
+        }
+        .score {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--score-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .instructions-toggle {
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .instructions-header {
+            padding: 12px 15px;
+            background: var(--toggle-header-bg);
+            color: var(--toggle-text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+        .instructions-header:hover {
+            background: var(--toggle-header-hover);
+        }
+        .instructions-content {
+            padding: 15px;
+            display: none;
+            background: var(--instructions-bg);
+            color: var(--instructions-text);
+            font-style: italic;
+        }
+        .instructions-content.show {
+            display: block;
+        }
+        .arrow {
+            transition: transform 0.3s;
+        }
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+        .timer-controller {
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .timer-controller h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+        #timer-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 10px 0;
+            background: var(--container-bg);
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .timer-input {
+            width: 60px;
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid var(--input-border);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .timer-btn {
+            padding: 8px 16px;
+            margin: 5px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .timer-btn:hover {
+            background: var(--button-hover-bg);
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+        @keyframes ripple {
+            to { transform: scale(2.5); opacity: 0; }
+        }
+        @media (max-width: 768px) {
+            .container { flex-direction: column; height: auto; }
+            .passage-section, .questions-section { width: 100%; padding: 15px; }
+            .passage-section { border-right: none; border-bottom: 2px solid var(--border-color); max-height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle">🌙 Night Mode</button>
+    <button class="highlight-toggle" id="highlightToggle">Switch to Green</button>
+
+    <div class="container">
+        <div class="passage-section">
+            <h1 class="passage-title">READING PASSAGE 1</h1>
+            <p class="passage-subtitle">You should spend about 20 minutes on Questions 1-13, which are based on Reading Passage 1 below.</p>
+            <div class="passage-content">
+                <h3>William Gilbert and Magnetism</h3>
+                <p><strong>A</strong> The 16th and 17th centuries saw two great pioneers of modern science: Galileo and Gilbert. The impact of their findings is eminent. Gilbert was the first modern scientist, also the accredited father of the science of electricity and magnetism, an Englishman of learning and a physician to Queen Elizabeth. He died in 1603 and was buried in his hometown of Colchester.</p>
+                <p><strong>B</strong> William Gilbert was born in Colchester but would later attend St John's College, Cambridge where he received his education, eventually graduating with an MD and shortly after heading the Royal College of Physicians. He came to the court of Queen Elizabeth in 1601 and remained there for the last three years of her life. It was not unusual for scientists to also be physicians in Gilbert's time. In fact, it was more the rule than the exception. The reason for this was that physicians occupied a relatively high position in society and so were encouraged to explore all areas of knowledge. The practice of medicine in Gilbert's time was of a very basic nature and doctors did not as a rule conduct experimental research. Gilbert was different.</p>
+                <p><strong>C</strong> Gilbert was interested in chemistry and followed the Copernican system of the universe. As a natural philosopher, he moved away from the theories of aristotelianism to become one of the first genuine scientists in the modern sense of the word. He was a pioneer in developing the scientific method of research and observed before concluding. He was meticulous in his record-keeping and made careful notes on all the experiments he conducted.</p>
+                <p><strong>D</strong> Gilbert was also a major figure in establishing the foundations of the study of electricity and magnetism as a science. He was the first to use the terms electric attraction, electrical force, and magnetic pole. He also coined the New Latin word 'electricus' to describe the property of attracting small objects after being rubbed. The English word 'electricity' derives from it. In 1600, he published his findings in a treatise entitled 'De Magnete' (On the Magnet). The work was well received in England where the people were at that time interested in practical science, but less so in Europe where traditional Aristotelian philosophy was still dominant. The work was also perhaps the first comprehensive book of physical science to be written in England.</p>
+                <p><strong>E</strong> In De Magnete, Gilbert described many of his experiments with his model Earth called the terrella. Gilbert discovered that if you place a piece of iron on a lodestone, the iron becomes magnetised and behaves like a magnet, attracting other pieces of iron. He also found that if you heat a magnet to a very high temperature, it loses its magnetism. Gilbert correctly deduced that the center of the Earth was iron and that a compass needle is attracted to it. Gilbert was the first to understand that the Earth itself is a big magnet and he explained that this is why a compass needle points north.</p>
+                <p><strong>F</strong> From his experiments, Gilbert also concluded that the tail of the Orion constellation was further away from the Earth than its head. He arrived at this conclusion by assuming that the Earth was at the center of the universe. He theorized that fixed stars were at remote but varying distances although he didn't publish this information until 1610. This was in contrast to the general belief at the time that all fixed stars were at a uniform distance from the Earth. It was only after his death that his papers were examined and the discovery made that he had arrived at this conclusion a few years before his book was published.</p>
+                <p><strong>G</strong> Gilbert's findings laid the groundwork for Galileo's later discoveries that the Earth and other planets revolve around the sun. In fact, Galileo praised Gilbert in several of his own works. Gilbert was also influential in the fields of cartography and exploration. He argued that the North-West Passage across the top of North America existed and could be navigated. This passage was eventually discovered in 1851. Gilbert's work on magnetism was so influential that when the first galvanometer, an instrument for detecting and measuring electric current, was invented in 1824, the unit of measurement was named the 'gilbert' in his honor. However, this unit has since been superseded by the ampere.</p>
+            </div>
+        </div>
+
+        <div class="questions-section">
+            <div class="timer-controller">
+                <h3>Timer (set your time)</h3>
+                <div id="timer-display">20:00</div>
+                <input type="number" id="timer-min" class="timer-input" min="0" value="20">
+                <input type="number" id="timer-sec" class="timer-input" min="0" max="59" value="00">
+                <button id="set-timer" class="timer-btn">Set</button>
+                <button id="start-timer" class="timer-btn">Start</button>
+                <button id="pause-timer" class="timer-btn">Pause</button>
+                <button id="reset-timer" class="timer-btn">Reset</button>
+            </div>
+
+            <h2 class="questions-title">Questions 1-13</h2>
+
+            <div class="question-group">
+                <h3>Questions 1-7</h3>
+                <p>Reading Passage 1 has seven paragraphs, A–G.</p>
+                <p>Choose the correct heading for each paragraph from the list of headings below.</p>
+                <p>Write the correct number, i–x, in boxes 1–7 on your answer sheet.</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions1')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow1">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions1">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <div class="question">
+                    <p><strong>List of Headings</strong></p>
+                    <ol style="padding-left: 20px; margin-bottom: 15px;">
+                        <li>i Early years of Gilbert</li>
+                        <li>ii What was new about his scientific research method</li>
+                        <li>iii The development of chemistry</li>
+                        <li>iv Questioning traditional astronomy</li>
+                        <li>v Pioneers of the early science</li>
+                        <li>vi Professional and social recognition</li>
+                        <li>vii Becoming the president of the Royal Science Society</li>
+                        <li>viii The great works of Gilbert</li>
+                        <li>ix His discovery about magnetism</li>
+                        <li>x His change of focus</li>
+                    </ol>
+                </div>
+
+                <!-- Each paragraph has its own full dropdown -->
+                <div class="question">
+                    <label>1 Paragraph A</label>
+                    <select name="q1">
+                        <option value="">--</option>
+                        <option value="i">i Early years of Gilbert</option>
+                        <option value="ii">ii What was new about his scientific research method</option>
+                        <option value="iii">iii The development of chemistry</option>
+                        <option value="iv">iv Questioning traditional astronomy</option>
+                        <option value="v">v Pioneers of the early science</option>
+                        <option value="vi">vi Professional and social recognition</option>
+                        <option value="vii">vii Becoming the president of the Royal Science Society</option>
+                        <option value="viii">viii The great works of Gilbert</option>
+                        <option value="ix">ix His discovery about magnetism</option>
+                        <option value="x">x His change of focus</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>2 Paragraph B</label>
+                    <select name="q2">
+                        <option value="">--</option>
+                        <option value="i">i Early years of Gilbert</option>
+                        <option value="ii">ii What was new about his scientific research method</option>
+                        <option value="iii">iii The development of chemistry</option>
+                        <option value="iv">iv Questioning traditional astronomy</option>
+                        <option value="v">v Pioneers of the early science</option>
+                        <option value="vi">vi Professional and social recognition</option>
+                        <option value="vii">vii Becoming the president of the Royal Science Society</option>
+                        <option value="viii">viii The great works of Gilbert</option>
+                        <option value="ix">ix His discovery about magnetism</option>
+                        <option value="x">x His change of focus</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>3 Paragraph C</label>
+                    <select name="q3">
+                        <option value="">--</option>
+                        <option value="i">i Early years of Gilbert</option>
+                        <option value="ii">ii What was new about his scientific research method</option>
+                        <option value="iii">iii The development of chemistry</option>
+                        <option value="iv">iv Questioning traditional astronomy</option>
+                        <option value="v">v Pioneers of the early science</option>
+                        <option value="vi">vi Professional and social recognition</option>
+                        <option value="vii">vii Becoming the president of the Royal Science Society</option>
+                        <option value="viii">viii The great works of Gilbert</option>
+                        <option value="ix">ix His discovery about magnetism</option>
+                        <option value="x">x His change of focus</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>4 Paragraph D</label>
+                    <select name="q4">
+                        <option value="">--</option>
+                        <option value="i">i Early years of Gilbert</option>
+                        <option value="ii">ii What was new about his scientific research method</option>
+                        <option value="iii">iii The development of chemistry</option>
+                        <option value="iv">iv Questioning traditional astronomy</option>
+                        <option value="v">v Pioneers of the early science</option>
+                        <option value="vi">vi Professional and social recognition</option>
+                        <option value="vii">vii Becoming the president of the Royal Science Society</option>
+                        <option value="viii">viii The great works of Gilbert</option>
+                        <option value="ix">ix His discovery about magnetism</option>
+                        <option value="x">x His change of focus</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>5 Paragraph E</label>
+                    <select name="q5">
+                        <option value="">--</option>
+                        <option value="i">i Early years of Gilbert</option>
+                        <option value="ii">ii What was new about his scientific research method</option>
+                        <option value="iii">iii The development of chemistry</option>
+                        <option value="iv">iv Questioning traditional astronomy</option>
+                        <option value="v">v Pioneers of the early science</option>
+                        <option value="vi">vi Professional and social recognition</option>
+                        <option value="vii">vii Becoming the president of the Royal Science Society</option>
+                        <option value="viii">viii The great works of Gilbert</option>
+                        <option value="ix">ix His discovery about magnetism</option>
+                        <option value="x">x His change of focus</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>6 Paragraph F</label>
+                    <select name="q6">
+                        <option value="">--</option>
+                        <option value="i">i Early years of Gilbert</option>
+                        <option value="ii">ii What was new about his scientific research method</option>
+                        <option value="iii">iii The development of chemistry</option>
+                        <option value="iv">iv Questioning traditional astronomy</option>
+                        <option value="v">v Pioneers of the early science</option>
+                        <option value="vi">vi Professional and social recognition</option>
+                        <option value="vii">vii Becoming the president of the Royal Science Society</option>
+                        <option value="viii">viii The great works of Gilbert</option>
+                        <option value="ix">ix His discovery about magnetism</option>
+                        <option value="x">x His change of focus</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>7 Paragraph G</label>
+                    <select name="q7">
+                        <option value="">--</option>
+                        <option value="i">i Early years of Gilbert</option>
+                        <option value="ii">ii What was new about his scientific research method</option>
+                        <option value="iii">iii The development of chemistry</option>
+                        <option value="iv">iv Questioning traditional astronomy</option>
+                        <option value="v">v Pioneers of the early science</option>
+                        <option value="vi">vi Professional and social recognition</option>
+                        <option value="vii">vii Becoming the president of the Royal Science Society</option>
+                        <option value="viii">viii The great works of Gilbert</option>
+                        <option value="ix">ix His discovery about magnetism</option>
+                        <option value="x">x His change of focus</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <h3>Questions 8–10</h3>
+                <p>Do the following statements agree with the information given in Reading Passage 1?</p>
+                <p>In boxes 8–10 on your answer sheet, write</p>
+                <p><strong>TRUE</strong> if the statement agrees with the information</p>
+                <p><strong>FALSE</strong> if the statement contradicts the information</p>
+                <p><strong>NOT GIVEN</strong> if there is no information on this</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions2')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow2">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions2">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <div class="question">
+                    <label>8 He is less famous than he should be.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q8" value="TRUE"> TRUE</label>
+                        <label class="tfng-option"><input type="radio" name="q8" value="FALSE"> FALSE</label>
+                        <label class="tfng-option"><input type="radio" name="q8" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>9 He was famous as a doctor before he was employed by the Queen.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q9" value="TRUE"> TRUE</label>
+                        <label class="tfng-option"><input type="radio" name="q9" value="FALSE"> FALSE</label>
+                        <label class="tfng-option"><input type="radio" name="q9" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>10 He lost faith in the medical theories of his time.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q10" value="TRUE"> TRUE</label>
+                        <label class="tfng-option"><input type="radio" name="q10" value="FALSE"> FALSE</label>
+                        <label class="tfng-option"><input type="radio" name="q10" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-group">
+                <h3>Questions 11–13</h3>
+                <p>Which THREE of the following are parts of Gilbert’s discovery?</p>
+                <p>Choose THREE letters, A–F.</p>
+                <p>Write the correct letters in boxes 11–13 on your answer sheet.</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions3')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow3">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions3">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <div class="multiple-options">
+                    <label class="option"><input type="checkbox" name="q11" value="A"> A Metal can be transformed into another.</label>
+                    <label class="option"><input type="checkbox" name="q11" value="B"> B Garlic can remove magnetism.</label>
+                    <label class="option"><input type="checkbox" name="q11" value="C"> C Metals can be magnetised.</label>
+                    <label class="option"><input type="checkbox" name="q11" value="D"> D Stars are at different distances from the earth.</label>
+                    <label class="option"><input type="checkbox" name="q11" value="E"> E The earth wobbles on its axis.</label>
+                    <label class="option"><input type="checkbox" name="q11" value="F"> F There are two charges of electricity.</label>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submitBtn">Submit Test</button>
+            <button class="reset-btn" id="resetBtn">Reset Test</button>
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        // Correct answers
+        const correctAnswers = {
+            q1: 'v',
+            q2: 'vi',
+            q3: 'x',
+            q4: 'ii',
+            q5: 'viii',
+            q6: 'ix',
+            q7: 'iv',
+            q8: 'TRUE',
+            q9: 'TRUE',
+            q10: 'TRUE',
+            q11_13: ['C','D','E']  // Metals can be magnetised, Stars at different distances, Earth wobbles
+        };
+
+        // Toggle instructions
+        function toggleInstructions(id) {
+            const content = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('instructions','arrow'));
+            content.classList.toggle('show');
+            arrow.classList.toggle('rotated');
+        }
+
+        // Night mode toggle
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const btn = document.getElementById('modeToggle');
+            btn.textContent = document.body.classList.contains('night-mode') ? '☀️ Day Mode' : '🌙 Night Mode';
+        }
+
+        // Ripple effect
+        function createRipple(e) {
+            const btn = e.currentTarget;
+            const circle = document.createElement('span');
+            const d = Math.max(btn.clientWidth, btn.clientHeight);
+            const r = d / 2;
+            circle.style.width = circle.style.height = d + 'px';
+            circle.style.left = e.clientX - btn.getBoundingClientRect().left - r + 'px';
+            circle.style.top = e.clientY - btn.getBoundingClientRect().top - r + 'px';
+            circle.classList.add('ripple');
+            const old = btn.querySelector('.ripple');
+            if (old) old.remove();
+            btn.appendChild(circle);
+        }
+
+        // Submit logic
+        function submitTest() {
+            let score = 0;
+            const resultsDiv = document.getElementById('results');
+            let html = '<div class="score">Your Score: ';
+
+            // Headings 1-7
+            for (let i = 1; i <= 7; i++) {
+                const val = document.querySelector(`select[name="q${i}"]`)?.value || '';
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                    Question ${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correct})
+                </div>`;
+            }
+
+            // T/F/NG 8-10
+            for (let i = 8; i <= 10; i++) {
+                const val = document.querySelector(`input[name="q${i}"]:checked`)?.value || '';
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                    Question ${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correct})
+                </div>`;
+            }
+
+            // Multiple choice 11-13 (3 correct)
+            const checked = Array.from(document.querySelectorAll('input[name^="q11"]:checked'))
+                .map(cb => cb.value).sort();
+            const correctSet = correctAnswers.q11_13.sort();
+            const isCorrect = checked.length === 3 && checked.join(',') === correctSet.join(',');
+            if (isCorrect) score += 3;
+            html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">
+                Questions 11-13: ${checked.join(', ') || 'none'} ${isCorrect ? '✔' : '✘'} (correct: ${correctSet.join(', ')})
+            </div>`;
+
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Reset
+        function resetTest() {
+            document.querySelectorAll('select').forEach(s => s.value = '');
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+            document.getElementById('results').style.display = 'none';
+        }
+
+        // Highlight
+        let currentHighlightClass = 'highlight-yellow';
+        document.addEventListener('mouseup', () => {
+            const sel = window.getSelection();
+            if (sel.rangeCount && !sel.isCollapsed) {
+                const range = sel.getRangeAt(0);
+                const span = document.createElement('span');
+                span.className = currentHighlightClass;
+                try { range.surroundContents(span); } catch(e) {}
+                sel.removeAllRanges();
+            }
+        });
+
+        document.addEventListener('click', e => {
+            if (e.target.classList.contains('highlight-yellow') || e.target.classList.contains('highlight-green')) {
+                const span = e.target;
+                while (span.firstChild) span.parentNode.insertBefore(span.firstChild, span);
+                span.parentNode.removeChild(span);
+                span.parentNode.normalize();
+            }
+        });
+
+        // Timer
+        let timerTime = 1200, timerInterval = null;
+        function updateTimerDisplay() {
+            const m = Math.floor(timerTime / 60);
+            const s = timerTime % 60;
+            document.getElementById('timer-display').textContent = `${m}:${s<10?'0':''}${s}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('button').forEach(b => b.addEventListener('click', createRipple));
+            document.getElementById('modeToggle').addEventListener('click', toggleNightMode);
+            document.getElementById('highlightToggle').addEventListener('click', () => {
+                currentHighlightClass = currentHighlightClass === 'highlight-yellow' ? 'highlight-green' : 'highlight-yellow';
+                document.getElementById('highlightToggle').textContent = currentHighlightClass === 'highlight-yellow' ? 'Switch to Green' : 'Switch to Yellow';
+            });
+            document.getElementById('submitBtn').addEventListener('click', submitTest);
+            document.getElementById('resetBtn').addEventListener('click', resetTest);
+
+            document.getElementById('set-timer').addEventListener('click', () => {
+                const min = parseInt(document.getElementById('timer-min').value) || 0;
+                const sec = parseInt(document.getElementById('timer-sec').value) || 0;
+                timerTime = min * 60 + sec;
+                updateTimerDisplay();
+            });
+            document.getElementById('start-timer').addEventListener('click', () => {
+                if (!timerInterval) timerInterval = setInterval(() => {
+                    if (timerTime > 0) { timerTime--; updateTimerDisplay(); }
+                    else { clearInterval(timerInterval); alert('Time is up!'); }
+                }, 1000);
+            });
+            document.getElementById('pause-timer').addEventListener('click', () => clearInterval(timerInterval));
+            document.getElementById('reset-timer').addEventListener('click', () => {
+                clearInterval(timerInterval); timerTime = 1200; updateTimerDisplay();
+            });
+            updateTimerDisplay();
+        });
+    </script>
+</body>
+</html>

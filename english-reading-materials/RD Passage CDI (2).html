@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading - Texting the Television</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg-color: #f5f7fa;
+            --container-bg: white;
+            --text-color: #2c3e50;
+            --title-color: #2c5282;
+            --border-color: #e8f4f8;
+            --button-bg: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            --button-hover-bg: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --reset-bg: linear-gradient(135deg, #ed64a6 0%, #d53f8c 100%);
+            --section-bg: linear-gradient(135deg, #f8fbff 0%, #fefefe 100%);
+            --question-bg: #f8f9fa;
+            --correct-bg: #f0fff4;
+            --correct-border: #38a169;
+            --incorrect-bg: #fff5f5;
+            --incorrect-border: #e53e3e;
+            --input-bg: white;
+            --input-border: #e2e8f0;
+            --input-focus-border: #4299e1;
+            --toggle-bg: #e6f3ff;
+            --toggle-border: #4299e1;
+            --toggle-header-bg: #4299e1;
+            --toggle-header-hover: #3182ce;
+            --toggle-text: white;
+            --instructions-bg: #f7fafc;
+            --instructions-text: #4a5568;
+            --score-bg: #e6f3ff;
+        }
+        .night-mode {
+            --bg-color: #1a202c;
+            --container-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --title-color: #63b3ed;
+            --border-color: #4a5568;
+            --button-bg: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            --button-hover-bg: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            --reset-bg: linear-gradient(135deg, #9f7aea 0%, #7c3aed 100%);
+            --section-bg: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --question-bg: #4a5568;
+            --correct-bg: #2f855a;
+            --correct-border: #38a169;
+            --incorrect-bg: #c53030;
+            --incorrect-border: #e53e3e;
+            --input-bg: #4a5568;
+            --input-border: #4a5568;
+            --input-focus-border: #63b3ed;
+            --toggle-bg: #2d3748;
+            --toggle-border: #63b3ed;
+            --toggle-header-bg: #2b6cb0;
+            --toggle-header-hover: #2c5282;
+            --toggle-text: #e2e8f0;
+            --instructions-bg: #2d3748;
+            --instructions-text: #cbd5e0;
+            --score-bg: #2d3748;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: all 0.4s;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .mode-toggle, .highlight-toggle {
+            position: absolute;
+            top: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .mode-toggle { right: 15px; }
+        .highlight-toggle { right: 150px; }
+        .passage-section, .questions-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+        }
+        .passage-section { border-right: 2px solid var(--border-color); background: var(--section-bg); }
+        .questions-section { background: var(--section-bg); }
+        .passage-title {
+            color: var(--title-color);
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 3px solid var(--input-focus-border);
+            padding-bottom: 10px;
+        }
+        .passage-subtitle {
+            color: var(--text-color);
+            font-size: 16px;
+            font-style: italic;
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .passage-content {
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        .passage-content p {
+            margin-bottom: 18px;
+            text-indent: 20px;
+        }
+        .questions-title {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            background: var(--question-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--input-focus-border);
+            margin-bottom: 20px;
+        }
+        .question-group {
+            margin-bottom: 30px;
+            background: var(--question-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--correct-border);
+        }
+        .question-group h3 {
+            color: var(--text-color);
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .question-group p {
+            margin-bottom: 10px;
+            font-style: italic;
+            color: var(--instructions-text);
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: var(--container-bg);
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tfng-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .tfng-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            cursor: pointer;
+        }
+        .tfng-option:hover {
+            background: var(--toggle-bg);
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        select:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+        .inline-input {
+            display: inline-block;
+            width: 160px;
+            padding: 2px 6px;
+            border: 1px solid var(--input-focus-border);
+            border-radius: 3px;
+            font-size: 13px;
+            background: var(--input-bg);
+            margin: 0 2px;
+            height: 24px;
+            color: var(--text-color);
+        }
+        .inline-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .submit-btn, .reset-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .submit-btn { background: var(--button-bg); color: white; }
+        .reset-btn { background: var(--reset-bg); color: white; }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--instructions-bg);
+            border-radius: 10px;
+            display: none;
+        }
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+        }
+        .result-item.correct { background: var(--correct-bg); border-left-color: var(--correct-border); }
+        .result-item.incorrect { background: var(--incorrect-bg); border-left-color: var(--incorrect-border); }
+        .score {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--score-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .timer-controller {
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .timer-controller h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+        #timer-display {
+            font-size: 2.0rem;
+            font-weight: 700;
+            color: var(--text-color);
+            background: var(--container-bg);
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin: 10px auto;
+            display: inline-block;
+            min-width: 180px;
+        }
+        .timer-input {
+            width: 60px;
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid var(--input-border);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .timer-btn {
+            padding: 8px 16px;
+            margin: 5px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .timer-btn:hover { background: var(--button-hover-bg); }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+        @keyframes ripple { to { transform: scale(2.5); opacity: 0; } }
+        @media (max-width: 768px) {
+            .container { flex-direction: column; height: auto; }
+            .passage-section, .questions-section { width: 100%; padding: 15px; }
+            .passage-section { border-right: none; border-bottom: 2px solid var(--border-color); max-height: 50vh; }
+        }
+        .highlight-yellow { background-color: #ffff99 !important; cursor: pointer; }
+        .highlight-green { background-color: #90ee90 !important; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle">🌙 Night Mode</button>
+    <button class="highlight-toggle" id="highlightToggle">Switch to Green</button>
+
+    <div class="container">
+        <!-- Passage -->
+        <div class="passage-section">
+            <h1 class="passage-title">READING PASSAGE 3</h1>
+            <p class="passage-subtitle">You should spend about 20 minutes on Questions 28–40, which are based on Reading Passage 3 below.</p>
+            <div class="passage-content">
+                <h3>Texting the Television</h3>
+                <p><strong>A</strong> Once upon a time, if a television show with any self-respect wanted to target a young audience, it needed to have an e-mail address. However, in Europe's TV shows, such addresses are gradually substituted by telephone numbers so that audiences can text the show from their mobile phones. Therefore, it comes as no shock that according to Gartner's research, texting has recently surpassed Internet usage across Europe. Besides, among the many uses of text messaging, one of the fastest-growing uses is to interact with television. The statistics provided by Gartner can display that 20% of French teenagers, 11% in Britain and 9% in Germany have responded to TV programmes by sending a text message.</p>
+                <p><strong>B</strong> This phenomenon can be largely attributed to the rapid growth of reality TV shows such as 'Big Brother', where viewers get to decide the result through voting. The majority of reality shows are now open to text-message voting, and in some shows like the latest series of Norway's 'Big Brother', most votes are collected in this manner. But TV-texting isn't just about voting. News shows encourage viewers to comment by texting messages; game shows enable the audience to be part of the competition; music shows answer requests by taking text messages; and broadcasters set up on-screen chatrooms. TV audiences tend to sit on the sofa with their mobile phones right by their sides, and 'it's a supernatural way to interact.' says Adam Daum of Gartner.</p>
+                <p><strong>C</strong> Mobile service providers charge appreciable rates for messages to certain numbers, which is why TV-texting can bring in a lot of cash. Take the latest British series of 'Big Brother' as an example. It brought about 5.4m text-message votes and £1.35m ($2.1m) of profit. In Germany, MTV's 'Videoclash' encourages the audience to vote for one of two rival videos, and induces up to 40,000 texts per hour, and each one of those texts costs €0.30 ($0.29), according to a consultancy based in Amsterdam. The Belgian quiz show '1 Against 100' had an eight-round texting match on the side, which brought in 110,000 participants in one month, and each of them paid €0.50 for each question. In Spain, a cryptic-crossword clue invites the audience to send their answers through text at the expense of €1, so that they can be enrolled in the poll to win a €300 prize. Normally, 6,000 viewers would participate within one day.</p>
+                <p><strong>D</strong> How come the joining forces of television and text message turn out to be this successful? One crucial aspect is the emergence of one-of-a-kind four-, five- or six-digit numbers known as 'short codes'. Every provider has control over its own short codes, but not until recently have they come to realise that it would make much more sense to work together to offer short codes compatible with all networks. The emergence of this universal short codes was a game-changer, because short codes are much easier to remember on the screen, according to Lars Becker of Flytxt, a mobile-marketing company.</p>
+                <p><strong>E</strong> Operators' co-operation on enlarging the market is by a larger trend, observes Katrina Bond of Analysys, a consultancy. When challenged by the dilemma between holding on tight to their margins and permitting the emergence of a new medium, no provider has ever chosen the latter. WAP, a technology for mobile-phone users to read cut-down web pages on their screens, failed because of service providers' reluctance towards revenue-sharing with content providers. Now that they've learnt their lesson, they are altering the way of operating. Orange, a French operator, has come such a long way as to launch a rate card for sharing revenue of text messages, a new level of transparency that used to be unimaginable.</p>
+                <p><strong>F</strong> At a recent conference, Han Weegink of CMG, a company that offers the television market text-message infrastructure, pointed out that the television industry is changing in a subtle yet fundamental way. Instead of the traditional one-way presentation, more and more TV shows are now getting viewers' reactions involved.</p>
+                <p><strong>G</strong> Certainly, engaging the audiences more has always been the promise of interactive TV. An interactive TV was originally designed to work with exquisite set-top devices, which could be directly plugged into the TV. However, as Mr Daum points out, that method was flawed in many ways. Developing and testing software for multiple and incompatible types of set-top box could be costly, not to mention that the 40% (or lower) market penetration is below that of mobile phones (around 85%). What's more, it's quicker to develop and set up apps for mobile phones. 'You can approach the market quicker, and you don't have to go through as many greedy middlemen,' Mr Daum says. Providers of set-top box technology are now adding texting function to the design of their products.</p>
+                <p><strong>H</strong> The triumph of TV-related texting reminds everyone in the business of how easily a fancy technology can all of a sudden be replaced by a less complicated, lower-tech method. That being said, the old-fashioned approach to interactive TV is not necessarily over; at least it proves that strong demands for interactive services still exist. It appears that the viewers would sincerely like to do more than simply staring at the TV screen. After all, couch potatoes would love some thumb exercises.</p>
+            </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="questions-section">
+            <div class="timer-controller">
+                <h3>Timer (set your time)</h3>
+                <div id="timer-display">20:00</div>
+                <input type="number" id="timer-min" class="timer-input" min="0" value="20">
+                <input type="number" id="timer-sec" class="timer-input" min="0" max="59" value="00">
+                <button id="set-timer" class="timer-btn">Set</button>
+                <button id="start-timer" class="timer-btn">Start</button>
+                <button id="pause-timer" class="timer-btn">Pause</button>
+                <button id="reset-timer" class="timer-btn">Reset</button>
+            </div>
+
+            <h2 class="questions-title">Questions 28–40</h2>
+
+            <!-- 28-32 Matching Headings -->
+            <div class="question-group">
+                <h3>Questions 28–32</h3>
+                <p>Reading Passage 3 has seven sections, A–G.</p>
+                <p>Choose the correct heading for sections B–E and G from the list of headings below.</p>
+                <p>Write the correct number, i–ix, in boxes 28–32 on your answer sheet.</p>
+                <p><strong>List of Headings</strong></p>
+                <p>i An application of short codes on the TV screen</p>
+                <p>ii An overview of a fast-growing business</p>
+                <p>iii The trend that profitable games are gaining more concerns</p>
+                <p>iv Why Netherlands takes the leading role</p>
+                <p>v A new perspective towards sharing the business opportunities</p>
+                <p>vi Factors relevant to the rapid increase in interactive TV</p>
+                <p>vii The revenue gains and bonus share</p>
+                <p>viii The possibility of the complex technology replaced by the simpler ones</p>
+                <p>ix The mind change of set-top box providers</p>
+
+                <div class="question">
+                    <label>28 Section B</label>
+                    <select name="q28">
+                        <option value="">--</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                        <option value="ix">ix</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>29 Section C</label>
+                    <select name="q29">
+                        <option value="">--</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                        <option value="ix">ix</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>30 Section D</label>
+                    <select name="q30">
+                        <option value="">--</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                        <option value="ix">ix</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>31 Section E</label>
+                    <select name="q31">
+                        <option value="">--</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                        <option value="ix">ix</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>32 Section G</label>
+                    <select name="q32">
+                        <option value="">--</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                        <option value="ix">ix</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 33-35 Multiple Choice -->
+            <div class="question-group">
+                <h3>Questions 33–35</h3>
+                <p>Choose the correct letter, A, B, C or D.</p>
+                <div class="question">
+                    <label>33 In Europe, a research hints that young audiences spend more money on</label>
+                    <div class="multiple-options">
+                        <label class="option"><input type="radio" name="q33" value="A"> A thumbing text messages.</label>
+                        <label class="option"><input type="radio" name="q33" value="B"> B writing e-mails.</label>
+                        <label class="option"><input type="radio" name="q33" value="C"> C watching TV programmes.</label>
+                        <label class="option"><input type="radio" name="q33" value="D"> D talking through mobile phones.</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>34 What would happen when reality TV shows invite the audience to vote?</label>
+                    <div class="multiple-options">
+                        <label class="option"><input type="radio" name="q34" value="A"> A Viewers would get attractive bonus.</label>
+                        <label class="option"><input type="radio" name="q34" value="B"> B They would be part of the competition.</label>
+                        <label class="option"><input type="radio" name="q34" value="C"> C Their questions would be replied.</label>
+                        <label class="option"><input type="radio" name="q34" value="D"> D Their participation could change the result.</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>35 Interactive TV will change from concentrating on set-top devices to</label>
+                    <div class="multiple-options">
+                        <label class="option"><input type="radio" name="q35" value="A"> A increasing their share in the market.</label>
+                        <label class="option"><input type="radio" name="q35" value="B"> B setting up a modified set-top box.</label>
+                        <label class="option"><input type="radio" name="q35" value="C"> C building an embedded message platform.</label>
+                        <label class="option"><input type="radio" name="q35" value="D"> D marching into the European market.</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 36-40 Matching -->
+            <div class="question-group">
+                <h3>Questions 36–40</h3>
+                <p>Look at the following descriptions (Questions 36–40) and the list of companies below.</p>
+                <p>Match each description with the correct company, A–F.</p>
+                <p>Write the correct letter, A–F, in boxes 36–40 on your answer sheet.</p>
+                <p><strong>List of Companies</strong></p>
+                <p>A Flytxt</p>
+                <p>B Analysys</p>
+                <p>C Endemol</p>
+                <p>D CMG</p>
+                <p>E MmO2</p>
+                <p>F Gartner</p>
+
+                <div class="question">
+                    <label>36 offered mobile phone message technology</label>
+                    <select name="q36">
+                        <option value="">--</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>37 earned considerable amount of money through a famous programme</label>
+                    <select name="q37">
+                        <option value="">--</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>38 expressed the view that short codes are convenient to remember when turning up</label>
+                    <select name="q38">
+                        <option value="">--</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>39 built their own mobile phone operating applications</label>
+                    <select name="q39">
+                        <option value="">--</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>40 indicated that it is easy for people to send message in an interactive TV</label>
+                    <select name="q40">
+                        <option value="">--</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submitBtn">Submit Test</button>
+            <button class="reset-btn" id="resetBtn">Reset Test</button>
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        const correctAnswers = {
+            q28: 'vi',
+            q29: 'vii',
+            q30: 'v',
+            q31: 'i',
+            q32: 'viii',
+            q33: 'A',
+            q34: 'D',
+            q35: 'C',
+            q36: 'D',
+            q37: 'E',
+            q38: 'A',
+            q39: 'C',
+            q40: 'F'
+        };
+
+        // Highlighting (Safari + Chrome)
+        let currentHighlightClass = 'highlight-yellow';
+        document.addEventListener('selectionchange', () => {
+            const sel = window.getSelection();
+            if (sel.rangeCount === 0 || sel.isCollapsed) return;
+            const range = sel.getRangeAt(0);
+            if (range.commonAncestorContainer.closest('input, select, button')) return;
+            const span = document.createElement('span');
+            span.className = currentHighlightClass;
+            try { range.surroundContents(span); } catch (e) {
+                const frag = range.extractContents();
+                span.appendChild(frag);
+                range.insertNode(span);
+            }
+            sel.removeAllRanges();
+        });
+        document.addEventListener('click', e => {
+            let t = e.target;
+            while (t && !t.classList.contains('highlight-yellow') && !t.classList.contains('highlight-green')) t = t.parentElement;
+            if (t) {
+                const p = t.parentNode;
+                while (t.firstChild) p.insertBefore(t.firstChild, t);
+                p.removeChild(t);
+                p.normalize();
+            }
+        });
+        document.getElementById('highlightToggle').addEventListener('click', function() {
+            currentHighlightClass = currentHighlightClass === 'highlight-yellow' ? 'highlight-green' : 'highlight-yellow';
+            this.textContent = currentHighlightClass === 'highlight-yellow' ? 'Switch to Green' : 'Switch to Yellow';
+        });
+
+        // Night mode
+        document.getElementById('modeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('night-mode');
+            this.textContent = document.body.classList.contains('night-mode') ? '☀️ Day Mode' : '🌙 Night Mode';
+        });
+
+        // Timer
+        let initialTime = 1200;
+        let timerTime = initialTime;
+        let timerInterval = null;
+        function updateTimerDisplay() {
+            const m = Math.floor(timerTime / 60);
+            const s = timerTime % 60;
+            document.getElementById('timer-display').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+        document.getElementById('set-timer').addEventListener('click', () => {
+            const min = parseInt(document.getElementById('timer-min').value) || 0;
+            const sec = parseInt(document.getElementById('timer-sec').value) || 0;
+            initialTime = min * 60 + sec;
+            timerTime = initialTime;
+            updateTimerDisplay();
+        });
+        document.getElementById('start-timer').addEventListener('click', () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    if (timerTime > 0) {
+                        timerTime--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        alert('Time is up!');
+                    }
+                }, 1000);
+            }
+        });
+        document.getElementById('pause-timer').addEventListener('click', () => clearInterval(timerInterval));
+        document.getElementById('reset-timer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerTime = initialTime;
+            updateTimerDisplay();
+        });
+        updateTimerDisplay();
+
+        // Submit
+        function submitTest() {
+            let score = 0;
+            const resultsDiv = document.getElementById('results');
+            let html = '<div class="score">Your Score: ';
+
+            // 28-32 matching headings
+            for (let i = 28; i <= 32; i++) {
+                const val = document.querySelector(`select[name="q${i}"]`)?.value || '';
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">Q${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correct})</div>`;
+            }
+
+            // 33-35 multiple choice
+            for (let i = 33; i <= 35; i++) {
+                const val = document.querySelector(`input[name="q${i}"]:checked`)?.value || '';
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">Q${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correct})</div>`;
+            }
+
+            // 36-40 matching
+            for (let i = 36; i <= 40; i++) {
+                const val = document.querySelector(`select[name="q${i}"]`)?.value || '';
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = val === correct;
+                if (isCorrect) score++;
+                html += `<div class="result-item ${isCorrect ? 'correct' : 'incorrect'}">Q${i}: ${val || '—'} ${isCorrect ? '✔' : '✘'} (correct: ${correct})</div>`;
+            }
+
+            html = `<div class="score">Your Score: ${score}/13</div>` + html;
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetTest() {
+            document.querySelectorAll('select').forEach(s => s.value = '');
+            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            document.getElementById('results').style.display = 'none';
+        }
+
+        // Ripple
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const circle = document.createElement('span');
+                const d = Math.max(btn.clientWidth, btn.clientHeight);
+                const r = d / 2;
+                circle.style.width = circle.style.height = d + 'px';
+                circle.style.left = e.clientX - btn.getBoundingClientRect().left - r + 'px';
+                circle.style.top = e.clientY - btn.getBoundingClientRect().top - r + 'px';
+                circle.classList.add('ripple');
+                btn.appendChild(circle);
+                setTimeout(() => circle.remove(), 600);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('submitBtn').addEventListener('click', submitTest);
+            document.getElementById('resetBtn').addEventListener('click', resetTest);
+        });
+    </script>
+</body>
+</html>

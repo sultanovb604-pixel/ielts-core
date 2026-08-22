@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Full Reading Practice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fafaf8;
+            --bg-secondary: #f3f3ef;
+            --bg-tertiary: #eceae3;
+            --text: #1c1c1a;
+            --text-muted: #5a5a55;
+            --text-light: #9a9a90;
+            --border: #e0ddd5;
+            --border-medium: #ccc9bf;
+            --header-bg: #ffffff;
+            --panel-bg: #ffffff;
+            --nav-bg: #ffffff;
+            --input-bg: #ffffff;
+            --example-bg: #f7f6f1;
+            --context-menu-bg: #ffffff;
+            --modal-bg: #ffffff;
+            --timer-color: #2c2c28;
+            --resizer-bg: #ededea;
+            --active-blue: #2563eb;
+            --active-blue-light: #dbeafe;
+            --correct-bg: #f0fdf4;
+            --incorrect-bg: #fef2f2;
+            --correct-border: #16a34a;
+            --incorrect-border: #dc2626;
+            --highlight-color: #fef08a;
+            --subq-bg: #ffffff;
+            --subq-border: #d1d5db;
+            --subq-text: #374151;
+            --footer-btn-bg: #f4f4f0;
+            --footer-btn-border: #d1cec5;
+            --passage-title: #1e3a5f;
+            --toolbar-bg: #1e1e2e;
+            --toolbar-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            --accent: #c7522a;
+        }
+
+        body.night-mode {
+            --bg: #0f0f0e;
+            --bg-secondary: #1a1a18;
+            --bg-tertiary: #222220;
+            --text: #e8e8e2;
+            --text-muted: #a0a098;
+            --text-light: #666660;
+            --border: #2e2e2a;
+            --border-medium: #3a3a36;
+            --header-bg: #141412;
+            --panel-bg: #141412;
+            --nav-bg: #141412;
+            --input-bg: #1e1e1c;
+            --example-bg: #1e1e1c;
+            --modal-bg: #1a1a18;
+            --timer-color: #e8e8e2;
+            --resizer-bg: #222220;
+            --active-blue: #60a5fa;
+            --active-blue-light: #1e3a5f;
+            --correct-bg: #052e16;
+            --incorrect-bg: #2d0a0a;
+            --correct-border: #22c55e;
+            --incorrect-border: #f87171;
+            --subq-bg: #1e1e1c;
+            --subq-border: #3a3a36;
+            --subq-text: #c0c0b8;
+            --footer-btn-bg: #222220;
+            --footer-btn-border: #3a3a36;
+            --passage-title: #93c5fd;
+            --toolbar-bg: #0a0a14;
+            --accent: #e07050;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            font-size: 15px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            background-color: var(--header-bg);
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            height: 56px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 12px; }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'DM Sans', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--timer-color);
+            letter-spacing: 0.05em;
+        }
+
+        .timer-controls { display: flex; align-items: center; gap: 4px; }
+
+        .timer-controls button, #night-mode-btn, #notes-toggle-btn {
+            background: var(--footer-btn-bg);
+            border: 1px solid var(--border-medium);
+            border-radius: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .timer-controls button { padding: 5px 7px; border-radius: 6px; }
+        .timer-controls button svg { width: 14px; height: 14px; fill: var(--text); }
+        .timer-controls button:hover, #night-mode-btn:hover, #notes-toggle-btn:hover {
+            background: var(--border); border-color: var(--text-light);
+        }
+
+        .telegram-link {
+            color: var(--active-blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border: 1px solid var(--active-blue-light);
+            border-radius: 8px;
+            transition: all 0.15s;
+        }
+        .telegram-link:hover { background: var(--active-blue-light); }
+
+        .main-container {
+            margin-top: 56px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 56px);
+        }
+
+        .panels-container { display: flex; flex: 1; overflow: hidden; }
+
+        .passage-panel {
+            flex: 1;
+            padding: 24px 28px 120px;
+            overflow-y: auto;
+            min-width: 250px;
+            background: var(--panel-bg);
+            transition: background-color 0.3s;
+        }
+
+        .reading-passage h4 {
+            font-family: 'Lora', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--passage-title);
+            line-height: 1.4;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .reading-passage .subtitle {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .reading-passage .passage-divider {
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+            margin: 0 auto 22px;
+            border-radius: 2px;
+        }
+        .reading-passage p {
+            margin-bottom: 1.1em;
+            color: var(--text);
+            line-height: 1.75;
+            font-size: 15px;
+        }
+        .para-label {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-right: 4px;
+        }
+
+        .questions-panel {
+            flex: 1;
+            padding: 24px 28px 120px;
+            overflow-y: auto;
+            min-width: 250px;
+            border-left: 1px solid var(--border);
+            background: var(--bg-secondary);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .resizer {
+            width: 8px;
+            cursor: col-resize;
+            background: var(--resizer-bg);
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="24" viewBox="0 0 8 24"><circle cx="4" cy="8" r="1.2" fill="%23999"/><circle cx="4" cy="12" r="1.2" fill="%23999"/><circle cx="4" cy="16" r="1.2" fill="%23999"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .part-header {
+            background: linear-gradient(135deg, var(--active-blue-light), var(--bg-secondary));
+            padding: 12px 20px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--active-blue);
+            margin-bottom: 20px;
+            border-radius: 0 6px 6px 0;
+            color: var(--text);
+        }
+        .part-header p { margin: 0; font-size: 14px; }
+        .part-header p:first-child { font-weight: 700; font-size: 15px; margin-bottom: 3px; color: var(--active-blue); }
+
+        .question { margin-bottom: 36px; }
+        .question p { margin-bottom: 8px; color: var(--text); }
+        .question ul { list-style: none; padding-left: 0; }
+        .question ul li { margin-bottom: 4px; color: var(--text); }
+
+        .question-prompt {
+            background: var(--example-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+        .question-prompt p:first-child { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+        .question-prompt ul li { padding: 2px 0; font-size: 13px; }
+        .question-prompt ul li strong { font-variant: small-caps; letter-spacing: 0.05em; }
+
+        .answer-input {
+            border: 1.5px solid var(--border-medium);
+            border-radius: 6px;
+            background-color: var(--input-bg);
+            color: var(--text);
+            padding: 3px 8px;
+            font-size: 14px;
+            font-family: inherit;
+            text-align: center;
+            margin: 0 4px;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s;
+            height: 30px;
+        }
+        .answer-input.wide { width: 180px; }
+        .answer-input.narrow { width: 70px; }
+        .answer-input.active-input {
+            border-color: var(--active-blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+        }
+        .answer-input::placeholder { color: #bbb; font-size: 12px; }
+        .answer-input.correct { border-color: var(--correct-border); background-color: var(--correct-bg); }
+        .answer-input.incorrect { border-color: var(--incorrect-border); background-color: var(--incorrect-bg); color: var(--incorrect-border); }
+        select.answer-input { cursor: pointer; }
+        select.answer-input option { background: var(--input-bg); color: var(--text); }
+
+        /* TRUE/FALSE/NOT GIVEN */
+        .tf-question {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1.5px solid var(--border);
+            transition: border-color 0.3s;
+        }
+        .tf-question-line {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--panel-bg);
+        }
+        .tf-question-number {
+            border: 2px solid var(--border-medium);
+            padding: 1px 7px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .tf-question-text { color: var(--text); font-size: 14px; line-height: 1.5; padding-top: 1px; }
+        .tf-options {
+            display: flex;
+            gap: 6px;
+            padding: 8px 14px 10px;
+            background: var(--bg-secondary);
+            flex-wrap: wrap;
+        }
+        .tf-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border: 1.5px solid var(--border-medium);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.15s;
+            background: var(--panel-bg);
+            color: var(--text);
+        }
+        .tf-option:hover { border-color: var(--active-blue); color: var(--active-blue); }
+        .tf-option input[type="radio"] { display: none; }
+        .tf-option.selected { border-color: var(--active-blue); background: var(--active-blue-light); color: var(--active-blue); }
+        .tf-question.correct { border-color: var(--correct-border); }
+        .tf-question.correct .tf-question-line { background: var(--correct-bg); }
+        .tf-question.incorrect { border-color: var(--incorrect-border); }
+        .tf-question.incorrect .tf-question-line { background: var(--incorrect-bg); }
+        .tf-option.correct { background: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-border) !important; }
+        .tf-option.incorrect { background: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-border) !important; }
+        .tf-option.correct-answer-highlight { background: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-border) !important; }
+
+        /* MCQ */
+        .multi-choice-question {
+            margin-bottom: 20px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .multi-choice-question > p {
+            padding: 10px 14px;
+            margin: 0;
+            background: var(--panel-bg);
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+        }
+        .multi-choice-options { padding: 8px; background: var(--bg-secondary); }
+        .multi-choice-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 14px;
+            color: var(--text);
+        }
+        .multi-choice-option:hover { background: var(--bg-tertiary); }
+        .multi-choice-option label { cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; }
+        .multi-choice-option input { accent-color: var(--active-blue); transform: scale(1.1); flex-shrink: 0; }
+        .multi-choice-option.correct { background: var(--correct-bg) !important; border-radius: 6px; }
+        .multi-choice-option.incorrect { background: var(--incorrect-bg) !important; border-radius: 6px; }
+        .multi-choice-option.correct-answer-highlight { background: var(--correct-bg) !important; border: 1px solid var(--correct-border) !important; }
+        .multi-choice-question.correct { border-color: var(--correct-border); }
+        .multi-choice-question.incorrect { border-color: var(--incorrect-border); }
+
+        /* Matching / dropdown rows */
+        .matching-form-container { margin-top: 10px; }
+        .matching-form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1.5px solid transparent;
+            transition: all 0.2s;
+        }
+        .matching-form-label {
+            flex: 1;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .matching-form-row.correct { background: var(--correct-bg); border-color: var(--correct-border); }
+        .matching-form-row.incorrect { background: var(--incorrect-bg); border-color: var(--incorrect-border); }
+
+        /* Sentence completion inline */
+        .sentence-completion { font-size: 14px; line-height: 3; color: var(--text); }
+        .sentence-completion p { margin-bottom: 14px; }
+
+        /* Notes completion boxes */
+        .notes-completion { font-size: 14px; }
+        .notes-section-title { font-weight: 700; font-size: 14px; margin: 16px 0 8px; color: var(--passage-title); border-bottom: 2px solid var(--accent); padding-bottom: 4px; display: inline-block; }
+        .notes-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; }
+        .notes-item-text { flex: 1; }
+
+        /* Summary completion */
+        .summary-text { font-size: 14px; line-height: 2.8; color: var(--text); }
+
+        /* Heading matching */
+        .heading-match-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1.5px solid transparent;
+        }
+        .heading-match-row.correct { background: var(--correct-bg); border-color: var(--correct-border); }
+        .heading-match-row.incorrect { background: var(--incorrect-bg); border-color: var(--incorrect-border); }
+        .heading-match-label { width: 90px; flex-shrink: 0; font-weight: 600; font-size: 14px; color: var(--text); }
+
+        .example-box {
+            border: 1px solid var(--border);
+            background: var(--example-bg);
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin: 14px 0;
+            font-size: 14px;
+            color: var(--text);
+        }
+        .example-box strong { display: block; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+        .example-box ol { padding-left: 20px; }
+        .example-box ol li { margin-bottom: 4px; }
+
+        .correct-answer-display { font-weight: 700; color: var(--correct-border); font-size: 13px; margin-left: 6px; }
+        .correct-answer-highlight { background: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-border) !important; font-weight: 700; border-radius: 4px; padding: 2px 6px; }
+
+        /* Nav arrows */
+        .nav-arrows {
+            position: fixed; bottom: 96px; right: 16px;
+            display: flex; gap: 4px; z-index: 101;
+        }
+        .nav-arrow {
+            width: 40px; height: 40px;
+            background: var(--text); color: var(--bg);
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; border-radius: 6px;
+            transition: opacity 0.15s;
+        }
+        .nav-arrow:hover { opacity: 0.8; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* Bottom nav */
+        .nav-row {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg);
+            padding: 0 12px;
+            display: flex; align-items: center;
+            height: 76px; z-index: 100;
+            border-top: 1px solid var(--border);
+            gap: 4px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .footer__questionWrapper___1tZ46 {
+            display: flex; align-items: center;
+        }
+        .footer__questionNo___3WNct {
+            background: none; border: none;
+            padding: 8px 12px;
+            font-size: 14px; font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.15s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .footer__questionWrapper___1tZ46.selected .footer__questionNo___3WNct {
+            color: var(--active-blue);
+        }
+        .footer__questionNo___3WNct:hover { background: var(--bg-secondary); }
+        .attemptedCount { font-size: 11px; color: var(--text-light); margin-left: 4px; font-weight: 400; }
+        .footer__questionWrapper___1tZ46.selected .attemptedCount { display: none; }
+
+        .footer__subquestionWrapper___9GgoP {
+            display: none; gap: 2px; flex-wrap: wrap; max-width: 460px;
+        }
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP { display: flex; }
+
+        .subQuestion {
+            width: 28px; height: 28px;
+            border: 1.5px solid var(--subq-border);
+            background: var(--subq-bg);
+            color: var(--subq-text);
+            font-size: 11px; font-weight: 600;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 4px;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .subQuestion:hover { background: var(--bg-tertiary); border-color: var(--text-light); }
+        .subQuestion.active { background: var(--active-blue); color: white; border-color: var(--active-blue); }
+        .subQuestion.answered { background: #6b7fcc; color: white; border-color: #5a6fbb; }
+        .subQuestion.correct { background: var(--correct-border); color: white; border-color: var(--correct-border); }
+        .subQuestion.incorrect { background: var(--incorrect-border); color: white; border-color: var(--incorrect-border); }
+
+        .footer__deliverButton___3FM07 {
+            margin-left: auto;
+            margin-right: 8px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+            transition: opacity 0.15s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .footer__deliverButton___3FM07:hover { opacity: 0.88; }
+        .footer__deliverButton___3FM07:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .hidden { display: none !important; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+        /* Highlight toolbar */
+        .highlight-toolbar {
+            position: fixed; display: none;
+            background: var(--toolbar-bg);
+            border-radius: 10px;
+            box-shadow: var(--toolbar-shadow);
+            z-index: 2000; padding: 6px 8px;
+            gap: 4px; align-items: center;
+        }
+        .highlight-toolbar.visible { display: flex; }
+        .toolbar-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 4px; padding: 5px 10px; border: none; border-radius: 6px;
+            cursor: pointer; font-size: 13px; font-weight: 600;
+            transition: all 0.12s; white-space: nowrap;
+        }
+        .toolbar-btn:hover { filter: brightness(1.15); }
+        .toolbar-btn.btn-yellow { background: #f59e0b; color: #1a1a1a; }
+        .toolbar-btn.btn-green  { background: #16a34a; color: #fff; }
+        .toolbar-btn.btn-pink   { background: #db2777; color: #fff; }
+        .toolbar-btn.btn-blue   { background: #2563eb; color: #fff; }
+        .toolbar-btn.btn-clear  { background: #6b7280; color: #fff; }
+        .toolbar-btn.btn-note   { background: #d97706; color: #fff; }
+        .toolbar-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 2px; }
+
+        .highlight { background-color: #fef08a; border-radius: 2px; }
+        .highlight.hl-green { background-color: #bbf7d0; }
+        .highlight.hl-pink  { background-color: #fbcfe8; }
+        .highlight.hl-blue  { background-color: #bfdbfe; }
+        body.night-mode .highlight         { background-color: #854d0e; color: #fef3c7; }
+        body.night-mode .highlight.hl-green { background-color: #14532d; color: #dcfce7; }
+        body.night-mode .highlight.hl-pink  { background-color: #831843; color: #fce7f3; }
+        body.night-mode .highlight.hl-blue  { background-color: #1e3a5f; color: #dbeafe; }
+
+        .comment-highlight {
+            background-color: #fde68a; position: relative; cursor: help;
+            border-bottom: 2px dotted #d97706; border-radius: 2px;
+        }
+        body.night-mode .comment-highlight { background-color: #4a3000; border-bottom-color: #f59e0b; color: #fde68a; }
+        .comment-tooltip {
+            position: absolute; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%);
+            background: #1e1e2e; color: #fff;
+            padding: 8px 12px; border-radius: 8px; font-size: 13px;
+            white-space: normal; max-width: 260px; z-index: 3000;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        .comment-tooltip::after {
+            content: ''; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent; border-top-color: #1e1e2e;
+        }
+        .comment-highlight:hover .comment-tooltip { opacity: 1; }
+        .comment-highlight::after { content: '📝'; font-size: 10px; vertical-align: super; margin-left: 2px; }
+        #toolbar-selection-btns, #toolbar-highlight-btns { display: inline-flex; align-items: center; gap: 4px; }
+
+        /* Notes panel */
+        .notes-panel {
+            position: fixed; right: 16px; top: 66px;
+            width: 270px; max-height: calc(100vh - 160px);
+            background: var(--modal-bg); border: 1px solid var(--border);
+            border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            z-index: 500; overflow-y: auto;
+            display: none; flex-direction: column;
+        }
+        .notes-panel.visible { display: flex; }
+        .notes-panel-header {
+            padding: 12px 14px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; font-size: 13px; color: var(--text);
+            background: var(--bg-secondary); border-radius: 12px 12px 0 0;
+        }
+        .notes-panel-close { background: none; border: none; cursor: pointer; font-size: 16px; color: var(--text-muted); }
+        .notes-list { padding: 10px; flex: 1; }
+        .note-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 13px; }
+        .note-item-text { font-weight: 600; color: #d97706; margin-bottom: 4px; font-size: 12px; }
+        .note-item-delete { background: none; border: none; color: var(--incorrect-border); cursor: pointer; font-size: 12px; float: right; }
+        .notes-empty { color: var(--text-light); font-size: 13px; padding: 10px; text-align: center; }
+
+        .note-input-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 3000; display: none; align-items: center; justify-content: center;
+        }
+        .note-input-overlay.visible { display: flex; }
+        .note-input-box { background: var(--modal-bg); border-radius: 12px; padding: 22px; width: 360px; max-width: 90vw; box-shadow: 0 16px 48px rgba(0,0,0,0.3); border: 1px solid var(--border); }
+        .note-input-box h3 { margin-bottom: 8px; font-size: 15px; color: var(--text); }
+        .note-input-box .selected-text-preview { background: var(--bg-secondary); border-left: 3px solid #d97706; padding: 8px 10px; margin-bottom: 12px; font-size: 13px; color: var(--text-muted); border-radius: 0 4px 4px 0; max-height: 60px; overflow: hidden; }
+        .note-input-box textarea { width: 100%; min-height: 80px; padding: 10px; border: 1.5px solid var(--border-medium); border-radius: 8px; font-size: 14px; background: var(--input-bg); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
+        .note-input-box textarea:focus { border-color: var(--active-blue); }
+        .note-input-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+        .note-input-actions button { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; }
+        .btn-save-note { background: #d97706; color: white; }
+        .btn-cancel-note { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border) !important; }
+
+        /* Results modal */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000; display: flex; justify-content: center; align-items: center;
+        }
+        .modal-overlay.hidden { display: none; }
+        .modal-content {
+            background: var(--modal-bg); padding: 28px; border-radius: 16px;
+            width: 90%; max-width: 560px; max-height: 80vh;
+            display: flex; flex-direction: column; position: relative;
+            border: 1px solid var(--border);
+        }
+        .modal-close-btn { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); }
+        .modal-content h2 { text-align: center; margin-bottom: 16px; font-family: 'Lora', serif; color: var(--text); font-size: 22px; }
+        .results-summary {
+            display: flex; justify-content: space-around; margin-bottom: 20px;
+            font-size: 16px; font-weight: 700; text-align: center;
+            border-bottom: 1px solid var(--border); padding-bottom: 16px; color: var(--text);
+        }
+        .results-summary span { font-size: 28px; display: block; color: var(--accent); }
+        .results-details-container { overflow-y: auto; }
+        .result-row {
+            display: grid; grid-template-columns: 36px 1fr 1fr;
+            gap: 12px; padding: 8px 4px; border-bottom: 1px solid var(--border);
+            font-size: 14px; color: var(--text);
+        }
+        .result-row.incorrect { background: var(--incorrect-bg); border-radius: 4px; }
+        .result-row .q-num { font-weight: 700; }
+        .result-row .user-ans { color: var(--text-muted); }
+        .result-row .correct-ans { color: var(--correct-border); font-weight: 600; }
+
+        .active-question { outline: 2px solid var(--active-blue); outline-offset: 2px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-left">
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+            </div>
+        </div>
+        <button id="night-mode-btn">🌙 Night Mode</button>
+        <button id="notes-toggle-btn">📝 Notes <span id="notes-count" style="background:#d97706;color:white;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
+    </div>
+    <a href="https://t.me/ielts_material_full" target="_blank" class="telegram-link">📚 Full Materials</a>
+</div>
+
+<div class="main-container" id="main-container">
+    <div class="panels-container">
+        <div class="passage-panel" id="passage-panel">
+
+            <!-- PASSAGE 1: The Life of Beatrix Potter -->
+            <div id="passage-text-1" class="reading-passage">
+                <h4>The Life of Beatrix Potter</h4>
+                <div class="subtitle">The children's author and illustrator who created Peter Rabbit</div>
+                <div class="passage-divider"></div>
+                <p>Beatrix Potter is one of the best-selling children's authors of all time. Her popular series of books that includes <em>The Tale of Peter Rabbit</em> was first published over one hundred years ago, and has never been out of print. Generations of children have enjoyed her many stories and illustrations, all of which celebrate the English lifestyle and rural landscape through the adventures of animals.</p>
+                <p>Born to a comfortable middle-class family in London in 1866, Potter spent much of her early life in her own company. She was educated in her parents' house by a governess and rarely saw her brother Bertram, who was sent to boarding school. Having little social contact with children of her own age, Potter began to be drawn into her own world of writing. When Beatrix was 15, she began to keep a diary written in a secret code of her own invention. Even Beatrix herself, when she read back over it in later life, found it difficult to understand. It was not until 15 years after her death that the code was cracked. To the outside world Beatrix appeared a shy and reserved person, but in her diary she was able to express herself openly, and she was critical of the paintings of a number of artists of the day.</p>
+                <p>Potter was a naturally gifted artist, and with the aid of some art lessons she also learnt the technical side of drawing. During her childhood, she looked after many animals, such as rabbits, frogs, and even bats. She drew these animals throughout her childhood, gradually improving the standard of her work by sketching in museums. She was also interested in natural history. She would spend many hours drawing wildlife such as fungi and flowers, and at one time she had an ambition to develop this scientific interest. An uncle tried to help her become a student at the Royal Botanic Gardens at Kew in London, but she was rejected because of her gender. Nevertheless, she achieved a measure of respect from the scientific establishment for her illustrations and contribution to mycology, the study of fungi.</p>
+                <p>When Potter was in her early 20s, her parents tried to arrange a partner for her to marry. Many likely suitors were found; however, Potter turned them all down. She was a fiercely independent woman, and she disliked the idea of being tied down to a domestic life that, at that time, consisted mostly of staying at home and bringing up children. Thus, unusually for British women of those times, she remained single and lived in her parents' home.</p>
+                <p>For several years, Potter tried to get her first children's book, <em>The Tale of Peter Rabbit</em>, published. Her initial attempts proved unsuccessful, but she persevered and eventually the book was accepted for publication by Frederick Warne & Company. The book finally came out in 1902, when Potter was 36, but the publishers did not expect it would sell many copies. In fact, the project was given to the youngest brother in the family company, Norman Warne, for his first project as a kind of test. Luckily, he proved to be a good choice as he warmed to both the book and Potter. He was determined to make a success of the book and developed a good working relationship with Potter as they pored over the individual details of the book. It was Norman who insisted that each drawing would be in colour. Potter insisted that the book remain small so that it would be easy for children to hold, and by the end of the year, 28,000 copies were in print.</p>
+                <p>The relationship between Warne and Potter blossomed, and eventually they became engaged. However, Potter's parents were unhappy about this because of his occupation. They eventually relented, but insisted the couple live apart for six months to give Potter time to change her mind. Tragically, before the wedding could take place, Warne developed pernicious anaemia, a blood disease, and passed away. Potter was devastated and she wrote in a letter to his sister, Millie, <em>'He did not live long, but he fulfilled a useful, happy life. I must try to make a fresh beginning next year.'</em></p>
+                <p>After Warne's death, Potter moved to the Lake District in northern England. In 1905 she bought a small farm there, and for the next eight years she busied herself writing more books, some of which were based in or around the area. She lived there for the remainder of her life, but due to failing eyesight she was forced to stop writing children's books. Instead, she devoted her time to the breeding of sheep and helping with the conservation of farms in the district. Using proceeds from her very successful books and later her inheritance, Potter was able to buy many working farms. On her death, she left over 4,000 acres to the National Trust, an organisation which protects historical buildings and areas of countryside in England. It has meant that her beloved countryside is now accessible to many visitors.</p>
+            </div>
+
+            <!-- PASSAGE 2: The Economic Effect of Climate -->
+            <div id="passage-text-2" class="reading-passage hidden">
+                <h4>The Economic Effect of Climate</h4>
+                <div class="subtitle">Latitude is crucial to a nation's strength, says Anjana Ahuja</div>
+                <div class="passage-divider"></div>
+                <p><span class="para-label">A</span> Dr William Masters was reading a book about mosquitoes when an idea struck him. 'There was this anecdote about the yellow fever epidemic that hit Philadelphia in 1793.' Masters recalls. 'This epidemic decimated the city until the first frost came.' The sub-zero temperatures froze out the insects, allowing Philadelphia to recover. If weather could be the key to a city's fortunes, Masters thought, then why not to historical fortunes of nations? And could frost lie at the heart of one of the most enduring economic mysteries of all — why are almost all the wealthy, industrialized nations to be found where the climate is cooler?</p>
+                <p><span class="para-label">B</span> After two years of research, he thinks that he has found a piece of the puzzle. Masters, an agricultural economist from Purdue University in Indiana, and Margaret McMillan at Tufts University, Boston, show that annual frosts are among the factors that distinguish rich nations from poor ones. Their study is published this month in the Journal of Economic Growth. The pair speculate that cold snaps have two main benefits — they freeze pests that would otherwise destroy crops, and also freeze organisms, such as those carried by mosquitoes, that carry disease. The result is agricultural abundance and a big workforce.</p>
+                <p><span class="para-label">C</span> The academics took two sets of information. The first was average income for countries, the second was climate data provided by the University of East Anglia. They found a curious tally between the sets. Countries having five or more frosty days in the winter months are uniformly rich; those with fewer than five are impoverished. The authors speculate that the five-day figure is important; it could be the minimum time needed to kill pests in the soil. To illustrate this, Masters notes: 'Finland is a small country that is growing quickly, but Bolivia is a small country that isn't growing at all. Perhaps climate has something to do with that.'</p>
+                <p><span class="para-label">D</span> Other minds have applied themselves to the split between poor and rich nations, citing anthropological, climatic and zoological reasons for why temperate nations are the most affluent. Jared Diamond, from the University of California at Los Angeles, pointed out in his book <em>Guns, Germs and Steel</em> that Eurasia is broadly aligned east-west, while Africa and the Americas are aligned north-south. So in Europe crops could move quickly across latitudes because climates are similar. One of the first domesticated crops, einkorn wheat, extended quickly from the Middle East into Europe; it took twice as long for it to get from Mexico to what is now the eastern United States. This easy movement along similar latitudes in Eurasia would also have meant a faster dissemination of other technologies, such as the wheel and writing, Diamond speculates.</p>
+                <p><span class="para-label">E</span> There are exceptions to the 'cold equals rich' argument. There are well-heeled tropical countries such as Singapore, a result of its superior trading position. Likewise, not all European countries are moneyed. Masters stresses that climate will never be the overriding factor — the wealth of nations is too complicated to be attributable to just one factor. Climate, he feels, somehow combines with other factors — such as the presence of institutions, including governments, and access to trading routes — to determine whether a country will do well.</p>
+                <p><span class="para-label">F</span> In the past, Masters says, economists thought that institutions had the biggest effect on the economy, because they brought order to a country in the form of, for example, laws and property rights. With order, so the thinking went, came affluence. 'But there are some problems that even countries with institutions have not been able to get around,' he says. 'My feeling is that, as countries get richer, they get better institutions. And the accumulation of wealth and improvement in governing institutions are both helped by a favourable environment, including climate.'</p>
+                <p><span class="para-label">G</span> This does not mean, he insists, that tropical countries are beyond economic help and destined to remain penniless. Instead of aid being geared towards improving administrative systems, it should be spent on technology to improve agriculture and to combat disease. Masters cites one example: 'There are regions in India that have been provided with irrigation — agricultural productivity has gone up and there has been an improvement in health.' Supplying vaccines against tropical diseases and developing crop varieties that can grow in the tropics would break the poverty cycle.</p>
+            </div>
+
+            <!-- PASSAGE 3: Decision, Decision! -->
+            <div id="passage-text-3" class="reading-passage hidden">
+                <h4>Decision, Decision!</h4>
+                <div class="subtitle">Research explores when we can make a vital decision quickly and when we need to proceed more deliberately</div>
+                <div class="passage-divider"></div>
+                <p><span class="para-label">A</span> A widely recognised legend tells us that in Gordium (in what is now Turkey) in the fourth century BC an oxcart was roped to a pole with a complex knot. It was said that the first person to untie it would become the king of Asia. Unfortunately, the knot proved impossible to untie. The story continues that when confronted with this problem, rather than deliberating on how to untie the Gordian knot, Alexander, the famous ruler of the Greeks in the ancient world, simply took out his sword and cut it in two — then went on to conquer Asia. Ever since, the notion of a 'Gordian solution' has referred to the attractiveness of a simple answer to an otherwise intractable problem.</p>
+                <p><span class="para-label">B</span> Among researchers in the psychology of decision making, however, such solutions have traditionally held little appeal. In particular, the 'conflict model' of decision making proposed by psychologists Irving Janis and Leon Mann in their 1977 book, <em>Decision Making</em>, argued that a complex decision-making process is essential for guarding individuals and groups from the peril of 'group-think'. Decisions made without thorough canvassing, surveying, weighing, examining and reexamining relevant information and options would be suboptimal and often disastrous. One foreign affair decision made by a well-known US political leader in the 1960s is typically held up as an example of the perils of inadequate thought, whereas his successful handling of a water crisis is cited as an example of the advantages of careful deliberation. However, examination of these historical events by Peter Suedfeld and Roderick Kramer found little difference in the two decision-making processes; both crises required and received complex consideration by the political administration, but later only the second one was deemed to be effective.</p>
+                <p><span class="para-label">C</span> In general, however, organizational and political science offers little evidence that complex decisions fare better than simpler ones. In fact, a growing body of work suggests that in many situations simply 'snap' decisions with being routinely superior to more complex ones — an idea that gained widespread public appeal with Malcolm Gladwell's best-selling book <em>Blink</em> (2005).</p>
+                <p><span class="para-label">D</span> An article by Ap Dijksterhuis of the University of Amsterdam and his colleagues, 'Making the Right Choice: the Deliberation-without-attention Effect', runs very much in the spirit of Gladwell's influential text. Its core argument is that to be effective, conscious (deliberative) decision making requires cognitive resources. Because increasingly complex decisions place increasing strain on those resources, the quality of our decisions declines as their complexity increases. In short, complex decisions overrun our cognitive powers. On the other hand, unconscious decision making (what the author refers to as 'deliberation without attention') requires no cognitive resources, so task complexity does not affect effectiveness. The seemingly counterintuitive conclusion is that although conscious thought enhances simple decisions, the opposite holds true for more complex decisions.</p>
+                <p><span class="para-label">E</span> Dijksterhuis reports four simple but elegant studies supporting this argument. In one, participants assessed the quality of four hypothetical cars by considering either four attributes (a simple task) or 12 attributes (a complex task). Among participants who considered four attributes, those who were allowed to engage in undistracted deliberative thought did better at discriminating between the best and worst cars. Those who were distracted and thus unable to deliberate had to rely on their unconscious thinking and did less well. The opposite pattern emerged when people considered 12 criteria. In this case, conscious deliberation led to inferior discrimination and poor decisions.</p>
+                <p><span class="para-label">F</span> In other studies, Dijksterhuis surveyed people shopping for clothes ('simple' products) and furniture ('complex' products). Compared with those who said they had deliberated long and hard, shoppers who bought with little conscious deliberation felt less happy with their simple clothing purchase but happier with the complex furniture purchases. Deliberation without attention actually produced better results as the decisions became more complex.</p>
+                <p><span class="para-label">G</span> From there, however, the researchers take a big leap. They write: There is no reason to assume that the deliberation-without-attention effect does not generalize to other types of choices — political, managerial or otherwise. In such cases, it should benefit the individual to think consciously about simple matters and to delegate thinking about more complicated matters to the unconscious.</p>
+                <p><span class="para-label">H</span> This radical inference contradicts standard political and managerial theory but doubtless comforts those in politics and management who always find the simple solution to the complex problem an attractive proposition. Indeed, one suspects many of our political leaders already embrace this wisdom.</p>
+                <p><span class="para-label">I</span> Still, it is there, in the realms of society and its governance, that the more problematic implications of deliberation without attention begin to surface. Variables that can be neatly circumscribed in decisions about shopping lose clarity in a world of group dynamics, social interaction, history and politics. Two pertinent questions arise. First, what counts as a complex decision? And second, what counts as a good outcome?</p>
+                <p><span class="para-label">J</span> As social psychologist Kurt Lewin (1890–1947) noted, a 'good' decision that nobody respects is actually bad. His classic studies of decision making showed that participating in deliberative processes makes people more likely to abide by the results. The issue here is that when political decision-makers make mistakes, it is their politics, or the relationship between their politics and our own, rather than psychology which is at fault.</p>
+                <p><span class="para-label">K</span> Gladwell's book and Dijksterhuis's paper are invaluable in pointing out the limitations of the conventional wisdom that decision quality rises with decision-making complexity. But this work still tempts us to believe that decision making is simply a matter of psychology, rather than also a question of politics, ideology and group membership. Avoiding social considerations in a search for general appeal rather than toward it.</p>
+            </div>
+
+        </div>
+        <div class="resizer" id="resizer"></div>
+        <div class="questions-panel" id="questions-panel">
+
+            <!-- QUESTIONS 1 -->
+            <div id="questions-1" class="question-set">
+                <div id="part-header-1" class="part-header">
+                    <p>Part 1</p>
+                    <p>Read the text and answer Questions 1–13.</p>
+                </div>
+
+                <!-- Q1-6: Notes completion (ONE WORD ONLY) -->
+                <div class="question" data-q-start="1" data-q-end="6">
+                    <div class="question-prompt">
+                        <p>Questions 1–6</p>
+                        <p>Complete the notes below. Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    </div>
+                    <div class="notes-completion">
+                        <div class="notes-section-title">Beatrix Potter</div>
+                        <div class="notes-section-title">Success as an author</div>
+                        <div style="margin-bottom:10px; font-size:14px;">• Her books have been in print for more than 100 years.</div>
+                        <div class="notes-section-title">Childhood</div>
+                        <div class="notes-item">• She received lessons at home from a <strong>1</strong> <input type="text" class="answer-input wide" id="q1" placeholder="1" data-q-start="1" data-q-end="1"></div>
+                        <div class="notes-item">• She wrote in her <strong>2</strong> <input type="text" class="answer-input wide" id="q2" placeholder="2" data-q-start="2" data-q-end="2"> in code.</div>
+                        <div class="notes-item">• She disliked the work of some <strong>3</strong> <input type="text" class="answer-input wide" id="q3" placeholder="3" data-q-start="3" data-q-end="3"> of the time.</div>
+                        <div class="notes-item">• She took lessons in drawing.</div>
+                        <div class="notes-item">• She practised drawing things she saw when she visited <strong>4</strong> <input type="text" class="answer-input wide" id="q4" placeholder="4" data-q-start="4" data-q-end="4"></div>
+                        <div class="notes-section-title">Life as a young adult</div>
+                        <div class="notes-item">• Her <strong>5</strong> <input type="text" class="answer-input wide" id="q5" placeholder="5" data-q-start="5" data-q-end="5"> to have a career in natural history was not realised.</div>
+                        <div class="notes-item">• Her illustrations were recognised as assisting research into <strong>6</strong> <input type="text" class="answer-input wide" id="q6" placeholder="6" data-q-start="6" data-q-end="6"></div>
+                    </div>
+                </div>
+
+                <!-- Q7-13: TRUE/FALSE/NOT GIVEN -->
+                <div class="question" data-q-start="7" data-q-end="13">
+                    <div class="question-prompt">
+                        <p>Questions 7–13</p>
+                        <p>Do the following statements agree with the information given in Reading Passage 1? Write:</p>
+                        <ul>
+                            <li><strong>TRUE</strong> — if the statement agrees with the information</li>
+                            <li><strong>FALSE</strong> — if the statement contradicts the information</li>
+                            <li><strong>NOT GIVEN</strong> — if there is no information on this</li>
+                        </ul>
+                    </div>
+                    <div class="tf-question" data-q-start="7" data-q-end="7">
+                        <div class="tf-question-line"><span class="tf-question-number">7</span><span class="tf-question-text">The life of a typical married woman at that time appealed to Potter.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q7" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q7" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q7" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="8" data-q-end="8">
+                        <div class="tf-question-line"><span class="tf-question-number">8</span><span class="tf-question-text">Potter's publishers insisted on changing the title of her first book.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q8" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q8" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q8" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="9" data-q-end="9">
+                        <div class="tf-question-line"><span class="tf-question-number">9</span><span class="tf-question-text">The publishers doubted whether Potter's first book would be successful.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q9" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q9" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q9" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="10" data-q-end="10">
+                        <div class="tf-question-line"><span class="tf-question-number">10</span><span class="tf-question-text">Norman Warne suggested Potter include black and white illustrations in her first book.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q10" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q10" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q10" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="11" data-q-end="11">
+                        <div class="tf-question-line"><span class="tf-question-number">11</span><span class="tf-question-text">At first, Potter's parents disapproved of Norman Warne as a potential husband.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q11" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q11" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q11" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="12" data-q-end="12">
+                        <div class="tf-question-line"><span class="tf-question-number">12</span><span class="tf-question-text">Potter continued writing children's books until her death.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q12" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q12" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q12" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="13" data-q-end="13">
+                        <div class="tf-question-line"><span class="tf-question-number">13</span><span class="tf-question-text">Potter's gift to the National Trust was the largest in recent times.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q13" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q13" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q13" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS 2 -->
+            <div id="questions-2" class="question-set hidden">
+                <div id="part-header-2" class="part-header">
+                    <p>Part 2</p>
+                    <p>Read the text and answer Questions 14–26.</p>
+                </div>
+
+                <!-- Q14-20: Paragraph Headings Matching -->
+                <div class="question" data-q-start="14" data-q-end="20">
+                    <div class="question-prompt">
+                        <p>Questions 14–20</p>
+                        <p>Reading Passage 2 has seven paragraphs, A–G. Choose the correct heading for each paragraph from the list of headings below.</p>
+                    </div>
+                    <div class="example-box">
+                        <strong>List of Headings</strong>
+                        <ol type="i">
+                            <li>Level of wealth affected by several other influences besides climate</li>
+                            <li>The failure of vaccination programmes</li>
+                            <li>The problems experienced by small countries</li>
+                            <li>The role of governments in creating wealth</li>
+                            <li>The best use of financial assistance</li>
+                            <li>The inspiration for Masters's research</li>
+                            <li>The advantages of cold weather to people and agriculture</li>
+                            <li>Positive correlations between climate and economy</li>
+                            <li>Reflecting on the traditional view</li>
+                            <li>Crop spread in Europe and other continents</li>
+                        </ol>
+                    </div>
+                    <div class="matching-form-container">
+                        <div class="heading-match-row"><span class="heading-match-label"><strong>14</strong> Paragraph A</span>
+                            <select class="answer-input wide" id="q14"><option value=""></option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option></select>
+                        </div>
+                        <div class="heading-match-row"><span class="heading-match-label"><strong>15</strong> Paragraph B</span>
+                            <select class="answer-input wide" id="q15"><option value=""></option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option></select>
+                        </div>
+                        <div class="heading-match-row"><span class="heading-match-label"><strong>16</strong> Paragraph C</span>
+                            <select class="answer-input wide" id="q16"><option value=""></option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option></select>
+                        </div>
+                        <div class="heading-match-row"><span class="heading-match-label"><strong>17</strong> Paragraph D</span>
+                            <select class="answer-input wide" id="q17"><option value=""></option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option></select>
+                        </div>
+                        <div class="heading-match-row"><span class="heading-match-label"><strong>18</strong> Paragraph E</span>
+                            <select class="answer-input wide" id="q18"><option value=""></option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option></select>
+                        </div>
+                        <div class="heading-match-row"><span class="heading-match-label"><strong>19</strong> Paragraph F</span>
+                            <select class="answer-input wide" id="q19"><option value=""></option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option></select>
+                        </div>
+                        <div class="heading-match-row"><span class="heading-match-label"><strong>20</strong> Paragraph G</span>
+                            <select class="answer-input wide" id="q20"><option value=""></option><option value="i">i</option><option value="ii">ii</option><option value="iii">iii</option><option value="iv">iv</option><option value="v">v</option><option value="vi">vi</option><option value="vii">vii</option><option value="viii">viii</option><option value="ix">ix</option><option value="x">x</option></select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q21-26: Sentence completion (NO MORE THAN THREE WORDS) -->
+                <div class="question" data-q-start="21" data-q-end="26">
+                    <div class="question-prompt">
+                        <p>Questions 21–26</p>
+                        <p>Complete the sentences below. Choose <strong>NO MORE THAN THREE WORDS</strong> from the passage for each answer.</p>
+                    </div>
+                    <div class="sentence-completion">
+                        <p><strong>21</strong>&nbsp; Philadelphia recovered from its <input type="text" class="answer-input wide" id="q21" placeholder="21" data-q-start="21" data-q-end="21"> when the temperature dropped dramatically.</p>
+                        <p><strong>22</strong>&nbsp; <input type="text" class="answer-input wide" id="q22" placeholder="22" data-q-start="22" data-q-end="22"> is an example of a small country whose economy is expanding.</p>
+                        <p><strong>23</strong>&nbsp; <input type="text" class="answer-input wide" id="q23" placeholder="23" data-q-start="23" data-q-end="23"> spread more slowly from Mexico than it did from the Middle East.</p>
+                        <p><strong>24</strong>&nbsp; Technology spread more quickly in <input type="text" class="answer-input wide" id="q24" placeholder="24" data-q-start="24" data-q-end="24"> than in Africa.</p>
+                        <p><strong>25</strong>&nbsp; <input type="text" class="answer-input wide" id="q25" placeholder="25" data-q-start="25" data-q-end="25"> is economically rich in spite of its tropical climate.</p>
+                        <p><strong>26</strong>&nbsp; Aid should be used to improve agriculture rather than to improve <input type="text" class="answer-input wide" id="q26" placeholder="26" data-q-start="26" data-q-end="26"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS 3 -->
+            <div id="questions-3" class="question-set hidden">
+                <div id="part-header-3" class="part-header">
+                    <p>Part 3</p>
+                    <p>Read the text and answer Questions 27–40.</p>
+                </div>
+
+                <!-- Q27-31 (renumbered from original 1-5): MCQ -->
+                <div class="question" data-q-start="27" data-q-end="31">
+                    <div class="question-prompt">
+                        <p>Questions 27–31</p>
+                        <p>Choose the correct letter, <strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>.</p>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="27" data-q-end="27">
+                        <p><strong>27</strong>&nbsp; The legend of the Gordian knot is used to illustrate the idea that</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="A"> A &nbsp;anyone can solve a difficult problem</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="B"> B &nbsp;difficult problems can have easy solutions</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="C"> C &nbsp;the solution to any problem requires a lot of thought</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q27" value="D"> D &nbsp;people who can solve complex problems make good leaders</label></div>
+                        </div>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="28" data-q-end="28">
+                        <p><strong>28</strong>&nbsp; The 'conflict model' of decision making proposed by Janis and Mann requires that</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="A"> A &nbsp;opposing political parties be involved</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="B"> B &nbsp;all-important facts be considered</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="C"> C &nbsp;people be encouraged to have different ideas</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q28" value="D"> D &nbsp;previous similar situations be thoroughly examined</label></div>
+                        </div>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="29" data-q-end="29">
+                        <p><strong>29</strong>&nbsp; According to recent thinking reinforced by Malcolm Gladwell, the best decisions</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="A"> A &nbsp;involve consultation</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="B"> B &nbsp;involve complex thought</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="C"> C &nbsp;are made very quickly</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q29" value="D"> D &nbsp;are the most attractive option</label></div>
+                        </div>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="30" data-q-end="30">
+                        <p><strong>30</strong>&nbsp; Dijksterhuis and his colleagues claim in their article that</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="A"> A &nbsp;our cognitive resources improve as tasks become more complex</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="B"> B &nbsp;conscious decision making is negatively affected by task complexity</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="C"> C &nbsp;unconscious decision making is a popular approach</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q30" value="D"> D &nbsp;deliberation without attention defines the way we make decisions</label></div>
+                        </div>
+                    </div>
+                    <div class="multi-choice-question" data-q-start="31" data-q-end="31">
+                        <p><strong>31</strong>&nbsp; Dijksterhuis's car study found that, in simple tasks, participants</p>
+                        <div class="multi-choice-options">
+                            <div class="multi-choice-option"><label><input type="radio" name="q31" value="A"> A &nbsp;were involved in lengthy discussions</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q31" value="B"> B &nbsp;found it impossible to make decisions quickly</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q31" value="C"> C &nbsp;were unable to differentiate between the options</label></div>
+                            <div class="multi-choice-option"><label><input type="radio" name="q31" value="D"> D &nbsp;could make a better choice when allowed to concentrate</label></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q32-35: Summary completion from word list A-I -->
+                <div class="question" data-q-start="32" data-q-end="35">
+                    <div class="question-prompt">
+                        <p>Questions 32–35</p>
+                        <p>Complete the summary using the list of words <strong>A–I</strong> below. Write the correct letter in boxes 32–35.</p>
+                    </div>
+                    <div class="example-box">
+                        <strong>Word List</strong>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;font-size:13px;">
+                            <span>A more</span><span>B counterintuitive</span><span>C simple</span>
+                            <span>D better</span><span>E conscious</span><span>F obvious</span>
+                            <span>G complex</span><span>H less</span><span>I worse</span>
+                        </div>
+                    </div>
+                    <div class="summary-text">
+                        Using clothing and furniture as examples of different types of purchases, Dijksterhuis questioned shoppers on their satisfaction with what they had bought. People who spent 
+                        <strong>32</strong> <select class="answer-input narrow" id="q32"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select> 
+                        time buying simple clothing items were more satisfied than those who had not. However, when buying furniture, shoppers made 
+                        <strong>33</strong> <select class="answer-input narrow" id="q33"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select> 
+                        purchasing decisions if they didn't think too hard. From this, the researchers concluded that in other choices, perhaps more important than shopping, 
+                        <strong>34</strong> <select class="answer-input narrow" id="q34"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select> 
+                        decisions are best made by the unconscious. The writer comments that Dijksterhuis's finding is apparently 
+                        <strong>35</strong> <select class="answer-input narrow" id="q35"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select> 
+                        but nonetheless true.
+                    </div>
+                </div>
+
+                <!-- Q36-40: YES/NO/NOT GIVEN -->
+                <div class="question" data-q-start="36" data-q-end="40">
+                    <div class="question-prompt">
+                        <p>Questions 36–40</p>
+                        <p>Do the following statements agree with the views of the writer in Reading Passage? Write:</p>
+                        <ul>
+                            <li><strong>YES</strong> — if the statement agrees with the views of the writer</li>
+                            <li><strong>NO</strong> — if the statement contradicts the views of the writer</li>
+                            <li><strong>NOT GIVEN</strong> — if it is impossible to say what the writer thinks</li>
+                        </ul>
+                    </div>
+                    <div class="tf-question" data-q-start="36" data-q-end="36">
+                        <div class="tf-question-line"><span class="tf-question-number">36</span><span class="tf-question-text">Dijksterhuis's findings agree with existing political and management theories.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q36" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q36" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q36" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="37" data-q-end="37">
+                        <div class="tf-question-line"><span class="tf-question-number">37</span><span class="tf-question-text">Some political leaders seem to use deliberation without attention when making complex decisions.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q37" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q37" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q37" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="38" data-q-end="38">
+                        <div class="tf-question-line"><span class="tf-question-number">38</span><span class="tf-question-text">All political decisions are complex ones.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q38" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q38" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q38" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="39" data-q-end="39">
+                        <div class="tf-question-line"><span class="tf-question-number">39</span><span class="tf-question-text">We judge political errors according to our own political beliefs.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q39" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q39" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q39" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="40" data-q-end="40">
+                        <div class="tf-question-line"><span class="tf-question-number">40</span><span class="tf-question-text">Social considerations must be taken into account for any examination of decision making to prove useful.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q40" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q40" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q40" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Nav arrows -->
+<div class="nav-arrows">
+    <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+    <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+</div>
+
+<!-- Bottom nav -->
+<nav class="nav-row">
+    <div class="footer__questionWrapper___1tZ46 selected">
+        <button class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+            Part <strong>1</strong><span class="attemptedCount">0 of 13</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(1)">1</button>
+            <button class="subQuestion" onclick="goToQuestion(2)">2</button>
+            <button class="subQuestion" onclick="goToQuestion(3)">3</button>
+            <button class="subQuestion" onclick="goToQuestion(4)">4</button>
+            <button class="subQuestion" onclick="goToQuestion(5)">5</button>
+            <button class="subQuestion" onclick="goToQuestion(6)">6</button>
+            <button class="subQuestion" onclick="goToQuestion(7)">7</button>
+            <button class="subQuestion" onclick="goToQuestion(8)">8</button>
+            <button class="subQuestion" onclick="goToQuestion(9)">9</button>
+            <button class="subQuestion" onclick="goToQuestion(10)">10</button>
+            <button class="subQuestion" onclick="goToQuestion(11)">11</button>
+            <button class="subQuestion" onclick="goToQuestion(12)">12</button>
+            <button class="subQuestion" onclick="goToQuestion(13)">13</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46">
+        <button class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+            Part <strong>2</strong><span class="attemptedCount">0 of 13</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(14)">14</button>
+            <button class="subQuestion" onclick="goToQuestion(15)">15</button>
+            <button class="subQuestion" onclick="goToQuestion(16)">16</button>
+            <button class="subQuestion" onclick="goToQuestion(17)">17</button>
+            <button class="subQuestion" onclick="goToQuestion(18)">18</button>
+            <button class="subQuestion" onclick="goToQuestion(19)">19</button>
+            <button class="subQuestion" onclick="goToQuestion(20)">20</button>
+            <button class="subQuestion" onclick="goToQuestion(21)">21</button>
+            <button class="subQuestion" onclick="goToQuestion(22)">22</button>
+            <button class="subQuestion" onclick="goToQuestion(23)">23</button>
+            <button class="subQuestion" onclick="goToQuestion(24)">24</button>
+            <button class="subQuestion" onclick="goToQuestion(25)">25</button>
+            <button class="subQuestion" onclick="goToQuestion(26)">26</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46">
+        <button class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+            Part <strong>3</strong><span class="attemptedCount">0 of 14</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(27)">27</button>
+            <button class="subQuestion" onclick="goToQuestion(28)">28</button>
+            <button class="subQuestion" onclick="goToQuestion(29)">29</button>
+            <button class="subQuestion" onclick="goToQuestion(30)">30</button>
+            <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+            <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+            <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+            <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+            <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+            <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+            <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+            <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+            <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+            <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+        </div>
+    </div>
+    <button id="deliver-button" class="footer__deliverButton___3FM07">✓ Check Answers</button>
+</nav>
+
+<!-- Highlight toolbar -->
+<div id="highlightToolbar" class="highlight-toolbar">
+    <span id="toolbar-selection-btns">
+        <button class="toolbar-btn btn-yellow" onclick="applyHighlight('hl-yellow')">🟡</button>
+        <button class="toolbar-btn btn-green"  onclick="applyHighlight('hl-green')">🟢</button>
+        <button class="toolbar-btn btn-pink"   onclick="applyHighlight('hl-pink')">🔴</button>
+        <button class="toolbar-btn btn-blue"   onclick="applyHighlight('hl-blue')">🔵</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-note"   onclick="openNoteInput()">📝 Note</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear"  onclick="clearThisHighlight()">✕ Remove</button>
+        <button class="toolbar-btn btn-clear"  onclick="clearAllHighlights()">⊘ All</button>
+    </span>
+    <span id="toolbar-highlight-btns" style="display:none">
+        <button class="toolbar-btn btn-yellow" onclick="recolorHighlight('hl-yellow')">🟡</button>
+        <button class="toolbar-btn btn-green"  onclick="recolorHighlight('hl-green')">🟢</button>
+        <button class="toolbar-btn btn-pink"   onclick="recolorHighlight('hl-pink')">🔴</button>
+        <button class="toolbar-btn btn-blue"   onclick="recolorHighlight('hl-blue')">🔵</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-note"   onclick="openNoteInput()">📝 Note</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear"  onclick="clearThisHighlight()">✕ Remove</button>
+        <button class="toolbar-btn btn-clear"  onclick="clearAllHighlights()">⊘ All</button>
+    </span>
+</div>
+
+<!-- Notes panel -->
+<div id="notesPanel" class="notes-panel">
+    <div class="notes-panel-header">
+        <span>📝 My Notes</span>
+        <button class="notes-panel-close" onclick="toggleNotesPanel()">✕</button>
+    </div>
+    <div class="notes-list" id="notesList">
+        <p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p>
+    </div>
+</div>
+
+<!-- Note input modal -->
+<div id="noteInputOverlay" class="note-input-overlay">
+    <div class="note-input-box">
+        <h3>Add a Note</h3>
+        <div class="selected-text-preview" id="noteTextPreview"></div>
+        <textarea id="noteTextarea" placeholder="Type your note here..."></textarea>
+        <div class="note-input-actions">
+            <button class="btn-cancel-note" onclick="cancelNote()">Cancel</button>
+            <button class="btn-save-note"   onclick="saveNote()">Save Note</button>
+        </div>
+    </div>
+</div>
+
+<!-- Results modal -->
+<div id="results-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeResultsModal()">×</button>
+        <h2>Your Results</h2>
+        <div class="results-summary">
+            <div>Score<span id="results-score">—</span></div>
+            <div>out of 40</div>
+            <div>Band<span id="results-band">—</span></div>
+        </div>
+        <div id="results-details" class="results-details-container"></div>
+        <div style="text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:center;">
+            <button onclick="retakeTest()" style="background:var(--accent);color:white;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">🔄 Retake</button>
+            <button onclick="closeResultsModal()" style="background:var(--bg-secondary);color:var(--text);border:1px solid var(--border-medium);border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Review</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let currentPassage = 1, currentQuestion = 1;
+    let selectedRange = null, selectedText = '';
+    let highlightTarget = null, lastAppliedHighlight = null;
+    let timeInSeconds = 3600, timerInterval;
+    let activeQuestionElement = null;
+    let notes = [], nextNoteId = 1;
+
+    const timerDisplay     = document.querySelector('.timer-display');
+    const timerToggleBtn   = document.getElementById('timer-toggle-btn');
+    const timerResetBtn    = document.getElementById('timer-reset-btn');
+    const deliverButton    = document.getElementById('deliver-button');
+    const resizer          = document.getElementById('resizer');
+    const passagePanel     = document.getElementById('passage-panel');
+    const questionsPanel   = document.getElementById('questions-panel');
+    const highlightToolbar = document.getElementById('highlightToolbar');
+    const nightModeBtn     = document.getElementById('night-mode-btn');
+    const notesToggleBtn   = document.getElementById('notes-toggle-btn');
+    const notesPanel       = document.getElementById('notesPanel');
+    const notesList        = document.getElementById('notesList');
+    const notesCount       = document.getElementById('notes-count');
+    const noteInputOverlay = document.getElementById('noteInputOverlay');
+    const noteTextarea     = document.getElementById('noteTextarea');
+    const noteTextPreview  = document.getElementById('noteTextPreview');
+
+    const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+    const playIcon  = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>';
+
+    // ── CORRECT ANSWERS ──────────────────────────────────────────
+    const correctAnswers = {
+        // Passage 1 — Beatrix Potter
+        '1': 'governess',
+        '2': 'diary',
+        '3': 'artists',
+        '4': 'museums',
+        '5': 'ambition',
+        '6': 'mycology',
+        '7': 'FALSE',
+        '8': 'NOT GIVEN',
+        '9': 'TRUE',
+        '10': 'FALSE',
+        '11': 'TRUE',
+        '12': 'FALSE',
+        '13': 'NOT GIVEN',
+        // Passage 2 — Economic Effect of Climate
+        '14': 'vi',
+        '15': 'vii',
+        '16': 'viii',
+        '17': 'x',
+        '18': 'i',
+        '19': 'iv',
+        '20': 'v',
+        '21': ['yellow fever epidemic', 'epidemic'],
+        '22': 'Finland',
+        '23': ['Einkorn wheat', 'einkorn wheat'],
+        '24': 'Eurasia',
+        '25': 'Singapore',
+        '26': 'administrative systems',
+        // Passage 3 — Decision, Decision!
+        '27': 'B',
+        '28': 'B',
+        '29': 'C',
+        '30': 'B',
+        '31': 'D',
+        '32': 'A',
+        '33': 'D',
+        '34': 'G',
+        '35': 'B',
+        '36': 'NO',
+        '37': 'NOT GIVEN',
+        '38': 'NOT GIVEN',
+        '39': 'YES',
+        '40': 'NOT GIVEN',
+    };
+
+    // ── INIT ──────────────────────────────────────────────────────
+    function initialize() {
+        startTimer();
+        switchToPart(1);
+        document.body.addEventListener('input', updateAllIndicators);
+        document.body.addEventListener('change', updateAllIndicators);
+        deliverButton.addEventListener('click', checkAnswers);
+        timerToggleBtn.addEventListener('click', toggleTimer);
+        timerResetBtn.addEventListener('click', resetTimer);
+        nightModeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('night-mode');
+            nightModeBtn.textContent = document.body.classList.contains('night-mode') ? '☀️ Day Mode' : '🌙 Night Mode';
+        });
+        notesToggleBtn.addEventListener('click', () => notesPanel.classList.toggle('visible'));
+        resizer.addEventListener('mousedown', initResize);
+        initHighlightToolbar();
+        // Style radio options as pill buttons
+        document.querySelectorAll('.tf-option').forEach(label => {
+            label.addEventListener('click', () => {
+                const name = label.querySelector('input').name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+                    r.closest('.tf-option').classList.remove('selected');
+                });
+                label.classList.add('selected');
+            });
+        });
+    }
+
+    // ── ANSWER CHECKING ───────────────────────────────────────────
+    function checkAnswers() {
+        // Unhide all sections temporarily for reading
+        document.querySelectorAll('.question-set.hidden, .reading-passage.hidden').forEach(s => s.classList.remove('hidden'));
+
+        document.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+        deliverButton.disabled = true;
+        clearInterval(timerInterval);
+
+        let score = 0;
+        const detailsContainer = document.getElementById('results-details');
+        detailsContainer.innerHTML = '';
+
+        document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(el =>
+            el.classList.remove('correct','incorrect','correct-answer-highlight'));
+        document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+
+        function getPartId(qNum) {
+            if (qNum <= 13) return 'questions-1';
+            if (qNum <= 26) return 'questions-2';
+            return 'questions-3';
+        }
+
+        function normalize(str) { return str.trim().toLowerCase(); }
+
+        for (let i = 1; i <= 40; i++) {
+            const key = String(i);
+            const correct = correctAnswers[key];
+            let userAnswer = '', isCorrect = false, displayUser = 'Not answered';
+            const correctDisplay = Array.isArray(correct) ? correct[0] : correct;
+
+            const radios = document.querySelectorAll(`input[name="q${i}"][type="radio"]`);
+            if (radios.length > 0) {
+                // Radio (T/F/NG, MCQ)
+                const checked = document.querySelector(`input[name="q${i}"]:checked`);
+                if (checked) {
+                    userAnswer = checked.value;
+                    displayUser = userAnswer;
+                    isCorrect = userAnswer === correct;
+                    const lbl = checked.closest('.tf-option, .multi-choice-option');
+                    if (lbl) lbl.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                const container = radios[0].closest('.tf-question, .multi-choice-question');
+                if (container) {
+                    container.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (!isCorrect) {
+                        const correctOpt = container.querySelector(`input[value="${correct}"]`);
+                        if (correctOpt) correctOpt.closest('.tf-option, .multi-choice-option')?.classList.add('correct-answer-highlight');
+                    }
+                }
+                if (isCorrect) score++;
+            } else {
+                const section = document.getElementById(getPartId(i));
+                const el = section?.querySelector(`#q${i}`);
+                if (el && el.tagName === 'SELECT') {
+                    userAnswer = el.value;
+                    displayUser = userAnswer || 'Not answered';
+                    isCorrect = userAnswer === correctDisplay;
+                    const row = el.closest('.heading-match-row, .matching-form-row') || el.parentNode;
+                    row.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (!isCorrect) {
+                        const sp = document.createElement('span');
+                        sp.className = 'correct-answer-display';
+                        sp.textContent = ' → ' + correctDisplay;
+                        el.insertAdjacentElement('afterend', sp);
+                    }
+                    if (isCorrect) score++;
+                } else if (el && el.tagName === 'INPUT') {
+                    userAnswer = el.value.trim();
+                    displayUser = userAnswer || 'Not answered';
+                    if (Array.isArray(correct)) {
+                        isCorrect = correct.some(a => normalize(userAnswer) === normalize(a));
+                    } else {
+                        isCorrect = normalize(userAnswer) === normalize(correct);
+                    }
+                    el.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (!isCorrect) {
+                        const sp = document.createElement('span');
+                        sp.className = 'correct-answer-display';
+                        sp.textContent = ' → ' + correctDisplay;
+                        el.insertAdjacentElement('afterend', sp);
+                    }
+                    if (isCorrect) score++;
+                }
+            }
+
+            detailsContainer.innerHTML += `<div class="result-row ${isCorrect ? '' : 'incorrect'}"><span class="q-num">${i}</span><span class="user-ans">${displayUser}</span><span class="correct-ans">${correctDisplay || '—'}</span></div>`;
+            const navBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+            if (navBtn) { navBtn.classList.remove('answered','active'); navBtn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+        }
+
+        document.getElementById('results-score').textContent = score;
+        document.getElementById('results-band').textContent = calcBand(score);
+        document.getElementById('results-modal').classList.remove('hidden');
+    }
+
+    function calcBand(s) {
+        const m = {40:9,39:9,38:8.5,37:8.5,36:8,35:8,34:7.5,33:7.5,32:7,31:7,30:7,29:6.5,28:6.5,27:6.5,26:6,25:6,24:6,23:5.5,22:5.5,21:5.5,20:5.5,19:5,18:5,17:5,16:5,15:5,14:4.5,13:4.5,12:4,11:4,10:4,9:3.5,8:3.5,7:3,6:3,5:2.5,4:2.5,3:2,2:2,1:1,0:0};
+        return m[s] ?? 0;
+    }
+
+    // ── NAVIGATION ────────────────────────────────────────────────
+    function switchToPart(partNumber) {
+        currentPassage = partNumber;
+        document.querySelectorAll('.reading-passage, .question-set').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`passage-text-${partNumber}`).classList.remove('hidden');
+        document.getElementById(`questions-${partNumber}`).classList.remove('hidden');
+        document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, i) =>
+            w.classList.toggle('selected', i + 1 === partNumber));
+        goToQuestion({1:1, 2:14, 3:27}[partNumber]);
+    }
+
+    function goToQuestion(qNum) {
+        currentQuestion = qNum;
+        let part = 1;
+        if (qNum >= 14 && qNum <= 26) part = 2;
+        else if (qNum >= 27) part = 3;
+        if (currentPassage !== part) {
+            currentPassage = part;
+            document.querySelectorAll('.reading-passage, .question-set').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`passage-text-${part}`).classList.remove('hidden');
+            document.getElementById(`questions-${part}`).classList.remove('hidden');
+            document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, i) =>
+                w.classList.toggle('selected', i + 1 === part));
+        }
+        if (activeQuestionElement) activeQuestionElement.classList.remove('active-question', 'active-input');
+        const target = document.querySelector(`[data-q-start="${qNum}"]`);
+        if (target) {
+            activeQuestionElement = target;
+            target.classList.add('active-question');
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        updateNav();
+    }
+
+    function updateNav() {
+        document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('active'));
+        const active = document.querySelector(`.subQuestion[onclick="goToQuestion(${currentQuestion})"]`);
+        if (active) active.classList.add('active');
+        document.querySelectorAll('.answer-input').forEach(el => el.classList.remove('active-input'));
+        const part = currentQuestion <= 13 ? 'questions-1' : currentQuestion <= 26 ? 'questions-2' : 'questions-3';
+        const el = document.getElementById(part)?.querySelector(`#q${currentQuestion}`);
+        if (el) { el.classList.add('active-input'); el.focus?.(); }
+    }
+
+    window.nextQuestion     = () => currentQuestion < 40 && goToQuestion(currentQuestion + 1);
+    window.previousQuestion = () => currentQuestion > 1  && goToQuestion(currentQuestion - 1);
+    window.goToQuestion     = goToQuestion;
+    window.switchToPart     = switchToPart;
+
+    function updateAllIndicators() {
+        [[1,1,13],[2,14,26],[3,27,40]].forEach(([part,start,end]) => {
+            let answered = 0;
+            for (let i = start; i <= end; i++) if (isAnswered(i)) answered++;
+            const w = document.querySelectorAll('.footer__questionWrapper___1tZ46')[part-1];
+            const sp = w?.querySelector('.attemptedCount');
+            if (sp) sp.textContent = `${answered} of ${end-start+1}`;
+        });
+        document.querySelectorAll('.subQuestion').forEach(btn => {
+            const q = parseInt(btn.textContent);
+            if (!btn.classList.contains('correct') && !btn.classList.contains('incorrect'))
+                btn.classList.toggle('answered', isAnswered(q));
+        });
+    }
+
+    function isAnswered(q) {
+        if (document.querySelector(`input[name="q${q}"]:checked`)) return true;
+        const part = q <= 13 ? 'questions-1' : q <= 26 ? 'questions-2' : 'questions-3';
+        const el = document.getElementById(part)?.querySelector(`#q${q}`);
+        if (el?.tagName === 'INPUT' && el.value.trim()) return true;
+        if (el?.tagName === 'SELECT' && el.value) return true;
+        return false;
+    }
+
+    // ── TIMER ─────────────────────────────────────────────────────
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeInSeconds--;
+            updateTimerDisplay();
+            if (timeInSeconds <= 0) { clearInterval(timerInterval); timerDisplay.textContent = "Time's up!"; }
+        }, 1000);
+        timerToggleBtn.innerHTML = pauseIcon;
+    }
+    function pauseTimer() { clearInterval(timerInterval); timerToggleBtn.innerHTML = playIcon; }
+    function toggleTimer() {
+        timerToggleBtn.innerHTML.includes('M6 19') ? pauseTimer() : startTimer();
+    }
+    function resetTimer() { timeInSeconds = 3600; updateTimerDisplay(); startTimer(); }
+    function updateTimerDisplay() {
+        const m = Math.floor(timeInSeconds / 60), s = timeInSeconds % 60;
+        timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    // ── RESIZER ───────────────────────────────────────────────────
+    function initResize(e) {
+        e.preventDefault();
+        const startX = e.clientX, startW = passagePanel.offsetWidth;
+        const drag = e => {
+            const w = startW + e.clientX - startX;
+            if (w > 250 && (document.body.clientWidth - w - 8) > 250)
+                passagePanel.style.flex = `0 0 ${w}px`;
+        };
+        const stop = () => { window.removeEventListener('mousemove', drag); window.removeEventListener('mouseup', stop); };
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('mouseup', stop);
+    }
+
+    // ── HIGHLIGHT TOOLBAR ─────────────────────────────────────────
+    function initHighlightToolbar() {
+        const panels = [passagePanel, questionsPanel];
+        const selBtns = document.getElementById('toolbar-selection-btns');
+        const hlBtns  = document.getElementById('toolbar-highlight-btns');
+
+        document.addEventListener('selectionchange', () => {
+            const sel = window.getSelection();
+            if (sel && !sel.isCollapsed && sel.toString().trim()) {
+                const range = sel.getRangeAt(0);
+                if (panels.some(p => p.contains(range.commonAncestorContainer))) {
+                    selectedRange = range.cloneRange();
+                    selectedText  = sel.toString();
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (highlightToolbar.contains(e.target) || noteInputOverlay.contains(e.target)) return;
+            const sel = window.getSelection();
+            const overHL = e.target.closest('.highlight, .comment-highlight');
+            if (overHL && (!sel || sel.isCollapsed)) {
+                highlightTarget = overHL; lastAppliedHighlight = null; selectedRange = null;
+                selBtns.style.display = 'none'; hlBtns.style.display = 'inline';
+                positionToolbar(e); return;
+            }
+            if (sel && !sel.isCollapsed && sel.toString().trim()) {
+                const range = sel.getRangeAt(0);
+                if (panels.some(p => p.contains(range.commonAncestorContainer))) {
+                    highlightTarget = null; lastAppliedHighlight = null;
+                    const startNode = range.startContainer;
+                    const existHL = (startNode.nodeType === 3 ? startNode.parentElement : startNode).closest('.highlight, .comment-highlight');
+                    if (existHL) highlightTarget = existHL;
+                    selBtns.style.display = 'inline'; hlBtns.style.display = 'none';
+                    positionToolbar(e); return;
+                }
+            }
+            hideToolbar();
+        });
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hideToolbar(); });
+        passagePanel.addEventListener('scroll', hideToolbar);
+        questionsPanel.addEventListener('scroll', hideToolbar);
+    }
+
+    function positionToolbar(e) {
+        highlightToolbar.classList.add('visible');
+        requestAnimationFrame(() => {
+            const w = highlightToolbar.offsetWidth || 300, h = highlightToolbar.offsetHeight || 44;
+            let left = e.pageX - w/2, top = e.pageY - h - 12;
+            if (left < 8) left = 8;
+            if (left + w > window.innerWidth - 8) left = window.innerWidth - w - 8;
+            if (top < 66) top = e.pageY + 12;
+            highlightToolbar.style.left = left + 'px'; highlightToolbar.style.top = top + 'px';
+        });
+    }
+    function hideToolbar() { highlightToolbar.classList.remove('visible'); }
+
+    window.applyHighlight = function(cls) {
+        if (!selectedRange || selectedRange.collapsed) { hideToolbar(); return; }
+        try {
+            const span = document.createElement('span');
+            span.className = 'highlight ' + cls;
+            span.appendChild(selectedRange.extractContents());
+            selectedRange.insertNode(span);
+            lastAppliedHighlight = span;
+        } catch(e){}
+        hideToolbar(); window.getSelection().removeAllRanges(); selectedRange = null;
+    };
+    window.recolorHighlight = function(cls) {
+        if (!highlightTarget) { hideToolbar(); return; }
+        highlightTarget.className = 'highlight ' + cls;
+        highlightTarget = null; hideToolbar();
+    };
+    window.clearThisHighlight = function() {
+        const tgt = highlightTarget || lastAppliedHighlight;
+        if (!tgt || !tgt.parentNode) { hideToolbar(); return; }
+        if (tgt.classList.contains('comment-highlight')) {
+            const idx = notes.findIndex(n => n.spanEl === tgt);
+            if (idx !== -1) notes.splice(idx, 1);
+            renderNotes();
+        }
+        unwrap(tgt); highlightTarget = null; lastAppliedHighlight = null; hideToolbar();
+    };
+    window.clearAllHighlights = function() {
+        document.querySelectorAll('.highlight, .comment-highlight').forEach(unwrap);
+        notes = []; renderNotes(); highlightTarget = null; lastAppliedHighlight = null; hideToolbar();
+    };
+    function unwrap(el) {
+        const p = el.parentNode; if (!p) return;
+        while (el.firstChild) p.insertBefore(el.firstChild, el);
+        p.removeChild(el); p.normalize();
+    }
+
+    // ── NOTES ─────────────────────────────────────────────────────
+    function toggleNotesPanel() { notesPanel.classList.toggle('visible'); }
+    window.openNoteInput = function() {
+        if (!selectedRange || selectedRange.collapsed) return;
+        noteTextPreview.textContent = selectedText.slice(0, 120) + (selectedText.length > 120 ? '…' : '');
+        noteTextarea.value = '';
+        noteInputOverlay.classList.add('visible');
+        setTimeout(() => noteTextarea.focus(), 50);
+    };
+    window.cancelNote = function() {
+        noteInputOverlay.classList.remove('visible'); hideToolbar();
+        window.getSelection().removeAllRanges(); selectedRange = null;
+    };
+    window.saveNote = function() {
+        const txt = noteTextarea.value.trim();
+        if (!txt || !selectedRange || selectedRange.collapsed) { cancelNote(); return; }
+        const span = document.createElement('span'); span.className = 'comment-highlight';
+        const tip  = document.createElement('span'); tip.className = 'comment-tooltip'; tip.textContent = txt;
+        try { span.appendChild(selectedRange.extractContents()); } catch(e){}
+        span.appendChild(tip); selectedRange.insertNode(span);
+        notes.push({ id: nextNoteId++, text: selectedText.slice(0,80), noteText: txt, spanEl: span });
+        renderNotes();
+        noteInputOverlay.classList.remove('visible'); hideToolbar();
+        window.getSelection().removeAllRanges(); selectedRange = null;
+    };
+    window.deleteNote = function(id) {
+        const idx = notes.findIndex(n => n.id === id);
+        if (idx === -1) return;
+        if (notes[idx].spanEl?.parentNode) unwrap(notes[idx].spanEl);
+        notes.splice(idx, 1); renderNotes();
+    };
+    function renderNotes() {
+        const n = notes.length;
+        notesCount.textContent = n; notesCount.style.display = n > 0 ? 'inline' : 'none';
+        if (!n) { notesList.innerHTML = '<p class="notes-empty">No notes yet.</p>'; return; }
+        notesList.innerHTML = notes.map(n => `
+            <div class="note-item">
+                <div style="display:flex;justify-content:space-between;">
+                    <div class="note-item-text">"${esc(n.text)}${n.text.length>=80?'…':''}"</div>
+                    <button class="note-item-delete" onclick="deleteNote(${n.id})">✕</button>
+                </div>
+                <div>${esc(n.noteText)}</div>
+            </div>`).join('');
+    }
+    function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // ── MODAL ─────────────────────────────────────────────────────
+    window.closeResultsModal = function() { document.getElementById('results-modal').classList.add('hidden'); };
+    window.retakeTest = function() {
+        document.querySelectorAll('input, select, textarea').forEach(el => { el.disabled = false; });
+        deliverButton.disabled = false;
+        document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(el =>
+            el.classList.remove('correct','incorrect','correct-answer-highlight'));
+        document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+        document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+        document.querySelectorAll('select').forEach(el => el.value = '');
+        document.querySelectorAll('input[type="radio"]').forEach(el => { el.checked = false; el.closest('.tf-option')?.classList.remove('selected'); });
+        document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('correct','incorrect','answered','active'));
+        resetTimer();
+        closeResultsModal();
+        switchToPart(1);
+        updateAllIndicators();
+    };
+
+    initialize();
+});
+</script>
+</body>
+</html>

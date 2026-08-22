@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Full Reading Practice</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f1f2ec;
+            --text: #1a1a1a;
+            --text-muted: #555;
+            --text-light: #888;
+            --border: #e0e0e0;
+            --border-medium: #ccc;
+            --header-bg: #ffffff;
+            --panel-bg: #ffffff;
+            --nav-bg: #ffffff;
+            --input-bg: #ffffff;
+            --example-bg: #f9f9f9;
+            --context-menu-bg: #ffffff;
+            --modal-bg: #ffffff;
+            --timer-color: #333;
+            --resizer-bg: #f0f0f0;
+            --active-blue: #4a90e2;
+            --correct-bg: #e9f7ef;
+            --incorrect-bg: #f8d7da;
+            --correct-border: #28a745;
+            --incorrect-border: #dc3545;
+            --highlight-yellow: #ffeb3b;
+            --highlight-green: #a5d6a7;
+            --subq-bg: #ffffff;
+            --subq-border: #ccc;
+            --subq-text: #333;
+            --footer-btn-bg: #f0f0f0;
+            --footer-btn-border: #ccc;
+            --passage-title: #2c3e50;
+            --toolbar-bg: #1a1a2e;
+            --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            --font-size-base: 16px;
+        }
+        body.night-mode {
+            --bg: #121212; --bg-secondary: #1e1e1e; --bg-tertiary: #252525;
+            --text: #e0e0e0; --text-muted: #aaa; --text-light: #777;
+            --border: #333; --border-medium: #444;
+            --header-bg: #1a1a1a; --panel-bg: #1a1a1a; --nav-bg: #1a1a1a;
+            --input-bg: #252525; --example-bg: #252525; --context-menu-bg: #2a2a2a;
+            --modal-bg: #1e1e1e; --timer-color: #e0e0e0; --resizer-bg: #2a2a2a;
+            --active-blue: #64b5f6;
+            --correct-bg: #1a3a2a; --incorrect-bg: #3a1a1a;
+            --correct-border: #4caf50; --incorrect-border: #f44336;
+            --highlight-yellow: #f9a825; --highlight-green: #388e3c;
+            --subq-bg: #252525; --subq-border: #444; --subq-text: #ccc;
+            --footer-btn-bg: #2a2a2a; --footer-btn-border: #444;
+            --passage-title: #90caf9;
+            --toolbar-bg: #0d0d1a; --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background-color: var(--bg); color: var(--text);
+            line-height: 1.6; font-size: var(--font-size-base);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .header {
+            background-color: var(--header-bg); padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 56px; transition: background-color 0.3s, border-color 0.3s; gap: 8px;
+        }
+        .header-left { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+        .timer-container {
+            display: flex; position: relative; cursor: default;
+            color: var(--timer-color); font-size: 15px; font-weight: 600;
+            align-items: center; font-family: 'Courier New', monospace;
+        }
+        .timer-controls { display: flex; align-items: center; gap: 5px; margin-left: 8px; }
+        .timer-controls button {
+            background: var(--footer-btn-bg); border: 1px solid var(--border-medium);
+            border-radius: 50%; padding: 0; cursor: pointer;
+            width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+            transition: background-color 0.2s;
+        }
+        .timer-controls button:hover { background: var(--border); }
+        .timer-controls button svg { width: 18px; height: 18px; fill: var(--timer-color); }
+        .header-btn {
+            background: var(--footer-btn-bg); border: 1px solid var(--border-medium);
+            border-radius: 16px; padding: 4px 10px; cursor: pointer;
+            font-size: 12px; font-weight: 600; color: var(--text);
+            display: flex; align-items: center; gap: 4px;
+            transition: all 0.2s; white-space: nowrap; font-family: Arial, sans-serif;
+        }
+        .header-btn:hover { background: var(--border); }
+        .zoom-controls {
+            display: flex; align-items: center; gap: 3px;
+            background: var(--footer-btn-bg); border: 1px solid var(--border-medium);
+            border-radius: 16px; padding: 2px 8px;
+        }
+        .zoom-btn {
+            background: none; border: none; cursor: pointer; color: var(--text);
+            font-size: 16px; font-weight: 700; width: 22px; height: 22px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 4px; transition: background 0.15s; line-height: 1;
+        }
+        .zoom-btn:hover { background: var(--border); }
+        .zoom-label { font-size: 12px; font-weight: 600; color: var(--text-muted); min-width: 34px; text-align: center; font-family: Arial, sans-serif; }
+        .telegram-link {
+            color: #0088cc; text-decoration: none; font-weight: 700; font-size: 13px;
+            display: flex; align-items: center; gap: 5px; font-family: Arial, sans-serif; white-space: nowrap;
+        }
+        .telegram-link:hover { text-decoration: underline; }
+        .main-container {
+            margin-top: 56px; display: flex; flex-direction: column;
+            background: var(--bg); height: calc(100vh - 56px); transition: background-color 0.3s;
+        }
+        .panels-container { display: flex; flex: 1; overflow: hidden; }
+        .passage-panel {
+            flex: 1; padding: 20px 24px 110px; overflow-y: auto;
+            min-width: 200px; background: var(--panel-bg); transition: background-color 0.3s;
+        }
+        .reading-passage h4 {
+            font-family: Georgia, serif; font-size: 1.25em; font-weight: 700;
+            color: var(--passage-title); line-height: 1.4; margin-bottom: 6px;
+            text-align: center; border-bottom: 2px solid var(--active-blue); padding-bottom: 8px;
+        }
+        .reading-passage .passage-subtitle {
+            text-align: center; font-style: italic; font-size: 0.95em;
+            color: var(--text-muted); margin-bottom: 18px;
+        }
+        .reading-passage p { margin-bottom: 1.1em; color: var(--text); line-height: 1.7; }
+        .reading-passage .para-label { font-weight: 700; }
+        .reading-passage h5 {
+            font-family: Georgia, serif; font-size: 1em; font-weight: 700;
+            color: var(--passage-title); margin: 16px 0 6px;
+        }
+        .questions-panel {
+            flex: 1; padding: 20px 20px 110px; overflow-y: auto; min-width: 200px;
+            border-left: 1px solid var(--border); background: var(--panel-bg);
+            font-family: Arial, sans-serif; transition: background-color 0.3s, border-color 0.3s;
+        }
+        .resizer {
+            width: 8px; cursor: col-resize; background-color: var(--resizer-bg);
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="30" viewBox="0 0 8 30"><path d="M3 11h2v2H3zM3 15h2v2H3zM3 19h2v2H3z" fill="%23888"/></svg>');
+            background-repeat: no-repeat; background-position: center; flex-shrink: 0;
+            transition: background-color 0.3s;
+        }
+        .part-header {
+            background-color: var(--bg-tertiary); padding: 12px 18px;
+            border: 1px solid var(--border); text-align: left; margin: 8px 16px;
+            border-radius: 5px; color: var(--text); font-family: Arial, sans-serif;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .part-header p { margin: 0; font-size: 14px; }
+        .part-header p:first-child { margin-bottom: 3px; }
+        .question { margin-bottom: 36px; color: var(--text); font-size: 0.95em; }
+        .question p { margin-bottom: 8px; color: var(--text); }
+        .question-prompt { margin-bottom: 16px; }
+        .question ul { list-style: none; padding-left: 0; }
+        .question ul li { margin-bottom: 4px; color: var(--text); }
+        .answer-input {
+            border: 1px solid var(--border-medium); border-radius: 4px;
+            background-color: var(--input-bg); color: var(--text);
+            padding: 2px 6px; font-size: 0.9em; font-family: Arial, sans-serif;
+            text-align: center; margin: 0 4px;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+            height: 26px; width: 140px;
+        }
+        .answer-input.wide { width: 180px; }
+        .answer-input.active-input { border-color: var(--active-blue); box-shadow: 0 0 3px 1px rgba(74,144,226,0.5); }
+        .answer-input::placeholder { color: #bbb; font-weight: 600; text-align: center; }
+        .answer-input.correct { border-color: var(--correct-border); background-color: var(--correct-bg); }
+        .answer-input.incorrect { border-color: var(--incorrect-border); background-color: var(--incorrect-bg); color: var(--incorrect-border); }
+
+        /* T/F/NG */
+        .tf-question { margin-bottom: 20px; border-radius: 4px; transition: background-color 0.3s; color: var(--text); }
+        .tf-question-line { display: flex; align-items: flex-start; margin-bottom: 10px; padding: 4px 0; border-radius: 4px; }
+        .tf-question-number { border: 2px solid var(--border-medium); padding: 1px 7px; margin-right: 10px; border-radius: 3px; font-weight: 700; color: var(--text); display: inline-block; flex-shrink: 0; }
+        .tf-question-text { padding-top: 2px; color: var(--text); }
+        .tf-options { padding-left: 4px; }
+        .tf-option { display: flex; align-items: center; margin-bottom: 8px; cursor: pointer; color: var(--text); }
+        .tf-option input[type="radio"] { margin-right: 8px; transform: scale(1.2); accent-color: var(--active-blue); }
+        .tf-question.correct .tf-question-line { background-color: var(--correct-bg); }
+        .tf-question.incorrect .tf-question-line { background-color: var(--incorrect-bg); }
+
+        /* MCQ */
+        .multi-choice-question { margin-bottom: 18px; padding: 8px; border-radius: 4px; border: 2px solid transparent; transition: border-color 0.3s, background-color 0.3s; color: var(--text); }
+        .multi-choice-option { margin-bottom: 8px; padding: 5px; border-radius: 4px; transition: background-color 0.3s; color: var(--text); }
+        .multi-choice-option label { display: flex; align-items: flex-start; cursor: pointer; font-size: 0.95em; color: var(--text); }
+        .multi-choice-option input[type="radio"] { margin-right: 10px; margin-top: 3px; transform: scale(1.2); accent-color: var(--active-blue); flex-shrink: 0; }
+        .multi-choice-option.correct { background-color: var(--correct-bg); }
+        .multi-choice-option.incorrect { background-color: var(--incorrect-bg); }
+
+        /* Multi-select (checkboxes) */
+        .multi-select-option { margin-bottom: 8px; padding: 5px; border-radius: 4px; transition: background-color 0.3s; color: var(--text); }
+        .multi-select-option label { display: flex; align-items: flex-start; cursor: pointer; font-size: 0.95em; color: var(--text); }
+        .multi-select-option input[type="checkbox"] { margin-right: 10px; margin-top: 3px; transform: scale(1.2); accent-color: var(--active-blue); flex-shrink: 0; }
+        .multi-select-option.correct { background-color: var(--correct-bg); }
+        .multi-select-option.incorrect { background-color: var(--incorrect-bg); }
+
+        /* Matching */
+        .matching-form-container { margin-top: 14px; }
+        .matching-form-row { display: flex; align-items: center; margin-bottom: 12px; gap: 10px; }
+        .matching-form-label { flex: 1; color: var(--text); font-size: 0.9em; }
+        .matching-form-row.correct { background-color: var(--correct-bg); border-left: 3px solid var(--correct-border); padding-left: 8px; border-radius: 4px; }
+        .matching-form-row.incorrect { background-color: var(--incorrect-bg); border-left: 3px solid var(--incorrect-border); padding-left: 8px; border-radius: 4px; }
+
+        /* Summary completion */
+        .summary-text { margin-top: 12px; font-size: 0.95em; line-height: 2.4; color: var(--text); }
+        .summary-box { border: 1px solid var(--border); background: var(--example-bg); padding: 14px 16px; border-radius: 5px; margin: 12px 0; }
+        .summary-box h5 { font-weight: 700; margin-bottom: 10px; color: var(--passage-title); font-family: Georgia, serif; }
+
+        .example-box {
+            border: 1px solid var(--border); background-color: var(--example-bg);
+            padding: 12px 16px; border-radius: 5px; margin: 14px 0; color: var(--text);
+            font-size: 0.9em; transition: background-color 0.3s, border-color 0.3s;
+        }
+        .correct-answer-display { font-weight: 700; color: #28a745; margin-left: 8px; font-size: 0.85em; }
+        .correct-answer-highlight { background-color: var(--correct-bg) !important; border: 1px solid var(--correct-border) !important; border-radius: 4px; padding: 2px 4px; }
+        .tf-option.correct-answer-highlight, .multi-choice-option.correct-answer-highlight { background-color: var(--correct-bg) !important; border: 1px solid var(--correct-border) !important; border-radius: 4px; padding: 4px; }
+
+        /* Nav arrows */
+        .nav-arrows { position: fixed; bottom: 90px; right: 16px; display: flex; gap: 4px; z-index: 101; }
+        .nav-arrow { width: 44px; height: 44px; background: #333; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; border-radius: 4px; }
+        body.night-mode .nav-arrow { background: #444; }
+        .nav-arrow:hover { background: #555; }
+        .nav-arrow:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Bottom nav */
+        .nav-row {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg); padding: 0; display: flex; align-items: center;
+            height: 74px; z-index: 100; border-top: 1px solid var(--border);
+            transition: background-color 0.3s, border-color 0.3s; overflow-x: auto;
+            font-family: Arial, sans-serif;
+        }
+        .footer__questionWrapper___1tZ46 { display: flex; align-items: center; margin-right: 12px; flex-shrink: 0; }
+        .footer__questionNo___3WNct {
+            background: none; border: none; padding: 8px 12px;
+            font-size: 14px; font-weight: 700; color: var(--text);
+            cursor: pointer; display: flex; align-items: center; gap: 4px;
+            transition: background-color 0.2s; border-radius: 4px;
+        }
+        .footer__questionNo___3WNct:hover { background-color: var(--bg-secondary); }
+        .section-prefix { font-size: 13px; }
+        .sectionNr { font-size: 14px; font-weight: 800; }
+        .attemptedCount { font-size: 12px; color: var(--text-muted); margin-left: 4px; font-weight: 400; }
+        .footer__subquestionWrapper___9GgoP { display: none; gap: 2px; margin-left: 6px; flex-wrap: wrap; }
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP { display: flex; }
+        .footer__questionWrapper___1tZ46.selected .attemptedCount { display: none; }
+        .subQuestion {
+            width: 30px; height: 30px; border: 1px solid var(--subq-border);
+            background: var(--subq-bg); color: var(--subq-text);
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; border-radius: 3px;
+        }
+        .subQuestion.answered { background-color: #6c8ebf; color: white; border-color: #5a7aad; }
+        .subQuestion.correct { background-color: #28a745; color: white; border-color: #28a745; }
+        .subQuestion.incorrect { background-color: #dc3545; color: white; border-color: #dc3545; }
+        .subQuestion:hover { background-color: var(--bg-secondary); border-color: var(--text-light); }
+        .subQuestion.active { background-color: var(--active-blue); color: white; border-color: var(--active-blue); }
+        .footer__deliverButton___3FM07 {
+            margin-left: auto; margin-right: 16px; flex-shrink: 0;
+            background-color: #4a90e2; color: white; border: none;
+            padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; gap: 6px;
+            transition: background-color 0.2s; min-width: 140px; justify-content: center;
+        }
+        .footer__deliverButton___3FM07:hover { background-color: #357abd; }
+        .footer__deliverButton___3FM07:disabled { background: var(--bg-secondary); color: var(--text-muted); cursor: not-allowed; }
+        .hidden { display: none !important; }
+
+        /* Highlight toolbar */
+        .highlight-toolbar {
+            position: fixed; display: none; background: var(--toolbar-bg);
+            border-radius: 8px; box-shadow: var(--toolbar-shadow); z-index: 2000;
+            padding: 5px 7px; gap: 3px; align-items: center; border: 1px solid rgba(255,255,255,0.12);
+        }
+        .highlight-toolbar.visible { display: flex; }
+        .toolbar-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 3px;
+            padding: 5px 9px; border: none; border-radius: 6px; cursor: pointer;
+            font-size: 13px; font-weight: 700; transition: all 0.15s; white-space: nowrap; font-family: Arial, sans-serif;
+        }
+        .toolbar-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+        .toolbar-btn.btn-yellow { background: #f9c000; color: #1a1a1a; }
+        .toolbar-btn.btn-green { background: #43a047; color: #fff; }
+        .toolbar-btn.btn-clear { background: #757575; color: #fff; }
+        .toolbar-btn.btn-clear-all { background: #c0392b; color: #fff; }
+        .toolbar-btn.btn-note { background: #ff6f00; color: #fff; }
+        .toolbar-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 2px; }
+        #toolbar-selection-btns, #toolbar-highlight-btns { display: inline-flex; align-items: center; gap: 3px; }
+
+        .comment-highlight { background-color: #ffe082; position: relative; cursor: help; border-bottom: 2px dotted #f57f17; border-radius: 2px; }
+        body.night-mode .comment-highlight { background-color: #6d4c00; border-bottom-color: #ffa000; color: #ffe082; }
+        .comment-highlight::after { content: '📝'; font-size: 11px; vertical-align: super; margin-left: 2px; }
+        .comment-tooltip {
+            position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background: #212121; color: #fff; padding: 8px 12px; border-radius: 6px;
+            font-size: 13px; white-space: normal; max-width: 260px; z-index: 3000;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .comment-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #212121; }
+        .comment-highlight:hover .comment-tooltip { opacity: 1; }
+
+        .notes-panel {
+            position: fixed; right: 18px; top: 66px; width: 270px; max-height: calc(100vh - 160px);
+            background: var(--modal-bg); border: 1px solid var(--border); border-radius: 10px;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.18); z-index: 500; overflow-y: auto;
+            display: none; flex-direction: column; transition: background-color 0.3s;
+        }
+        .notes-panel.visible { display: flex; }
+        .notes-panel-header {
+            padding: 10px 14px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; font-size: 13px; color: var(--text);
+            background: var(--bg-secondary); border-radius: 10px 10px 0 0; font-family: Arial, sans-serif;
+        }
+        .notes-panel-close { background: none; border: none; cursor: pointer; font-size: 17px; color: var(--text-muted); }
+        .notes-list { padding: 8px; flex: 1; }
+        .note-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 9px; margin-bottom: 7px; font-size: 12px; color: var(--text); font-family: Arial, sans-serif; }
+        .note-item-text { font-weight: 700; color: #f57f17; margin-bottom: 3px; font-size: 11px; }
+        .note-item-content { color: var(--text); }
+        .note-item-delete { background: none; border: none; color: var(--incorrect-border); cursor: pointer; font-size: 11px; float: right; padding: 0; }
+        .notes-empty { color: var(--text-muted); font-size: 12px; padding: 10px; text-align: center; font-family: Arial, sans-serif; }
+
+        .note-input-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: none; align-items: center; justify-content: center; }
+        .note-input-overlay.visible { display: flex; }
+        .note-input-box { background: var(--modal-bg); border-radius: 12px; padding: 22px; width: 360px; max-width: 90vw; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); font-family: Arial, sans-serif; }
+        .note-input-box h3 { margin-bottom: 8px; font-size: 15px; color: var(--text); }
+        .note-input-box .selected-text-preview { background: var(--bg-secondary); border-left: 3px solid #f9a825; padding: 7px 10px; margin-bottom: 12px; font-size: 12px; color: var(--text-muted); border-radius: 0 4px 4px 0; max-height: 56px; overflow: hidden; }
+        .note-input-box textarea { width: 100%; min-height: 72px; padding: 9px; border: 1px solid var(--border-medium); border-radius: 6px; font-size: 13px; background: var(--input-bg); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
+        .note-input-box textarea:focus { border-color: var(--active-blue); }
+        .note-input-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+        .note-input-actions button { padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 700; }
+        .btn-save-note { background: #f9a825; color: #1a1a1a; }
+        .btn-cancel-note { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border) !important; }
+
+        .highlight { background-color: var(--highlight-yellow); border-radius: 2px; cursor: pointer; }
+        .highlight.hl-green { background-color: var(--highlight-green); }
+        body.night-mode .highlight { background-color: #f9a825; color: #000; }
+        body.night-mode .highlight.hl-green { background-color: #388e3c; color: #fff; }
+
+        .active-question { outline: 2px solid var(--active-blue); border-radius: 4px; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .modal-overlay.hidden { display: none; }
+        .modal-content { background: var(--modal-bg); padding: 24px; border-radius: 12px; width: 92%; max-width: 600px; max-height: 82vh; display: flex; flex-direction: column; position: relative; border: 1px solid var(--border); }
+        .modal-close-btn { position: absolute; top: 10px; right: 14px; background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-muted); }
+        .modal-content h2 { text-align: center; margin-bottom: 14px; color: var(--text); font-family: Georgia, serif; }
+        .results-summary { display: flex; justify-content: space-around; margin-bottom: 16px; font-size: 18px; font-weight: 700; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 14px; color: var(--text); font-family: Arial, sans-serif; }
+        .results-details-container { overflow-y: auto; padding-right: 8px; }
+        .result-row { display: grid; grid-template-columns: 40px 1fr 1fr; gap: 12px; padding: 7px 5px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text); font-family: Arial, sans-serif; }
+        .result-row.incorrect { background-color: var(--incorrect-bg); }
+        .result-row .q-num { font-weight: 700; }
+        .result-row .user-ans { color: var(--text-muted); }
+        .result-row .correct-ans { color: var(--correct-border); font-weight: 600; }
+
+        select.answer-input option { background: var(--input-bg); color: var(--text); }
+        .blockquote-box { border-left: 3px solid var(--active-blue); background: var(--bg-secondary); padding: 10px 14px; margin: 12px 0; font-style: italic; font-size: 0.95em; color: var(--text-muted); }
+
+        .center-cta {
+            position: absolute; left: 58%; top: 50%; transform: translate(-50%, -50%);
+            text-align: center; white-space: nowrap;
+        }
+        .center-cta span { display: block; font-size: 11px; color: #777; margin-bottom: 2px; }
+        .center-cta a {
+            display: inline-block; padding: 5px 14px; border-radius: 20px;
+            background: linear-gradient(135deg,#4a90e2,#6a5acd); color: #fff;
+            font-size: 12px; font-weight: 600; text-decoration: none;
+            box-shadow: 0 2px 8px rgba(74,144,226,0.3); transition: 0.2s;
+        }
+        .center-cta a:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74,144,226,0.5); }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-left">
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="zoom-controls">
+            <button class="zoom-btn" id="zoom-out-btn" title="Zoom out">−</button>
+            <span class="zoom-label" id="zoom-label">100%</span>
+            <button class="zoom-btn" id="zoom-in-btn" title="Zoom in">+</button>
+        </div>
+        <button id="night-mode-btn" class="header-btn" title="Toggle Night Mode">🌙 Night</button>
+        <button id="notes-toggle-btn" class="header-btn" title="Show Notes">📝 Notes <span id="notes-count" style="background:#f9a825;color:#1a1a1a;border-radius:10px;padding:1px 5px;font-size:11px;display:none;margin-left:2px;">0</span></button>
+        <div class="center-cta">
+            <a href="https://t.me/m/ojS0ofg4YWEy" target="_blank">For More Authentic tests you need to buy Premium Service</a>
+        </div>
+    </div>
+    <a href="https://t.me/ieltsmaterials_full" target="_blank" class="telegram-link">📚 IELTS CDI Materials</a>
+</div>
+
+<div class="main-container" id="main-container">
+    <div id="passage-header-container">
+        <div id="part-header-1" class="part-header">
+            <p><strong>Part 1</strong></p>
+            <p>Read the text below and answer questions 1–13.</p>
+        </div>
+        <div id="part-header-2" class="part-header hidden">
+            <p><strong>Part 2</strong></p>
+            <p>Read the text below and answer questions 14–26.</p>
+        </div>
+        <div id="part-header-3" class="part-header hidden">
+            <p><strong>Part 3</strong></p>
+            <p>Read the text below and answer questions 27–40.</p>
+        </div>
+    </div>
+    <div class="panels-container">
+        <!-- PASSAGE PANEL -->
+        <div class="passage-panel" id="passage-panel">
+
+            <!-- PASSAGE 1: Traditional Farming in Zambia's Luapula Province -->
+            <div id="passage-text-1" class="reading-passage">
+                <h4>Traditional Farming in Zambia's Luapula Province</h4>
+                <p>By tradition, land in Luapula Province is not owned by individuals but, as in many other parts of Africa, is allocated by the headman or headwoman of a village to people of either sex according to need. Since land is generally prepared by hand, a single family group cannot take on a very large area, so land has not been a limiting resource over large parts of the province. However, that situation has already changed near the main towns, and there has long been a scarcity of land for cultivation in the river valley. In both these areas, registered ownership patterns are becoming prevalent.</p>
+                <p>Most of the traditional cropping in Luapula Province is based on citemene, a system whereby crops are grown on the ashes of tree branches. As a rule, entire trees are pollarded (pollarding: removing the tops of tree branches) rather than felled, so that they can regenerate. Branches are cut over an area of land of varying size early in the dry season and then stacked to dry out. The wood is fired before the onset of the rains, and in the first year, the area is planted with the African cereal called finger millet. The grain of this crop is used to brew local drinks such as cipumu, which contributes several vitamins of the B complex to people's diets. Cipumu is also used in cementing reciprocal working relationships.</p>
+                <p>During the second year, and possibly for a few years more, the area is planted with various combinations of annuals such as maize, pumpkins, sweet potatoes, groundnuts, beans, and various leafy vegetables, grown with a certain amount of rotation. The diverse sequence ends with the vegetable cassava, which is often planted next to the last but one crop before this is harvested.</p>
+                <p>Richards (1969) observed that the practice of citemene entails a definite division of labour; men and women perform different tasks. The men stake out plots in an unobtrusive manner, since it is considered provocative towards one's neighbours to mark boundaries in an explicit way. The dangerous work of felling branches is also the men's province. Branches are then stacked by women and fired by men. Women and men cooperate in the planting work, but the harvesting is always done by women.</p>
+                <p>At the beginning of the citemene cycle, little weeding is necessary, since the firing of the branches effectively destroys weeds, but as the cycle progresses, weeds increase, and nutrients eventually become depleted to a point where further effort with annual crops is not worthwhile. At this point, cassava is planted, since it can produce a crop on soil that is almost exhausted. Thereafter, the plot is abandoned, and a new area is pollarded for the next cycle.</p>
+                <p>Until recently, citemene has been an ingenious system for providing seasonal, high-quality cereals and vegetables in regions of acidic, heavily leached soils. Nutritionally, the most serious deficiency has been that of protein. However, this could be alleviated when fish were available, provided that cultivators lived near the valley or could find a source of dried fish. The citemene/fishing system was well adapted to the ecology of the woodland regions and sustainable for long periods, but only as long as human population densities stayed at low levels.</p>
+                <p>Although population densities are still much lower today than in many other parts of the world, neither the fisheries nor the woodlands of Luapula are capable, with unmodified traditional practices, of supporting the expanding population in a sustainable manner. For instance, even in a normal season, diets suffer from a lack of energy, protein, vitamins, and minerals. It will therefore be necessary in the future to intensify and diversify productive systems.</p>
+            </div>
+
+            <!-- PASSAGE 2: Babies Cry in Their Mother Tongue -->
+            <div id="passage-text-2" class="reading-passage hidden">
+                <h4>Babies Cry in Their Mother Tongue</h4>
+                <p>A newborn baby's cry may sound the same to the ears of sleep-deprived parents the world over but, say scientists, comparisons of babies a few days old show that the cry of a newborn shares similarities with the language its parents speak. The reason for this is presumably the different intonation patterns in their native languages, which are already perceived in the uterus and are later reproduced.</p>
+                <p><span class="para-label">A</span> &nbsp;It is already known that human foetuses become attentive listeners in the final trimester of pregnancy. "The mother's voice in particular is sensed early on," explains Professor Amelia Finlayson of the Institute for Human Cognitive and Brain Sciences in Leipzig. "Human foetuses perceive information filtered at around 400 hertz, but they cannot hear the actual words. It is a bit like holding your head under water when someone is talking next to the bath."</p>
+                <p><span class="para-label">B</span> &nbsp;Finlayson's research indicates that newborn babies probably cannot distinguish between the accents of Welsh and Northern Scottish people or between Low German and Upper Bavarian, but they can recognise major differences in the intonation patterns of their respective mother tongues. The Leipzig researchers showed that in an earlier experiment, by means of physiological studies of babies of three to four months of age. For that study, the babies had hoods with electrodes put on their heads, and had recordings of different intonation patterns played to them. The children's brainwaves reacted to the differences even when they were asleep.</p>
+                <p><span class="para-label">C</span> &nbsp;At the same time, Doctor Katya Williams of the University of Würzburg first suggested in her PhD thesis that babies' crying might be a stage in their linguistic development. Said Williams: "It used to be thought that a baby's cry was just a signal of alarm to call its mother. This assumption was corrected when we noticed that the cries are not the same from week to week. What biological purpose would that have? If a fire siren sounded different every day, we would not even recognise it!"</p>
+                <p><span class="para-label">D</span> &nbsp;The question thus presented itself as to whether babies' cries already showed the intonation patterns of their different mother tongues. To study this, the Leipzig brain researchers and the 'screaming researchers' of the University of Würzburg worked in collaboration with their colleagues at the Laboratory of Cognitive Sciences and Linguistics, at the École Normale Supérieure in Paris, to devise a new experiment. German and French babies were selected for the comparison because the differences in the intonation shapes of these two mother tongues are particularly pronounced. For example, the German word Papa is stressed on the first syllable, while in French it is stressed on the second.</p>
+                <p><span class="para-label">E</span> &nbsp;These three research groups made a comparison of recordings of 60 healthy newborns aged between two and five days old: 30 infants born into French-speaking families and 30 born into German-speaking families. Whenever the babies were hungry or thirsty or simply wanted their mothers and announced the fact by crying, the researchers were at the ready with their microphones and recorded their complaints. More than 20 hours of recordings of babies' crying were then fed into a computer for the purpose of analysis.</p>
+                <p><span class="para-label">F</span> &nbsp;The amazing result, published in the journal Modern Biology, is that just a few days after birth, babies use the acoustic input they perceive in the uterus to adapt their linguistic production to their target mother tongue. The melody of the German babies' screams usually began loudly and at a high pitch and then followed a downward curve, while the French babies more often screamed with a rising melody contour. Thus, they reproduce precisely the intonation patterns that are characteristic of their respective mother tongues. This proves, says the team of researchers, that babies' cries are attempts to communicate specifically with their mothers. "Newborns are probably highly motivated to imitate their mother's behaviour in order to attract her and foster bonding and therefore physical nourishment," they wrote.</p>
+                <p><span class="para-label">G</span> &nbsp;Furthermore, the findings are consistent with the hypothesis that linguistic development does not just begin from the age of nine to ten months, with the first babbling resembling language such as 'mam-mam-mam' or 'ba-ba-ba', but with the very first sounds that babies produce. "We are born to learn language. And that starts right away," says Dr Katya Williams. Dr Williams' colleague, Mr Walter Meade, discovered that this initial sensitivity to the melodic features of language assists infants to subsequently learn their mother tongue. "The melodic patterns practised in crying are building blocks for eventual sound production, such as gurgling and babbling, right up to the first words and sentences," says Meade.</p>
+                <p><span class="para-label">H</span> &nbsp;The results also demonstrated once again how language distinguishes human infants from all other primates. According to Williams, among baby chimpanzees, the 'crying melody' is closely associated with the build-up and reduction of pressure in the lungs, and is not generated by a mental process. "In comparison with the sounds of other primates, the cries of a newborn human baby display a fantastic repertoire of melodic and rhythmic variations," she adds. "Our babies are expert vocalists in comparison with all the other animals. Could that offer some small consolation for nerve-wracked parents?"</p>
+            </div>
+
+            <!-- PASSAGE 3: Ancient Rome -->
+            <div id="passage-text-3" class="reading-passage hidden">
+                <h4>Ancient Rome: Archaeologists Are Trying to Understand More About the Early History of the City</h4>
+                <p>From ancient times to the present, historians have asked the question: How and why did an ordinary little town in central Italy grow so much bigger than any other in the ancient Mediterranean and come to control such a huge empire? During the first century BCE, Roman writers themselves began systematically to study the earlier centuries of their city and their empire. Yet these historians had little more direct evidence of the earliest phases of Rome's history than modern writers have, and in some ways perhaps not as much, as there were no surviving documents or archives. Their 'histories' about the foundation of ancient Rome tell us a good deal about how the Romans saw their city, their values, and their failings. However, they tell us very little indeed about what they claim to inform us about: that is, what earliest Rome was actually like. One fact is obvious. Rome was already a very old city by 63 BCE, the birth date of its first emperor. But how exactly are we to access reliable information about the origins of Rome?</p>
+                <p>One way of doing this is by turning away from the histories of Roman writers and seeking out clues in the Latin language, or in later Roman institutions that might point back to features of earliest Rome. Much more tangible, however, is the evidence of archaeology. Dig down deep in the city of Rome, below the visible ancient monuments, and a few traces of a much earlier settlement or settlements remain. Beneath the Forum itself (an ancient marketplace at the centre of the city) lie the remains of an early cemetery, which caused tremendous excitement when they were first unearthed at the start of the 20th century. Cemeteries imply the existence of a community, and traces of that are presumably to be found in the groups of huts whose faint outlines have been detected under various parts of the later city, including on the Palatine (the centremost of the seven hills on which Rome is built). We have little idea of the nature of these huts beyond their construction in wood, clay, and thatch, and still less of the lifestyle they supported. But we can fill in some of the gaps if we look just outside Rome. One of the best preserved and most carefully excavated of these early structures was found at Fidenae, a few miles north of the city, in the 1980s. It is a rectangular building, some six by five metres, made of wood and rammed earth — a construction method still utilised up to the present day — with a simple porch around it, formed by the overhanging roof. Inside was a central hearth, some large pottery storage jars, and traces of predictable foodstuffs and domestic animals.</p>
+                <p>There are vivid glimpses of human and other life here; the question is, what do those glimpses add up to? The archaeological remains certainly demonstrate that there is a long and rich prehistory behind the ancient Rome we can still see, but quite how long that prehistory is is another matter.</p>
+                <p>Part of the problem is the conditions of excavation in the city itself. The site of Rome has been so intensively built on for centuries that we find these traces of early occupation only in spots that happen not to have been disturbed. The foundations dug in the first and second centuries CE for the vast marble temples of the forum obliterated much of what then lay beneath the surface; the cellars of grand Renaissance houses cut through even more ancient remains in other parts of the city. So we have tiny snapshots, never the big picture. This is archaeology at its most difficult, and — although new fragments of evidence emerge all the time — its interpretation, and reinterpretation is almost always contested and often controversial. For example, there is an ongoing debate about whether the small pieces of wattle and daub found in excavations in the Forum in the mid-20th century indicate that there was an early hut settlement there too, or whether they were inadvertently introduced as part of the rubble used a few centuries later to provide a new raised surface for the area. It has to be said that this place, though fine for a cemetery, would have been rather damp and marshy for a village.</p>
+                <p>Precise dating is even more contentious. It cannot be stressed enough that there is no certain independent date for any of the archaeological material from earliest Rome or the area around, and that arguments still rage about the age of almost every major find. It has taken decades of work over the past century or so — using such diagnostics as the existence of wheel-made pottery (assumed to be later than handmade), the occasional presence on graves of Greek ceramics (whose dating is better, but still not perfectly understood) and careful comparison from site to site — to produce a rough chronological scheme covering the period from around 1000 to 600 BCE.</p>
+                <p>On that basis, the earliest burials in Rome would have been around 1000 BCE, and the earliest known settlements around 750–700 BCE. But even these dates are far from certain. Recent scientific methods — including radiocarbon dating, which calculates the age of any organic material — have suggested that they are all too 'young', by as much as a hundred years. The building at Fidenae, for example, was dated around the middle of the eighth century BCE according to traditional archaeological criteria, but that is pushed back to around the end of the ninth century BCE if we follow radiocarbon analysis. If anything, Rome appears to be getting older.</p>
+            </div>
+        </div>
+
+        <div class="resizer" id="resizer"></div>
+
+        <!-- QUESTIONS PANEL -->
+        <div class="questions-panel" id="questions-panel">
+
+            <!-- QUESTIONS 1–13 (Passage 1) -->
+            <div id="questions-1" class="question-set">
+                <div class="questions-container">
+
+                    <!-- Q1–5: Sentence completion -->
+                    <div class="question" data-q-start="1" data-q-end="5">
+                        <div class="question-prompt">
+                            <p><strong>Questions 1–5</strong></p>
+                            <p>Complete the sentences below. Write <strong>NO MORE THAN THREE WORDS</strong> from the passage for each answer.</p>
+                        </div>
+                        <div class="summary-text">
+                            <p><strong>1</strong>&nbsp;&nbsp;In Luapula Province, land has traditionally been given to people on the basis of <input type="text" class="answer-input wide" id="q1" placeholder="1">.</p>
+                            <p><strong>2</strong>&nbsp;&nbsp;The citemene system involves planting crops in the <input type="text" class="answer-input wide" id="q2" placeholder="2"> of wood.</p>
+                            <p><strong>3</strong>&nbsp;&nbsp;In the citemene system, <input type="text" class="answer-input wide" id="q3" placeholder="3"> is the last crop to be planted.</p>
+                            <p><strong>4</strong>&nbsp;&nbsp;In areas without trees, crops are planted in a <input type="text" class="answer-input wide" id="q4" placeholder="4">.</p>
+                            <p><strong>5</strong>&nbsp;&nbsp;If conditions are right, fruit trees may be planted near <input type="text" class="answer-input wide" id="q5" placeholder="5">.</p>
+                        </div>
+                    </div>
+
+                    <!-- Q6–9: Matching animals -->
+                    <div class="question" data-q-start="6" data-q-end="9">
+                        <div class="question-prompt">
+                            <p><strong>Questions 6–9</strong></p>
+                            <p>Look at the following statements and the list of animals below. Match each statement with the correct animal, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.</p>
+                        </div>
+                        <div class="example-box">
+                            <strong>List of Animals</strong>
+                            <div style="margin-top:8px;font-size:0.9em;line-height:1.8;">
+                                <div><strong>A</strong>&nbsp;&nbsp;Fish</div>
+                                <div><strong>B</strong>&nbsp;&nbsp;Goats</div>
+                                <div><strong>C</strong>&nbsp;&nbsp;Oxen</div>
+                            </div>
+                        </div>
+                        <div class="matching-form-container">
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>6</strong>&nbsp;&nbsp;They yield the biggest profits for farmers.</label>
+                                <select class="answer-input" id="q6"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>7</strong>&nbsp;&nbsp;They may be consumed on special occasions.</label>
+                                <select class="answer-input" id="q7"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>8</strong>&nbsp;&nbsp;Because of insect pests, they do not thrive.</label>
+                                <select class="answer-input" id="q8"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>9</strong>&nbsp;&nbsp;They are often preserved and sold outside the local area.</label>
+                                <select class="answer-input" id="q9"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q10–12: TRUE/FALSE/NOT GIVEN -->
+                    <div class="question" data-q-start="10" data-q-end="12">
+                        <div class="question-prompt">
+                            <p><strong>Questions 10–12</strong></p>
+                            <p>Choose <strong>TRUE</strong> if the statement agrees with the information given in the text, choose <strong>FALSE</strong> if the statement contradicts the information, or choose <strong>NOT GIVEN</strong> if there is no information on this.</p>
+                        </div>
+                        <div class="tf-question" data-q-start="10" data-q-end="10">
+                            <div class="tf-question-line"><span class="tf-question-number">10</span><span class="tf-question-text">Agricultural land is usually prepared without the help of oxen.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q10" value="TRUE"> TRUE</label>
+                                <label class="tf-option"><input type="radio" name="q10" value="FALSE"> FALSE</label>
+                                <label class="tf-option"><input type="radio" name="q10" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="11" data-q-end="11">
+                            <div class="tf-question-line"><span class="tf-question-number">11</span><span class="tf-question-text">Children are a source of extra labour during busy periods.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q11" value="TRUE"> TRUE</label>
+                                <label class="tf-option"><input type="radio" name="q11" value="FALSE"> FALSE</label>
+                                <label class="tf-option"><input type="radio" name="q11" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="12" data-q-end="12">
+                            <div class="tf-question-line"><span class="tf-question-number">12</span><span class="tf-question-text">The people of Luapula Province eat chicken on a regular basis.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q12" value="TRUE"> TRUE</label>
+                                <label class="tf-option"><input type="radio" name="q12" value="FALSE"> FALSE</label>
+                                <label class="tf-option"><input type="radio" name="q12" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q13: Multiple Choice -->
+                    <div class="question" data-q-start="13" data-q-end="13">
+                        <div class="question-prompt">
+                            <p><strong>Question 13</strong></p>
+                            <p>Choose the correct answer.</p>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="13" data-q-end="13">
+                            <p><strong>13</strong>&nbsp;&nbsp;What is the writer's opinion about traditional farming methods in Luapula Province?</p>
+                            <div class="multi-choice-options">
+                                <div class="multi-choice-option"><label><input type="radio" name="q13" value="A"> A. They meet all the dietary needs of the local population.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q13" value="B"> B. The region's natural resources have not been fully exploited.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q13" value="C"> C. They will be inadequate to support a growing population.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q13" value="D"> D. A larger labour force will be required for maximum efficiency.</label></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS 14–26 (Passage 2) -->
+            <div id="questions-2" class="question-set hidden">
+                <div class="questions-container">
+
+                    <!-- Q14–19: Paragraph matching -->
+                    <div class="question" data-q-start="14" data-q-end="19">
+                        <div class="question-prompt">
+                            <p><strong>Questions 14–19</strong></p>
+                            <p>Reading Passage 2 has eight paragraphs, <strong>A–H</strong>. Which paragraph contains the following information? Choose the correct letter, <strong>A–H</strong>.</p>
+                        </div>
+                        <div class="matching-form-container">
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>14</strong>&nbsp;&nbsp;a description of the methodology of an experiment carried out by several research institutes</label>
+                                <select class="answer-input" id="q14"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>15</strong>&nbsp;&nbsp;the rationale for choosing the participants of an experiment</label>
+                                <select class="answer-input" id="q15"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>16</strong>&nbsp;&nbsp;a suggestion that babies are driven to copy their mothers to gain food</label>
+                                <select class="answer-input" id="q16"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>17</strong>&nbsp;&nbsp;an account of the methodology of a past experiment carried out by the Leipzig researchers</label>
+                                <select class="answer-input" id="q17"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>18</strong>&nbsp;&nbsp;an illustration of the limitation of babies' ability to hear inside the womb</label>
+                                <select class="answer-input" id="q18"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>19</strong>&nbsp;&nbsp;an assertion that babies of different nationalities cry with different intonation</label>
+                                <select class="answer-input" id="q19"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q20–23: Matching researchers -->
+                    <div class="question" data-q-start="20" data-q-end="23">
+                        <div class="question-prompt">
+                            <p><strong>Questions 20–23</strong></p>
+                            <p>Look at the following statements and the list of researchers below. Match each statement with the correct researcher, <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.</p>
+                        </div>
+                        <div class="example-box">
+                            <strong>List of Researchers</strong>
+                            <div style="margin-top:8px;font-size:0.9em;line-height:1.8;">
+                                <div><strong>A</strong>&nbsp;&nbsp;Professor Amelia Finlayson</div>
+                                <div><strong>B</strong>&nbsp;&nbsp;Doctor Katya Williams</div>
+                                <div><strong>C</strong>&nbsp;&nbsp;Mr Walter Meade</div>
+                            </div>
+                        </div>
+                        <div class="matching-form-container">
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>20</strong>&nbsp;&nbsp;Important everyday sounds must remain consistent in order to be understood.</label>
+                                <select class="answer-input" id="q20"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>21</strong>&nbsp;&nbsp;The different tones used in crying help babies to learn language later on.</label>
+                                <select class="answer-input" id="q21"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>22</strong>&nbsp;&nbsp;The tune of young primates' cries is created by their breathing, not their brain.</label>
+                                <select class="answer-input" id="q22"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>23</strong>&nbsp;&nbsp;Unborn babies in the womb are focused on the voice of one specific person.</label>
+                                <select class="answer-input" id="q23"><option value=""></option><option>A</option><option>B</option><option>C</option></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q24–26: Sentence completion ONE WORD -->
+                    <div class="question" data-q-start="24" data-q-end="26">
+                        <div class="question-prompt">
+                            <p><strong>Questions 24–26</strong></p>
+                            <p>Complete the sentences below. Write <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                        </div>
+                        <div class="summary-text">
+                            <p><strong>24</strong>&nbsp;&nbsp;Professor Amelia Finlayson doubts unborn babies can recognise different <input type="text" class="answer-input" id="q24" placeholder="24">.</p>
+                            <p><strong>25</strong>&nbsp;&nbsp;In the first Leipzig experiment, the <input type="text" class="answer-input" id="q25" placeholder="25"> of babies changed upon hearing different intonation patterns.</p>
+                            <p><strong>26</strong>&nbsp;&nbsp;Early scientists believed that babies cried for no other reason than as a <input type="text" class="answer-input" id="q26" placeholder="26"> that they wanted their parents.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUESTIONS 27–40 (Passage 3) -->
+            <div id="questions-3" class="question-set hidden">
+                <div class="questions-container">
+
+                    <!-- Q27–32: YES/NO/NOT GIVEN -->
+                    <div class="question" data-q-start="27" data-q-end="32">
+                        <div class="question-prompt">
+                            <p><strong>Questions 27–32</strong></p>
+                            <p>Choose <strong>YES</strong> if the statement agrees with the claims of the writer, choose <strong>NO</strong> if the statement contradicts the claims of the writer, or <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this.</p>
+                        </div>
+                        <div class="tf-question" data-q-start="27" data-q-end="27">
+                            <div class="tf-question-line"><span class="tf-question-number">27</span><span class="tf-question-text">Historians have expressed little curiosity about the rise of the Roman Empire.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q27" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q27" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q27" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="28" data-q-end="28">
+                            <div class="tf-question-line"><span class="tf-question-number">28</span><span class="tf-question-text">Accounts from the first century BCE of Rome's origins may be less reliable than 21st-century accounts.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q28" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q28" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q28" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="29" data-q-end="29">
+                            <div class="tf-question-line"><span class="tf-question-number">29</span><span class="tf-question-text">Most Roman historians viewed their ancient capital in an unrealistically positive light.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q29" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q29" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q29" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="30" data-q-end="30">
+                            <div class="tf-question-line"><span class="tf-question-number">30</span><span class="tf-question-text">The accounts by early Roman historians about the founding of Rome provide a full description of life at that time.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q30" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q30" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q30" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="31" data-q-end="31">
+                            <div class="tf-question-line"><span class="tf-question-number">31</span><span class="tf-question-text">It is certain that the city of Rome was in existence long before 63 BCE.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q31" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q31" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q31" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                        <div class="tf-question" data-q-start="32" data-q-end="32">
+                            <div class="tf-question-line"><span class="tf-question-number">32</span><span class="tf-question-text">Some people oppose archaeological excavations in Rome because they can damage the ancient monuments.</span></div>
+                            <div class="tf-options">
+                                <label class="tf-option"><input type="radio" name="q32" value="YES"> YES</label>
+                                <label class="tf-option"><input type="radio" name="q32" value="NO"> NO</label>
+                                <label class="tf-option"><input type="radio" name="q32" value="NOT GIVEN"> NOT GIVEN</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q33–36: Multiple Choice -->
+                    <div class="question" data-q-start="33" data-q-end="36">
+                        <div class="question-prompt">
+                            <p><strong>Questions 33–36</strong></p>
+                            <p>Choose the correct answer.</p>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="33" data-q-end="33">
+                            <p><strong>33</strong>&nbsp;&nbsp;According to the writer, why were the archaeological remains found at Fidenae important?</p>
+                            <div class="multi-choice-options">
+                                <div class="multi-choice-option"><label><input type="radio" name="q33" value="A"> A. They shed some light on the way of life of ancient Romans.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q33" value="B"> B. They were the first evidence of an ancient Roman settlement in the area.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q33" value="C"> C. They overturned common assumptions about the diet of ancient Romans.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q33" value="D"> D. They showed how sophisticated domestic Roman architecture could be.</label></div>
+                            </div>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="34" data-q-end="34">
+                            <p><strong>34</strong>&nbsp;&nbsp;What did Rome's marble temples and Renaissance houses have in common?</p>
+                            <div class="multi-choice-options">
+                                <div class="multi-choice-option"><label><input type="radio" name="q34" value="A"> A. They were the most enduring buildings of their respective eras.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q34" value="B"> B. They were evidence of Rome's enormous wealth.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q34" value="C"> C. They were built on previously unoccupied sites.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q34" value="D"> D. Their construction destroyed evidence of earlier buildings.</label></div>
+                            </div>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="35" data-q-end="35">
+                            <p><strong>35</strong>&nbsp;&nbsp;What does the writer say in the fifth paragraph about the dating of excavated remains?</p>
+                            <div class="multi-choice-options">
+                                <div class="multi-choice-option"><label><input type="radio" name="q35" value="A"> A. Only the age of a proportion of remains can be agreed upon.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q35" value="B"> B. Only an approximate sequence of eras can be established.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q35" value="C"> C. Serious attempts at dating began only a few decades ago.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q35" value="D"> D. More thorough investigations will result in reliable dates.</label></div>
+                            </div>
+                        </div>
+                        <div class="multi-choice-question" data-q-start="36" data-q-end="36">
+                            <p><strong>36</strong>&nbsp;&nbsp;In the final paragraph, the writer makes the point that</p>
+                            <div class="multi-choice-options">
+                                <div class="multi-choice-option"><label><input type="radio" name="q36" value="A"> A. traditional archaeological methods of dating have been discredited.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q36" value="B"> B. many archaeologists are reluctant to abandon traditional methods of dating.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q36" value="C"> C. radiocarbon dating is more accurate than archaeological methods.</label></div>
+                                <div class="multi-choice-option"><label><input type="radio" name="q36" value="D"> D. the findings of traditional archaeology and radiocarbon dating differ.</label></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q37–40: Sentence endings matching -->
+                    <div class="question" data-q-start="37" data-q-end="40">
+                        <div class="question-prompt">
+                            <p><strong>Questions 37–40</strong></p>
+                            <p>Complete each sentence with the correct ending, <strong>A–F</strong>, below.</p>
+                        </div>
+                        <div class="example-box">
+                            <div style="font-size:0.9em;line-height:1.9;">
+                                <div><strong>A</strong>&nbsp;&nbsp;composed of organic materials which are in use in the 21st century.</div>
+                                <div><strong>B</strong>&nbsp;&nbsp;referred to in popular legends about the origins of Rome.</div>
+                                <div><strong>C</strong>&nbsp;&nbsp;constructed on the site of an earlier burial ground.</div>
+                                <div><strong>D</strong>&nbsp;&nbsp;used to determine the relative dates of various Roman artefacts.</div>
+                                <div><strong>E</strong>&nbsp;&nbsp;chosen as the area for the greatest number of archaeological excavations.</div>
+                                <div><strong>F</strong>&nbsp;&nbsp;expected to shed some light on what Rome was originally like.</div>
+                            </div>
+                        </div>
+                        <div class="matching-form-container">
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>37</strong>&nbsp;&nbsp;The Latin language can be ___</label>
+                                <select class="answer-input" id="q37"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>38</strong>&nbsp;&nbsp;The Roman Forum was ___</label>
+                                <select class="answer-input" id="q38"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>39</strong>&nbsp;&nbsp;The recently discovered building at Fidenae was ___</label>
+                                <select class="answer-input" id="q39"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                            </div>
+                            <div class="matching-form-row">
+                                <label class="matching-form-label"><strong>40</strong>&nbsp;&nbsp;Ancient Greek pottery is sometimes ___</label>
+                                <select class="answer-input" id="q40"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nav arrows -->
+<div class="nav-arrows">
+    <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+    <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+</div>
+
+<!-- Bottom nav -->
+<nav class="nav-row" aria-label="Questions">
+    <div class="footer__questionWrapper___1tZ46 selected" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+            <span class="section-prefix">Part </span><span class="sectionNr">1</span>
+            <span class="attemptedCount">0 of 13</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(1)">1</button>
+            <button class="subQuestion" onclick="goToQuestion(2)">2</button>
+            <button class="subQuestion" onclick="goToQuestion(3)">3</button>
+            <button class="subQuestion" onclick="goToQuestion(4)">4</button>
+            <button class="subQuestion" onclick="goToQuestion(5)">5</button>
+            <button class="subQuestion" onclick="goToQuestion(6)">6</button>
+            <button class="subQuestion" onclick="goToQuestion(7)">7</button>
+            <button class="subQuestion" onclick="goToQuestion(8)">8</button>
+            <button class="subQuestion" onclick="goToQuestion(9)">9</button>
+            <button class="subQuestion" onclick="goToQuestion(10)">10</button>
+            <button class="subQuestion" onclick="goToQuestion(11)">11</button>
+            <button class="subQuestion" onclick="goToQuestion(12)">12</button>
+            <button class="subQuestion" onclick="goToQuestion(13)">13</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+            <span class="section-prefix">Part </span><span class="sectionNr">2</span>
+            <span class="attemptedCount">0 of 13</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(14)">14</button>
+            <button class="subQuestion" onclick="goToQuestion(15)">15</button>
+            <button class="subQuestion" onclick="goToQuestion(16)">16</button>
+            <button class="subQuestion" onclick="goToQuestion(17)">17</button>
+            <button class="subQuestion" onclick="goToQuestion(18)">18</button>
+            <button class="subQuestion" onclick="goToQuestion(19)">19</button>
+            <button class="subQuestion" onclick="goToQuestion(20)">20</button>
+            <button class="subQuestion" onclick="goToQuestion(21)">21</button>
+            <button class="subQuestion" onclick="goToQuestion(22)">22</button>
+            <button class="subQuestion" onclick="goToQuestion(23)">23</button>
+            <button class="subQuestion" onclick="goToQuestion(24)">24</button>
+            <button class="subQuestion" onclick="goToQuestion(25)">25</button>
+            <button class="subQuestion" onclick="goToQuestion(26)">26</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+            <span class="section-prefix">Part </span><span class="sectionNr">3</span>
+            <span class="attemptedCount">0 of 14</span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(27)">27</button>
+            <button class="subQuestion" onclick="goToQuestion(28)">28</button>
+            <button class="subQuestion" onclick="goToQuestion(29)">29</button>
+            <button class="subQuestion" onclick="goToQuestion(30)">30</button>
+            <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+            <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+            <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+            <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+            <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+            <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+            <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+            <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+            <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+            <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+        </div>
+    </div>
+    <button id="deliver-button" class="footer__deliverButton___3FM07">✓ Check Answers</button>
+</nav>
+
+<!-- Highlight Toolbar -->
+<div id="highlightToolbar" class="highlight-toolbar">
+    <span id="toolbar-selection-btns">
+        <button class="toolbar-btn btn-yellow" onclick="applyHighlight('hl-yellow')" title="Highlight yellow">🟡 Yellow</button>
+        <button class="toolbar-btn btn-green"  onclick="applyHighlight('hl-green')"  title="Highlight green">🟢 Green</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-note"   onclick="openNoteInput()"            title="Add note">📝 Note</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear"     onclick="clearThisHighlight()"  title="Remove highlight">✕ Remove</button>
+        <button class="toolbar-btn btn-clear-all" onclick="clearAllHighlights()"  title="Remove all">⊘ All</button>
+    </span>
+    <span id="toolbar-highlight-btns" style="display:none">
+        <button class="toolbar-btn btn-yellow" onclick="recolorHighlight('hl-yellow')" title="Change to yellow">🟡 Yellow</button>
+        <button class="toolbar-btn btn-green"  onclick="recolorHighlight('hl-green')"  title="Change to green">🟢 Green</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-note"   onclick="openNoteInput()"               title="Add note">📝 Note</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear"     onclick="clearThisHighlight()"  title="Remove highlight">✕ Remove</button>
+        <button class="toolbar-btn btn-clear-all" onclick="clearAllHighlights()"  title="Remove all">⊘ All</button>
+    </span>
+</div>
+
+<!-- Notes Panel -->
+<div id="notesPanel" class="notes-panel">
+    <div class="notes-panel-header">
+        <span>📝 My Notes</span>
+        <button class="notes-panel-close" onclick="toggleNotesPanel()">✕</button>
+    </div>
+    <div class="notes-list" id="notesList">
+        <p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p>
+    </div>
+</div>
+
+<!-- Note Input Modal -->
+<div id="noteInputOverlay" class="note-input-overlay">
+    <div class="note-input-box">
+        <h3>Add a Note</h3>
+        <div class="selected-text-preview" id="noteTextPreview"></div>
+        <textarea id="noteTextarea" placeholder="Type your note here..."></textarea>
+        <div class="note-input-actions">
+            <button class="btn-cancel-note" onclick="cancelNote()">Cancel</button>
+            <button class="btn-save-note"   onclick="saveNote()">Save Note</button>
+        </div>
+    </div>
+</div>
+
+<!-- Results Modal -->
+<div id="results-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+        <h2>Results</h2>
+        <div class="results-summary">
+            <p>Score: <span id="results-score"></span> / 40</p>
+            <p>IELTS Band: <span id="results-band"></span></p>
+        </div>
+        <div id="results-details" class="results-details-container"></div>
+        <div style="text-align:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+            <button onclick="retakeTest()" style="background:#4a90e2;color:#fff;border:none;border-radius:6px;padding:10px 26px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retake Test</button>
+            <button onclick="closeResultsModal()" style="background:var(--footer-btn-bg);color:var(--text);border:1px solid var(--border-medium);border-radius:6px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;margin-left:10px;">Review Answers</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ═══════════════ CORRECT ANSWERS ═══════════════
+    const correctAnswers = {
+        // Passage 1 – Zambia Farming
+        '1': ['need'],
+        '2': ['ashes'],
+        '3': ['cassava'],
+        '4': ['garden'],
+        '5': ['homesteads', 'the homestead'],
+        '6': 'B',
+        '7': 'B',
+        '8': 'C',
+        '9': 'A',
+        '10': 'TRUE',
+        '11': 'NOT GIVEN',
+        '12': 'NOT GIVEN',
+        '13': 'C',
+        // Passage 2 – Babies
+        '14': 'D',
+        '15': 'D',
+        '16': 'F',
+        '17': 'B',
+        '18': 'A',
+        '19': 'B',
+        '20': 'B',
+        '21': 'C',
+        '22': 'B',
+        '23': 'A',
+        '24': ['accents'],
+        '25': ['brainwaves'],
+        '26': ['signal'],
+        // Passage 3 – Ancient Rome
+        '27': 'NO',
+        '28': 'YES',
+        '29': 'NOT GIVEN',
+        '30': 'NO',
+        '31': 'YES',
+        '32': 'NOT GIVEN',
+        '33': 'A',
+        '34': 'D',
+        '35': 'B',
+        '36': 'D',
+        '37': 'F',
+        '38': 'C',
+        '39': 'A',
+        '40': 'D'
+    };
+
+    // ═══════════════ STATE ═══════════════
+    let currentPassage = 1;
+    let currentQuestion = 1;
+    let selectedRange = null;
+    let selectedText = '';
+    let highlightTarget = null;
+    let lastAppliedHighlight = null;
+    let timeInSeconds = 3600;
+    let timerInterval;
+    let activeQuestionElement = null;
+    let zoomLevel = 100;
+    let notes = [];
+    let nextNoteId = 1;
+
+    // ═══════════════ DOM ═══════════════
+    const timerDisplay     = document.querySelector('.timer-display');
+    const timerToggleBtn   = document.getElementById('timer-toggle-btn');
+    const timerResetBtn    = document.getElementById('timer-reset-btn');
+    const deliverButton    = document.getElementById('deliver-button');
+    const resizer          = document.getElementById('resizer');
+    const passagePanel     = document.getElementById('passage-panel');
+    const questionsPanel   = document.getElementById('questions-panel');
+    const highlightToolbar = document.getElementById('highlightToolbar');
+    const nightModeBtn     = document.getElementById('night-mode-btn');
+    const notesToggleBtn   = document.getElementById('notes-toggle-btn');
+    const notesPanel       = document.getElementById('notesPanel');
+    const notesList        = document.getElementById('notesList');
+    const notesCount       = document.getElementById('notes-count');
+    const noteInputOverlay = document.getElementById('noteInputOverlay');
+    const noteTextarea     = document.getElementById('noteTextarea');
+    const noteTextPreview  = document.getElementById('noteTextPreview');
+    const zoomInBtn        = document.getElementById('zoom-in-btn');
+    const zoomOutBtn       = document.getElementById('zoom-out-btn');
+    const zoomLabel        = document.getElementById('zoom-label');
+
+    const playIcon  = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>';
+    const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+    function initialize() {
+        startTimer();
+        switchToPart(1);
+        document.body.addEventListener('input', updateAllIndicators);
+        document.body.addEventListener('change', updateAllIndicators);
+        deliverButton.addEventListener('click', checkAnswers);
+        timerToggleBtn.addEventListener('click', toggleTimer);
+        timerResetBtn.addEventListener('click', resetTimer);
+        nightModeBtn.addEventListener('click', toggleNightMode);
+        notesToggleBtn.addEventListener('click', toggleNotesPanel);
+        zoomInBtn.addEventListener('click', () => adjustZoom(10));
+        zoomOutBtn.addEventListener('click', () => adjustZoom(-10));
+        resizer.addEventListener('mousedown', initResize);
+        initializeHighlightToolbar();
+    }
+
+    function adjustZoom(delta) {
+        zoomLevel = Math.min(200, Math.max(60, zoomLevel + delta));
+        document.documentElement.style.setProperty('--font-size-base', (zoomLevel / 100 * 16) + 'px');
+        zoomLabel.textContent = zoomLevel + '%';
+        zoomOutBtn.disabled = zoomLevel <= 60;
+        zoomInBtn.disabled  = zoomLevel >= 200;
+    }
+
+    function toggleNightMode() {
+        document.body.classList.toggle('night-mode');
+        const isNight = document.body.classList.contains('night-mode');
+        nightModeBtn.innerHTML = isNight ? '☀️ Day' : '🌙 Night';
+    }
+
+    function normalise(s) { return (s || '').trim().toLowerCase(); }
+
+    function isTextCorrect(userAns, correctAns) {
+        if (!userAns || !userAns.trim()) return false;
+        const u = normalise(userAns);
+        if (Array.isArray(correctAns)) return correctAns.some(c => u === normalise(c));
+        return u === normalise(correctAns);
+    }
+
+    function checkAnswers() {
+        document.querySelectorAll('.question-set.hidden, .reading-passage.hidden, .part-header.hidden')
+            .forEach(s => s.classList.remove('hidden'));
+        document.querySelectorAll('input, select').forEach(el => el.disabled = true);
+        deliverButton.disabled = true;
+        clearInterval(timerInterval);
+        document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight')
+            .forEach(el => el.classList.remove('correct','incorrect','correct-answer-highlight'));
+        document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+
+        let score = 0;
+        const resultsEl = document.getElementById('results-details');
+        resultsEl.innerHTML = '';
+
+        function appendResult(qNum, isCorrect, userDisplay, correctDisplay) {
+            resultsEl.innerHTML += `<div class="result-row ${isCorrect ? '' : 'incorrect'}"><span class="q-num">${qNum}</span><span class="user-ans">${userDisplay}</span><span class="correct-ans">${correctDisplay}</span></div>`;
+            const navBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${qNum})"]`);
+            if (navBtn) { navBtn.classList.remove('answered','active'); navBtn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+        }
+
+        function showCorrectOnEl(el, correctDisplay) {
+            const sp = document.createElement('span');
+            sp.className = 'correct-answer-display';
+            sp.innerHTML = ` ➜ <span class="correct-answer-highlight">${correctDisplay}</span>`;
+            el.parentNode.insertBefore(sp, el.nextSibling);
+        }
+
+        // Q1–5: text inputs
+        for (let i = 1; i <= 5; i++) {
+            const el = document.getElementById(`q${i}`);
+            const correct = correctAnswers[String(i)];
+            const correctDisplay = Array.isArray(correct) ? correct[0] : correct;
+            const userAns = el ? el.value : '';
+            const isCorrect = isTextCorrect(userAns, correct);
+            if (el) el.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (isCorrect) score++;
+            else if (el) showCorrectOnEl(el, correctDisplay);
+            appendResult(i, isCorrect, userAns || 'Not Answered', correctDisplay);
+        }
+
+        // Q6–9: select matching
+        for (let i = 6; i <= 9; i++) {
+            const el = document.getElementById(`q${i}`);
+            const correct = correctAnswers[String(i)];
+            const userAns = el ? el.value : '';
+            const isCorrect = normalise(userAns) === normalise(correct);
+            const row = el ? (el.closest('.matching-form-row') || el.parentElement) : null;
+            if (row) row.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect && el) showCorrectOnEl(el, correct);
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        // Q10–12: T/F/NG radios
+        for (let i = 10; i <= 12; i++) {
+            const correct = correctAnswers[String(i)];
+            const checked = document.querySelector(`input[name="q${i}"]:checked`);
+            const container = document.querySelector(`.tf-question[data-q-start="${i}"]`);
+            const userAns = checked ? checked.value : '';
+            const isCorrect = userAns === correct;
+            if (checked) (checked.closest('.tf-option') || checked).classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (container) {
+                container.classList.add(isCorrect ? 'correct' : 'incorrect');
+                if (!isCorrect) {
+                    const corrOpt = container.querySelector(`input[value="${correct}"]`);
+                    if (corrOpt) (corrOpt.closest('.tf-option') || corrOpt).classList.add('correct-answer-highlight');
+                }
+            }
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        // Q13: MCQ
+        {
+            const i = 13;
+            const correct = correctAnswers[String(i)];
+            const checked = document.querySelector(`input[name="q${i}"]:checked`);
+            const container = document.querySelector(`.multi-choice-question[data-q-start="${i}"]`);
+            const userAns = checked ? checked.value : '';
+            const isCorrect = userAns === correct;
+            if (checked) (checked.closest('.multi-choice-option') || checked).classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (container && !isCorrect) {
+                container.classList.add('incorrect');
+                const corrOpt = container.querySelector(`input[value="${correct}"]`);
+                if (corrOpt) (corrOpt.closest('.multi-choice-option') || corrOpt).classList.add('correct-answer-highlight');
+            }
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        // Q14–19: paragraph matching selects
+        for (let i = 14; i <= 19; i++) {
+            const el = document.getElementById(`q${i}`);
+            const correct = correctAnswers[String(i)];
+            const userAns = el ? el.value : '';
+            const isCorrect = normalise(userAns) === normalise(correct);
+            const row = el ? (el.closest('.matching-form-row') || el.parentElement) : null;
+            if (row) row.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect && el) showCorrectOnEl(el, correct);
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        // Q20–23: researcher matching selects
+        for (let i = 20; i <= 23; i++) {
+            const el = document.getElementById(`q${i}`);
+            const correct = correctAnswers[String(i)];
+            const userAns = el ? el.value : '';
+            const isCorrect = normalise(userAns) === normalise(correct);
+            const row = el ? (el.closest('.matching-form-row') || el.parentElement) : null;
+            if (row) row.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect && el) showCorrectOnEl(el, correct);
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        // Q24–26: text inputs
+        for (let i = 24; i <= 26; i++) {
+            const el = document.getElementById(`q${i}`);
+            const correct = correctAnswers[String(i)];
+            const correctDisplay = Array.isArray(correct) ? correct[0] : correct;
+            const userAns = el ? el.value : '';
+            const isCorrect = isTextCorrect(userAns, correct);
+            if (el) el.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (isCorrect) score++;
+            else if (el) showCorrectOnEl(el, correctDisplay);
+            appendResult(i, isCorrect, userAns || 'Not Answered', correctDisplay);
+        }
+
+        // Q27–32: YES/NO/NG radios
+        for (let i = 27; i <= 32; i++) {
+            const correct = correctAnswers[String(i)];
+            const checked = document.querySelector(`input[name="q${i}"]:checked`);
+            const container = document.querySelector(`.tf-question[data-q-start="${i}"]`);
+            const userAns = checked ? checked.value : '';
+            const isCorrect = userAns === correct;
+            if (checked) (checked.closest('.tf-option') || checked).classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (container) {
+                container.classList.add(isCorrect ? 'correct' : 'incorrect');
+                if (!isCorrect) {
+                    const corrOpt = container.querySelector(`input[value="${correct}"]`);
+                    if (corrOpt) (corrOpt.closest('.tf-option') || corrOpt).classList.add('correct-answer-highlight');
+                }
+            }
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        // Q33–36: MCQ
+        for (let i = 33; i <= 36; i++) {
+            const correct = correctAnswers[String(i)];
+            const checked = document.querySelector(`input[name="q${i}"]:checked`);
+            const container = document.querySelector(`.multi-choice-question[data-q-start="${i}"]`);
+            const userAns = checked ? checked.value : '';
+            const isCorrect = userAns === correct;
+            if (checked) (checked.closest('.multi-choice-option') || checked).classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (container && !isCorrect) {
+                container.classList.add('incorrect');
+                const corrOpt = container.querySelector(`input[value="${correct}"]`);
+                if (corrOpt) (corrOpt.closest('.multi-choice-option') || corrOpt).classList.add('correct-answer-highlight');
+            }
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        // Q37–40: sentence ending selects
+        for (let i = 37; i <= 40; i++) {
+            const el = document.getElementById(`q${i}`);
+            const correct = correctAnswers[String(i)];
+            const userAns = el ? el.value : '';
+            const isCorrect = normalise(userAns) === normalise(correct);
+            const row = el ? (el.closest('.matching-form-row') || el.parentElement) : null;
+            if (row) row.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect && el) showCorrectOnEl(el, correct);
+            if (isCorrect) score++;
+            appendResult(i, isCorrect, userAns || 'Not Answered', correct);
+        }
+
+        document.getElementById('results-score').textContent = score;
+        document.getElementById('results-band').textContent = calcBand(score);
+        document.getElementById('results-modal').classList.remove('hidden');
+    }
+
+    function calcBand(s) {
+        const m = {40:9,39:9,38:8.5,37:8.5,36:8,35:8,34:7.5,33:7.5,32:7,31:7,30:7,29:6.5,28:6.5,27:6.5,26:6,25:6,24:6,23:5.5,22:5.5,21:5.5,20:5.5,19:5,18:5,17:5,16:5,15:5,14:4.5,13:4.5,12:4,11:4,10:4,9:3.5,8:3.5,7:3,6:3,5:2.5,4:2.5,3:2,2:2,1:1,0:0};
+        return m[s] !== undefined ? m[s] : '0';
+    }
+
+    function switchToPart(n) {
+        currentPassage = n;
+        document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`passage-text-${n}`).classList.remove('hidden');
+        document.getElementById(`questions-${n}`).classList.remove('hidden');
+        document.getElementById(`part-header-${n}`).classList.remove('hidden');
+        document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, idx) => {
+            w.classList.toggle('selected', idx + 1 === n);
+        });
+        const firstQ = {1:1, 2:14, 3:27}[n];
+        goToQuestion(firstQ);
+    }
+
+    function goToQuestion(qNum) {
+        currentQuestion = qNum;
+        let part = 1;
+        if (qNum >= 14 && qNum <= 26) part = 2;
+        else if (qNum >= 27) part = 3;
+
+        if (currentPassage !== part) {
+            currentPassage = part;
+            document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`passage-text-${part}`).classList.remove('hidden');
+            document.getElementById(`questions-${part}`).classList.remove('hidden');
+            document.getElementById(`part-header-${part}`).classList.remove('hidden');
+            document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, idx) => {
+                w.classList.toggle('selected', idx + 1 === part);
+            });
+        }
+
+        if (activeQuestionElement) activeQuestionElement.classList.remove('active-question','active-input');
+
+        let target = document.querySelector(`[data-q-start="${qNum}"]`);
+        if (target) {
+            activeQuestionElement = target;
+            target.classList.add('active-question');
+            const pr = questionsPanel.getBoundingClientRect();
+            const er = target.getBoundingClientRect();
+            if (er.top < pr.top || er.bottom > pr.bottom) target.scrollIntoView({behavior:'smooth', block:'center'});
+        }
+        updateNavigation();
+    }
+
+    function updateNavigation() {
+        document.querySelectorAll('.subQuestion').forEach(b => b.classList.remove('active'));
+        const activeBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${currentQuestion})"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+        document.querySelectorAll('.answer-input').forEach(el => el.classList.remove('active-input'));
+        const activeInput = document.getElementById(`q${currentQuestion}`);
+        if (activeInput) { activeInput.classList.add('active-input'); try { activeInput.focus(); } catch(e){} }
+    }
+
+    window.nextQuestion     = () => currentQuestion < 40 && goToQuestion(currentQuestion + 1);
+    window.previousQuestion = () => currentQuestion > 1  && goToQuestion(currentQuestion - 1);
+    window.goToQuestion     = goToQuestion;
+    window.switchToPart     = switchToPart;
+
+    function updateAllIndicators() {
+        updateCount(1, 1, 13);
+        updateCount(2, 14, 26);
+        updateCount(3, 27, 40);
+        updateAnsweredNav();
+    }
+
+    function updateAnsweredNav() {
+        document.querySelectorAll('.subQuestion').forEach(btn => {
+            const n = parseInt(btn.textContent, 10);
+            if (!btn.classList.contains('correct') && !btn.classList.contains('incorrect')) {
+                btn.classList.toggle('answered', isAnswered(n));
+            }
+        });
+    }
+
+    function isAnswered(qNum) {
+        const el = document.getElementById(`q${qNum}`);
+        if (el && el.tagName === 'INPUT' && el.value.trim()) return true;
+        if (el && el.tagName === 'SELECT' && el.value) return true;
+        if (document.querySelector(`input[name="q${qNum}"]:checked`)) return true;
+        return false;
+    }
+
+    function updateCount(part, start, end) {
+        let count = 0;
+        for (let i = start; i <= end; i++) if (isAnswered(i)) count++;
+        const wrappers = document.querySelectorAll('.footer__questionWrapper___1tZ46');
+        const w = wrappers[part - 1];
+        if (w) { const s = w.querySelector('.attemptedCount'); if (s) s.textContent = `${count} of ${end - start + 1}`; }
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeInSeconds--;
+            updateTimerDisplay();
+            if (timeInSeconds <= 0) { clearInterval(timerInterval); timerDisplay.textContent = "Time's up!"; }
+        }, 1000);
+        timerToggleBtn.innerHTML = pauseIcon;
+    }
+    function pauseTimer() { clearInterval(timerInterval); timerToggleBtn.innerHTML = playIcon; }
+    function toggleTimer() {
+        timerToggleBtn.innerHTML.includes('M6 19h4') ? pauseTimer() : startTimer();
+    }
+    function resetTimer() { timeInSeconds = 3600; updateTimerDisplay(); startTimer(); }
+    function updateTimerDisplay() {
+        const m = Math.floor(timeInSeconds / 60);
+        const s = timeInSeconds % 60;
+        timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function initResize(e) {
+        e.preventDefault();
+        const startX = e.clientX;
+        const startW = passagePanel.offsetWidth;
+        const drag = ev => {
+            const nw = startW + ev.clientX - startX;
+            if (nw > 200 && (document.body.clientWidth - nw - resizer.offsetWidth) > 200) {
+                passagePanel.style.flex = `0 0 ${nw}px`;
+            }
+        };
+        const stop = () => { window.removeEventListener('mousemove', drag); window.removeEventListener('mouseup', stop); };
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('mouseup', stop);
+    }
+
+    function initializeHighlightToolbar() {
+        const panels = [passagePanel, questionsPanel];
+        const selBtns = document.getElementById('toolbar-selection-btns');
+        const hlBtns  = document.getElementById('toolbar-highlight-btns');
+
+        document.addEventListener('selectionchange', () => {
+            const sel = window.getSelection();
+            if (sel && !sel.isCollapsed && sel.toString().trim()) {
+                const r = sel.getRangeAt(0);
+                if (panels.some(p => p.contains(r.commonAncestorContainer))) {
+                    selectedRange = r.cloneRange();
+                    selectedText  = sel.toString();
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (highlightToolbar.contains(e.target)) return;
+            if (noteInputOverlay.contains(e.target)) return;
+            const sel = window.getSelection();
+            const overHL = e.target.closest('.highlight, .comment-highlight');
+
+            if (overHL && (!sel || sel.isCollapsed)) {
+                highlightTarget = overHL;
+                lastAppliedHighlight = null;
+                selectedRange = null;
+                selBtns.style.display = 'none';
+                hlBtns.style.display  = 'inline-flex';
+                positionToolbar(e);
+                return;
+            }
+            if (sel && !sel.isCollapsed && sel.toString().trim()) {
+                const r = sel.getRangeAt(0);
+                if (panels.some(p => p.contains(r.commonAncestorContainer))) {
+                    highlightTarget = null;
+                    lastAppliedHighlight = null;
+                    selBtns.style.display = 'inline-flex';
+                    hlBtns.style.display  = 'none';
+                    positionToolbar(e);
+                    return;
+                }
+            }
+            hideToolbar();
+        });
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') hideToolbar(); });
+        passagePanel.addEventListener('scroll', hideToolbar);
+        questionsPanel.addEventListener('scroll', hideToolbar);
+    }
+
+    function positionToolbar(e) {
+        highlightToolbar.classList.add('visible');
+        requestAnimationFrame(() => {
+            const tbW = highlightToolbar.offsetWidth  || 260;
+            const tbH = highlightToolbar.offsetHeight || 40;
+            let left = e.pageX - tbW / 2;
+            let top  = e.pageY - tbH - 12;
+            if (left < 6) left = 6;
+            if (left + tbW > window.innerWidth - 6) left = window.innerWidth - tbW - 6;
+            if (top < 62) top = e.pageY + 12;
+            highlightToolbar.style.left = left + 'px';
+            highlightToolbar.style.top  = top + 'px';
+        });
+    }
+    function hideToolbar() { highlightToolbar.classList.remove('visible'); }
+
+    window.applyHighlight = function(colorClass) {
+        if (!selectedRange || selectedRange.collapsed) { hideToolbar(); return; }
+        try {
+            const span = document.createElement('span');
+            span.className = 'highlight ' + colorClass;
+            span.appendChild(selectedRange.extractContents());
+            selectedRange.insertNode(span);
+            lastAppliedHighlight = span;
+        } catch(e) {}
+        hideToolbar();
+        window.getSelection().removeAllRanges();
+        selectedRange = null;
+    };
+
+    window.recolorHighlight = function(colorClass) {
+        if (!highlightTarget) { hideToolbar(); return; }
+        highlightTarget.className = 'highlight ' + colorClass;
+        highlightTarget = null;
+        hideToolbar();
+    };
+
+    window.clearThisHighlight = function() {
+        const tgt = highlightTarget || lastAppliedHighlight;
+        if (!tgt || !tgt.parentNode) { hideToolbar(); return; }
+        if (tgt.classList.contains('comment-highlight')) {
+            const idx = notes.findIndex(n => n.spanEl === tgt);
+            if (idx !== -1) notes.splice(idx, 1);
+            renderNotesList();
+        }
+        unwrap(tgt);
+        highlightTarget = null;
+        lastAppliedHighlight = null;
+        hideToolbar();
+    };
+
+    window.clearAllHighlights = function() {
+        document.querySelectorAll('.highlight, .comment-highlight').forEach(unwrap);
+        notes = [];
+        renderNotesList();
+        highlightTarget = null;
+        lastAppliedHighlight = null;
+        hideToolbar();
+    };
+
+    function unwrap(el) {
+        const p = el.parentNode;
+        if (!p) return;
+        while (el.firstChild) p.insertBefore(el.firstChild, el);
+        p.removeChild(el);
+        p.normalize();
+    }
+
+    function toggleNotesPanel() { notesPanel.classList.toggle('visible'); }
+
+    window.openNoteInput = function() {
+        if (!selectedRange || selectedRange.collapsed) { hideToolbar(); return; }
+        noteTextPreview.textContent = selectedText.length > 110 ? selectedText.slice(0, 110) + '…' : selectedText;
+        noteTextarea.value = '';
+        noteInputOverlay.classList.add('visible');
+        setTimeout(() => noteTextarea.focus(), 50);
+    };
+
+    window.cancelNote = function() {
+        noteInputOverlay.classList.remove('visible');
+        hideToolbar();
+        window.getSelection().removeAllRanges();
+        selectedRange = null;
+    };
+
+    window.saveNote = function() {
+        const noteText = noteTextarea.value.trim();
+        if (!noteText) { noteTextarea.focus(); return; }
+        if (!selectedRange || selectedRange.collapsed) { cancelNote(); return; }
+        const span = document.createElement('span');
+        span.className = 'comment-highlight';
+        const tooltip = document.createElement('span');
+        tooltip.className = 'comment-tooltip';
+        tooltip.textContent = noteText;
+        try { span.appendChild(selectedRange.extractContents()); } catch(e) {}
+        span.appendChild(tooltip);
+        selectedRange.insertNode(span);
+        const noteObj = { id: nextNoteId++, text: selectedText.slice(0, 80), noteText, spanEl: span };
+        notes.push(noteObj);
+        renderNotesList();
+        noteInputOverlay.classList.remove('visible');
+        hideToolbar();
+        window.getSelection().removeAllRanges();
+        selectedRange = null;
+    };
+
+    function renderNotesList() {
+        const count = notes.length;
+        notesCount.textContent = count;
+        notesCount.style.display = count > 0 ? 'inline' : 'none';
+        if (count === 0) {
+            notesList.innerHTML = '<p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p>';
+            return;
+        }
+        notesList.innerHTML = notes.map(n => `
+            <div class="note-item" id="note-${n.id}">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="note-item-text">"${esc(n.text)}${n.text.length >= 80 ? '…' : ''}"</div>
+                    <button class="note-item-delete" onclick="deleteNote(${n.id})">✕</button>
+                </div>
+                <div class="note-item-content">${esc(n.noteText)}</div>
+            </div>`).join('');
+    }
+
+    window.deleteNote = function(id) {
+        const idx = notes.findIndex(n => n.id === id);
+        if (idx === -1) return;
+        const note = notes[idx];
+        if (note.spanEl && note.spanEl.parentNode) unwrap(note.spanEl);
+        notes.splice(idx, 1);
+        renderNotesList();
+    };
+
+    function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    window.closeResultsModal = function() { document.getElementById('results-modal').classList.add('hidden'); };
+
+    window.retakeTest = function() {
+        document.querySelectorAll('input, select').forEach(el => { el.disabled = false; });
+        deliverButton.disabled = false;
+        document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(el => {
+            el.classList.remove('correct','incorrect','correct-answer-highlight');
+        });
+        document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+        document.querySelectorAll('input[type="text"]').forEach(el => el.value = '');
+        document.querySelectorAll('select').forEach(el => el.value = '');
+        document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+        document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+        document.querySelectorAll('.subQuestion').forEach(b => b.classList.remove('correct','incorrect','answered','active'));
+        resetTimer();
+        document.getElementById('results-modal').classList.add('hidden');
+        switchToPart(1);
+        updateAllIndicators();
+    };
+
+    initialize();
+});
+</script>
+</body>
+</html>

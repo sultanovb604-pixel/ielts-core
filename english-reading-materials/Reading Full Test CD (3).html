@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>IELTS Reading Practice</title>
+    <style>
+.flash {
+    animation: flashAnim 0.6s ease-out;
+}
+@keyframes flashAnim {
+    0% { background: yellow; }
+    100% { background: transparent; }
+}
+
+        * { box-sizing: border-box; margin:0; padding:0; }
+        body { font-family: Arial, sans-serif; color:#222; background:#fff; line-height:1.4; }
+        #header { position:fixed; top:0; left:0; right:0; height:60px; background:#fff; border-bottom:1px solid #e0e0e0; display:flex; align-items:center; justify-content:space-between; padding:0 20px; z-index:100; }
+        #timer { font-weight:bold; }
+        #passage-header-container { margin-top:60px; padding:15px 20px; background:#f5f5f5; border-bottom:1px solid #e0e0e0; }
+        .main-container { display:flex; flex-direction:column; height:calc(100vh - 60px); }
+        .panels-container { display:flex; flex:1; overflow:hidden; }
+        .passage-panel { flex:1; overflow-y:auto; padding:20px 20px 120px; min-width:220px; }
+        .questions-panel { flex:1; overflow-y:auto; padding:20px 20px 120px; border-left:1px solid #e0e0e0; min-width:300px; }
+        .reading-passage p { margin-bottom:15px; text-align:justify; }
+        .question { margin-bottom:20px; }
+        .inline-input { padding:6px 10px; border:1px solid #ddd; border-radius:4px; min-width:140px; }
+        .answer-input { padding:6px 10px; border:1px solid #ddd; border-radius:4px; min-width:120px; }
+        .drop-zone { min-width:80px; min-height:36px; border:2px dashed #cfcfcf; border-radius:4px; background:#fafafa; display:flex; align-items:center; justify-content:center; padding:4px; text-align:center; }
+        .drop-zone.filled { border-style:solid; border-color:#4a90e2; background:#e8f4ff; }
+        .drag-item { padding:8px 12px; background:#fff; border:1px solid #ddd; border-radius:4px; cursor:grab; margin:6px; display:inline-block; }
+        .drag-item.dragging { opacity:0.5; }
+        .matching-options-bank { padding:10px; background:#fbfbfb; border:1px solid #eee; display:flex; flex-wrap:wrap; gap:8px; }
+        .resizer { width:10px; cursor:col-resize; background:#f5f5f5; border-left:1px solid #e0e0e0; border-right:1px solid #e0e0e0; display:flex; align-items:center; justify-content:center; }
+        #bottom-nav { position:fixed; bottom:0; left:0; right:0; height:80px; background:#fff; border-top:1px solid #e0e0e0; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; gap:20px; z-index:100; <div style="display:flex; gap:12px; align-items:center;">
+    <button id="prev-question-btn" style="background:#666; color:#fff; padding:10px 20px; border:none; border-radius:6px; font-size:15px; cursor:pointer;">◀ Previous Question</button>
+    <button id="next-question-btn" style="background:#4a90e2; color:#fff; padding:10px 20px; border:none; border-radius:6px; font-size:15px; cursor:pointer;">Next Question ▶</button>
+</div> }
+        #submit-btn { background:#4a90e2; color:#fff; padding:12px 28px; border-radius:8px; border:none; cursor:pointer; font-size:16px; }
+        .part-btn { padding:8px 12px; border-radius:6px; border:1px solid #ddd; background:#f7f7f7; cursor:pointer; }
+        .part-btn.active { background:#4a90e2; color:#fff; border-color:#4a90e2; }
+        .question-btn { padding:5px 8px; border:1px solid #ddd; border-radius:4px; cursor:pointer; margin:2px; }
+        .question-btn.answered { background:#d4edda; border-color:#28a745; }
+        .drop-heading { min-width:150px; min-height:30px; border:2px dashed #cfcfcf; padding:3px 6px; margin-right:10px; display:inline-flex; align-items:center; justify-content:center; background:#fff; border-radius:4px; }
+        .drop-heading.filled { background:#e8f4ff; border-style:solid; border-color:#4a90e2; }
+        .diagram-container { display:flex; gap:16px; align-items:flex-start; }
+        .diagram-container img { max-width:420px; width:40%; height:auto; border:1px solid #ddd; padding:6px; background:#fff; }
+        .table-select { width:100%; border-collapse:collapse; margin-top:8px; }
+        .table-select th, .table-select td { border:1px solid #ddd; padding:8px; text-align:center; }
+        .table-select th:first-child, .table-select td:first-child { text-align:left; }
+        .table-select input[type="radio"] { width:18px; height:18px; }
+        .heading-bank { margin-bottom:12px; }
+        .results-correct { color:#28a745; } .results-incorrect { color:#dc3545; }
+        .flash { animation: flashAnim 0.6s ease-out; } @keyframes flashAnim { 0% { background: yellow; } 100% { background: transparent; } }
+        .input-filled { border-color: #28a745 !important; background: #e9fbe9 !important;}
+        
+   </style>
+</head>
+<body>
+    <div id="header">
+        <div id="timer-container">
+            <span id="timer">60:00</span>
+            <button id="timer-toggle">⏸</button>
+            <button id="timer-reset">↻</button>
+        </div>
+        <a href="https://t.me/ielts_material_full" target="_blank">Full Exam Materials</a>
+    </div>
+
+    <div id="passage-header-container">
+        <div id="part-header-1" class="part-header" style="display:block;">
+            <p><strong>Part 1</strong></p>
+            <p>Read the text and answer questions 1-13.</p>
+        </div>
+        <div id="part-header-2" class="part-header" style="display:none;">
+            <p><strong>Part 2</strong></p>
+            <p>Read the text and answer questions 14-26.</p>
+        </div>
+        <div id="part-header-3" class="part-header" style="display:none;">
+            <p><strong>Part 3</strong></p>
+            <p>Read the text and answer questions 27-40.</p>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="panels-container">
+            <div class="passage-panel" id="passage-panel">
+                <!-- Passage 1 -->
+                <div id="passage-text-1" class="reading-passage" style="display:block;">
+                    <h4 style="text-align:center;">The pesticide-free village</h4>
+                    <p>Gerry Marten and Dona Glee Williams report on the Indian village of Punukula, so nearly destroyed by reliance on pesticides</p>
+                    <p>Around 20 years ago, a handful of families migrated from the Guntur district of Andhra Pradesh, south-east India, into Punukula, a community of around 900 people farming plots of between two and ten acres. The outsiders from Guntur brought cotton culture with them, and this attracted resident farmers by promising to bring in more hard cash than the mixed crops they were already growing to eat and sell, such as millet, mung beans, chilli and rice. But growing cotton meant using pesticides and fertilisers – until then a mystery to the mostly illiterate farmers of the community.</p>
+                    <p>Local agrochemical dealers obligingly filled the need for information and supplies. These ‘middlemen’ sold commercial seeds, fertilisers and insecticides on credit, and guaranteed purchase of the crop. They offered technical advice provided by the companies that supplied their products. The farmers depend on the dealers. If they wanted to grow cotton – and they did – it seemed they had no choice.</p>
+                    <p>A quick ‘high’ of booming yields and incomes hooked growers during the early years of cotton in the region. Outlay on insecticides was fairly low because cotton pests hadn’t moved in yet. Many farmers were so impressed with the chemicals that they started using them on their other crops as well. The immediate payoffs from chemically-dependent cotton agriculture both ensured and obscured the fact that the black dirt fields had gone into a freefall of environmental degradation, dragged down by a chain of cause and effect.</p>
+                    <p>Soon cotton-eaters, such as bollworms and aphids, plagued the fields. Repeated spraying killed off the most susceptible pests and left the strongest to reproduce and pass on their resistance to generations of ever-harder offspring. As the bugs grew tougher and more abundant, farmers applied a greater variety and quantity of poisons, something mixing ‘cocktails’ of as many as ten insecticides. At the same time, cotton was gobbling up the nutrients in the soil, leaving the growers no option to invest in chemical fertilisers.</p>
+                    <p>By the time some farmers tried to break free of their chemical dependence, insecticides had already decimated the birds, wasps, beetles, and other predators that had once provided natural control of crop pests. Without their balancing presence, pests ran riot if insecticide was cut back. As outlays for fertilisers and insecticides escalated, the cost of producing cotton mounted. Eventually the expense of chemical inputs outgrew the cash value of the crop, and farmers fell further and further into debt and poverty.</p>
+                    <p>Their vicious cycle was only broken by the willingness of a prominent village elder to experiment with something different. He had been among the first villagers to grow cotton, and he would be the first to try it without chemicals, as set out by a programme in Non-Pesticide Management (NPM). This had been devised for Punukala with the help of a Non-Government Organisation called SECURE that had become aware of the hardships caused by the pesticide trap.</p>
+                    <p>It involved turning to neem, a fast-growing, broad-leaved evergreen tree related to mahogany. Neem protects itself against insects by producing a multitude of natural pesticides that have evolved specifically to defeat plant-eating insects. Thus they are generally harmless to human and other animals, including birds and insects that eat pests.</p>
+                    <p>The plant is native to India and Burma, where it has been used for centuries to control pests and to promote health. To protect cotton, neem seeds are simply ground into a powder, soaked overnight in water, and sprayed onto the crop at least every 10 days. Neem cake applied to the soil kills insect pests and doubles as an organic fertiliser high in nitrogen. As neem grows locally and is easy to process, it is much less expensive than the chemical insecticides sold for profit by the dealers and their corporate suppliers.</p>
+                    <p>Quick, short-term gains had once pushed Punukula into chemical-dependent agriculture. Now they found that similar immediate rewards were helping to speed change in the other direction: the harvest of the next 20 NPM farmers was as good as the harvest of farmers using insecticides, and they came out ahead because they weren’t buying insecticides. Instead of investing cash (in short supply) in chemicals, they invested time and labour in NPM practices.</p>
+                    <p>By the end of 2000, all the farmers in Punukula village were using NPM rather than chemicals for cotton, and they began to use it on other crops as well. The change gathered momentum as NPM became even more effective once everyone was using it. The status and economic opportunities of women improved – neem became a source of income for some of them, as they gathered seeds from the surrounding area to sell for NPM in other villages. The improve situation meant that families could afford to put more land under cultivation.</p>
+                    <p>In 2004, the panchayat (village government) formally declared Punukula to be a pesticide-free village. And they have big plans for the future, such as water purification. The village now serves as a model for disseminating NPM to other communities, with around 2000 farmers visiting each year.</p>
+                    <p>What began as a few farmers desperate to find a way to farm without poisons has become a movement with the potential to pull an entire region back from ecological disaster.</p>
+                </div>
+
+                <!-- Passage 2 -->
+                <div id="passage-text-2" class="reading-passage" style="display:none;">
+                    <h4 style="text-align:center;">New filter promises clean water for millions</h4>
+                    <p>An ingenious invention is set to bring clean water to developing countries, and while the science may be cutting edge, the materials are extremely down to earth.</p>
+                    <p>A handful of clay, yesterday’s coffee grounds and some cow manure are the ingredients that could bring clean, safe drinking water to many developing countries. The simple new technology, developed by Australian National University (ANU) materials scientist and potter Tony Flynn, allows water filters to be made from commonly available materials and fired (or baked) using cow manure as the source of heat, without the need for a kiln (an oven for baking or drying pottery). The filters have been tested and shown to remove common pathogens (disease-producing organisms) including E-coli.</p>
+                    <p>The invention was born out of a project involving the Manatuto community in East Timor. A charity operating there wanted to help set up a small industrial site manufacturing water filters, but initial research found the local clay to be too fine – a problem solved by the addition of organic material. While the problems of producing a working ceramic filter in East Timor were overcome, the solution was kiln-based and particular to that community’s materials and couldn’t be applied elsewhere. Flynn’s technique for manure firing, with no requirement for a kiln, has made this zero technology approach available anywhere it is needed.</p>
+                    <p>Other commercial clay filters do exist, but, even if available, with prices starting at US$5 each, they are often outside the budgets of most people in the developing world. Unlike other water filtering devices, Flynn’s filters are inexpensive and simple to produce. Take a handful of clay, mix it with a handful of organic material such as used tea leaves, coffee grounds or rice hulls, add water in a sufficient quantity to make a stiff mixture and form a cylindrical pot that has one end closed, then dry it in the sun. According to Flynn, used coffee grounds have given the best results to date. The walls of the filter can be measured using the width of an adult finger as the standard. Next, surround the pots with straw, put them in a mound of cow manure, light the straw and then top up the burning manure as required. The filters are finished in 45 to 60 minutes.</p>
+                    <p>The properties of cow manure are vital, as the fuel can reach a temperature of 700 degrees in half an hour, and will be up to 950 degrees after another 20 to 30 minutes. The manure makes a good fuel because it is very high in organic material that burns readily and quickly. The manure has to be dry and is best used exactly as found in the field; there is no need to break it up or process it any further. In contrast, a potter’s kiln is an expensive item and can take up to four or five hours to get up to 800 degrees. It needs expensive scarce fuel, such as gas or wood to heat it, and experience to use it. With no technology, no insulation and nothing other than a pile of cow manure and a match, none of these requirements apply.</p>
+                    <p>It is also helpful that, like clay and organic material, cow manure is freely available across the developing world. A cow is a natural fuel factory. Manure is a mixture of vegetable materials of different sizes, and cow manure as a fuel is the same wherever it is found.</p>
+                    <p>Just as using manure as a fuel for domestic use is not a new idea, the fact that liquid can pass through clay objects is something that potters have always known, and clay’s porous nature is something that, as a former ceramics lecturer in the ANU School of Art, Flynn is well aware of. The difference is that, rather than viewing the porous nature of the material as a problem – after all, not many people want a pot that won’t hold water – his filters capitalize on this property.</p>
+                    <p>The filtration process is simple, but effective. The basic principle is that there are passages through the filter that are wide enough for water droplets to pass through, but too narrow for pathogens. Tests with the deadly E-coli bacterium have seen the filters remove 96.4 to 99.8 per cent of the pathogen – well within safe levels. The thickness of the clay container needs to be the same thickness as an adult finger for the process to be effective. If this is the case, using only one filter, a liter of water can be obtained in two hours.</p>
+                    <p>The use of organic material, which burns away leaving cavities after firing, helps produce the structure in which pathogens will become trapped. It overcomes the potential problems of finer clays that may not let water through and also means that cracks are soon halted. And like clay and cow manure, organic material is universally available in the developing communities that need most assistance, as tea, coffee and rice are grown in these areas.</p>
+                    <p>With all the components being widely available, Flynn says there is no reason the technology couldn’t be applied throughout the developing world. He has no plans to exploit his idea financially by registering ownership through a patent. If he did, any commercial copying would legally entitle him to a share in any profits made. Without a patent, there will be no illegality in it being adopted in any community that needs it. ‘Everyone has a right to clean water, and these filters have the potential to enable anyone in the world to drink water safely,’ says Flynn.</p>
+                </div>
+
+                <!-- Passage 3 -->
+                <div id="passage-text-3" class="reading-passage" style="display:none;">
+                    <h4 style="text-align:center;">Putting the brakes on climate change</h4>
+                    <p>Are hydrogen cars the answer?</p>
+                    <p><span class="drop-heading" data-question="q27"></span><strong>A</strong> It is tempting to think that the conservation of coral reefs and rainforests is a separate issue from traffic and air pollution. But it is not. Scientists are now confident that rapid changes in the Earth’s climate are already disrupting and altering many wildlife habitats. Pollution from vehicles is a big part of the problem.</p>
+                    <p><span class="drop-heading" data-question="q28"></span><strong>B</strong> The United Nation’s Climate Change Panel has estimated that the global average temperature rise expected by the year 2100 could be as much as 6C°, causing forest fires and dieback on land and coral bleaching in the ocean. Few species, if any, will be immune from the changes in temperature, rainfall and sea levels. The panel believes that if such catastrophic temperature rises are to be avoided, the quantity of greenhouse gases, especially carbon dioxide, being released into the atmosphere must be reduced. That will depend on slowing the rate of deforestation and, more crucially, finding alternatives to coal, oil and gas as our principal energy sources.</p>
+                    <p><span class="drop-heading" data-question="q29"></span><strong>C</strong> Technologies do exist to reduce or eliminate carbon dioxide as a waste product of our energy consumption. Wind power and solar power are both spreading fast, but what are we doing about traffic? Electric cars are one possible option, but their range and the time it takes to charge their batteries pose serious limitations. However, the technology that shows the most potential to make cars climate-friendly is fuel-cell technology. This was actually invented in the late nineteenth century but because the world’s motor industry put its effort into developing the combustion engine, it was never refined for mass production. One of the first prototype fuel-cell-powered vehicles has been built by the Ford Motor Company. It is like a conventional car, only with better acceleration and a smoother ride. Ford engineers expect to be able to produce a virtually silent vehicle in the future.</p>
+                    <p><span class="drop-heading" data-question="q30"></span><strong>D</strong> So what’s the process involved – and is there a catch? Hydrogen goes into the fuel tank, producing electricity. The only emission from the exhaust pipe is water. The fuel-cell is, in some ways, similar to a battery, but unlike a battery it does not run down. As long as hydrogen and oxygen are supplied to the cell, it will keep on generating electricity. Some cells work off methane and a few use liquid fuels such as methanol, but fuel-cells using hydrogen probably have the most potential. Furthermore, they need not be limited to transport. Fuel-cells can be made in a huge range of sizes, small enough for portable computers or large enough for power stations. They have no moving parts and therefore need no oil.</p>
+                    <p><span class="drop-heading" data-question="q31"></span><strong>E</strong> One source of hydrogen is water. But to exploit the abundant resource, electricity is needed, and if the electricity is produced by a coal-fired power station or other fossil fuel, then the overall carbon reduction benefit of the fuel-cell disappears. Renewable sources, such as wind and solar power, do not produce enough energy for it to be economically viable to use them in the ‘manufacture’ of hydrogen as a transport fuel. Another source of hydrogen is, however, available and could provide a supply pending the development of more efficient and cheaper renewable energy technologies. By splitting natural gas (methane) into its constituent parts, hydrogen and carbon dioxide are produced. One way round the problem of what to do with the carbon dioxide could be to store it back below ground – so called geological sequestration. Oil companies, such as Norway’s Statoil, are experimenting with storing carbon dioxide below ground in oil and gas wells.</p>
+                    <p><span class="drop-heading" data-question="q32"></span><strong>F</strong> With freak weather conditions, arguably caused by global warming, frequently in the headlines, the urgent need to get fuel-cell vehicles will be available in most showrooms. Even now, fuel-cell buses are operating in the US, while in Germany a courier company is planning to take delivery of fuel-cell-powered vans in the near future. The fact that centrally-run fleets of buses and vans are the first fuel-cell vehicles identifies another challenge – fuel distribution. The refueling facilities necessary to top up hydrogen-powered vehicles are available only in a very few places at present. Public transport and delivery firms are logical places to start, since their vehicles are operated from central depots.</p>
+                    <p><strong>G</strong> Fuel-cell technology is being developed right across the automotive industry. This technology could have a major impact in slowing down climate change, but further investment is needed if the industry – and the world’s wildlife – is to have a long-term future.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"><div></div></div>
+
+            <div class="questions-panel" id="questions-panel">
+                <!-- Questions for part 1 (1-13) -->
+                <div id="questions-1" class="question-set" style="display:block;">
+                    <div class="question">
+                        <p><strong>Questions 1-4</strong></p>
+                        <p>Do the following statements agree with the information given in Reading Passage 1?</p>
+                        <p>In boxes 1-4 on your answer sheet, write</p>
+                        <p>TRUE if the statement agrees with the information</p>
+                        <p>FALSE if the statement contradicts the information</p>
+                        <p>NOT GIVEN if there is no information on this</p>
+                        <div class="question">
+                            <p><strong>1</strong> Cotton growing was expected to raise more money than other crops.</p>
+                            <label><input type="radio" name="q1" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q1" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q1" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>2</strong> Some of the local agrochemical dealers had been farmers in the past.</p>
+                            <label><input type="radio" name="q2" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q2" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q2" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>3</strong> Initially the farmers’ cotton yields were low.</p>
+                            <label><input type="radio" name="q3" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q3" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q3" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>4</strong> At first, the farmers failed to notice the negative effects on their fields of pesticide use.</p>
+                            <label><input type="radio" name="q4" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q4" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q4" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p><strong>Questions 5-10</strong></p>
+                        <p>Complete the notes below.</p>
+                        <p>Choose NO MORE THAN TWO WORDS from the passage for each answer.</p>
+                        <p>Write your answers in boxes 5-10 on your answer sheet.</p>
+                        <p><strong>Non-Pesticide-Management Programme</strong></p>
+                        <p> Developed with the aid of SECURE</p>
+                        <p> Based on use of an <input id="q5" class="inline-input" placeholder="(NO MORE THAN TWO WORDS)"/> called neem</p>
+                        <p> Neem contains many <input id="q6" class="inline-input" placeholder="(NO MORE THAN TWO WORDS)"/> that target plant-eating predators</p>
+                        <p><strong>Neem</strong></p>
+                        <p> Used as a pesticide</p>
+                        <p>- <input id="q7" class="inline-input" placeholder="(NO MORE THAN TWO WORDS)"/> formed by grinding seeds</p>
+                        <p>- left <input id="q8" class="inline-input" placeholder="(NO MORE THAN TWO WORDS)"/> to soak in water</p>
+                        <p>- Sprayed regularly</p>
+                        <p> Used as a pesticide and as a fertiliser</p>
+                        <p>- added in <input id="q9" class="inline-input" placeholder="(NO MORE THAN TWO WORDS)"/> form to soil</p>
+                        <p>- contains a lot of <input id="q10" class="inline-input" placeholder="(NO MORE THAN TWO WORDS)"/></p>
+                    </div>
+
+                    <div class="question">
+                        <p><strong>Questions 11-13</strong></p>
+                        <p>Answer the questions below.</p>
+                        <p>Choose NO MORE THAN TWO WORDS AND/OR A NUMBER from the passage for each answer.</p>
+                        <p>Write your answers in boxes 11-13 on your answer sheet.</p>
+                        <p><strong>11</strong> In which year did farmers finally stop using chemicals on cotton crops in Punukula? <input id="q11" class="answer-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/></p>
+                        <p><strong>12</strong> What did the women of Punukula collect to make money? <input id="q12" class="answer-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/></p>
+                        <p><strong>13</strong> What project do the authorities in Punukula hope to set up in the future? <input id="q13" class="answer-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/></p>
+                    </div>
+                </div>
+
+                <!-- Questions for part 2 (14-26) -->
+                <div id="questions-2" class="question-set" style="display:none;">
+                    <div class="question">
+                        <p><strong>Questions 14-19</strong></p>
+                        <p>Complete the flow-chart below.</p>
+                        <p>Choose NO MORE THAN TWO WORDS AND/OR A NUMBER from the passage for each answer.</p>
+                        <p>Write your answers in boxes 14-19 on your answer sheet.</p>
+                        <p><strong>Step-by-step guide to making Flynn’s water filters</strong></p>
+                        <p>Make the mixture for the filter from organic material (e.g. tea, coffee, rice),</p>
+                        <p><input id="q14" class="inline-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/> and <input id="q15" class="inline-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/></p>
+                        <p>Shape into pots and place them in a fire made from</p>
+                        <p><input id="q16" class="inline-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/> and <input id="q17" class="inline-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/></p>
+                        <p>Fuel the fire to reach a maximum heat of <input id="q18" class="inline-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/></p>
+                        <p>Remove the filters from the fire.</p>
+                        <p>Bake the filters in the fire for a maximum period of <input id="q19" class="inline-input" placeholder="(NO MORE THAN TWO WORDS AND/OR A NUMBER)"/></p>
+                    </div>
+
+                    <div class="question">
+                        <p><strong>Questions 20-23</strong></p>
+                        <p>Do the following statements agree with the information given in Reading Passage 2?</p>
+                        <p>In boxes 20-23 on your answer sheet, write</p>
+                        <p>TRUE if the statement agrees with the information</p>
+                        <p>FALSE if the statement contradicts the information</p>
+                        <p>NOT GIVEN if there is no information on this</p>
+                        <div class="question">
+                            <p><strong>20</strong> The clay in the Manatuto project was initially unsuitable for the project’s purpose.</p>
+                            <label><input type="radio" name="q20" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q20" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q20" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>21</strong> Coffee grounds produce filters that are twice as efficient as those using other organic materials.</p>
+                            <label><input type="radio" name="q21" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q21" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q21" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>22</strong> It takes half an hour for a cow-manure fire to reach 950 degrees.</p>
+                            <label><input type="radio" name="q22" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q22" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q22" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>23</strong> E-coli is the most difficult bacterium to remove from water by filtration.</p>
+                            <label><input type="radio" name="q23" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q23" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q23" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <p><strong>Questions 24-26</strong></p>
+                        <p>Choose the correct letter, A, B, C or D.</p>
+                        <p>Write the correct letter in boxes 24-26 on your answer sheet.</p>
+                        <div class="question">
+                            <p><strong>24</strong> The Manatuto project aimed to set up a</p>
+                            <label><input type="radio" name="q24" value="A"> A charitable trust.</label><br/>
+                            <label><input type="radio" name="q24" value="B"> B filtration experiment.</label><br/>
+                            <label><input type="radio" name="q24" value="C"> C water filter factory.</label><br/>
+                            <label><input type="radio" name="q24" value="D"> D community kiln.</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>25</strong> To be effective, the Flynn filters must</p>
+                            <label><input type="radio" name="q25" value="A"> A remove all dangerous pathogens.</label><br/>
+                            <label><input type="radio" name="q25" value="B"> B be a particular thickness.</label><br/>
+                            <label><input type="radio" name="q25" value="C"> C filter water as quickly as possible.</label><br/>
+                            <label><input type="radio" name="q25" value="D"> D be made from 100 per cent clay.</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>26</strong> Flynn does not intend to patent his filter because</p>
+                            <label><input type="radio" name="q26" value="A"> A he wants it to be freely available.</label><br/>
+                            <label><input type="radio" name="q26" value="B"> B has produced a very simple design.</label><br/>
+                            <label><input type="radio" name="q26" value="C"> C cannot make a profit in poor countries.</label><br/>
+                            <label><input type="radio" name="q26" value="D"> D has already given the idea to a charity.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions for part 3 (27-40) -->
+                <div id="questions-3" class="question-set" style="display:none;">
+                    <div class="question">
+                        <p><strong>Questions 27-32</strong></p>
+                        <p>Reading Passage 3 has seven paragraphs, A-G.</p>
+                        <p>Choose the correct heading for paragraphs A-F from the list of headings below.</p>
+                        <p>Write the correct number, i-ix, in boxes 27-32 on your answer sheet.</p>
+                        <p><strong>List of Headings</strong></p>
+                        <div class="heading-bank" id="bank-27-32">
+                            <div class="drag-item" draggable="true" data-value="i">i Action already taken by the United Nations</div>
+                            <div class="drag-item" draggable="true" data-value="ii">ii Marketing the hydrogen car</div>
+                            <div class="drag-item" draggable="true" data-value="iii">iii Making the new technology available worldwide</div>
+                            <div class="drag-item" draggable="true" data-value="iv">iv Some negative predictions from one group of experts</div>
+                            <div class="drag-item" draggable="true" data-value="v">v How the new vehicle technology works</div>
+                            <div class="drag-item" draggable="true" data-value="vi">vi The history of fuel-cell technology</div>
+                            <div class="drag-item" draggable="true" data-value="vii">vii A holistic view of climate change</div>
+                            <div class="drag-item" draggable="true" data-value="viii">viii Locating the essential ingredient</div>
+                            <div class="drag-item" draggable="true" data-value="ix">ix Sustaining car manufacture</div>
+                        </div>
+                        <p style="font-size:13px; color:#555;">(Drag i-ix into the small boxes at the start of paragraphs A-F in the passage panel.)</p>
+                    </div>
+
+                    <div class="question">
+                        <p><strong>Questions 33-36</strong></p>
+                        <p>Complete the sentences below.</p>
+                        <p>Choose NO MORE THAN TWO WORDS from the passage for each answer.</p>
+                        <p>Write your answers in boxes 33-36 on your answer sheet.</p>
+                        <p><strong>33</strong> In the late nineteenth century, the car industry invested in the development of the <input id="q33" class="answer-input" placeholder="(NO MORE THAN TWO WORDS)"/>, rather than fuel-cell technology.</p>
+                        <p><strong>34</strong> Ford engineers predict that they will eventually design an almost <input id="q34" class="answer-input" placeholder="(NO MORE THAN TWO WORDS)"/> car.</p>
+                        <p><strong>35</strong> While a fuel-cell lasts longer, some aspects of it are comparable to a <input id="q35" class="answer-input" placeholder="(NO MORE THAN TWO WORDS)"/>.</p>
+                        <p><strong>36</strong> Fuel-cells can come in many sizes and can be used in power stations and in <input id="q36" class="answer-input" placeholder="(NO MORE THAN TWO WORDS)"/> as well as in vehicles.</p>
+                    </div>
+
+                    <div class="question">
+                        <p><strong>Questions 37-40</strong></p>
+                        <p>Do the following statements agree with the information given in Reading Passage 3?</p>
+                        <p>In boxes 37-40 on your answer sheet, write</p>
+                        <p>TRUE if the statement agrees with the information</p>
+                        <p>FALSE if the statement contradicts the information</p>
+                        <p>NOT GIVEN if there is no information on this</p>
+                        <div class="question">
+                            <p><strong>37</strong> Using electricity produced by burning fossil fuels to access sources of hydrogen may increase the positive effect of the fuel-cell.</p>
+                            <label><input type="radio" name="q37" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q37" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q37" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>38</strong> The oil company Statoil in Norway owns gas wells in other parts of the world.</p>
+                            <label><input type="radio" name="q38" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q38" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q38" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>39</strong> Public transport is leading the way in the application of fuel-cell technology.</p>
+                            <label><input type="radio" name="q39" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q39" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q39" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="question">
+                            <p><strong>40</strong> More funding is necessary to ensure the success of the fuel-cell vehicle industry.</p>
+                            <label><input type="radio" name="q40" value="TRUE"> TRUE</label><br/>
+                            <label><input type="radio" name="q40" value="FALSE"> FALSE</label><br/>
+                            <label><input type="radio" name="q40" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottom-nav">
+        <div>
+            <button class="part-btn active" data-part="1">Part 1 <span class="attempted-count">0 of 13</span></button>
+            <button class="part-btn" data-part="2">Part 2 <span class="attempted-count">0 of 13</span></button>
+            <button class="part-btn" data-part="3">Part 3 <span class="attempted-count">0 of 14</span></button>
+        </div>
+
+        <div id="question-nav"></div>
+
+        <div>
+            <button id="submit-btn">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        // Timer
+        let timerSeconds = 3600;
+        let timerInterval = null;
+        let timerRunning = true;
+        const timerDisplay = document.getElementById('timer');
+        const timerToggle = document.getElementById('timer-toggle');
+        const timerReset = document.getElementById('timer-reset');
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            timerDisplay.textContent = `${minutes}:${String(seconds).padStart(2,'0')}`;
+        }
+        function startTimer() {
+            if (timerInterval) return;
+            timerRunning = true; timerToggle.textContent = '⏸';
+            timerInterval = setInterval(() => {
+                if (timerSeconds>0) { timerSeconds--; updateTimerDisplay(); }
+                else { clearInterval(timerInterval); timerInterval=null; timerToggle.textContent='▶'; }
+            },1000);
+        }
+        function pauseTimer() { clearInterval(timerInterval); timerInterval=null; timerRunning=false; timerToggle.textContent='▶'; }
+        timerToggle.addEventListener('click', ()=> { if (timerRunning) pauseTimer(); else startTimer(); });
+        timerReset.addEventListener('click', ()=> { pauseTimer(); timerSeconds=3600; updateTimerDisplay(); });
+        startTimer();
+
+        // Resizer
+        const resizer = document.getElementById('resizer');
+        const passagePanel = document.getElementById('passage-panel');
+        const questionsPanel = document.getElementById('questions-panel');
+        let isResizing=false;
+        resizer.addEventListener('mousedown', ()=>{ isResizing=true; document.body.style.cursor='col-resize'; });
+        document.addEventListener('mousemove', (e)=>{ if(!isResizing) return; const containerWidth = passagePanel.parentElement.offsetWidth; const newPassageWidth = e.clientX - passagePanel.getBoundingClientRect().left; const newPassagePercent = (newPassageWidth/containerWidth)*100; if (newPassagePercent>20 && newPassagePercent<80){ passagePanel.style.flex=`0 0 ${newPassagePercent}%`; questionsPanel.style.flex=`0 0 ${100-newPassagePercent}%`; }});
+        document.addEventListener('mouseup', ()=>{ isResizing=false; document.body.style.cursor='default'; });
+
+        // Part switching and nav
+        function switchToPart(partNum) {
+            document.querySelectorAll('.reading-passage').forEach(p=>p.style.display='none');
+            document.querySelectorAll('.question-set').forEach(s=>s.style.display='none');
+            document.querySelectorAll('.part-header').forEach(h=>h.style.display='none');
+            document.getElementById(`passage-text-${partNum}`).style.display='block';
+            document.getElementById(`questions-${partNum}`).style.display='block';
+            document.getElementById(`part-header-${partNum}`).style.display='block';
+            document.querySelectorAll('.part-btn').forEach(b=>b.classList.remove('active'));
+            document.querySelector(`.part-btn[data-part="${partNum}"]`).classList.add('active');
+            updateSubNavigation(partNum);
+        }
+        document.querySelectorAll('.part-btn').forEach(btn => { btn.addEventListener('click', ()=> switchToPart(Number(btn.dataset.part))); });
+        function updateSubNavigation(part) {
+            const map = {1:{s:1,e:13},2:{s:14,e:26},3:{s:27,e:40}};
+            const {s,e} = map[part];
+            const nav = document.getElementById('question-nav'); nav.innerHTML='';
+            for (let i=s;i<=e;i++){
+                const b=document.createElement('button'); b.className='question-btn'; b.textContent=i; b.dataset.question=i;
+                b.addEventListener('click', ()=> goToQuestion(i));
+                if (isQuestionAnswered(i)) b.classList.add('answered');
+                nav.appendChild(b);
+            }
+        }
+        function goToQuestion(qNum) {
+            const elem = document.querySelector(`[data-question="q${qNum}"]`) || document.getElementById(`q${qNum}`);
+            if (elem) elem.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+
+        // Drag & drop (for headings)
+        let draggedElem = null;
+        document.addEventListener('dragstart', (e)=> {
+            if (e.target.classList.contains('drag-item')) {
+                draggedElem = e.target;
+                e.target.classList.add('dragging');
+            }
+        });
+        document.addEventListener('dragend', (e)=> {
+            if (e.target.classList.contains('drag-item')) {
+                e.target.classList.remove('dragging');
+            }
+            draggedElem = null;
+        });
+
+        document.addEventListener('dragover', (e)=> {
+            if (e.target.classList.contains('drop-zone') || e.target.classList.contains('drop-heading')) {
+                e.preventDefault();
+                e.target.classList.add('drag-over');
+            }
+        });
+        document.addEventListener('dragleave', (e)=> {
+            if (e.target.classList && (e.target.classList.contains('drop-zone') || e.target.classList.contains('drop-heading'))) {
+                e.target.classList.remove('drag-over');
+            }
+        });
+        document.addEventListener('drop', (e)=> {
+            const target = e.target;
+            if ((target.classList && target.classList.contains('drop-heading')) && draggedElem) {
+                e.preventDefault();
+                target.classList.remove('drag-over');
+                const val = draggedElem.dataset.value || draggedElem.textContent.trim();
+                target.textContent = val;
+                target.dataset.answer = val;
+                target.classList.add('filled');
+                updateAnsweredIndicators();
+            }
+        });
+
+        // Click to clear drop zones
+        document.addEventListener('click', (e)=> {
+            if (e.target.classList && e.target.classList.contains('drop-heading') && e.target.classList.contains('filled')) {
+                e.target.textContent=''; e.target.dataset.answer=''; e.target.classList.remove('filled');
+                updateAnsweredIndicators();
+            }
+        });
+
+        // Make heading drop boxes droppable
+        document.querySelectorAll('.drop-heading').forEach(d => {
+            d.addEventListener('dragover', (ev)=> { ev.preventDefault(); d.classList.add('drag-over'); });
+            d.addEventListener('dragleave', ()=> d.classList.remove('drag-over'));
+            d.addEventListener('drop', (ev)=> {
+                ev.preventDefault(); d.classList.remove('drag-over');
+                if (draggedElem) { d.textContent = draggedElem.dataset.value || draggedElem.textContent.trim(); d.dataset.answer = d.textContent; d.classList.add('filled'); updateAnsweredIndicators(); }
+            });
+        });
+
+        // Utility: check answered
+        function isQuestionAnswered(qNum) {
+            // radio group
+            const radio = document.querySelector(`input[name="q${qNum}"]:checked`);
+            if (radio) return true;
+            // text input
+            const input = document.getElementById(`q${qNum}`);
+            if (input) { if (input.value.trim() !== '') { input.classList.add('input-filled'); return true; } else { input.classList.remove('input-filled');}}
+            // drop-heading (27-32)
+            const dh = document.querySelector(`.drop-heading[data-question="q${qNum}"]`);
+            if (dh && dh.dataset.answer && dh.dataset.answer.trim()!=='') return true;
+            return false;
+        }
+
+        function updateAnsweredIndicators() {
+            document.querySelectorAll('.question-btn').forEach(btn => {
+                const qNum = Number(btn.dataset.question);
+                if (isQuestionAnswered(qNum)) btn.classList.add('answered'); else btn.classList.remove('answered');
+            });
+            // update counts
+            const questionCounts = {1:13,2:13,3:14};
+            for (let part=1;part<=3;part++){
+                const start = part===1?1:part===2?14:27;
+                const end = start + questionCounts[part]-1;
+                let answered = 0;
+                for (let q=start;q<=end;q++) if (isQuestionAnswered(q)) answered++;
+                const span = document.querySelector(`.part-btn[data-part="${part}"] .attempted-count`);
+                if (span) span.textContent = `${answered} of ${questionCounts[part]}`;
+            }
+        }
+
+        // Listen for inputs to update indicators
+        document.querySelectorAll('input[type="text"], input[type="radio"]').forEach(el => {
+            el.addEventListener('change', updateAnsweredIndicators);
+            el.addEventListener('input', updateAnsweredIndicators);
+        });
+
+        // Correct answers object
+        const correctAnswers = {
+            q1: 'TRUE', q2: 'NOT GIVEN', q3: 'FALSE', q4: 'TRUE',
+            q5: 'an evergreen tree', q6: 'natural pesticides', q7: 'powder', q8: 'overnight', q9: 'cake', q10: 'nitrogen',
+            q11: '2000', q12: '(neem) seeds', q13: 'water purification',
+            q14: 'clay', q15: 'water', q16: 'straw', q17: 'cow manure', q18: '950 degrees', q19: '60 minutes',
+            q20: 'TRUE', q21: 'NOT GIVEN', q22: 'FALSE', q23: 'NOT GIVEN',
+            q24: 'C', q25: 'B', q26: 'A',
+            q27: 'vii', q28: 'iv', q29: 'vi', q30: 'v', q31: 'viii', q32: 'iii',
+            q33: 'combustion engine', q34: 'silent', q35: 'battery', q36: 'portable computers',
+            q37: 'FALSE', q38: 'NOT GIVEN', q39: 'TRUE', q40: 'TRUE'
+        };
+
+        // Submit handler
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            // Collect answers and grade
+            let correct=0, incorrect=0;
+            const results=[];
+            for (let q=1;q<=40;q++){
+                const qId = `q${q}`;
+                let userAns = '';
+                // radio groups
+                const radio = document.querySelector(`input[name="${qId}"]:checked`);
+                if (radio) userAns = radio.value;
+                // text input
+                const txt = document.getElementById(qId);
+                if (txt && txt.value) userAns = txt.value.trim();
+                // drop-heading (27-32)
+                const dh = document.querySelector(`.drop-heading[data-question="${qId}"]`);
+                if (dh && dh.dataset.answer) userAns = dh.dataset.answer.trim();
+                // Normalize
+                const userN = userAns.toLowerCase().trim();
+                let corr = (correctAnswers[qId] || '').toLowerCase().trim();
+
+                let isCorrect=false;
+                if (!corr && !userN) { isCorrect=false; }
+                else if (corr && userN === corr) { isCorrect=true; }
+                else {
+                    // special checks: phrases - check inclusion or equality
+                    if (corr && userN.includes(corr)) isCorrect=true;
+                }
+
+                if (isCorrect) { correct++; } else { incorrect++; }
+                results.push({ question:q, userAnswer: userAns||'(blank)', correctAnswer: correctAnswers[qId]||'(n/a)', isCorrect});
+            }
+
+            showResultsModal(correct, incorrect, results);
+        });
+        // Text Highlighting
+        let highlights = [];
+
+        document.addEventListener('contextmenu', (e) => {
+            const selection = window.getSelection();
+            if (selection.toString().trim().length === 0) return;
+
+            e.preventDefault();
+
+            const menu = document.createElement('div');
+            menu.id = 'context-menu';
+            menu.style.cssText = `
+                position: absolute;
+                top: ${e.pageY}px;
+                left: ${e.pageX}px;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                padding: 5px 0;
+                z-index: 10000;
+            `;
+
+            const highlightBtn = document.createElement('button');
+            highlightBtn.textContent = '🖍 Highlight';
+            highlightBtn.style.cssText = 'display: block; width: 100%; padding: 8px 15px; border: none; background: white; text-align: left; cursor: pointer;';
+            highlightBtn.addEventListener('click', () => {
+                highlightSelection();
+                menu.remove();
+            });
+
+            menu.appendChild(highlightBtn);
+            document.body.appendChild(menu);
+
+            setTimeout(() => {
+                document.addEventListener('click', () => menu.remove(), { once: true });
+            }, 100);
+        });
+
+        function highlightSelection() {
+            const selection = window.getSelection();
+            if (selection.rangeCount === 0) return;
+
+            const range = selection.getRangeAt(0);
+            const span = document.createElement('span');
+            span.classList.add('highlighted-text');
+            span.style.backgroundColor = 'yellow';
+
+            range.surroundContents(span);
+            highlights.push(span);
+
+            selection.removeAllRanges();
+        }
+
+        function showResultsModal(correct, incorrect, results){
+            const total = correct+incorrect;
+            const pct = total>0?((correct/total)*100).toFixed(1):'0.0';
+            let rows='';
+            results.forEach(r=>{
+                const icon = r.isCorrect ? '✓' : '✗';
+                const color = r.isCorrect ? '#28a745' : '#dc3545';
+                rows += `<tr><td style="padding:8px;border:1px solid #ddd;">${r.question}</td><td style="padding:8px;border:1px solid #ddd;">${r.userAnswer}</td><td style="padding:8px;border:1px solid #ddd;">${r.correctAnswer}</td><td style="padding:8px;border:1px solid #ddd;color:${color};">${icon}</td></tr>`;
+            });
+            const modal = document.createElement('div');
+            modal.id='results-modal';
+            modal.style.cssText = 'position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;';
+            modal.innerHTML = `
+                <div style="background:#fff;padding:22px;border-radius:8px;max-width:900px;width:95%;max-height:85vh;overflow:auto;">
+                    <h2>Test Results</h2>
+                    <p><strong>Score: ${correct}/${total} (${pct}%)</strong></p>
+                    <p>Correct: <span style="color:#28a745;">${correct}</span> | Incorrect: <span style="color:#dc3545;">${incorrect}</span></p>
+                    <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+                        <thead><tr style="background:#f5f5f5;"><th style="padding:10px;border:1px solid #ddd;">Q</th><th style="padding:10px;border:1px solid #ddd;">Your Answer</th><th style="padding:10px;border:1px solid #ddd;">Correct Answer</th><th style="padding:10px;border:1px solid #ddd;">Status</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div style="margin-top:14px;display:flex;gap:10px;justify-content:flex-end;">
+                        <button id="close-results" style="background:#4a90e2;color:#fff;padding:8px 16px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('close-results').addEventListener('click', ()=> modal.remove());
+        }
+
+        // Initialize nav
+        switchToPart(1);
+        updateAnsweredIndicators();
+    </script>
+</body>
+</html>

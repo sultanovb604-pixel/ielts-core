@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Full Reading Practice</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f1f2ec;
+            --text: #1a1a1a;
+            --text-muted: #555;
+            --text-light: #888;
+            --border: #e0e0e0;
+            --border-medium: #ccc;
+            --header-bg: #ffffff;
+            --panel-bg: #ffffff;
+            --nav-bg: #ffffff;
+            --input-bg: #ffffff;
+            --example-bg: #f9f9f9;
+            --context-menu-bg: #ffffff;
+            --modal-bg: #ffffff;
+            --timer-color: #333;
+            --resizer-bg: #f0f0f0;
+            --active-blue: #4a90e2;
+            --correct-bg: #e9f7ef;
+            --incorrect-bg: #f8d7da;
+            --correct-border: #28a745;
+            --incorrect-border: #dc3545;
+            --highlight-color: #ffeb3b;
+            --subq-bg: #ffffff;
+            --subq-border: #ccc;
+            --subq-text: #333;
+            --footer-btn-bg: #f0f0f0;
+            --footer-btn-border: #ccc;
+            --passage-title: #2c3e50;
+            --toolbar-bg: #1a1a2e;
+            --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+        body.night-mode {
+            --bg: #121212; --bg-secondary: #1e1e1e; --bg-tertiary: #252525;
+            --text: #e0e0e0; --text-muted: #aaa; --text-light: #777;
+            --border: #333; --border-medium: #444;
+            --header-bg: #1a1a1a; --panel-bg: #1a1a1a; --nav-bg: #1a1a1a;
+            --input-bg: #252525; --example-bg: #252525; --modal-bg: #1e1e1e;
+            --timer-color: #e0e0e0; --resizer-bg: #2a2a2a;
+            --active-blue: #64b5f6;
+            --correct-bg: #1a3a2a; --incorrect-bg: #3a1a1a;
+            --correct-border: #4caf50; --incorrect-border: #f44336;
+            --subq-bg: #252525; --subq-border: #444; --subq-text: #ccc;
+            --footer-btn-bg: #2a2a2a; --footer-btn-border: #444;
+            --passage-title: #90caf9; --toolbar-bg: #0d0d1a;
+            --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.6; font-size: 16px; transition: background-color 0.3s, color 0.3s; }
+        .header { background-color: var(--header-bg); padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; transition: background-color 0.3s, border-color 0.3s; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .timer-container { display: flex; align-items: center; color: var(--timer-color); font-size: 16px; font-weight: 500; }
+        .timer-controls { display: flex; align-items: center; gap: 6px; margin-left: 12px; }
+        .timer-controls button { background: var(--footer-btn-bg); border: 1px solid var(--border-medium); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s; }
+        .timer-controls button:hover { background: var(--border); }
+        .timer-controls button svg { width: 20px; height: 20px; fill: var(--timer-color); }
+        #night-mode-btn { background: var(--footer-btn-bg); border: 1px solid var(--border-medium); border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap; }
+        #night-mode-btn:hover { background: var(--border); }
+        .telegram-link { color: #0088cc; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+        .telegram-link:hover { text-decoration: underline; }
+        .main-container { margin-top: 60px; display: flex; flex-direction: column; background: var(--bg); height: calc(100vh - 60px); }
+        .panels-container { display: flex; flex: 1; overflow: hidden; }
+        .passage-panel { flex: 1; padding: 20px 20px 100px; overflow-y: auto; min-width: 200px; background: var(--panel-bg); }
+        .questions-panel { flex: 1; padding: 20px 20px 100px; overflow-y: auto; min-width: 200px; border-left: 1px solid var(--border); background: var(--panel-bg); }
+        .resizer { width: 10px; cursor: col-resize; background-color: var(--resizer-bg); background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="30" viewBox="0 0 10 30"><path d="M4 11h2v2H4zM4 15h2v2H4zM4 19h2v2H4z" fill="%23888"/></svg>'); background-repeat: no-repeat; background-position: center; flex-shrink: 0; }
+        .part-header { background-color: var(--bg-tertiary); padding: 15px 20px; border: 1px solid var(--border); margin: 10px 20px; border-radius: 5px; color: var(--text); }
+        .part-header p { margin: 0; }
+        .part-header p:first-child { margin-bottom: 5px; }
+        .reading-passage h4 { font-size: 20px; font-weight: 700; color: var(--passage-title); margin-bottom: 20px; text-align: center; border-bottom: 2px solid var(--active-blue); padding-bottom: 8px; }
+        .reading-passage p { margin-bottom: 1.2em; color: var(--text); }
+        .question { margin-bottom: 36px; color: var(--text); }
+        .question p { margin-bottom: 10px; color: var(--text); }
+        .question-prompt { margin-bottom: 18px; }
+        .question ul { list-style: none; padding-left: 0; }
+        .question ul li { margin-bottom: 5px; color: var(--text); }
+        .answer-input { border: 1px solid var(--border-medium); border-radius: 4px; background-color: var(--input-bg); color: var(--text); padding: 2px 6px; font-size: 15px; text-align: center; margin: 0 4px; height: 28px; width: 150px; transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s; position: relative; z-index: 10; pointer-events: auto; }
+        .answer-input.active-input { border-color: var(--active-blue); box-shadow: 0 0 3px 1px rgba(74,144,226,0.5); }
+        .answer-input::placeholder { color: #999; font-weight: bold; }
+        .answer-input.correct { border-color: var(--correct-border); background-color: var(--correct-bg); }
+        .answer-input.incorrect { border-color: var(--incorrect-border); background-color: var(--incorrect-bg); color: var(--incorrect-border); }
+        .q-number { color: var(--text-light); font-size: 14px; font-weight: bold; }
+        .hidden { display: none !important; }
+        .example-box { border: 1px solid var(--border); background-color: var(--example-bg); padding: 15px; border-radius: 5px; margin: 15px 0; color: var(--text); }
+        /* TF Questions */
+        .tf-question { margin-bottom: 22px; padding: 8px 0; color: var(--text); border-radius: 4px; }
+        .tf-question-line { display: flex; align-items: flex-start; margin-bottom: 12px; padding: 5px 0; border-radius: 4px; }
+        .tf-question-number { border: 2px solid var(--border-medium); padding: 2px 8px; margin-right: 10px; border-radius: 3px; font-weight: bold; color: var(--text); white-space: nowrap; }
+        .tf-question-text { padding-top: 3px; color: var(--text); }
+        .tf-options { padding-left: 5px; }
+        .tf-option { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; color: var(--text); }
+        .tf-option input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+        .tf-question.correct .tf-question-line { background-color: var(--correct-bg); }
+        .tf-question.incorrect .tf-question-line { background-color: var(--incorrect-bg); }
+        /* MCQ */
+        .multi-choice-question { margin-bottom: 22px; padding: 10px; border-radius: 4px; border: 3px solid transparent; }
+        .multi-choice-option { margin-bottom: 8px; padding: 6px; border-radius: 4px; color: var(--text); }
+        .multi-choice-option label { display: flex; align-items: center; cursor: pointer; font-size: 15px; color: var(--text); }
+        .multi-choice-option input { margin-right: 12px; transform: scale(1.3); accent-color: var(--active-blue); }
+        .multi-choice-option.correct { background-color: var(--correct-bg); }
+        .multi-choice-option.incorrect { background-color: var(--incorrect-bg); }
+        /* Matching */
+        .matching-form-container { margin-top: 15px; }
+        .matching-form-row { display: flex; align-items: center; margin-bottom: 12px; gap: 10px; }
+        .matching-form-label { flex: 1; color: var(--text); }
+        .matching-form-row.correct { background-color: var(--correct-bg); border-left: 3px solid var(--correct-border); padding-left: 8px; border-radius: 4px; }
+        .matching-form-row.incorrect { background-color: var(--incorrect-bg); border-left: 3px solid var(--incorrect-border); padding-left: 8px; border-radius: 4px; }
+        /* People matching table */
+        .people-table { border-collapse: collapse; margin: 12px 0; }
+        .people-table td { padding: 4px 10px; color: var(--text); }
+        /* Summary completion */
+        .summary-text p { line-height: 2.8; font-size: 16px; color: var(--text); }
+        .inline-input { display: inline-block; }
+        /* Active highlight */
+        .active-question { outline: 2px solid var(--active-blue); border-radius: 4px; }
+        /* Nav */
+        .nav-arrows { position: fixed; bottom: 100px; right: 20px; display: flex; gap: 5px; z-index: 101; }
+        .nav-arrow { width: 50px; height: 50px; background: #333; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; }
+        body.night-mode .nav-arrow { background: #444; }
+        .nav-arrow:hover { background: #555; }
+        .nav-row { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg); display: flex; align-items: center; height: 80px; z-index: 100; border-top: 1px solid var(--border); overflow-x: auto; }
+        .footer__questionWrapper___1tZ46 { display: flex; align-items: center; margin-right: 10px; }
+        .footer__questionNo___3WNct { background: none; border: none; padding: 10px 12px; font-size: 15px; font-weight: 600; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .footer__questionNo___3WNct:hover { background-color: var(--bg-secondary); }
+        .section-prefix { font-size: 15px; }
+        .sectionNr { font-size: 15px; font-weight: bold; }
+        .attemptedCount { font-size: 13px; color: var(--text-muted); margin-left: 4px; font-weight: 400; }
+        @media (max-width: 768px) { .attemptedCount { display: none; } }
+        .footer__subquestionWrapper___9GgoP { display: none; gap: 2px; margin-left: 8px; }
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP { display: flex; }
+        .footer__questionWrapper___1tZ46.selected .attemptedCount { display: none; }
+        .subQuestion { width: 30px; height: 30px; border: 1px solid var(--subq-border); background: var(--subq-bg); color: var(--subq-text); font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 2px; transition: all 0.2s; }
+        .subQuestion:hover { background-color: var(--bg-secondary); }
+        .subQuestion.active { background-color: var(--active-blue); color: white; border-color: var(--active-blue); }
+        .subQuestion.answered { background-color: #6c8ebf; color: white; border-color: #5a7aad; }
+        .subQuestion.correct { background-color: #28a745; color: white; border-color: #28a745; }
+        .subQuestion.incorrect { background-color: #dc3545; color: white; border-color: #dc3545; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+        .footer__deliverButton___3FM07 { margin-left: auto; margin-right: 16px; background-color: var(--footer-btn-bg); color: var(--text); border: 1px solid var(--footer-btn-border); padding: 10px 18px; border-radius: 4px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; min-width: 160px; justify-content: center; white-space: nowrap; }
+        .footer__deliverButton___3FM07:hover { background-color: var(--border); }
+        .footer__deliverButton___3FM07:disabled { background: var(--bg-secondary); color: var(--text-muted); cursor: not-allowed; }
+        /* Highlight toolbar */
+        .highlight-toolbar { position: fixed; display: none; background: var(--toolbar-bg); border-radius: 8px; box-shadow: var(--toolbar-shadow); z-index: 2000; padding: 6px 8px; gap: 4px; align-items: center; border: 1px solid rgba(255,255,255,0.1); }
+        .highlight-toolbar.visible { display: flex; }
+        .toolbar-btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; white-space: nowrap; }
+        .toolbar-btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+        .toolbar-btn.btn-yellow { background: #f9a825; color: #1a1a1a; }
+        .toolbar-btn.btn-green  { background: #43a047; color: #fff; }
+        .toolbar-btn.btn-pink   { background: #e91e63; color: #fff; }
+        .toolbar-btn.btn-blue   { background: #1976d2; color: #fff; }
+        .toolbar-btn.btn-clear  { background: #757575; color: #fff; }
+        .toolbar-btn.btn-note   { background: #ff6f00; color: #fff; }
+        .toolbar-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.2); margin: 0 2px; }
+        .highlight { background-color: #ffeb3b; border-radius: 2px; }
+        .highlight.hl-green { background-color: #a5d6a7; }
+        .highlight.hl-pink  { background-color: #f48fb1; }
+        .highlight.hl-blue  { background-color: #90caf9; }
+        body.night-mode .highlight          { background-color: #f9a825; color: #000; }
+        body.night-mode .highlight.hl-green { background-color: #388e3c; color: #fff; }
+        body.night-mode .highlight.hl-pink  { background-color: #c2185b; color: #fff; }
+        body.night-mode .highlight.hl-blue  { background-color: #1565c0; color: #fff; }
+        .comment-highlight { background-color: #ffe082; position: relative; cursor: help; border-bottom: 2px dotted #f57f17; border-radius: 2px; }
+        body.night-mode .comment-highlight { background-color: #6d4c00; border-bottom-color: #ffa000; color: #ffe082; }
+        .comment-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #212121; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px; max-width: 280px; white-space: normal; z-index: 3000; opacity: 0; pointer-events: none; transition: opacity 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .comment-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #212121; }
+        .comment-highlight:hover .comment-tooltip { opacity: 1; }
+        .comment-highlight::after { content: '📝'; font-size: 11px; vertical-align: super; margin-left: 2px; }
+        /* Notes panel */
+        .notes-panel { position: fixed; right: 20px; top: 70px; width: 280px; max-height: calc(100vh - 170px); background: var(--modal-bg); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); z-index: 500; overflow-y: auto; display: none; flex-direction: column; }
+        .notes-panel.visible { display: flex; }
+        .notes-panel-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px; color: var(--text); background: var(--bg-secondary); border-radius: 10px 10px 0 0; }
+        .notes-panel-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-muted); }
+        .notes-list { padding: 10px; flex: 1; }
+        .note-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; font-size: 13px; color: var(--text); }
+        .note-item-text { font-weight: 600; color: #f57f17; margin-bottom: 4px; font-size: 12px; }
+        .note-item-delete { background: none; border: none; color: var(--incorrect-border); cursor: pointer; font-size: 12px; float: right; }
+        .notes-empty { color: var(--text-muted); font-size: 13px; padding: 10px; text-align: center; }
+        /* Note modal */
+        .note-input-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: none; align-items: center; justify-content: center; }
+        .note-input-overlay.visible { display: flex; }
+        .note-input-box { background: var(--modal-bg); border-radius: 12px; padding: 24px; width: 380px; max-width: 90vw; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
+        .note-input-box h3 { margin-bottom: 8px; font-size: 16px; color: var(--text); }
+        .selected-text-preview { background: var(--bg-secondary); border-left: 3px solid #f9a825; padding: 8px 10px; margin-bottom: 14px; font-size: 13px; color: var(--text-muted); border-radius: 0 4px 4px 0; max-height: 60px; overflow: hidden; }
+        .note-input-box textarea { width: 100%; min-height: 80px; padding: 10px; border: 1px solid var(--border-medium); border-radius: 6px; font-size: 14px; background: var(--input-bg); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
+        .note-input-box textarea:focus { border-color: var(--active-blue); }
+        .note-input-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+        .note-input-actions button { padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; }
+        .btn-save-note { background: #f9a825; color: #1a1a1a; }
+        .btn-cancel-note { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border) !important; }
+        /* Results modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .modal-overlay.hidden { display: none; }
+        .modal-content { background: var(--modal-bg); padding: 25px; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; display: flex; flex-direction: column; position: relative; border: 1px solid var(--border); }
+        .modal-close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-muted); }
+        .modal-content h2 { text-align: center; margin-bottom: 15px; color: var(--text); }
+        .results-summary { display: flex; justify-content: space-around; margin-bottom: 20px; font-size: 18px; font-weight: bold; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; color: var(--text); }
+        .results-details-container { overflow-y: auto; padding-right: 10px; }
+        .result-row { display: grid; grid-template-columns: 40px 1fr 1fr; gap: 15px; padding: 8px 5px; border-bottom: 1px solid var(--border); font-size: 15px; color: var(--text); }
+        .result-row.incorrect { background-color: var(--incorrect-bg); }
+        .result-row .q-num { font-weight: bold; }
+        .result-row .user-ans { color: var(--text-muted); }
+        .result-row .correct-ans { color: var(--correct-border); font-weight: 500; }
+        .correct-answer-display { font-weight: bold; color: #28a745; margin-left: 8px; font-size: 13px; }
+        .correct-answer-highlight, .tf-option.correct-answer-highlight, .multi-choice-option.correct-answer-highlight { background-color: var(--correct-bg) !important; border: 1px solid var(--correct-border) !important; border-radius: 4px; padding: 4px; }
+        select.answer-input option { background: var(--input-bg); color: var(--text); }
+        #notes-toggle-btn { background: var(--footer-btn-bg); border: 1px solid var(--border-medium); border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        #notes-toggle-btn:hover { background: var(--border); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="timer-container">
+                <span class="timer-display">60:00</span>
+                <div class="timer-controls">
+                    <button id="timer-toggle-btn" title="Pause/Resume Timer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>
+                    </button>
+                    <button id="timer-reset-btn" title="Reset Timer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <button id="night-mode-btn" title="Toggle Night Mode"><span>🌙</span> Night Mode</button>
+            <button id="notes-toggle-btn" title="Show Notes">📝 Notes <span id="notes-count" style="background:#f9a825;color:#1a1a1a;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
+        </div>
+        <a href="https://t.me/ielts_material_full" target="_blank" class="telegram-link">Full Exam Materials</a>
+    </div>
+
+    <div class="main-container" id="main-container">
+        <div id="passage-header-container">
+            <div id="part-header-1" class="part-header"><p><strong>Part 1</strong></p><p>Read the text and answer questions 1–13.</p></div>
+            <div id="part-header-2" class="part-header hidden"><p><strong>Part 2</strong></p><p>Read the text and answer questions 14–26.</p></div>
+            <div id="part-header-3" class="part-header hidden"><p><strong>Part 3</strong></p><p>Read the text and answer questions 27–40.</p></div>
+        </div>
+        <div class="panels-container">
+            <div class="passage-panel" id="passage-panel">
+
+                <!-- PASSAGE 1: Maori Fish Hooks -->
+                <div id="passage-text-1" class="reading-passage">
+                    <h4>Maori Fish Hooks</h4>
+                    <p><strong>A.</strong> Maori fish hooks, made from wood, bone, stone, and flax, are intended to have the best possible design and function. The hooks are designed to target specific species with precision. In the industry of commercial long-line fishing, there are some Maori hook designs that are making a splash.</p>
+                    <p><strong>B.</strong> When Polynesians first came to New Zealand sometime within the years 1100–1300 AD, they didn't have the technology necessary to heat and manipulate metal out of rocks. Meanwhile, fish was the settlers' main food source at the time, so fishermen made their hooks and fishing gear out of wood, bone, stone, and shells. Other plants native to the island of New Zealand, such as flax (harakeke), cabbage tree (ti), and astelia (kiekie), provided the necessary fibrous material to make fishing lines and nets of greater or equal strength to the jute used by Europeans at the time. However, as a material, metal is more malleable and can be shaped in various ways, whereas natural materials are limited in the forms they can take. The Maori fish hooks needed to be more innovative in overcoming these limitations.</p>
+                    <p><strong>C.</strong> Early accounts of Europeans who settled and explored New Zealand claimed that Maori hooks, known as <em>matau</em>, were "odd," "of doubtful efficacy," "very clumsy affairs," or "impossible looking." Archaeologists from more recent times have also described the round hook as odd, with comments such as, "shaped in a manner which makes it very difficult to imagine could ever be effective in catching a fish." William Anderson, who was aboard the <em>Resolution</em> during Cook's third voyage in 1777 as the ship's surgeon, remarked that the Maori "live chiefly by fishing, making use… of wooden fish hooks pointed with bone, but so oddly made that a stranger is at a loss to know how they can answer such a purpose."</p>
+                    <p><strong>D.</strong> The Museum of New Zealand Te Papa Tongarewa conducted a study on Maori fish hooks 230 years later and demonstrated that the unique hook design was a matter of function. The hook's design allowed it to catch fish by spinning away from the direction of the point and catching their jaws, instead of poking a hole through the fish or being used as a lever, as some archaeologists had suggested. It appears that the design of the Maori fish hook is perhaps the world's most efficiently and masterfully designed, likely superior to any modern metal fish hook today.</p>
+                    <p><strong>E.</strong> To make larger hooks, Maori used shanks made of strong wood, with stout points made of bone or shell. They tied tree branches and saplings together to grow them into ideal shapes for building, then harvested the plants when they reached the appropriate size. They hardened wood by carefully drying it and burying it underground with fires lit above. Human bone was often used for bone points, which were securely lashed to a groove at the end of the shank using pre-made flax materials (<em>muka</em>). When they wanted to catch larger species like sharks, groper, and ling, they used composite hooks. However, on average, the traditional hook was usually no longer than a three-finger breadth (128 mm in length).</p>
+                    <p><strong>F.</strong> To capture seabirds for food and feathers, like albatross, the islanders used slender hooks that can be differentiated from other hooks intended for fish by their lighter build and lack of an inturned point. Many of these hooks were collected by early explorers, suggesting that seabird catching with hook and line was an important source of food and feathers for the Maori (105 mm in length). Slender hooks with wide gapes were used to capture albatross and other seabirds and can be distinguished from fish hooks by their lighter construction and absence of an inturned point. Early explorers collected many of these hooks, which could indicate that catching seabirds provided significant amounts of food and feathers for the Maori.</p>
+                    <p><strong>G.</strong> The Maori quickly adopted new materials once they became available through European explorers, sealers, and whalers who began arriving towards the end of the 1700s. At this point, the Maori were still making their fish hooks but were now using metals and imported materials. Wooden and flax components of old, abandoned fish hooks decomposed quickly as traditional hooks were discarded in favor of new ones. Tools made of luxury materials such as ivory or greenstone may have been kept as decorative items, with stylized Maori fish hooks today serving as a symbol of cultural revitalization.</p>
+                    <p><strong>H.</strong> The Maori continued to recreate traditional designs even as new materials became available, preferring hook shapes introduced by <em>Pakeha</em> in the 1800s. By maintaining the tradition of the rotating hook design, they remained connected to an essential part of their cultural heritage. In the end, however, mass-produced European metal hooks eventually dominated, making it difficult to continue crafting hooks from nails, horseshoes, and other metal objects. Eventually, traditional designs fell out of favor.</p>
+                    <p><strong>I.</strong> By the late 19th and early 20th centuries, tourist and collector demand for Maori artifacts had grown, leading manufacturers to produce large quantities of forged hooks. These replicas were then traded with both Maori and Europeans as forgeries of the real thing, sometimes directly commissioned by artifact dealers. Fake hooks can be identified by their cheap construction, inconsistent materials, rudimentary lashings, odd or overly elaborate decorative carvings, and the absence of in-turned points or angled grooves used to attach the fishing line properly.</p>
+                    <p><strong>J.</strong> The evolution of <em>matau</em> throughout history symbolizes how the Maori have adapted to European tools, materials, and technology over time. It also reflects how European influence contributed to, rather than completely replaced, traditional Maori skills, as native materials were replaced or complemented by metals and, more recently, artificial materials. Today, commercial longline fishermen around the world have begun using the circle hook design—one that is nearly identical in appearance and function to the traditional <em>matau</em>. It appears that the advantages and improved catch rates of this Maori technology have once again been recognized.</p>
+                </div>
+
+                <!-- PASSAGE 2: Health IT in New Zealand -->
+                <div id="passage-text-2" class="reading-passage hidden">
+                    <h4>Health IT in New Zealand</h4>
+                    <p><strong>A.</strong> At some time in their lives, nearly all New Zealanders will have to attend an after-hours clinic following an emergency or accident. On entering the consulting room, the patient is faced with a barrage of questions. The first ones relate to the current episode, and are followed by more general enquiries. Do you have any allergies? Are you on any medications? And so on. But imagine a different scenario. The patient walks into the consulting room and there on the healthcare professional's computer screen is his or her medical record in its entirety — allergies, medications, test results and everything else. To some, it's amazing that this isn't happening already. After all, individuals can track their bank accounts, phone records and countless other transactions online, so why can't they track their health? Ian McCrae, Orion Health's CEO, says that it's understandable if health often falls behind other sectors in its adoption of information technology (IT). It might be, he argues, because of concerns about patient privacy, but also because health care is just so complicated.</p>
+                    <p><strong>B.</strong> The irony is, New Zealand started out being ahead of the game. The backbone of any health IT system is having a unique identifier for each patient, and New Zealand's national health index (NHI) number system was introduced in 1993, before most other countries in the world. Innovation then slowed for some years, but in 2011 the earthquake in Canterbury, which affected thousands of people, was a catalyst for health IT in that region of the country. Suddenly, many people couldn't be seen by their usual doctor and many health records were inaccessible. An existing plan for an electronic shared record was fast-tracked, and within six months a basic system, HealthOne, was up and running. By 2013, clinicians in the hospital emergency department were able to see all relevant medical information about patients. Dr. Nigel Millar, Chief Medical Officer for the Canterbury region, says within days doctors were telling him the information had already revolutionised the way they worked.</p>
+                    <p><strong>C.</strong> This idea, known as a 'patient portal', is now in operation in other parts of the country, including the capital Wellington. With a mobile app patients can remain connected to their patient portal on their mobile device, allowing for added flexibility. However, there's a lot of complacency in medicine, according to Dr. Richard Medlicott. He says that innovative IT systems have the potential to radically change health care delivery, because they will free doctors from routine administrative tasks and instead allow them to focus on diagnosis and patient care, which is where their skills are really needed. But he admits there is some way to go in the adoption of shared care records, and also in changing the mindset of some doctors who are resistant to change. A good example of technology in use comes from Australia, where the National Home Doctor Service has brought back a service that was becoming infrequent — the home visit. The after hours service uses an app to arrange an on-call doctor who will visit patients at home to provide on-the-spot healthcare.</p>
+                    <p><strong>D.</strong> A key part of the health IT picture is maintaining a dialogue and exchange of ideas between healthcare professionals, according to Kate Reid, a director at Orion Health. Reid says this is critical, but it's not easy because there are so many different agencies that are sometimes in competition. Another issue, Reid says, is that there are many information systems that are being trialled today. However, these trials are not big enough to determine if they could ever work at a national level. One area where cooperation in health IT really could deliver benefits is in disease prevention and early intervention, says Reid. 'We've got innovations and technology that could be reaching at-risk people right now,' she argues, but the infrastructure is not in place to allow funding to be shifted from treatment to prevention. Scott Arrol, CEO of New Zealand Health IT, says that advances are coming, they're just not arriving as fast as everybody would like.</p>
+                    <p><strong>E.</strong> While IT is extremely important to a functioning health system, there are other areas where New Zealand technologies are improving health care. Dr. Hong Sheng Chiong, for example, has adapted a smartphone camera for medical use. The examination kit combines a phone adapter and app, allowing users to examine the eye with minimal training. Another innovation is the Clever MedKit, an intelligent first aid kit. It separates different items like band-aids and ice packs and orders replacements when necessary, making it particularly helpful in today's busy offices. In a separate field, the use of pre-made ceramic fittings which can be placed over a broken tooth in a single sitting reduces the cost of treatment. Dr. Adam Doudney came up with the idea before it was developed by researchers at the technology company Rhondium. Another idea is the Silhouette system, which offers a way to easily monitor wounds. It allows practitioners to detect small differences in wound size by collecting accurate images and data. Finally, the Auckland Bioengineering Institute is helping those wishing to keep fit or rehabilitate from injury. When placed on the body their special sensor moves with the wearer and measures the amount of movement, before the data is transmitted to the user's mobile or tablet. It'll be fascinating to see how these and other technologies transform medicine over the years to come.</p>
+                </div>
+
+                <!-- PASSAGE 3: The Hazards of Multitasking -->
+                <div id="passage-text-3" class="reading-passage hidden">
+                    <h4>The Hazards of Multitasking</h4>
+                    <p><em>Doing more than one thing at once – is it always a good idea?</em></p>
+                    <p>You arrive at the office, review your todo list and start to feel a headache coming on. You resolve to tackle the items as quickly as possible. While you return calls, you sort email and other letters. You begin keying in slides for tomorrow's presentation. Then your manager comes in wanting an immediate update on sales figures. You have just opened the spreadsheet when a very important customer calls. With the receiver held between your shoulder and your ear, you continue adding up the sales totals until, 15 minutes later, you finally manage, politely, to get rid of the client. You've been multitasking again.</p>
+                    <p>You may believe that anyone who wants to get ahead today should master the art of multitasking. However, a recent study by the Families and Work Institute in New York City has found that 45 per cent of US workers believe that they are asked or expected to work on too many tasks at once. Managers may be surprised to learn that they are actually wasting their workers' time. As it turns out, the human brain cannot really master the computer's art of crunching data in the background while moving between process windows. Instead, a growing number of studies show that trying to juggle jobs rather than completing them sequentially can take longer, and leave workers with a reduced ability to perform each task. In addition, the stress associated with multitasking may contribute to short-term memory difficulties. The combination results in inefficiency, careless thinking and mistakes – not to mention the possible dangers of divided attention for drivers, air traffic controllers, and others who handle machinery.</p>
+                    <p>How can a time management strategy that has become part of the common wisdom actually be so wrong? Exploring that question requires a closer look at an area of consciousness research that examines how the brain focuses attention. One of the modern foundations of current knowledge of multitasking was laid in 1935, when the American psychologist John Ridley Stroop reported that processing information from one task could cause interference with another. Stroop noticed that when study participants were asked to name the colour of a word – such as 'green' – printed in a different colour – red, for example – they experienced difficulty saying the name of the colour. This phenomenon is thought to occur when two tasks get tangled: the brain must suppress one that has been learned so well that it has become automatic (reading), to attend to a second task that requires concentration (naming the colour).</p>
+                    <p>During the past couple of decades, psychologists have probed more deeply into the nature and limitations of multitasking. Psychologist and brain researcher Ernst Pöppel, of the Ludwig Maximilian University in Munich, believes that it is impossible to carry out two or three different tasks simultaneously with the same degree of concentration. He says that seemingly simultaneous awareness and processing of information actually takes place in 'three-second windows'.</p>
+                    <p>In these three-second segments, the brain takes in, as a block, all the data about the environment streaming in from the sensory systems; subsequent events are processed in the next window. So a person can concentrate on a conversation for three seconds, then for three seconds on a crying child, and three seconds on a computer screen. While one subject at a time occupies the foreground of consciousness, the others stay in the background until they, in turn, are given access to the central processor.</p>
+                    <p>Another experiment by psychologist David E Meyer, of the University of Michigan, quantified just how much time we can lose when we shuttle between tasks. The researchers asked test participants to write a report and check their email at the same time. Those individuals who constantly jumped back and forth between the two tasks took about one and a half times as long to finish as those who completed one job before turning to the other. Each switchover from one task to another meant rethinking, and thus involved additional neural resources. In effect, the brain needs time to turn off the rules for one task and to turn on the rules for another. 'Multitasking saves time only when it is a matter of relaxed, routine tasks,' Meyer says. It also takes the brain longer to adapt when switching rapidly back to an interrupted task, rather than waiting longer before switching back.</p>
+                    <p>By its nature multitasking is stressful, and the area in the brain most involved with multitasking is also most affected by the resulting stress. Located behind the forehead, the prefrontal cortex, which neuroscientists call the 'executive' part of the brain, helps us to assess tasks, prioritise them and assign mental resources. It also 'marks' the spot at which a task has been interrupted, so that we can return to it later. This stress can also affect brain cells in another region, the hippocampus, which is important for forming new memories; damage in that area also makes it difficult for a person to acquire new skills.</p>
+                    <p>Psychiatrists Edward Halliwell and John Ratey, of Harvard University, say that multitasking can bring about a brain condition that causes sufferers to constantly seek new information while having difficulties concentrating on its content. All in all, it may be wise to let the email wait while you work on your presentation. You will save time and perform each task better.</p>
+                </div>
+            </div>
+            <div class="resizer" id="resizer"></div>
+            <div class="questions-panel" id="questions-panel">
+
+                <!-- QUESTIONS FOR PASSAGE 1 -->
+                <div id="questions-1" class="question-set">
+                    <div class="questions-container">
+                        <!-- Q1-8: Paragraph matching -->
+                        <div class="question" data-q-start="1" data-q-end="8">
+                            <div class="question-prompt">
+                                <p><strong>Questions 1–8</strong></p>
+                                <p>The reading passage has ten paragraphs labelled A–J.</p>
+                                <p>Which paragraph contains the following information?</p>
+                                <p>Write the correct letter A–J in boxes 1–8 on your answer sheet.</p>
+                                <p><em>NB You may use any letter more than once.</em></p>
+                            </div>
+                            <div class="matching-form-container">
+                                <div class="matching-form-row"><label for="q1" class="matching-form-label"><strong>1</strong>&nbsp; Instruction on how to recognise authentic Maori hooks from counterfeit ones</label><select class="answer-input" id="q1"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                                <div class="matching-form-row"><label for="q2" class="matching-form-label"><strong>2</strong>&nbsp; A description of a different type of hooks that are not used to catch fish</label><select class="answer-input" id="q2"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                                <div class="matching-form-row"><label for="q3" class="matching-form-label"><strong>3</strong>&nbsp; An acknowledgement that Maori design and craftsmanship are still relevant in the modern world</label><select class="answer-input" id="q3"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                                <div class="matching-form-row"><label for="q4" class="matching-form-label"><strong>4</strong>&nbsp; An investigation into how the hooks functioned so effectively</label><select class="answer-input" id="q4"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                                <div class="matching-form-row"><label for="q5" class="matching-form-label"><strong>5</strong>&nbsp; A description of how modern technology began to dominate and eventually took over from traditional hook construction</label><select class="answer-input" id="q5"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                                <div class="matching-form-row"><label for="q6" class="matching-form-label"><strong>6</strong>&nbsp; A list of raw materials used to construct hooks</label><select class="answer-input" id="q6"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                                <div class="matching-form-row"><label for="q7" class="matching-form-label"><strong>7</strong>&nbsp; An outline of how different styles of hooks and types of materials were employed to catch larger fish</label><select class="answer-input" id="q7"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                                <div class="matching-form-row"><label for="q8" class="matching-form-label"><strong>8</strong>&nbsp; An account of how the Maori employed new technology and adapted it</label><select class="answer-input" id="q8"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                            </div>
+                        </div>
+                        <!-- Q9-13: YES/NO/NOT GIVEN -->
+                        <div class="question" data-q-start="9" data-q-end="13">
+                            <div class="question-prompt">
+                                <p><strong>Questions 9–13</strong></p>
+                                <p>Do the following statements agree with the information given in the reading passage? In boxes 9–13 on your answer sheet, write:</p>
+                                <ul style="list-style:none;padding-left:0;">
+                                    <li><strong>YES</strong> – if the statement reflects the claims of the writer</li>
+                                    <li><strong>NO</strong> – if the statement contradicts the claims of the writer</li>
+                                    <li><strong>NOT GIVEN</strong> – if it is impossible to say what the writer thinks about this</li>
+                                </ul>
+                            </div>
+                            <div class="tf-question" data-q-start="9" data-q-end="9">
+                                <div class="tf-question-line"><span class="tf-question-number">9</span><span class="tf-question-text">The early European settlers quickly understood how the Maori fish hook worked.</span></div>
+                                <div class="tf-options"><label class="tf-option"><input type="radio" name="q9" value="YES"> YES</label><label class="tf-option"><input type="radio" name="q9" value="NO"> NO</label><label class="tf-option"><input type="radio" name="q9" value="NOT GIVEN"> NOT GIVEN</label></div>
+                            </div>
+                            <div class="tf-question" data-q-start="10" data-q-end="10">
+                                <div class="tf-question-line"><span class="tf-question-number">10</span><span class="tf-question-text">The hook works by making a hole and embedding itself in the mouth of the fish.</span></div>
+                                <div class="tf-options"><label class="tf-option"><input type="radio" name="q10" value="YES"> YES</label><label class="tf-option"><input type="radio" name="q10" value="NO"> NO</label><label class="tf-option"><input type="radio" name="q10" value="NOT GIVEN"> NOT GIVEN</label></div>
+                            </div>
+                            <div class="tf-question" data-q-start="11" data-q-end="11">
+                                <div class="tf-question-line"><span class="tf-question-number">11</span><span class="tf-question-text">The Maoris catch seabirds by their feet.</span></div>
+                                <div class="tf-options"><label class="tf-option"><input type="radio" name="q11" value="YES"> YES</label><label class="tf-option"><input type="radio" name="q11" value="NO"> NO</label><label class="tf-option"><input type="radio" name="q11" value="NOT GIVEN"> NOT GIVEN</label></div>
+                            </div>
+                            <div class="tf-question" data-q-start="12" data-q-end="12">
+                                <div class="tf-question-line"><span class="tf-question-number">12</span><span class="tf-question-text">There used to be a demand for Maori fish hooks and many counterfeit ones were produced.</span></div>
+                                <div class="tf-options"><label class="tf-option"><input type="radio" name="q12" value="YES"> YES</label><label class="tf-option"><input type="radio" name="q12" value="NO"> NO</label><label class="tf-option"><input type="radio" name="q12" value="NOT GIVEN"> NOT GIVEN</label></div>
+                            </div>
+                            <div class="tf-question" data-q-start="13" data-q-end="13">
+                                <div class="tf-question-line"><span class="tf-question-number">13</span><span class="tf-question-text">Today European style hooks have completely replaced the traditional styles used by the Maoris.</span></div>
+                                <div class="tf-options"><label class="tf-option"><input type="radio" name="q13" value="YES"> YES</label><label class="tf-option"><input type="radio" name="q13" value="NO"> NO</label><label class="tf-option"><input type="radio" name="q13" value="NOT GIVEN"> NOT GIVEN</label></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUESTIONS FOR PASSAGE 2 -->
+                <div id="questions-2" class="question-set hidden">
+                    <div class="questions-container">
+                        <!-- Q14-18: Paragraph matching A-E -->
+                        <div class="question" data-q-start="14" data-q-end="18">
+                            <div class="question-prompt">
+                                <p><strong>Questions 14–18</strong></p>
+                                <p>Reading Passage 2 has five paragraphs, A–E.</p>
+                                <p>Which paragraph contains the following information?</p>
+                                <p>Write the correct letter, A–E, in boxes 14–18 on your answer sheet.</p>
+                            </div>
+                            <div class="matching-form-container">
+                                <div class="matching-form-row"><label for="q14" class="matching-form-label"><strong>14</strong>&nbsp; Reference to a medical practice that became less common but is now being used more frequently in one country</label><select class="answer-input" id="q14"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                                <div class="matching-form-row"><label for="q15" class="matching-form-label"><strong>15</strong>&nbsp; Reference to a health management scheme in New Zealand that was more advanced than those used in other nations</label><select class="answer-input" id="q15"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                                <div class="matching-form-row"><label for="q16" class="matching-form-label"><strong>16</strong>&nbsp; The claim that some of the information systems being tested in the health sector are only on a small scale</label><select class="answer-input" id="q16"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                                <div class="matching-form-row"><label for="q17" class="matching-form-label"><strong>17</strong>&nbsp; Reference to the fact that most people in New Zealand will experience an urgent medical situation at some point</label><select class="answer-input" id="q17"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                                <div class="matching-form-row"><label for="q18" class="matching-form-label"><strong>18</strong>&nbsp; Mention of a dramatic event that led to improved use of health information technology in one part of New Zealand</label><select class="answer-input" id="q18"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                            </div>
+                        </div>
+                        <!-- Q19-22: Match person -->
+                        <div class="question" data-q-start="19" data-q-end="22">
+                            <div class="question-prompt">
+                                <p><strong>Questions 19–22</strong></p>
+                                <p>Look at the following statements (Questions 19–22) and the list of people below.</p>
+                                <p>Match each statement with the correct person, A–E.</p>
+                                <p>Write the correct letter, A–E, in boxes 19–22 on your answer sheet.</p>
+                            </div>
+                            <div class="example-box">
+                                <p><strong>List of People</strong></p>
+                                <p><strong>A</strong> Ian McCrae &nbsp; <strong>B</strong> Nigel Millar &nbsp; <strong>C</strong> Richard Medlicott &nbsp; <strong>D</strong> Kate Reid &nbsp; <strong>E</strong> Scott Arrol</p>
+                            </div>
+                            <div class="matching-form-container">
+                                <div class="matching-form-row"><label for="q19" class="matching-form-label"><strong>19</strong>&nbsp; Money should be invested in technology that attempts to stop people becoming ill.</label><select class="answer-input" id="q19"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                                <div class="matching-form-row"><label for="q20" class="matching-form-label"><strong>20</strong>&nbsp; Information supplied by a new IT system has quickly altered the behaviour of medical staff.</label><select class="answer-input" id="q20"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                                <div class="matching-form-row"><label for="q21" class="matching-form-label"><strong>21</strong>&nbsp; The health industry is sometimes slow to take up new ideas.</label><select class="answer-input" id="q21"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                                <div class="matching-form-row"><label for="q22" class="matching-form-label"><strong>22</strong>&nbsp; New technologies will enable healthcare professionals to concentrate on the most important aspects of their work.</label><select class="answer-input" id="q22"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option></select></div>
+                            </div>
+                        </div>
+                        <!-- Q23-26: Summary completion ONE WORD ONLY -->
+                        <div class="question" data-q-start="23" data-q-end="26">
+                            <div class="question-prompt">
+                                <p><strong>Questions 23–26</strong></p>
+                                <p>Complete the summary below.</p>
+                                <p>Write <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                                <p>Write your answers in boxes 23–26 on your answer sheet.</p>
+                            </div>
+                            <div class="example-box" style="font-weight:600;margin-bottom:15px;">Other Health Technologies</div>
+                            <div class="summary-text">
+                                <p>Apart from IT, New Zealand scientists have made good progress with other types of medical technology. Dr Chiong has designed a camera so that doctors can look into a patient's <input type="text" class="answer-input" id="q23" placeholder="23" style="width:120px;">. Dr Doudney invented a ceramic covering for a broken <input type="text" class="answer-input" id="q24" placeholder="24" style="width:120px;">, whose idea was developed by researchers at Rhondium. Another breakthrough is that changes in the <input type="text" class="answer-input" id="q25" placeholder="25" style="width:120px;"> of wounds can now be recorded more accurately because of the new Silhouette system. Lastly, a new type of <input type="text" class="answer-input" id="q26" placeholder="26" style="width:120px;"> developed by the Auckland Bioengineering Institute can assist fitness and recovery.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUESTIONS FOR PASSAGE 3 -->
+                <div id="questions-3" class="question-set hidden">
+                    <div class="questions-container">
+                        <!-- Q27-31: Match person -->
+                        <div class="question" data-q-start="27" data-q-end="31">
+                            <div class="question-prompt">
+                                <p><strong>Questions 27–31</strong></p>
+                                <p>Look at the following theories (Questions 27–31) and the list of people below. Match each theory with the correct person or people, A, B, C or D.</p>
+                                <p>Write the correct letter, A, B, C or D, in boxes 27–31 on your answer sheet.</p>
+                                <p><em>NB You may use any letter more than once.</em></p>
+                            </div>
+                            <div class="example-box">
+                                <p><strong>List of People</strong></p>
+                                <p><strong>A</strong> John Ridley Stroop &nbsp; <strong>B</strong> Ernst Pöppel &nbsp; <strong>C</strong> David E Meyer &nbsp; <strong>D</strong> Edward Halliwell &amp; John Ratey</p>
+                            </div>
+                            <div class="matching-form-container">
+                                <div class="matching-form-row"><label for="q27" class="matching-form-label"><strong>27</strong>&nbsp; Less attention will be paid to each task when more than one task is attempted at the same time.</label><select class="answer-input" id="q27"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                                <div class="matching-form-row"><label for="q28" class="matching-form-label"><strong>28</strong>&nbsp; Repeated changes of task mean that the brain will take a while to adjust.</label><select class="answer-input" id="q28"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                                <div class="matching-form-row"><label for="q29" class="matching-form-label"><strong>29</strong>&nbsp; Using the skills required for one task may make performing another one more difficult.</label><select class="answer-input" id="q29"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                                <div class="matching-form-row"><label for="q30" class="matching-form-label"><strong>30</strong>&nbsp; When multitasking, the brain can only focus on single tasks for very short periods.</label><select class="answer-input" id="q30"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                                <div class="matching-form-row"><label for="q31" class="matching-form-label"><strong>31</strong>&nbsp; Multitasking can lead to a medical problem.</label><select class="answer-input" id="q31"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                            </div>
+                        </div>
+                        <!-- Q32-34: MCQ -->
+                        <div class="question" data-q-start="32" data-q-end="34">
+                            <div class="question-prompt">
+                                <p><strong>Questions 32–34</strong></p>
+                                <p>Choose the correct letter, A, B, C or D.</p>
+                                <p>Write the correct letter in boxes 32–34 on your answer sheet.</p>
+                            </div>
+                            <div class="multi-choice-question" data-q-start="32" data-q-end="32">
+                                <p><strong>32</strong>&nbsp; What is suggested about the worker in the opening paragraph?</p>
+                                <div class="multi-choice-options">
+                                    <div class="multi-choice-option"><label><input type="radio" name="q32" value="A"> A. Anxiety deprived him of sleep the previous night.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q32" value="B"> B. He feels overwhelmed by his workload.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q32" value="C"> C. His manager has expressed disapproval.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q32" value="D"> D. He finds his work dull and uninteresting.</label></div>
+                                </div>
+                            </div>
+                            <div class="multi-choice-question" data-q-start="33" data-q-end="33">
+                                <p><strong>33</strong>&nbsp; Drivers and air traffic controllers are mentioned in the passage because they</p>
+                                <div class="multi-choice-options">
+                                    <div class="multi-choice-option"><label><input type="radio" name="q33" value="A"> A. need to perform several tasks at once.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q33" value="B"> B. are unable to maintain concentration.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q33" value="C"> C. use their time efficiently.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q33" value="D"> D. cannot afford to make mistakes.</label></div>
+                                </div>
+                            </div>
+                            <div class="multi-choice-question" data-q-start="34" data-q-end="34">
+                                <p><strong>34</strong>&nbsp; In John Ridley Stroop's experiment, participants found it difficult to</p>
+                                <div class="multi-choice-options">
+                                    <div class="multi-choice-option"><label><input type="radio" name="q34" value="A"> A. tell one colour from another.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q34" value="B"> B. match up pairs of similar colours.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q34" value="C"> C. read out the name of one colour printed in another colour.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q34" value="D"> D. decide what colour looks most appropriate for a particular word.</label></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Q35-39: Summary completion NO MORE THAN TWO WORDS -->
+                        <div class="question" data-q-start="35" data-q-end="39">
+                            <div class="question-prompt">
+                                <p><strong>Questions 35–39</strong></p>
+                                <p>Complete the summary below.</p>
+                                <p>Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</p>
+                                <p>Write your answers in boxes 35–39 on your answer sheet.</p>
+                                <p><strong>Multitasking and its effects on the brain</strong></p>
+                            </div>
+                            <div class="summary-text">
+                                <p>The stressful nature of multitasking has been shown to affect parts of the brain. The area most affected is the prefrontal cortex, which is found to the rear of the <input type="text" class="answer-input" id="q35" placeholder="35" style="width:140px;">. It is the part of the brain which judges tasks, then puts them in order of importance and allocates <input type="text" class="answer-input" id="q36" placeholder="36" style="width:140px;">; it also enables a worker to resume a task which has been put to one side.</p>
+                                <p>A second area, the hippocampus, may also be affected by the stress of multitasking. If any <input type="text" class="answer-input" id="q37" placeholder="37" style="width:130px;"> in the hippocampus are affected, people may have problems with storing <input type="text" class="answer-input" id="q38" placeholder="38" style="width:130px;">, as well as learning <input type="text" class="answer-input" id="q39" placeholder="39" style="width:130px;">.</p>
+                            </div>
+                        </div>
+                        <!-- Q40: MCQ -->
+                        <div class="question" data-q-start="40" data-q-end="40">
+                            <div class="question-prompt">
+                                <p><strong>Question 40</strong></p>
+                                <p>Choose the correct letter, A, B, C or D.</p>
+                                <p>Write the correct letter in box 40 on your answer sheet.</p>
+                            </div>
+                            <div class="multi-choice-question" data-q-start="40" data-q-end="40">
+                                <p><strong>40</strong>&nbsp; The main aim of this passage is to</p>
+                                <div class="multi-choice-options">
+                                    <div class="multi-choice-option"><label><input type="radio" name="q40" value="A"> A. describe areas where multitasking is useful.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q40" value="B"> B. challenge widely held opinions on multitasking.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q40" value="C"> C. show the physical damage that multitasking can cause.</label></div>
+                                    <div class="multi-choice-option"><label><input type="radio" name="q40" value="D"> D. call for better psychological experiments on multitasking.</label></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- end questions-panel -->
+        </div><!-- end panels-container -->
+    </div><!-- end main-container -->
+
+    <!-- Nav Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+        <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="nav-row" aria-label="Questions">
+        <div class="footer__questionWrapper___1tZ46 selected" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+                <span class="section-prefix">Part </span><span class="sectionNr">1</span><span class="attemptedCount">0 of 13</span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(1)">1</button>
+                <button class="subQuestion" onclick="goToQuestion(2)">2</button>
+                <button class="subQuestion" onclick="goToQuestion(3)">3</button>
+                <button class="subQuestion" onclick="goToQuestion(4)">4</button>
+                <button class="subQuestion" onclick="goToQuestion(5)">5</button>
+                <button class="subQuestion" onclick="goToQuestion(6)">6</button>
+                <button class="subQuestion" onclick="goToQuestion(7)">7</button>
+                <button class="subQuestion" onclick="goToQuestion(8)">8</button>
+                <button class="subQuestion" onclick="goToQuestion(9)">9</button>
+                <button class="subQuestion" onclick="goToQuestion(10)">10</button>
+                <button class="subQuestion" onclick="goToQuestion(11)">11</button>
+                <button class="subQuestion" onclick="goToQuestion(12)">12</button>
+                <button class="subQuestion" onclick="goToQuestion(13)">13</button>
+            </div>
+        </div>
+        <div class="footer__questionWrapper___1tZ46" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+                <span class="section-prefix">Part </span><span class="sectionNr">2</span><span class="attemptedCount">0 of 13</span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(14)">14</button>
+                <button class="subQuestion" onclick="goToQuestion(15)">15</button>
+                <button class="subQuestion" onclick="goToQuestion(16)">16</button>
+                <button class="subQuestion" onclick="goToQuestion(17)">17</button>
+                <button class="subQuestion" onclick="goToQuestion(18)">18</button>
+                <button class="subQuestion" onclick="goToQuestion(19)">19</button>
+                <button class="subQuestion" onclick="goToQuestion(20)">20</button>
+                <button class="subQuestion" onclick="goToQuestion(21)">21</button>
+                <button class="subQuestion" onclick="goToQuestion(22)">22</button>
+                <button class="subQuestion" onclick="goToQuestion(23)">23</button>
+                <button class="subQuestion" onclick="goToQuestion(24)">24</button>
+                <button class="subQuestion" onclick="goToQuestion(25)">25</button>
+                <button class="subQuestion" onclick="goToQuestion(26)">26</button>
+            </div>
+        </div>
+        <div class="footer__questionWrapper___1tZ46" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+                <span class="section-prefix">Part </span><span class="sectionNr">3</span><span class="attemptedCount">0 of 14</span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(27)">27</button>
+                <button class="subQuestion" onclick="goToQuestion(28)">28</button>
+                <button class="subQuestion" onclick="goToQuestion(29)">29</button>
+                <button class="subQuestion" onclick="goToQuestion(30)">30</button>
+                <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+                <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+                <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+                <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+                <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+                <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+                <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+                <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+                <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+                <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+            </div>
+        </div>
+        <button id="deliver-button" class="footer__deliverButton___3FM07">✓ Check Answers</button>
+    </nav>
+
+    <!-- Highlight Toolbar -->
+    <div id="highlightToolbar" class="highlight-toolbar">
+        <span id="toolbar-selection-btns">
+            <button class="toolbar-btn btn-yellow" onclick="applyHighlight('hl-yellow')">🟡</button>
+            <button class="toolbar-btn btn-green"  onclick="applyHighlight('hl-green')">🟢</button>
+            <button class="toolbar-btn btn-pink"   onclick="applyHighlight('hl-pink')">🔴</button>
+            <button class="toolbar-btn btn-blue"   onclick="applyHighlight('hl-blue')">🔵</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-note"   onclick="openNoteInput()">📝 Note</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-clear"  onclick="clearThisHighlight()">✕ Remove</button>
+            <button class="toolbar-btn btn-clear"  onclick="clearAllHighlights()">⊘ All</button>
+        </span>
+        <span id="toolbar-highlight-btns" style="display:none">
+            <button class="toolbar-btn btn-yellow" onclick="recolorHighlight('hl-yellow')">🟡</button>
+            <button class="toolbar-btn btn-green"  onclick="recolorHighlight('hl-green')">🟢</button>
+            <button class="toolbar-btn btn-pink"   onclick="recolorHighlight('hl-pink')">🔴</button>
+            <button class="toolbar-btn btn-blue"   onclick="recolorHighlight('hl-blue')">🔵</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-note"   onclick="openNoteInput()">📝 Note</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-clear"  onclick="clearThisHighlight()">✕ Remove</button>
+            <button class="toolbar-btn btn-clear"  onclick="clearAllHighlights()">⊘ All</button>
+        </span>
+    </div>
+
+    <!-- Notes Panel -->
+    <div id="notesPanel" class="notes-panel">
+        <div class="notes-panel-header">
+            <span>📝 My Notes</span>
+            <button class="notes-panel-close" onclick="toggleNotesPanel()">✕</button>
+        </div>
+        <div class="notes-list" id="notesList"><p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p></div>
+    </div>
+
+    <!-- Note Input Modal -->
+    <div id="noteInputOverlay" class="note-input-overlay">
+        <div class="note-input-box">
+            <h3>Add a Note</h3>
+            <div class="selected-text-preview" id="noteTextPreview"></div>
+            <textarea id="noteTextarea" placeholder="Type your note here..."></textarea>
+            <div class="note-input-actions">
+                <button class="btn-cancel-note" onclick="cancelNote()">Cancel</button>
+                <button class="btn-save-note"   onclick="saveNote()">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+            <h2>Results</h2>
+            <div class="results-summary">
+                <p>Score: <span id="results-score"></span> / 40</p>
+                <p>IELTS Band: <span id="results-band"></span></p>
+            </div>
+            <div id="results-details" class="results-details-container"></div>
+            <div style="text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="retakeTest()" style="background:#4a90e2;color:#fff;border:none;border-radius:6px;padding:10px 28px;font-size:15px;font-weight:700;cursor:pointer;">🔄 Retake Test</button>
+                <button onclick="closeResultsModal()" style="background:var(--footer-btn-bg);color:var(--text);border:1px solid var(--border-medium);border-radius:6px;padding:10px 22px;font-size:15px;font-weight:600;cursor:pointer;margin-left:12px;">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let currentPassage = 1;
+        let currentQuestion = 1;
+        let selectedRange = null;
+        let selectedText = '';
+        let highlightTarget = null;
+        let lastAppliedHighlight = null;
+        let timeInSeconds = 3600;
+        let timerInterval;
+        let activeQuestionElement = null;
+        let notes = [];
+        let nextNoteId = 1;
+
+        const timerDisplay      = document.querySelector('.timer-display');
+        const timerToggleButton = document.getElementById('timer-toggle-btn');
+        const timerResetButton  = document.getElementById('timer-reset-btn');
+        const deliverButton     = document.getElementById('deliver-button');
+        const resizer           = document.getElementById('resizer');
+        const passagePanel      = document.getElementById('passage-panel');
+        const questionsPanel    = document.getElementById('questions-panel');
+        const highlightToolbar  = document.getElementById('highlightToolbar');
+        const nightModeBtn      = document.getElementById('night-mode-btn');
+        const notesToggleBtn    = document.getElementById('notes-toggle-btn');
+        const notesPanel        = document.getElementById('notesPanel');
+        const notesList         = document.getElementById('notesList');
+        const notesCount        = document.getElementById('notes-count');
+        const noteInputOverlay  = document.getElementById('noteInputOverlay');
+        const noteTextarea      = document.getElementById('noteTextarea');
+        const noteTextPreview   = document.getElementById('noteTextPreview');
+
+        const playIcon  = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>';
+        const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+        // ── CORRECT ANSWERS ──────────────────────────────────────────────────────
+        // P1: Q1-8 paragraph matching (A-J), Q9-13 YES/NO/NOT GIVEN
+        // P2: Q14-18 paragraph matching (A-E), Q19-22 person matching (A-E), Q23-26 text
+        // P3: Q27-31 person matching (A-D), Q32-34 MCQ, Q35-39 text summary, Q40 MCQ
+        const correctAnswers = {
+            // Passage 1
+            '1':  'I',
+            '2':  'F',
+            '3':  'J',
+            '4':  'D',
+            '5':  'H',
+            '6':  'B',
+            '7':  'E',
+            '8':  'G',
+            '9':  'NO',
+            '10': 'NO',
+            '11': 'NOT GIVEN',
+            '12': 'YES',
+            '13': 'NO',
+            // Passage 2
+            '14': 'C',
+            '15': 'B',
+            '16': 'D',
+            '17': 'A',
+            '18': 'B',
+            '19': 'D',
+            '20': 'B',
+            '21': 'A',
+            '22': 'C',
+            '23': ['eye'],
+            '24': ['tooth'],
+            '25': ['size'],
+            '26': ['sensor'],
+            // Passage 3
+            '27': 'B',
+            '28': 'C',
+            '29': 'A',
+            '30': 'B',
+            '31': 'D',
+            '32': 'B',
+            '33': 'D',
+            '34': 'C',
+            '35': ['forehead'],
+            '36': ['mental resources'],
+            '37': ['brain cells','cells'],
+            '38': ['new memories','memories'],
+            '39': ['new skills','skills'],
+            '40': 'B',
+        };
+
+        // ── PART MAPPINGS ────────────────────────────────────────────────────────
+        function getPartForQ(q) {
+            if (q <= 13)  return 1;
+            if (q <= 26)  return 2;
+            return 3;
+        }
+        function getSectionId(q) { return 'questions-' + getPartForQ(q); }
+
+        function getInputEl(qNum) {
+            const section = document.getElementById(getSectionId(qNum));
+            if (!section) return null;
+            return section.querySelector(`#q${qNum}`);
+        }
+
+        // ── INIT ─────────────────────────────────────────────────────────────────
+        function initialize() {
+            startTimer();
+            switchToPart(1);
+            document.body.addEventListener('input',  updateAllIndicators);
+            document.body.addEventListener('change', updateAllIndicators);
+            deliverButton.addEventListener('click',  checkAnswers);
+            timerToggleButton.addEventListener('click', toggleTimer);
+            timerResetButton.addEventListener('click',  resetTimer);
+            nightModeBtn.addEventListener('click',   toggleNightMode);
+            notesToggleBtn.addEventListener('click', toggleNotesPanel);
+            resizer.addEventListener('mousedown', initResize);
+            initializeHighlightToolbar();
+        }
+
+        // ── NIGHT MODE ───────────────────────────────────────────────────────────
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const isNight = document.body.classList.contains('night-mode');
+            nightModeBtn.innerHTML = isNight ? '<span>☀️</span> Day Mode' : '<span>🌙</span> Night Mode';
+        }
+
+        // ── ANSWER CHECKING ──────────────────────────────────────────────────────
+        function checkAnswers() {
+            document.querySelectorAll('.question-set.hidden, .reading-passage.hidden, .part-header.hidden')
+                .forEach(s => s.classList.remove('hidden'));
+            document.querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+            deliverButton.disabled = true;
+            clearInterval(timerInterval);
+
+            let score = 0;
+            const detailsContainer = document.getElementById('results-details');
+            detailsContainer.innerHTML = '';
+            document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(el =>
+                el.classList.remove('correct','incorrect','correct-answer-highlight'));
+            document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+
+            for (let i = 1; i <= 40; i++) {
+                const qKey = String(i);
+                const correctAnswer = correctAnswers[qKey];
+                let userAnswer = '';
+                let isCorrect = false;
+                let userAnswerDisplay = 'Not Answered';
+                const correctText = Array.isArray(correctAnswer) ? correctAnswer[0] : (correctAnswer || '');
+
+                const radioInputs = document.querySelectorAll(`input[name="q${i}"][type="radio"]`);
+
+                if (radioInputs.length > 0) {
+                    // Radio (TF or MCQ)
+                    const qContainer = radioInputs[0].closest('.tf-question,.multi-choice-question');
+                    const checked = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (checked) {
+                        userAnswer = checked.value;
+                        userAnswerDisplay = userAnswer;
+                        isCorrect = (userAnswer === correctAnswer);
+                        const lbl = checked.closest('.tf-option,.multi-choice-option');
+                        if (lbl) lbl.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    }
+                    if (qContainer) {
+                        if (isCorrect && qContainer.classList.contains('tf-question')) qContainer.classList.add('correct');
+                        if (!isCorrect) {
+                            if (qContainer.classList.contains('tf-question')) qContainer.classList.add('incorrect');
+                            const correctOpt = qContainer.querySelector(`input[value="${correctAnswer}"]`);
+                            if (correctOpt) {
+                                const lbl = correctOpt.closest('.tf-option,.multi-choice-option');
+                                if (lbl) lbl.classList.add('correct-answer-highlight');
+                            }
+                        }
+                    }
+                    if (isCorrect) score++;
+                } else {
+                    const inputEl = getInputEl(i);
+                    if (inputEl && inputEl.tagName === 'SELECT') {
+                        userAnswer = inputEl.value;
+                        userAnswerDisplay = userAnswer || 'Not Answered';
+                        isCorrect = (userAnswer === correctAnswer);
+                        const rowEl = inputEl.closest('.matching-form-row') || inputEl;
+                        if (isCorrect) { score++; rowEl.classList.add('correct'); }
+                        else {
+                            rowEl.classList.add('incorrect');
+                            const sp = document.createElement('span');
+                            sp.className = 'correct-answer-display';
+                            sp.innerHTML = `&nbsp;➜ <span class="correct-answer-highlight">${correctText}</span>`;
+                            inputEl.after(sp);
+                        }
+                    } else if (inputEl && inputEl.tagName === 'INPUT') {
+                        userAnswer = inputEl.value.trim();
+                        userAnswerDisplay = userAnswer || 'Not Answered';
+                        if (Array.isArray(correctAnswer)) {
+                            isCorrect = correctAnswer.some(a => userAnswer.toLowerCase() === a.toLowerCase());
+                        } else {
+                            isCorrect = userAnswer.toLowerCase() === correctText.toLowerCase();
+                        }
+                        inputEl.classList.add(isCorrect ? 'correct' : 'incorrect');
+                        if (isCorrect) {
+                            score++;
+                        } else {
+                            const sp = document.createElement('span');
+                            sp.className = 'correct-answer-display';
+                            sp.innerHTML = `&nbsp;➜ <span class="correct-answer-highlight">${correctText}</span>`;
+                            inputEl.after(sp);
+                        }
+                    }
+                }
+
+                detailsContainer.innerHTML += `<div class="result-row ${isCorrect ? '' : 'incorrect'}"><span class="q-num">${i}</span><span class="user-ans">${userAnswerDisplay}</span><span class="correct-ans">${correctText || '—'}</span></div>`;
+
+                const navBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+                if (navBtn) {
+                    navBtn.classList.remove('answered','active');
+                    navBtn.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+            }
+
+            document.getElementById('results-score').textContent = score;
+            document.getElementById('results-band').textContent = calculateBand(score);
+            document.getElementById('results-modal').classList.remove('hidden');
+        }
+
+        function calculateBand(score) {
+            const map = {40:9.0,39:9.0,38:8.5,37:8.5,36:8.0,35:8.0,34:7.5,33:7.5,32:7.0,31:7.0,30:7.0,29:6.5,28:6.5,27:6.5,26:6.0,25:6.0,24:6.0,23:5.5,22:5.5,21:5.5,20:5.5,19:5.0,18:5.0,17:5.0,16:5.0,15:5.0,14:4.5,13:4.5,12:4.0,11:4.0,10:4.0,9:3.5,8:3.5,7:3.0,6:3.0,5:2.5,4:2.5,3:2.0,2:2.0,1:1.0,0:0.0};
+            return map[score] !== undefined ? map[score] : '0.0';
+        }
+
+        // ── NAVIGATION ───────────────────────────────────────────────────────────
+        function switchToPart(partNumber) {
+            currentPassage = partNumber;
+            document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`passage-text-${partNumber}`).classList.remove('hidden');
+            document.getElementById(`questions-${partNumber}`).classList.remove('hidden');
+            document.getElementById(`part-header-${partNumber}`).classList.remove('hidden');
+            document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, idx) =>
+                w.classList.toggle('selected', (idx + 1) === partNumber));
+            const firstQ = {1:1, 2:14, 3:27}[partNumber];
+            goToQuestion(firstQ);
+        }
+
+        function goToQuestion(questionNumber) {
+            currentQuestion = questionNumber;
+            const part = getPartForQ(questionNumber);
+            if (currentPassage !== part) {
+                currentPassage = part;
+                document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`passage-text-${part}`).classList.remove('hidden');
+                document.getElementById(`questions-${part}`).classList.remove('hidden');
+                document.getElementById(`part-header-${part}`).classList.remove('hidden');
+                document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, idx) =>
+                    w.classList.toggle('selected', (idx + 1) === part));
+            }
+            if (activeQuestionElement) activeQuestionElement.classList.remove('active-question','active-input');
+
+            let targetEl = document.querySelector(`[data-q-start="${questionNumber}"]`);
+            if (targetEl) {
+                activeQuestionElement = targetEl;
+                targetEl.classList.add('active-question');
+                scrollIntoViewIfNeeded(targetEl);
+            }
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('active'));
+            const activeNav = document.querySelector(`.subQuestion[onclick="goToQuestion(${currentQuestion})"]`);
+            if (activeNav) activeNav.classList.add('active');
+
+            document.querySelectorAll('.answer-input').forEach(el => el.classList.remove('active-input'));
+            const inputEl = getInputEl(currentQuestion);
+            if (inputEl) { inputEl.classList.add('active-input'); inputEl.focus && inputEl.focus(); }
+        }
+
+        window.nextQuestion = () => currentQuestion < 40 && goToQuestion(currentQuestion + 1);
+        window.previousQuestion = () => currentQuestion > 1 && goToQuestion(currentQuestion - 1);
+
+        function isQuestionAnswered(qNum) {
+            const el = getInputEl(qNum);
+            if (el && el.tagName === 'INPUT' && el.value.trim()) return true;
+            if (el && el.tagName === 'SELECT' && el.value) return true;
+            if (document.querySelector(`input[name="q${qNum}"]:checked`)) return true;
+            return false;
+        }
+
+        function updateAllIndicators() {
+            updateAttemptedCount(1, 1, 13);
+            updateAttemptedCount(2, 14, 26);
+            updateAttemptedCount(3, 27, 40);
+            document.querySelectorAll('.subQuestion').forEach(btn => {
+                const qNum = parseInt(btn.textContent, 10);
+                btn.classList.toggle('answered', isQuestionAnswered(qNum));
+            });
+        }
+
+        function updateAttemptedCount(part, startQ, endQ) {
+            let answered = 0;
+            for (let i = startQ; i <= endQ; i++) { if (isQuestionAnswered(i)) answered++; }
+            const wrapper = document.querySelectorAll('.footer__questionWrapper___1tZ46')[part - 1];
+            if (wrapper) {
+                const span = wrapper.querySelector('.attemptedCount');
+                if (span) span.textContent = `${answered} of ${endQ - startQ + 1}`;
+            }
+        }
+
+        function scrollIntoViewIfNeeded(element) {
+            const panel = element.closest('.questions-panel,.passage-panel');
+            if (!panel) return;
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // ── TIMER ────────────────────────────────────────────────────────────────
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeInSeconds--;
+                updateTimerDisplay();
+                if (timeInSeconds <= 0) { clearInterval(timerInterval); timerDisplay.textContent = "Time's up!"; }
+            }, 1000);
+            timerToggleButton.innerHTML = pauseIcon;
+        }
+        function pauseTimer() { clearInterval(timerInterval); timerToggleButton.innerHTML = playIcon; }
+        function toggleTimer() {
+            timerToggleButton.innerHTML.includes('M6 19h4') ? pauseTimer() : startTimer();
+        }
+        function resetTimer() { timeInSeconds = 3600; updateTimerDisplay(); startTimer(); }
+        function updateTimerDisplay() {
+            const m = Math.floor(timeInSeconds / 60), s = timeInSeconds % 60;
+            timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }
+
+        // ── RESIZER ──────────────────────────────────────────────────────────────
+        function initResize(e) {
+            e.preventDefault();
+            const startX = e.clientX, startWidth = passagePanel.offsetWidth;
+            const doDrag = e => {
+                const w = startWidth + e.clientX - startX;
+                if (w > 200 && (document.body.clientWidth - w - resizer.offsetWidth) > 200)
+                    passagePanel.style.flex = `0 0 ${w}px`;
+            };
+            const stopDrag = () => { window.removeEventListener('mousemove', doDrag); window.removeEventListener('mouseup', stopDrag); };
+            window.addEventListener('mousemove', doDrag);
+            window.addEventListener('mouseup', stopDrag);
+        }
+
+        // ── HIGHLIGHT TOOLBAR ────────────────────────────────────────────────────
+        function initializeHighlightToolbar() {
+            const panels = [passagePanel, questionsPanel];
+            const selBtns = document.getElementById('toolbar-selection-btns');
+            const hlBtns  = document.getElementById('toolbar-highlight-btns');
+
+            document.addEventListener('mouseup', e => {
+                if (highlightToolbar.contains(e.target)) return;
+                if (noteInputOverlay.contains(e.target)) return;
+                const sel = window.getSelection();
+                const overHL = e.target.closest('.highlight,.comment-highlight');
+                if (overHL && (!sel || sel.isCollapsed)) {
+                    highlightTarget = overHL; lastAppliedHighlight = null; selectedRange = null;
+                    selBtns.style.display = 'none'; hlBtns.style.display = 'inline';
+                    positionAndShowToolbar(e); return;
+                }
+                if (sel && !sel.isCollapsed && sel.toString().trim().length > 0) {
+                    const range = sel.getRangeAt(0);
+                    if (panels.some(p => p.contains(range.commonAncestorContainer))) {
+                        selectedRange = range.cloneRange(); selectedText = sel.toString();
+                        highlightTarget = null; lastAppliedHighlight = null;
+                        const startNode = range.startContainer;
+                        const existHL = (startNode.nodeType === 3 ? startNode.parentElement : startNode).closest('.highlight,.comment-highlight');
+                        if (existHL) highlightTarget = existHL;
+                        selBtns.style.display = 'inline'; hlBtns.style.display = 'none';
+                        positionAndShowToolbar(e); return;
+                    }
+                }
+                hideToolbar();
+            });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') hideToolbar(); });
+            passagePanel.addEventListener('scroll', hideToolbar);
+            questionsPanel.addEventListener('scroll', hideToolbar);
+        }
+
+        function positionAndShowToolbar(e) {
+            highlightToolbar.classList.add('visible');
+            requestAnimationFrame(() => {
+                const tbW = highlightToolbar.offsetWidth || 300, tbH = highlightToolbar.offsetHeight || 44;
+                let left = e.pageX - tbW / 2, top = e.pageY - tbH - 14;
+                if (left < 8) left = 8;
+                if (left + tbW > window.innerWidth - 8) left = window.innerWidth - tbW - 8;
+                if (top < 68) top = e.pageY + 14;
+                highlightToolbar.style.left = left + 'px';
+                highlightToolbar.style.top  = top + 'px';
+            });
+        }
+        function hideToolbar() { highlightToolbar.classList.remove('visible'); }
+
+        window.applyHighlight = function(colorClass) {
+            if (!selectedRange || selectedRange.collapsed) { hideToolbar(); return; }
+            try {
+                const span = document.createElement('span');
+                span.className = 'highlight ' + colorClass;
+                span.appendChild(selectedRange.extractContents());
+                selectedRange.insertNode(span);
+                lastAppliedHighlight = span;
+            } catch(e) {}
+            hideToolbar(); window.getSelection().removeAllRanges(); selectedRange = null;
+        };
+        window.recolorHighlight = function(colorClass) {
+            if (!highlightTarget) { hideToolbar(); return; }
+            highlightTarget.className = 'highlight ' + colorClass;
+            highlightTarget = null; hideToolbar();
+        };
+        window.clearThisHighlight = function() {
+            const target = highlightTarget || lastAppliedHighlight;
+            if (!target || !target.parentNode) { hideToolbar(); return; }
+            if (target.classList.contains('comment-highlight')) {
+                const idx = notes.findIndex(n => n.spanEl === target);
+                if (idx !== -1) notes.splice(idx, 1);
+                renderNotesList();
+            }
+            unwrap(target); highlightTarget = null; lastAppliedHighlight = null; hideToolbar();
+        };
+        window.clearAllHighlights = function() {
+            document.querySelectorAll('.highlight,.comment-highlight').forEach(unwrap);
+            notes = []; renderNotesList();
+            highlightTarget = null; lastAppliedHighlight = null; hideToolbar();
+        };
+        function unwrap(el) {
+            const p = el.parentNode; if (!p) return;
+            while (el.firstChild) p.insertBefore(el.firstChild, el);
+            p.removeChild(el); p.normalize();
+        }
+
+        // ── NOTES ────────────────────────────────────────────────────────────────
+        function toggleNotesPanel() { notesPanel.classList.toggle('visible'); }
+        window.openNoteInput = function() {
+            if (!selectedRange || selectedRange.collapsed) return;
+            noteTextPreview.textContent = selectedText.length > 120 ? selectedText.slice(0,120) + '…' : selectedText;
+            noteTextarea.value = '';
+            noteInputOverlay.classList.add('visible');
+            setTimeout(() => noteTextarea.focus(), 50);
+        };
+        window.cancelNote = function() {
+            noteInputOverlay.classList.remove('visible');
+            hideToolbar(); window.getSelection().removeAllRanges(); selectedRange = null;
+        };
+        window.saveNote = function() {
+            const noteText = noteTextarea.value.trim();
+            if (!noteText) { noteTextarea.focus(); return; }
+            if (!selectedRange || selectedRange.collapsed) { cancelNote(); return; }
+            const span = document.createElement('span');
+            span.className = 'comment-highlight';
+            const tooltip = document.createElement('span');
+            tooltip.className = 'comment-tooltip';
+            tooltip.textContent = noteText;
+            try { span.appendChild(selectedRange.extractContents()); } catch(e) {}
+            span.appendChild(tooltip);
+            selectedRange.insertNode(span);
+            const noteObj = { id: nextNoteId++, text: selectedText.slice(0,80), noteText, spanEl: span };
+            notes.push(noteObj);
+            renderNotesList();
+            noteInputOverlay.classList.remove('visible');
+            hideToolbar(); window.getSelection().removeAllRanges(); selectedRange = null;
+        };
+        function renderNotesList() {
+            const count = notes.length;
+            notesCount.textContent = count;
+            notesCount.style.display = count > 0 ? 'inline' : 'none';
+            if (count === 0) { notesList.innerHTML = '<p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p>'; return; }
+            notesList.innerHTML = notes.map(n => `<div class="note-item"><div style="display:flex;justify-content:space-between;"><div class="note-item-text">"${esc(n.text)}${n.text.length>=80?'…':''}"</div><button class="note-item-delete" onclick="deleteNote(${n.id})">✕</button></div><div>${esc(n.noteText)}</div></div>`).join('');
+        }
+        window.deleteNote = function(id) {
+            const idx = notes.findIndex(n => n.id === id);
+            if (idx === -1) return;
+            if (notes[idx].spanEl && notes[idx].spanEl.parentNode) unwrap(notes[idx].spanEl);
+            notes.splice(idx, 1); renderNotesList();
+        };
+        function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+        // ── MODAL ────────────────────────────────────────────────────────────────
+        window.closeResultsModal = function() { document.getElementById('results-modal').classList.add('hidden'); };
+        window.retakeTest = function() {
+            document.querySelectorAll('input,select,textarea').forEach(el => el.disabled = false);
+            deliverButton.disabled = false;
+            document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(el =>
+                el.classList.remove('correct','incorrect','correct-answer-highlight'));
+            document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+            document.querySelectorAll('input[type="text"]').forEach(el => el.value = '');
+            document.querySelectorAll('select').forEach(el => el.value = '');
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('correct','incorrect','answered','active'));
+            document.getElementById('results-modal').classList.add('hidden');
+            resetTimer(); switchToPart(1); updateAllIndicators();
+        };
+
+        window.goToQuestion     = goToQuestion;
+        window.switchToPart     = switchToPart;
+        window.toggleNotesPanel = toggleNotesPanel;
+
+        initialize();
+    });
+    </script>
+</body>
+</html>

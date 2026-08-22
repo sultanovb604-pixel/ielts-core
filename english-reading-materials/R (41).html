@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Full Reading Practice</title>
+    <style>
+        :root {
+            --bg: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #f1f2ec;
+            --text: #1a1a1a; --text-muted: #555; --text-light: #888;
+            --border: #e0e0e0; --border-medium: #ccc;
+            --header-bg: #ffffff; --panel-bg: #ffffff; --nav-bg: #ffffff;
+            --input-bg: #ffffff; --example-bg: #f9f9f9;
+            --modal-bg: #ffffff; --timer-color: #333; --resizer-bg: #f0f0f0;
+            --active-blue: #4a90e2;
+            --correct-bg: #e9f7ef; --incorrect-bg: #f8d7da;
+            --correct-border: #28a745; --incorrect-border: #dc3545;
+            --highlight-yellow: #ffeb3b; --highlight-green: #a5d6a7;
+            --subq-bg: #ffffff; --subq-border: #ccc; --subq-text: #333;
+            --footer-btn-bg: #f0f0f0; --passage-title: #2c3e50;
+            --toolbar-bg: #1a1a2e; --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            --font-size-base: 16px;
+        }
+        body.night-mode {
+            --bg: #121212; --bg-secondary: #1e1e1e; --bg-tertiary: #252525;
+            --text: #e0e0e0; --text-muted: #aaa; --text-light: #777;
+            --border: #333; --border-medium: #444;
+            --header-bg: #1a1a1a; --panel-bg: #1a1a1a; --nav-bg: #1a1a1a;
+            --input-bg: #252525; --example-bg: #252525;
+            --modal-bg: #1e1e1e; --timer-color: #e0e0e0; --resizer-bg: #2a2a2a;
+            --active-blue: #64b5f6;
+            --correct-bg: #1a3a2a; --incorrect-bg: #3a1a1a;
+            --correct-border: #4caf50; --incorrect-border: #f44336;
+            --highlight-yellow: #f9a825; --highlight-green: #388e3c;
+            --subq-bg: #252525; --subq-border: #444; --subq-text: #ccc;
+            --footer-btn-bg: #2a2a2a; --passage-title: #90caf9;
+            --toolbar-bg: #0d0d1a; --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Georgia,'Times New Roman',serif; background-color: var(--bg); color: var(--text); line-height: 1.6; font-size: var(--font-size-base); transition: background-color 0.3s, color 0.3s; }
+        .header { background-color: var(--header-bg); padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 56px; transition: background-color 0.3s, border-color 0.3s; gap: 8px; }
+        .header-left { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+        .timer-container { display: flex; color: var(--timer-color); font-size: 15px; font-weight: 600; align-items: center; font-family: 'Courier New',monospace; }
+        .timer-controls { display: flex; align-items: center; gap: 5px; margin-left: 8px; }
+        .timer-controls button { background: var(--footer-btn-bg); border: 1px solid var(--border-medium); border-radius: 50%; padding: 0; cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+        .timer-controls button svg { width: 18px; height: 18px; fill: var(--timer-color); }
+        .header-btn { background: var(--footer-btn-bg); border: 1px solid var(--border-medium); border-radius: 16px; padding: 4px 10px; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 4px; white-space: nowrap; font-family: Arial,sans-serif; }
+        .header-btn:hover { background: var(--border); }
+        .zoom-controls { display: flex; align-items: center; gap: 3px; background: var(--footer-btn-bg); border: 1px solid var(--border-medium); border-radius: 16px; padding: 2px 8px; }
+        .zoom-btn { background: none; border: none; cursor: pointer; color: var(--text); font-size: 16px; font-weight: 700; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        .zoom-btn:hover { background: var(--border); }
+        .zoom-label { font-size: 12px; font-weight: 600; color: var(--text-muted); min-width: 34px; text-align: center; font-family: Arial,sans-serif; }
+        .telegram-link { color: #0088cc; text-decoration: none; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 5px; font-family: Arial,sans-serif; white-space: nowrap; }
+        .telegram-link:hover { text-decoration: underline; }
+        .main-container { margin-top: 56px; display: flex; flex-direction: column; background: var(--bg); height: calc(100vh - 56px); }
+        .panels-container { display: flex; flex: 1; overflow: hidden; }
+        .passage-panel { flex: 1; padding: 20px 24px 110px; overflow-y: auto; min-width: 200px; background: var(--panel-bg); }
+        .reading-passage h4 { font-family: Georgia,serif; font-size: 1.25em; font-weight: 700; color: var(--passage-title); text-align: center; border-bottom: 2px solid var(--active-blue); padding-bottom: 8px; margin-bottom: 6px; }
+        .reading-passage .passage-subtitle { text-align: center; font-style: italic; font-size: 0.95em; color: var(--text-muted); margin-bottom: 18px; }
+        .reading-passage p { margin-bottom: 1.1em; color: var(--text); line-height: 1.7; }
+        .reading-passage .para-label { font-weight: 700; }
+        .reading-passage h5 { font-family: Georgia,serif; font-size: 1em; font-weight: 700; color: var(--passage-title); margin: 16px 0 6px; }
+        .questions-panel { flex: 1; padding: 20px 20px 110px; overflow-y: auto; min-width: 200px; border-left: 1px solid var(--border); background: var(--panel-bg); font-family: Arial,sans-serif; }
+        .resizer { width: 8px; cursor: col-resize; background-color: var(--resizer-bg); background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="30" viewBox="0 0 8 30"><path d="M3 11h2v2H3zM3 15h2v2H3zM3 19h2v2H3z" fill="%23888"/></svg>'); background-repeat: no-repeat; background-position: center; flex-shrink: 0; }
+        .part-header { background-color: var(--bg-tertiary); padding: 12px 18px; border: 1px solid var(--border); margin: 8px 16px; border-radius: 5px; color: var(--text); font-family: Arial,sans-serif; }
+        .part-header p { margin: 0; font-size: 14px; }
+        .part-header p:first-child { margin-bottom: 3px; }
+        .question { margin-bottom: 36px; color: var(--text); font-size: 0.95em; }
+        .question p { margin-bottom: 8px; color: var(--text); }
+        .question-prompt { margin-bottom: 16px; }
+        .answer-input { border: 1px solid var(--border-medium); border-radius: 4px; background-color: var(--input-bg); color: var(--text); padding: 2px 6px; font-size: 0.9em; font-family: Arial,sans-serif; text-align: center; margin: 0 4px; height: 26px; width: 140px; transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s; }
+        .answer-input.wide { width: 180px; }
+        .answer-input.active-input { border-color: var(--active-blue); box-shadow: 0 0 3px 1px rgba(74,144,226,0.5); }
+        .answer-input::placeholder { color: #bbb; font-weight: 600; }
+        .answer-input.correct { border-color: var(--correct-border); background-color: var(--correct-bg); }
+        .answer-input.incorrect { border-color: var(--incorrect-border); background-color: var(--incorrect-bg); color: var(--incorrect-border); }
+        .tf-question { margin-bottom: 20px; border-radius: 4px; color: var(--text); }
+        .tf-question-line { display: flex; align-items: flex-start; margin-bottom: 10px; padding: 4px 0; border-radius: 4px; }
+        .tf-question-number { border: 2px solid var(--border-medium); padding: 1px 7px; margin-right: 10px; border-radius: 3px; font-weight: 700; color: var(--text); flex-shrink: 0; }
+        .tf-question-text { padding-top: 2px; color: var(--text); }
+        .tf-options { padding-left: 4px; }
+        .tf-option { display: flex; align-items: center; margin-bottom: 8px; cursor: pointer; color: var(--text); }
+        .tf-option input[type="radio"] { margin-right: 8px; transform: scale(1.2); accent-color: var(--active-blue); }
+        .tf-question.correct .tf-question-line { background-color: var(--correct-bg); }
+        .tf-question.incorrect .tf-question-line { background-color: var(--incorrect-bg); }
+        .matching-form-container { margin-top: 14px; }
+        .matching-form-row { display: flex; align-items: center; margin-bottom: 12px; gap: 10px; }
+        .matching-form-label { flex: 1; color: var(--text); font-size: 0.9em; }
+        .matching-form-row.correct { background-color: var(--correct-bg); border-left: 3px solid var(--correct-border); padding-left: 8px; border-radius: 4px; }
+        .matching-form-row.incorrect { background-color: var(--incorrect-bg); border-left: 3px solid var(--incorrect-border); padding-left: 8px; border-radius: 4px; }
+        .summary-box { border: 1px solid var(--border); background: var(--example-bg); padding: 14px 16px; border-radius: 5px; margin: 12px 0; }
+        .example-box { border: 1px solid var(--border); background-color: var(--example-bg); padding: 12px 16px; border-radius: 5px; margin: 14px 0; color: var(--text); font-size: 0.9em; }
+        .correct-answer-display { font-weight: 700; color: #28a745; margin-left: 8px; font-size: 0.85em; }
+        .correct-answer-highlight { background-color: var(--correct-bg) !important; border: 1px solid var(--correct-border) !important; border-radius: 4px; padding: 2px 4px; }
+        .tf-option.correct-answer-highlight { background-color: var(--correct-bg) !important; border: 1px solid var(--correct-border) !important; border-radius: 4px; padding: 4px; }
+        .nav-arrows { position: fixed; bottom: 90px; right: 16px; display: flex; gap: 4px; z-index: 101; }
+        .nav-arrow { width: 44px; height: 44px; background: #333; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; border-radius: 4px; }
+        body.night-mode .nav-arrow { background: #444; }
+        .nav-arrow:hover { background: #555; }
+        .nav-row { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg); display: flex; align-items: center; height: 74px; z-index: 100; border-top: 1px solid var(--border); overflow-x: auto; font-family: Arial,sans-serif; }
+        .footer__questionWrapper___1tZ46 { display: flex; align-items: center; margin-right: 12px; flex-shrink: 0; }
+        .footer__questionNo___3WNct { background: none; border: none; padding: 8px 12px; font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 4px; }
+        .footer__questionNo___3WNct:hover { background-color: var(--bg-secondary); }
+        .attemptedCount { font-size: 12px; color: var(--text-muted); margin-left: 4px; font-weight: 400; }
+        .footer__subquestionWrapper___9GgoP { display: none; gap: 2px; margin-left: 6px; flex-wrap: wrap; }
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP { display: flex; }
+        .footer__questionWrapper___1tZ46.selected .attemptedCount { display: none; }
+        .subQuestion { width: 30px; height: 30px; border: 1px solid var(--subq-border); background: var(--subq-bg); color: var(--subq-text); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; border-radius: 3px; }
+        .subQuestion.answered { background-color: #6c8ebf; color: white; border-color: #5a7aad; }
+        .subQuestion.correct { background-color: #28a745; color: white; border-color: #28a745; }
+        .subQuestion.incorrect { background-color: #dc3545; color: white; border-color: #dc3545; }
+        .subQuestion:hover { background-color: var(--bg-secondary); }
+        .subQuestion.active { background-color: var(--active-blue); color: white; border-color: var(--active-blue); }
+        .footer__deliverButton___3FM07 { margin-left: auto; margin-right: 16px; flex-shrink: 0; background-color: #4a90e2; color: white; border: none; padding: 10px 18px; border-radius: 5px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; min-width: 140px; justify-content: center; }
+        .footer__deliverButton___3FM07:hover { background-color: #357abd; }
+        .footer__deliverButton___3FM07:disabled { background: var(--bg-secondary); color: var(--text-muted); cursor: not-allowed; }
+        .hidden { display: none !important; }
+        .highlight-toolbar { position: fixed; display: none; background: var(--toolbar-bg); border-radius: 8px; box-shadow: var(--toolbar-shadow); z-index: 2000; padding: 5px 7px; gap: 3px; align-items: center; border: 1px solid rgba(255,255,255,0.12); }
+        .highlight-toolbar.visible { display: flex; }
+        .toolbar-btn { display: inline-flex; align-items: center; justify-content: center; gap: 3px; padding: 5px 9px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; white-space: nowrap; font-family: Arial,sans-serif; }
+        .toolbar-btn:hover { filter: brightness(1.15); }
+        .toolbar-btn.btn-yellow { background: #f9c000; color: #1a1a1a; }
+        .toolbar-btn.btn-green { background: #43a047; color: #fff; }
+        .toolbar-btn.btn-clear { background: #757575; color: #fff; }
+        .toolbar-btn.btn-clear-all { background: #c0392b; color: #fff; }
+        .toolbar-btn.btn-note { background: #ff6f00; color: #fff; }
+        .toolbar-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 2px; }
+        #toolbar-selection-btns, #toolbar-highlight-btns { display: inline-flex; align-items: center; gap: 3px; }
+        .comment-highlight { background-color: #ffe082; position: relative; cursor: help; border-bottom: 2px dotted #f57f17; border-radius: 2px; }
+        body.night-mode .comment-highlight { background-color: #6d4c00; border-bottom-color: #ffa000; color: #ffe082; }
+        .comment-highlight::after { content: '📝'; font-size: 11px; vertical-align: super; margin-left: 2px; }
+        .comment-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #212121; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 13px; white-space: normal; max-width: 260px; z-index: 3000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .comment-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #212121; }
+        .comment-highlight:hover .comment-tooltip { opacity: 1; }
+        .notes-panel { position: fixed; right: 18px; top: 66px; width: 270px; max-height: calc(100vh - 160px); background: var(--modal-bg); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,0.18); z-index: 500; overflow-y: auto; display: none; flex-direction: column; }
+        .notes-panel.visible { display: flex; }
+        .notes-panel-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 13px; color: var(--text); background: var(--bg-secondary); border-radius: 10px 10px 0 0; font-family: Arial,sans-serif; }
+        .notes-panel-close { background: none; border: none; cursor: pointer; font-size: 17px; color: var(--text-muted); }
+        .notes-list { padding: 8px; flex: 1; }
+        .note-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 9px; margin-bottom: 7px; font-size: 12px; color: var(--text); font-family: Arial,sans-serif; }
+        .note-item-text { font-weight: 700; color: #f57f17; margin-bottom: 3px; font-size: 11px; }
+        .note-item-delete { background: none; border: none; color: var(--incorrect-border); cursor: pointer; font-size: 11px; float: right; }
+        .notes-empty { color: var(--text-muted); font-size: 12px; padding: 10px; text-align: center; font-family: Arial,sans-serif; }
+        .note-input-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: none; align-items: center; justify-content: center; }
+        .note-input-overlay.visible { display: flex; }
+        .note-input-box { background: var(--modal-bg); border-radius: 12px; padding: 22px; width: 360px; max-width: 90vw; font-family: Arial,sans-serif; }
+        .note-input-box h3 { margin-bottom: 8px; font-size: 15px; color: var(--text); }
+        .note-input-box .selected-text-preview { background: var(--bg-secondary); border-left: 3px solid #f9a825; padding: 7px 10px; margin-bottom: 12px; font-size: 12px; color: var(--text-muted); border-radius: 0 4px 4px 0; max-height: 56px; overflow: hidden; }
+        .note-input-box textarea { width: 100%; min-height: 72px; padding: 9px; border: 1px solid var(--border-medium); border-radius: 6px; font-size: 13px; background: var(--input-bg); color: var(--text); resize: vertical; outline: none; }
+        .note-input-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+        .note-input-actions button { padding: 7px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 700; }
+        .btn-save-note { background: #f9a825; color: #1a1a1a; }
+        .btn-cancel-note { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border) !important; }
+        .highlight { background-color: var(--highlight-yellow); border-radius: 2px; cursor: pointer; }
+        .highlight.hl-green { background-color: var(--highlight-green); }
+        .active-question { outline: 2px solid var(--active-blue); border-radius: 4px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .modal-overlay.hidden { display: none; }
+        .modal-content { background: var(--modal-bg); padding: 24px; border-radius: 12px; width: 92%; max-width: 600px; max-height: 82vh; display: flex; flex-direction: column; position: relative; border: 1px solid var(--border); }
+        .modal-close-btn { position: absolute; top: 10px; right: 14px; background: none; border: none; font-size: 26px; cursor: pointer; color: var(--text-muted); }
+        .modal-content h2 { text-align: center; margin-bottom: 14px; color: var(--text); font-family: Georgia,serif; }
+        .results-summary { display: flex; justify-content: space-around; margin-bottom: 16px; font-size: 18px; font-weight: 700; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 14px; color: var(--text); font-family: Arial,sans-serif; }
+        .results-details-container { overflow-y: auto; padding-right: 8px; }
+        .result-row { display: grid; grid-template-columns: 40px 1fr 1fr; gap: 12px; padding: 7px 5px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text); font-family: Arial,sans-serif; }
+        .result-row.incorrect { background-color: var(--incorrect-bg); }
+        .result-row .q-num { font-weight: 700; }
+        .result-row .user-ans { color: var(--text-muted); }
+        .result-row .correct-ans { color: var(--correct-border); font-weight: 600; }
+        select.answer-input option { background: var(--input-bg); color: var(--text); }
+        .center-cta { position: absolute; left: 58%; top: 50%; transform: translate(-50%,-50%); text-align: center; white-space: nowrap; }
+        .center-cta a { display: inline-block; padding: 5px 14px; border-radius: 20px; background: linear-gradient(135deg,#4a90e2,#6a5acd); color: #fff; font-size: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 2px 8px rgba(74,144,226,0.3); }
+        .q-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88em; font-family: Arial,sans-serif; }
+        .q-table th { background: var(--bg-tertiary); padding: 7px 10px; text-align: left; border: 1px solid var(--border); font-weight: 700; }
+        .q-table td { padding: 8px 10px; border: 1px solid var(--border); color: var(--text); vertical-align: middle; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-left">
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="zoom-controls">
+            <button class="zoom-btn" id="zoom-out-btn">&#8722;</button>
+            <span class="zoom-label" id="zoom-label">100%</span>
+            <button class="zoom-btn" id="zoom-in-btn">&#43;</button>
+        </div>
+        <button id="night-mode-btn" class="header-btn">&#127769; Night</button>
+        <button id="notes-toggle-btn" class="header-btn">&#128221; Notes <span id="notes-count" style="background:#f9a825;color:#1a1a1a;border-radius:10px;padding:1px 5px;font-size:11px;display:none;margin-left:2px;">0</span></button>
+        <div class="center-cta">
+            <a href="https://t.me/m/ojS0ofg4YWEy" target="_blank">For More Authentic tests you need to buy Premium Service</a>
+        </div>
+    </div>
+    <a href="https://t.me/ieltsmaterials_full" target="_blank" class="telegram-link">&#128218; IELTS CDI Materials</a>
+</div>
+
+<div class="main-container">
+    <div id="passage-header-container">
+        <div id="part-header-1" class="part-header"><p><strong>Part 1</strong></p><p>Read the text below and answer questions 1&#8211;13.</p></div>
+        <div id="part-header-2" class="part-header hidden"><p><strong>Part 2</strong></p><p>Read the text below and answer questions 14&#8211;26.</p></div>
+        <div id="part-header-3" class="part-header hidden"><p><strong>Part 3</strong></p><p>Read the text below and answer questions 27&#8211;40.</p></div>
+    </div>
+    <div class="panels-container">
+        <div class="passage-panel" id="passage-panel">
+
+            <!-- PASSAGE 1: Giraffes -->
+            <div id="passage-text-1" class="reading-passage">
+                <h4>New Understanding of Giraffes in the Wild</h4>
+                <p>Even as the tallest animals on Earth, giraffes can be easy to overlook. Despite being a favorite in zoos, until recently almost nobody studied giraffes in the wild. 'When I first became interested in giraffes in 2008 and started looking through the scientific literature, I was really surprised to see how little had been done,' said Megan Strauss, an animal researcher at the University of Minnesota, USA. All that is changing fast, as a growing number of researchers seek to understand the biology and complex behavior of this graceful giant in its native habitat.</p>
+                <p>Giraffes, found throughout sub-Saharan Africa, are currently classified as a single species with up to nine varieties that differ by features like head shape and whether the fur on their legs is plain or patterned. The giraffe is not listed as endangered, but researchers point to evidence that in the past 15 years, the population has fallen some 40 percent.</p>
+                <p>Recent studies have allowed researchers new insights into giraffes' social structures. Groups of female giraffes, for example, have been found to form close friendships that can last for years. 'We're just at the beginnings of trying to understand this kind of behavior,' Dr Strauss said. Female giraffes can live 20 years or more, and it makes sense they might rely on each other for clues to the best feeding grounds, help with taking care of their young, or the reduction of stress, by staying in groups.</p>
+                <p>Mother giraffes have displayed signs of grief after losing their young, known as calves, to lions. Dr Strauss described one case in which a mother spent four days at the place where a lion had eaten her calf, refusing food, and often in the company of two other adult females. Giraffe calves are extremely vulnerable to predators, and though mothers will fight valiantly to keep their young alive &#8212; kicking forward and backward &#8212; half of all calves are killed in their first year of life.</p>
+                <p>Male giraffes, known as bulls, generally become more important with age, and older bulls display that dominance physically and behaviorally: as their neck muscles grow, the male's posture becomes prouder and more vertical. Recent observations show young bulls, when left on their own, mimicking their elders: head held high and neck puffed out. But should a dominant older bull come into view, the younger males instantly try to make themselves look small and innocent.</p>
+                <p>The younger bulls have reason to fear their elders. Clashes have been witnessed between adults when each bull repeatedly 'necks' the other, using his massive neck to slam his head against his rival. One bull somehow survived with a broken neck.</p>
+                <h5>Physical features of giraffes: study findings</h5>
+                <p>The skin of a giraffe is mostly gray. The coat has dark patches separated by light hair, which serves as camouflage, allowing them to blend in with the light and shade patterns of the acacia trees from which they feed. Grazing giraffes are hard to see even a few meters away.</p>
+                <p>Research indicates that giraffes also have excellent sight, can see in color and over great distances, which helps them to spot lions and keep track of each other. In addition, a giraffe's extraordinary mouth has lips and tongue that can together grasp a branch and then pluck away the leaves while avoiding thorns, almost as humans would grab with their hands. Each day, a giraffe consumes about 30 kilograms of leaves, shoots and vines, all digested in its four-chambered stomach.</p>
+                <p>A giraffe can stand more than six meters tall, with its neck accounting for roughly a third of its height and its legs the same. The giraffe's long neck is due to the length of the vertebrae, not the number of vertebrae. The growth of the neck largely takes place during early childhood, as giraffe mothers would have a difficult time giving birth to young with longer necks. The giraffe's head and neck are held up by large muscles attached to the lower spine.</p>
+                <p>Recent studies show that the greatest challenge to the giraffe's cardiovascular system is how to both pump blood very high and retrieve it from far below. The outside of a giraffe's veins are extremely thick, to prevent blood leaking into surrounding tissue. Other adaptations in the cardiovascular system allow the giraffe to bend over for a drink of water, and then raise its head again quickly without fainting.</p>
+                <p>Researchers were also surprised to find that a giraffe does not have an unusually large heart. It is half a percent of body mass, the same as in a mouse. Moreover, the amount of blood pumped into circulation is modest, proportionally lower than it is in humans. That could help explain why giraffes rarely run for very long: enough oxygen cannot be delivered to their muscles fast enough for them to keep running. Or maybe the giraffes are worried about tripping over their own feet. This is because signals from the nerves travel at about the same speed in giraffes as in rats or other mammals. Given the greater distance they have to travel in the giraffe to reach the brain, it is possible the giraffe faces real challenges in reacting quickly to a rock beneath its hoof or a bite to its ankle.</p>
+                <p>New understanding of this wonderful animal sheds light on both its physiology and its behavior. Researchers hope to use this knowledge to increase their ability to work with preservation, as its habitat is reduced and the giraffe becomes scarcer.</p>
+            </div>
+
+            <!-- PASSAGE 2: Healthy Buildings -->
+            <div id="passage-text-2" class="reading-passage hidden">
+                <h4>Healthy Buildings, Productive People</h4>
+                <p><span class="para-label">A</span>&nbsp; Have you felt tired at your desk lately? According to new research, some often overlooked environmental factors within buildings &#8212; the degree or type of ventilation, airborne contaminants, lighting and noise levels, for example &#8212; can play a surprisingly large role in how good or bad you feel, and even how well you think. It is estimated that we spend more than 90 percent of our time inside, but builders in general have paid little attention to the health aspects of indoor spaces, instead focusing on superficial design features and on meeting minimum environmental standards to keep costs down.</p>
+                <p><span class="para-label">B</span>&nbsp; Researchers at Harvard University in the US looked at the effects of indoor air quality on workers' cognitive performance &#8212; important both for health and for companies' bottom lines, says Joseph Allen, assistant professor of environmental health and principal investigator of the studies. 'The true cost of running our buildings should take into account the health and productivity of people in those buildings,' Allen says. In fact, an analysis by the team showed that the cost of making alterations that could boost cognitive performance significantly was minuscule compared with the related increase in productivity &#8212; about $40 per person, per year, compared with a $6,500 increase in employee productivity.</p>
+                <p><span class="para-label">C</span>&nbsp; The team's first study, published in Environmental Health Perspectives, was conducted at the Syracuse Center of Excellence, a US research organization devoted to studying and developing sustainability. The center houses a laboratory that allows researchers to test a wide range of indoor air quality factors using sophisticated ventilation. Each day, the indoor environment was controlled with a ventilation system which included small amounts of carbon dioxide and volatile organic compounds, or VOCs &#8212; the toxic by-products of office supplies commonly found in the workplace. The office workers were blinded to the conditions. For six days over two weeks, 24 office workers with administrative, technical, professional or managerial jobs came to the lab and performed their regular work under minimal supervision, as well as participating in an hour and a half of cognitive testing at the end of the day. The cognitive tasks used in the study had participants respond to online scenarios that mimic real-life situations, such as running a city as a mayor. The findings are remarkable for showing in a well-controlled study, that indoor air quality can significantly lower cognitive performance in buildings that would otherwise meet current building standards, notes environmental psychologist Craig Zimring, director of Georgia Tech University's SimTigrate Design Lab in the US. 'If these findings are replicated in other labs and in real-world work environments,' he says, 'they could lead to designs that provide much more outside air through mechanical ventilation or operable windows, for example' &#8212; in turn, promoting better health and performance.</p>
+                <p><span class="para-label">D</span>&nbsp; In a second study, reported in Building and Environment, the Harvard&#8211;Syracuse team moved from the lab to the real world. Using the same methodology, they compared test scores of 109 people working in 10 buildings &#8212; about 12 people per site &#8212; in two buildings in each of five cities. When the team examined the buildings for differences, they found that certified buildings had lower humidity levels and brighter light than the non-certified buildings. That said, the differences in humidity and lighting didn't entirely explain the differing cognitive function scores of people on the job. This has led researchers to believe that other factors, such as how someone feels about their working environment, may also play a part, notes Harvard research fellow Piers MacNaughton, who led the study.</p>
+                <p><span class="para-label">E</span>&nbsp; A recently constructed building on the Washington University campus in St. Louis, US, is providing another opportunity to examine how green building design can affect health and behavior. Hillman Hall was designed with the highest environmental and energy standards available, as well as design elements intended to foster more collaboration and physical activity, says Amy Eyler, associate professor and assistant dean for public health at the Brown School at Washington University. The design includes easy access to stairways, plenty of natural light, generous spaces for collaboration, desks that allow people to sit or stand up, and inviting places to walk. Unlike traditional hallways designed as long corridors with private offices to either side, for example, these hallways include classrooms, offices and spaces to sit, so they are multi-use &#8212; 'you have many reasons to walk them,' says Eyler. To test how the building might affect people's behavior, Eyler conducted a pre-test before people moved in, and a post-test one year later. Her team collected data on the three main features the designers were attempting to foster: physical activity, collaboration and sustainable practices. Results showed that people were more likely to take part in spontaneous collaborations in the new space than in the older ones, and to be physically active.</p>
+                <p><span class="para-label">F</span>&nbsp; Like other researchers in this growing field, Eyler sees multidisciplinary collaboration as the key to success. Administrators, public health faculty and architects worked together to create a building that captured the university's vision for a space that fosters collegial work and health for faculty, staff and students &#8212; a shared goal evidenced by the fact that the architecture firm that designed the building also funded part of the research. 'Complex projects like this one need teams of people with varied backgrounds and expertise in order to solve them,' Eyler says.</p>
+            </div>
+
+            <!-- PASSAGE 3: Child's Play -->
+            <div id="passage-text-3" class="reading-passage hidden">
+                <h4>Child's Play in Medieval England</h4>
+                <p class="passage-subtitle">Professor Nicholas Orme investigates childhood in the Middle Ages</p>
+                <p><span class="para-label">A</span>&nbsp; 'Play up! Play up! And play the game!' The ringing chorus of Sir Henry Newbolt's celebrated cricket poem Vitai Lampada (1908) sums up views about play in 19th- and early 20th-century Britain. Children's play was important, and adults should regulate and direct it. Games promoted endurance, self-discipline and team spirit &#8212; qualities needed for the health of society and government. Newbolt was one in a long line of people who thought in this way. The notion that children's play should be used for educational and social purposes goes back at least to the ancient Greeks and the toys and games of medieval England tell us much about how adults then saw childhood. But they also reveal a good deal about children themselves, and cast light on what has recently become a controversial issue.</p>
+                <p><span class="para-label">B</span>&nbsp; Forty years ago, the French historian Philippe Ari&#232;s argued, in Centuries of Childhood, that childhood in the Middle Ages did not exist in its modern sense. Children were regarded by adults with relatively little affection and followed a way of life not very different from that of their elders. More recent historians have disputed this, pointing to plentiful signs of parental affection and arguing that childhood, by its very nature, must always have been much the same.</p>
+                <p><span class="para-label">C</span>&nbsp; In this debate play is crucial. Did adults encourage it? If so, did they see it as recreational (by providing toys, for example) or as educational (making children play in particular ways)? Did children play as their elders told them, or did they invent their own games, away from adults and even against their wishes? These questions can be answered from a rich body of evidence including actual toys of the period, pictures of children's activities in contemporary manuscripts and literary sources such as religious works and dictionaries. We know not only how medieval English children played but what their elders thought on the subject.</p>
+                <p><span class="para-label">D</span>&nbsp; We know, for example, that adults gave children toys from infancy onwards. In 1398 the writer John Trevisa describes babies playing with 'a child's brooch', an object similar in function to the bright plastic toys given to babies today to bite and handle. William Horman, 16th-century author of a Latin textbook, talks of buying a rattle to stop a baby crying. Indeed, by 1300 it appears there was a toy industry in England. Boys' toys often took military forms, such as the two metal soldiers of that date, found in London, and made from a mould. Girls had dolls, known before the 17th century as 'poppets' or puppets, commercially manufactured, imported and, in 1582, taxed at a halfpenny each. Not that children were by any means dependent on things that were bought for them. Gerald of Wales recalls how he and his brothers built towns, palaces, churches and monasteries from sand at Manorbier Castle in about 1150 (perhaps on the nearby beach).</p>
+                <p><span class="para-label">E</span>&nbsp; Active games were universal. In his English-to-Latin dictionary of 1440, a mysterious recluse known as Geoffrey mentions children playing 'tennis' and swinging on what he calls a 'totter' or 'merrytotter'. Children chased each other, swam and played ball games. Boys in the later Middle Ages shot arrows with bows and archery is an example of a sport encouraged by adults, who wanted boys to grow up to play their part in what was, for most men, a warrior society.</p>
+                <p><span class="para-label">F</span>&nbsp; However, by no means all children's military activity was directed by adults. In 1400, six months after King Richard II had been overthrown by Henry IV, the children of London gathered together and chose themselves kings. Adam of Usk tells us they congregated 'in thousands &#8230; and made war upon each other &#8230; whereby many died'. The new king had to order their parents and masters to stop them.</p>
+                <p><span class="para-label">G</span>&nbsp; This willingness of children to take the initiative in play, not just to wait for adults to direct them, is evident in the way they observed the calendar. Medieval life was regulated by light, weather, crops and the Church's cycle of fasts and festivals. Children shared in the adult round of religious festivals, but had their own observances as well, semi-detached from their elders. In the 1200s, the priest Thomas Docking remarked that in spring a child 'follows the ploughman; in autumn he accompanies the grape-gatherers'. In 1518, the poet Alexander Barclay records children playing with tops in March, looking for fruit in summer and making footballs by filling pigs' bladders with dried peas in autumn.</p>
+                <p><span class="para-label">H</span>&nbsp; It is clear from this evidence that the relationship between adults and children in medieval society was, in major respects, a modern one. Parents took an indulgent interest in their children, providing them with toys and giving them time to play. Children played in a wide variety of ways &#8212; imaginatively, skilfully, athletically and violently &#8212; developing their minds, bodies and social skills. Adults tried at times to direct play &#8212; partly to keep children in order, partly to give them skills for adult life &#8212; but children gravitated to one another and formed a culture of their own. We can answer Ari&#232;s's thesis, then, with a resounding 'No!'. Childhood has always been much the same.</p>
+            </div>
+        </div>
+
+        <div class="resizer" id="resizer"></div>
+
+        <!-- QUESTIONS PANEL -->
+        <div class="questions-panel" id="questions-panel">
+
+            <!-- Q1-13: Giraffes -->
+            <div id="questions-1" class="question-set">
+                <div class="question" data-q-start="1" data-q-end="7">
+                    <div class="question-prompt">
+                        <p><strong>Questions 1&#8211;7</strong></p>
+                        <p>Choose <strong>TRUE</strong> if the statement agrees with the information given in the text, <strong>FALSE</strong> if the statement contradicts it, or <strong>NOT GIVEN</strong> if there is no information on this.</p>
+                    </div>
+                    <div class="tf-question" data-q-start="1" data-q-end="1">
+                        <div class="tf-question-line"><span class="tf-question-number">1</span><span class="tf-question-text">The amount of research on giraffes in their natural environment has increased lately.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q1" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q1" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q1" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="2" data-q-end="2">
+                        <div class="tf-question-line"><span class="tf-question-number">2</span><span class="tf-question-text">Megan Strauss disapproves of keeping giraffes in zoos.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q2" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q2" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q2" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="3" data-q-end="3">
+                        <div class="tf-question-line"><span class="tf-question-number">3</span><span class="tf-question-text">The number of giraffes in Africa has nearly doubled.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q3" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q3" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q3" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="4" data-q-end="4">
+                        <div class="tf-question-line"><span class="tf-question-number">4</span><span class="tf-question-text">Female giraffes tend to live longer than males.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q4" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q4" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q4" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="5" data-q-end="5">
+                        <div class="tf-question-line"><span class="tf-question-number">5</span><span class="tf-question-text">Mother giraffes sometimes use their legs to defend their young.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q5" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q5" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q5" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="6" data-q-end="6">
+                        <div class="tf-question-line"><span class="tf-question-number">6</span><span class="tf-question-text">Younger bulls hold their necks higher in the presence of more powerful males.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q6" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q6" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q6" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="7" data-q-end="7">
+                        <div class="tf-question-line"><span class="tf-question-number">7</span><span class="tf-question-text">Male giraffes have been observed fighting.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q7" value="TRUE"> TRUE</label>
+                            <label class="tf-option"><input type="radio" name="q7" value="FALSE"> FALSE</label>
+                            <label class="tf-option"><input type="radio" name="q7" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="question" data-q-start="8" data-q-end="13">
+                    <div class="question-prompt">
+                        <p><strong>Questions 8&#8211;13</strong></p>
+                        <p>Complete the table. Write <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    </div>
+                    <table class="q-table">
+                        <thead><tr><th>Physical feature</th><th>Study finding</th></tr></thead>
+                        <tbody>
+                            <tr><td>Skin / Coat</td><td>Provides <input type="text" class="answer-input" id="q8" placeholder="8"> when standing near trees</td></tr>
+                            <tr><td>Eyes</td><td>Let them look out for lions</td></tr>
+                            <tr><td>Mouth</td><td>Can be used like <input type="text" class="answer-input" id="q9" placeholder="9"> to get leaves</td></tr>
+                            <tr><td>Neck</td><td>About equal in length to the legs; length develops in childhood to provide an easier <input type="text" class="answer-input" id="q10" placeholder="10"> for mothers</td></tr>
+                            <tr><td>Cardiovascular system</td><td>Extra-strong <input type="text" class="answer-input" id="q11" placeholder="11"> keep blood from spilling; <input type="text" class="answer-input" id="q12" placeholder="12"> is normal size for a large animal</td></tr>
+                            <tr><td>Nerves</td><td>Slower reaction time because <input type="text" class="answer-input" id="q13" placeholder="13"> need to go farther to the brain</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Q14-26: Healthy Buildings -->
+            <div id="questions-2" class="question-set hidden">
+                <div class="question" data-q-start="14" data-q-end="19">
+                    <div class="question-prompt">
+                        <p><strong>Questions 14&#8211;19</strong></p>
+                        <p>Reading Passage 2 has six paragraphs (<strong>A&#8211;F</strong>). Choose the correct heading for each paragraph from the list below.</p>
+                    </div>
+                    <div class="example-box">
+                        <strong>List of Headings</strong>
+                        <div style="margin-top:8px;font-size:0.9em;line-height:1.9;">
+                            <div><strong>i</strong> &nbsp;The effects of a new environmentally friendly building on the people who work there</div>
+                            <div><strong>ii</strong> &nbsp;The ability of well-designed workplaces to attract the best staff</div>
+                            <div><strong>iii</strong> &nbsp;The assessment of workplaces in several locations</div>
+                            <div><strong>iv</strong> &nbsp;The low priority given to making buildings healthy for users</div>
+                            <div><strong>v</strong> &nbsp;Achieving design efficiency by involving a range of specialists</div>
+                            <div><strong>vi</strong> &nbsp;Workers were assessed outside of their usual workplace</div>
+                            <div><strong>vii</strong> &nbsp;Workplace changes based on worker feedback</div>
+                            <div><strong>viii</strong> &nbsp;The financial benefits of efficient workplaces</div>
+                        </div>
+                    </div>
+                    <div class="matching-form-container">
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>14</strong> &nbsp;Paragraph A</label><select class="answer-input" id="q14"><option value=""></option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>15</strong> &nbsp;Paragraph B</label><select class="answer-input" id="q15"><option value=""></option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>16</strong> &nbsp;Paragraph C</label><select class="answer-input" id="q16"><option value=""></option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>17</strong> &nbsp;Paragraph D</label><select class="answer-input" id="q17"><option value=""></option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>18</strong> &nbsp;Paragraph E</label><select class="answer-input" id="q18"><option value=""></option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>19</strong> &nbsp;Paragraph F</label><select class="answer-input" id="q19"><option value=""></option><option>i</option><option>ii</option><option>iii</option><option>iv</option><option>v</option><option>vi</option><option>vii</option><option>viii</option></select></div>
+                    </div>
+                </div>
+                <div class="question" data-q-start="20" data-q-end="23">
+                    <div class="question-prompt">
+                        <p><strong>Questions 20&#8211;23</strong></p>
+                        <p>Match each statement with the correct researcher (<strong>A</strong>, <strong>B</strong>, <strong>C</strong> or <strong>D</strong>). You may use any letter more than once.</p>
+                    </div>
+                    <div class="example-box">
+                        <strong>List of Researchers</strong>
+                        <div style="margin-top:8px;font-size:0.9em;line-height:1.8;">
+                            <div><strong>A</strong> &nbsp;Joseph Allen</div>
+                            <div><strong>B</strong> &nbsp;Craig Zimring</div>
+                            <div><strong>C</strong> &nbsp;Piers MacNaughton</div>
+                            <div><strong>D</strong> &nbsp;Amy Eyler</div>
+                        </div>
+                    </div>
+                    <div class="matching-form-container">
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>20</strong> &nbsp;Further investigations will result in improved wellbeing and efficiency.</label><select class="answer-input" id="q20"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>21</strong> &nbsp;A person's opinion of their workspace may influence how well they perform at work.</label><select class="answer-input" id="q21"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>22</strong> &nbsp;The design of a workplace can have an impact on how much staff work with their colleagues.</label><select class="answer-input" id="q22"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>23</strong> &nbsp;A worker's mental capacity may be considerably reduced due to their working environment.</label><select class="answer-input" id="q23"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                    </div>
+                </div>
+                <div class="question" data-q-start="24" data-q-end="26">
+                    <div class="question-prompt">
+                        <p><strong>Questions 24&#8211;26</strong></p>
+                        <p>Complete the summary. Write <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                    </div>
+                    <div class="summary-box">
+                        <p style="font-size:0.95em;line-height:2.6;">Allen's first study was done at the Syracuse Center, which focuses on researching <strong>24</strong> <input type="text" class="answer-input" id="q24" placeholder="24">. In this study, a complex ventilation system was used to control the airflow in the simulated workplace. All staff carried out normal duties during the day without much <strong>25</strong> <input type="text" class="answer-input" id="q25" placeholder="25">. Later in the day participants were assessed as they performed tasks which required them to play a role, for example acting as <strong>26</strong> <input type="text" class="answer-input" id="q26" placeholder="26"> while dealing with practical problems.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q27-40: Child's Play -->
+            <div id="questions-3" class="question-set hidden">
+                <div class="question" data-q-start="27" data-q-end="31">
+                    <div class="question-prompt">
+                        <p><strong>Questions 27&#8211;31</strong></p>
+                        <p>Reading Passage 3 has eight paragraphs, <strong>A&#8211;H</strong>. Which paragraph contains the following information?</p>
+                    </div>
+                    <div class="matching-form-container">
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>27</strong> &nbsp;economic evidence for play in medieval England</label><select class="answer-input" id="q27"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>28</strong> &nbsp;an example of how children created their own toys</label><select class="answer-input" id="q28"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>29</strong> &nbsp;an example of warlike play approved by grown-ups</label><select class="answer-input" id="q29"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>30</strong> &nbsp;a political event mirrored in children's play</label><select class="answer-input" id="q30"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>31</strong> &nbsp;the origin of an academic debate about medieval life</label><select class="answer-input" id="q31"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+                    </div>
+                </div>
+                <div class="question" data-q-start="32" data-q-end="35">
+                    <div class="question-prompt">
+                        <p><strong>Questions 32&#8211;35</strong></p>
+                        <p>Match each date with the correct event (<strong>A&#8211;J</strong>).</p>
+                    </div>
+                    <div class="example-box">
+                        <strong>List of Events</strong>
+                        <div style="margin-top:8px;font-size:0.9em;line-height:1.9;">
+                            <div><strong>A</strong> &nbsp;invention of cricket &nbsp;&nbsp;<strong>B</strong> &nbsp;children picking grapes &nbsp;&nbsp;<strong>C</strong> &nbsp;poem about value of games</div>
+                            <div><strong>D</strong> &nbsp;early toy manufacturing in England &nbsp;&nbsp;<strong>E</strong> &nbsp;puppets first imported into England</div>
+                            <div><strong>F</strong> &nbsp;dolls taxed in England &nbsp;&nbsp;<strong>G</strong> &nbsp;death of Adam of Usk &nbsp;&nbsp;<strong>H</strong> &nbsp;children playing tennis</div>
+                            <div><strong>I</strong> &nbsp;children's gang warfare &nbsp;&nbsp;<strong>J</strong> &nbsp;a description of seasonal activities</div>
+                        </div>
+                    </div>
+                    <div class="matching-form-container">
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>32</strong> &nbsp;1400</label><select class="answer-input" id="q32"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>33</strong> &nbsp;1518</label><select class="answer-input" id="q33"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>34</strong> &nbsp;1582</label><select class="answer-input" id="q34"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                        <div class="matching-form-row"><label class="matching-form-label"><strong>35</strong> &nbsp;1908</label><select class="answer-input" id="q35"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option><option>J</option></select></div>
+                    </div>
+                </div>
+                <div class="question" data-q-start="36" data-q-end="40">
+                    <div class="question-prompt">
+                        <p><strong>Questions 36&#8211;40</strong></p>
+                        <p>Choose <strong>YES</strong> if the statement agrees with the claims of the writer, <strong>NO</strong> if the statement contradicts the claims of the writer, or <strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this.</p>
+                    </div>
+                    <div class="tf-question" data-q-start="36" data-q-end="36">
+                        <div class="tf-question-line"><span class="tf-question-number">36</span><span class="tf-question-text">Little is known about adult attitudes to children's play in the Middle Ages.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q36" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q36" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q36" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="37" data-q-end="37">
+                        <div class="tf-question-line"><span class="tf-question-number">37</span><span class="tf-question-text">Most toys were imported into England before 1300.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q37" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q37" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q37" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="38" data-q-end="38">
+                        <div class="tf-question-line"><span class="tf-question-number">38</span><span class="tf-question-text">Medieval children celebrated the seasons in their own ways.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q38" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q38" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q38" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="39" data-q-end="39">
+                        <div class="tf-question-line"><span class="tf-question name">39</span><span class="tf-question-text">Medieval children made presents for their parents on special occasions.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q39" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q39" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q39" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                    <div class="tf-question" data-q-start="40" data-q-end="40">
+                        <div class="tf-question-line"><span class="tf-question-number">40</span><span class="tf-question-text">Parents and children in the Middle Ages behaved much as they do today.</span></div>
+                        <div class="tf-options">
+                            <label class="tf-option"><input type="radio" name="q40" value="YES"> YES</label>
+                            <label class="tf-option"><input type="radio" name="q40" value="NO"> NO</label>
+                            <label class="tf-option"><input type="radio" name="q40" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav-arrows">
+    <button class="nav-arrow" onclick="previousQuestion()">&#8249;</button>
+    <button class="nav-arrow" onclick="nextQuestion()">&#8250;</button>
+</div>
+
+<nav class="nav-row">
+    <div class="footer__questionWrapper___1tZ46 selected">
+        <button class="footer__questionNo___3WNct" onclick="switchToPart(1)"><span class="section-prefix">Part </span><span class="sectionNr">1</span><span class="attemptedCount">0 of 13</span></button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(1)">1</button><button class="subQuestion" onclick="goToQuestion(2)">2</button><button class="subQuestion" onclick="goToQuestion(3)">3</button><button class="subQuestion" onclick="goToQuestion(4)">4</button><button class="subQuestion" onclick="goToQuestion(5)">5</button><button class="subQuestion" onclick="goToQuestion(6)">6</button><button class="subQuestion" onclick="goToQuestion(7)">7</button><button class="subQuestion" onclick="goToQuestion(8)">8</button><button class="subQuestion" onclick="goToQuestion(9)">9</button><button class="subQuestion" onclick="goToQuestion(10)">10</button><button class="subQuestion" onclick="goToQuestion(11)">11</button><button class="subQuestion" onclick="goToQuestion(12)">12</button><button class="subQuestion" onclick="goToQuestion(13)">13</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46">
+        <button class="footer__questionNo___3WNct" onclick="switchToPart(2)"><span class="section-prefix">Part </span><span class="sectionNr">2</span><span class="attemptedCount">0 of 13</span></button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(14)">14</button><button class="subQuestion" onclick="goToQuestion(15)">15</button><button class="subQuestion" onclick="goToQuestion(16)">16</button><button class="subQuestion" onclick="goToQuestion(17)">17</button><button class="subQuestion" onclick="goToQuestion(18)">18</button><button class="subQuestion" onclick="goToQuestion(19)">19</button><button class="subQuestion" onclick="goToQuestion(20)">20</button><button class="subQuestion" onclick="goToQuestion(21)">21</button><button class="subQuestion" onclick="goToQuestion(22)">22</button><button class="subQuestion" onclick="goToQuestion(23)">23</button><button class="subQuestion" onclick="goToQuestion(24)">24</button><button class="subQuestion" onclick="goToQuestion(25)">25</button><button class="subQuestion" onclick="goToQuestion(26)">26</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46">
+        <button class="footer__questionNo___3WNct" onclick="switchToPart(3)"><span class="section-prefix">Part </span><span class="sectionNr">3</span><span class="attemptedCount">0 of 14</span></button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(27)">27</button><button class="subQuestion" onclick="goToQuestion(28)">28</button><button class="subQuestion" onclick="goToQuestion(29)">29</button><button class="subQuestion" onclick="goToQuestion(30)">30</button><button class="subQuestion" onclick="goToQuestion(31)">31</button><button class="subQuestion" onclick="goToQuestion(32)">32</button><button class="subQuestion" onclick="goToQuestion(33)">33</button><button class="subQuestion" onclick="goToQuestion(34)">34</button><button class="subQuestion" onclick="goToQuestion(35)">35</button><button class="subQuestion" onclick="goToQuestion(36)">36</button><button class="subQuestion" onclick="goToQuestion(37)">37</button><button class="subQuestion" onclick="goToQuestion(38)">38</button><button class="subQuestion" onclick="goToQuestion(39)">39</button><button class="subQuestion" onclick="goToQuestion(40)">40</button>
+        </div>
+    </div>
+    <button id="deliver-button" class="footer__deliverButton___3FM07">&#10003; Check Answers</button>
+</nav>
+
+<div id="highlightToolbar" class="highlight-toolbar">
+    <span id="toolbar-selection-btns">
+        <button class="toolbar-btn btn-yellow" onclick="applyHighlight('hl-yellow')">&#127937; Yellow</button>
+        <button class="toolbar-btn btn-green" onclick="applyHighlight('hl-green')">&#129001; Green</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-note" onclick="openNoteInput()">&#128221; Note</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear" onclick="clearThisHighlight()">&#10005; Remove</button>
+        <button class="toolbar-btn btn-clear-all" onclick="clearAllHighlights()">&#8856; All</button>
+    </span>
+    <span id="toolbar-highlight-btns" style="display:none">
+        <button class="toolbar-btn btn-yellow" onclick="recolorHighlight('hl-yellow')">&#127937; Yellow</button>
+        <button class="toolbar-btn btn-green" onclick="recolorHighlight('hl-green')">&#129001; Green</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-note" onclick="openNoteInput()">&#128221; Note</button>
+        <div class="toolbar-sep"></div>
+        <button class="toolbar-btn btn-clear" onclick="clearThisHighlight()">&#10005; Remove</button>
+        <button class="toolbar-btn btn-clear-all" onclick="clearAllHighlights()">&#8856; All</button>
+    </span>
+</div>
+
+<div id="notesPanel" class="notes-panel">
+    <div class="notes-panel-header"><span>&#128221; My Notes</span><button class="notes-panel-close" onclick="toggleNotesPanel()">&#10005;</button></div>
+    <div class="notes-list" id="notesList"><p class="notes-empty">No notes yet.</p></div>
+</div>
+
+<div id="noteInputOverlay" class="note-input-overlay">
+    <div class="note-input-box">
+        <h3>Add a Note</h3>
+        <div class="selected-text-preview" id="noteTextPreview"></div>
+        <textarea id="noteTextarea" placeholder="Type your note here..."></textarea>
+        <div class="note-input-actions">
+            <button class="btn-cancel-note" onclick="cancelNote()">Cancel</button>
+            <button class="btn-save-note" onclick="saveNote()">Save Note</button>
+        </div>
+    </div>
+</div>
+
+<div id="results-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+        <h2>Results</h2>
+        <div class="results-summary">
+            <p>Score: <span id="results-score"></span> / 40</p>
+            <p>IELTS Band: <span id="results-band"></span></p>
+        </div>
+        <div id="results-details" class="results-details-container"></div>
+        <div style="text-align:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+            <button onclick="retakeTest()" style="background:#4a90e2;color:#fff;border:none;border-radius:6px;padding:10px 26px;font-size:14px;font-weight:700;cursor:pointer;">&#128260; Retake Test</button>
+            <button onclick="closeResultsModal()" style="background:var(--footer-btn-bg);color:var(--text);border:1px solid var(--border-medium);border-radius:6px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;margin-left:10px;">Review Answers</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+const CA={
+'1':'TRUE','2':'NOT GIVEN','3':'FALSE','4':'NOT GIVEN','5':'TRUE','6':'FALSE','7':'TRUE',
+'8':['camouflage'],'9':['hands'],'10':['birth'],'11':['veins'],'12':['heart'],'13':['signals'],
+'14':'iv','15':'viii','16':'vi','17':'iii','18':'i','19':'v',
+'20':'B','21':'C','22':'D','23':'A',
+'24':['sustainability'],'25':['supervision'],'26':['mayor'],
+'27':'D','28':'D','29':'E','30':'F','31':'B',
+'32':'I','33':'J','34':'F','35':'C',
+'36':'NO','37':'NOT GIVEN','38':'YES','39':'NOT GIVEN','40':'YES'
+};
+let cp=1,cq=1,sr=null,st='',ht=null,lh=null,ts=3600,ti=null,aqe=null,zl=100,notes=[],nid=1;
+const td=document.querySelector('.timer-display'),ttb=document.getElementById('timer-toggle-btn'),trb=document.getElementById('timer-reset-btn'),db=document.getElementById('deliver-button'),rz=document.getElementById('resizer'),pp=document.getElementById('passage-panel'),qp=document.getElementById('questions-panel'),htb=document.getElementById('highlightToolbar'),nmb=document.getElementById('night-mode-btn'),ntb=document.getElementById('notes-toggle-btn'),np=document.getElementById('notesPanel'),nl=document.getElementById('notesList'),nc=document.getElementById('notes-count'),nio=document.getElementById('noteInputOverlay'),nta=document.getElementById('noteTextarea'),ntp=document.getElementById('noteTextPreview'),zib=document.getElementById('zoom-in-btn'),zob=document.getElementById('zoom-out-btn'),zlb=document.getElementById('zoom-label');
+const PI='<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>';
+const PUI='<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+function norm(s){return(s||'').trim().toLowerCase();}
+function isTC(u,c){if(!u||!u.trim())return false;const n=norm(u);return Array.isArray(c)?c.some(x=>n===norm(x)):n===norm(c);}
+function startTimer(){if(ti)clearInterval(ti);ti=setInterval(()=>{ts--;utd();if(ts<=0){clearInterval(ti);td.textContent="Time's up!";}},1000);ttb.innerHTML=PUI;}
+function pauseTimer(){clearInterval(ti);ttb.innerHTML=PI;}
+function toggleTimer(){ttb.innerHTML.includes('M6 19h4')?pauseTimer():startTimer();}
+function resetTimer(){ts=3600;utd();startTimer();}
+function utd(){const m=Math.floor(ts/60),s=ts%60;td.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function adjZoom(d){zl=Math.min(200,Math.max(60,zl+d));document.documentElement.style.setProperty('--font-size-base',(zl/100*16)+'px');zlb.textContent=zl+'%';}
+function toggleNight(){document.body.classList.toggle('night-mode');nmb.innerHTML=document.body.classList.contains('night-mode')?'&#9728;&#65039; Day':'&#127769; Night';}
+function switchToPart(n){cp=n;document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(e=>e.classList.add('hidden'));document.getElementById('passage-text-'+n).classList.remove('hidden');document.getElementById('questions-'+n).classList.remove('hidden');document.getElementById('part-header-'+n).classList.remove('hidden');document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w,i)=>w.classList.toggle('selected',i+1===n));goToQuestion({1:1,2:14,3:27}[n]);}
+function goToQuestion(qn){cq=qn;let pt=1;if(qn>=14&&qn<=26)pt=2;else if(qn>=27)pt=3;if(cp!==pt){cp=pt;document.querySelectorAll('.reading-passage,.question-set,.part-header').forEach(e=>e.classList.add('hidden'));document.getElementById('passage-text-'+pt).classList.remove('hidden');document.getElementById('questions-'+pt).classList.remove('hidden');document.getElementById('part-header-'+pt).classList.remove('hidden');document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w,i)=>w.classList.toggle('selected',i+1===pt));}
+if(aqe)aqe.classList.remove('active-question','active-input');let t=document.querySelector('[data-q-start="'+qn+'"]');if(t){aqe=t;t.classList.add('active-question');const pr=qp.getBoundingClientRect(),er=t.getBoundingClientRect();if(er.top<pr.top||er.bottom>pr.bottom)t.scrollIntoView({behavior:'smooth',block:'center'});}
+document.querySelectorAll('.subQuestion').forEach(b=>b.classList.remove('active'));const ab=document.querySelector('.subQuestion[onclick="goToQuestion('+qn+')"]');if(ab)ab.classList.add('active');document.querySelectorAll('.answer-input').forEach(e=>e.classList.remove('active-input'));const ai=document.getElementById('q'+qn);if(ai){ai.classList.add('active-input');try{ai.focus();}catch(e){}}}
+window.nextQuestion=()=>cq<40&&goToQuestion(cq+1);
+window.previousQuestion=()=>cq>1&&goToQuestion(cq-1);
+window.goToQuestion=goToQuestion;window.switchToPart=switchToPart;
+function isAns(n){const e=document.getElementById('q'+n);if(e&&e.tagName==='INPUT'&&e.value.trim())return true;if(e&&e.tagName==='SELECT'&&e.value)return true;if(document.querySelector('input[name="q'+n+'"]:checked'))return true;return false;}
+function uai(){document.querySelectorAll('.subQuestion').forEach(b=>{const n=parseInt(b.textContent,10);if(!b.classList.contains('correct')&&!b.classList.contains('incorrect'))b.classList.toggle('answered',isAns(n));});}
+function uc(pt,s,e){let c=0;for(let i=s;i<=e;i++)if(isAns(i))c++;const w=document.querySelectorAll('.footer__questionWrapper___1tZ46')[pt-1];if(w){const x=w.querySelector('.attemptedCount');if(x)x.textContent=c+' of '+(e-s+1);}}
+function uall(){uc(1,1,13);uc(2,14,26);uc(3,27,40);uai();}
+function checkAnswers(){
+document.querySelectorAll('.question-set.hidden,.reading-passage.hidden,.part-header.hidden').forEach(e=>e.classList.remove('hidden'));
+document.querySelectorAll('input,select').forEach(e=>e.disabled=true);db.disabled=true;clearInterval(ti);
+document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(e=>e.classList.remove('correct','incorrect','correct-answer-highlight'));
+document.querySelectorAll('.correct-answer-display').forEach(e=>e.remove());
+let sc=0;const rd=document.getElementById('results-details');rd.innerHTML='';
+function ar(n,ok,u,c){rd.innerHTML+='<div class="result-row '+(ok?'':'incorrect')+'"><span class="q-num">'+n+'</span><span class="user-ans">'+(u||'Not Answered')+'</span><span class="correct-ans">'+c+'</span></div>';const nb=document.querySelector('.subQuestion[onclick="goToQuestion('+n+')"]');if(nb){nb.classList.remove('answered','active');nb.classList.add(ok?'correct':'incorrect');}}
+function sc2(el,cd){const sp=document.createElement('span');sp.className='correct-answer-display';sp.innerHTML=' &#10145; <span class="correct-answer-highlight">'+cd+'</span>';el.parentNode.insertBefore(sp,el.nextSibling);}
+// Q1-7 radio TFG
+for(let i=1;i<=7;i++){const c=CA[String(i)],ch=document.querySelector('input[name="q'+i+'"]:checked'),cont=document.querySelector('.tf-question[data-q-start="'+i+'"]'),u=ch?ch.value:'',ok=u===c;if(ch)(ch.closest('.tf-option')||ch).classList.add(ok?'correct':'incorrect');if(cont){cont.classList.add(ok?'correct':'incorrect');if(!ok){const co=cont.querySelector('input[value="'+c+'"]');if(co)(co.closest('.tf-option')||co).classList.add('correct-answer-highlight');}}if(ok)sc++;ar(i,ok,u,c);}
+// Q8-13 text
+for(let i=8;i<=13;i++){const el=document.getElementById('q'+i),c=CA[String(i)],cd=Array.isArray(c)?c[0]:c,u=el?el.value:'',ok=isTC(u,c);if(el)el.classList.add(ok?'correct':'incorrect');if(ok)sc++;else if(el)sc2(el,cd);ar(i,ok,u,cd);}
+// Q14-26 selects
+for(let i=14;i<=26;i++){const el=document.getElementById('q'+i);if(!el)continue;const c=CA[String(i)],cd=Array.isArray(c)?c[0]:c,u=el.value,ok=i>=24?isTC(u,c):norm(u)===norm(c),row=el.closest('.matching-form-row')||el.parentElement;if(row)row.classList.add(ok?'correct':'incorrect');if(!ok)sc2(el,cd);if(ok)sc++;ar(i,ok,u,cd);}
+// Q27-35 selects
+for(let i=27;i<=35;i++){const el=document.getElementById('q'+i),c=CA[String(i)],u=el?el.value:'',ok=norm(u)===norm(c),row=el?(el.closest('.matching-form-row')||el.parentElement):null;if(row)row.classList.add(ok?'correct':'incorrect');if(!ok&&el)sc2(el,c);if(ok)sc++;ar(i,ok,u,c);}
+// Q36-40 radio YNG
+for(let i=36;i<=40;i++){const c=CA[String(i)],ch=document.querySelector('input[name="q'+i+'"]:checked'),cont=document.querySelector('.tf-question[data-q-start="'+i+'"]'),u=ch?ch.value:'',ok=u===c;if(ch)(ch.closest('.tf-option')||ch).classList.add(ok?'correct':'incorrect');if(cont){cont.classList.add(ok?'correct':'incorrect');if(!ok){const co=cont.querySelector('input[value="'+c+'"]');if(co)(co.closest('.tf-option')||co).classList.add('correct-answer-highlight');}}if(ok)sc++;ar(i,ok,u,c);}
+document.getElementById('results-score').textContent=sc;document.getElementById('results-band').textContent=calcBand(sc);document.getElementById('results-modal').classList.remove('hidden');}
+function calcBand(s){const m={40:9,39:9,38:8.5,37:8.5,36:8,35:8,34:7.5,33:7.5,32:7,31:7,30:7,29:6.5,28:6.5,27:6.5,26:6,25:6,24:6,23:5.5,22:5.5,21:5.5,20:5.5,19:5,18:5,17:5,16:5,15:5,14:4.5,13:4.5,12:4,11:4,10:4,9:3.5,8:3.5,7:3,6:3,5:2.5,4:2.5,3:2,2:2,1:1,0:0};return m[s]!==undefined?m[s]:'0';}
+function initResize(e){e.preventDefault();const sx=e.clientX,sw=pp.offsetWidth,drag=ev=>{const nw=sw+ev.clientX-sx;if(nw>200&&(document.body.clientWidth-nw-rz.offsetWidth)>200)pp.style.flex='0 0 '+nw+'px';},stop=()=>{window.removeEventListener('mousemove',drag);window.removeEventListener('mouseup',stop);};window.addEventListener('mousemove',drag);window.addEventListener('mouseup',stop);}
+function initHL(){const panels=[pp,qp],sb=document.getElementById('toolbar-selection-btns'),hb=document.getElementById('toolbar-highlight-btns');
+document.addEventListener('selectionchange',()=>{const sel=window.getSelection();if(sel&&!sel.isCollapsed&&sel.toString().trim()){const r=sel.getRangeAt(0);if(panels.some(p=>p.contains(r.commonAncestorContainer))){sr=r.cloneRange();st=sel.toString();}}});
+document.addEventListener('mouseup',e=>{if(htb.contains(e.target)||nio.contains(e.target))return;const sel=window.getSelection(),oh=e.target.closest('.highlight,.comment-highlight');if(oh&&(!sel||sel.isCollapsed)){ht=oh;lh=null;sr=null;sb.style.display='none';hb.style.display='inline-flex';posT(e);return;}if(sel&&!sel.isCollapsed&&sel.toString().trim()){const r=sel.getRangeAt(0);if(panels.some(p=>p.contains(r.commonAncestorContainer))){ht=null;lh=null;sb.style.display='inline-flex';hb.style.display='none';posT(e);return;}}hideT();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideT();});pp.addEventListener('scroll',hideT);qp.addEventListener('scroll',hideT);}
+function posT(e){htb.classList.add('visible');requestAnimationFrame(()=>{const tw=htb.offsetWidth||260,th=htb.offsetHeight||40;let l=e.pageX-tw/2,t=e.pageY-th-12;if(l<6)l=6;if(l+tw>window.innerWidth-6)l=window.innerWidth-tw-6;if(t<62)t=e.pageY+12;htb.style.left=l+'px';htb.style.top=t+'px';});}
+function hideT(){htb.classList.remove('visible');}
+window.applyHighlight=function(c){if(!sr||sr.collapsed){hideT();return;}try{const s=document.createElement('span');s.className='highlight '+c;s.appendChild(sr.extractContents());sr.insertNode(s);lh=s;}catch(e){}hideT();window.getSelection().removeAllRanges();sr=null;};
+window.recolorHighlight=function(c){if(!ht){hideT();return;}ht.className='highlight '+c;ht=null;hideT();};
+window.clearThisHighlight=function(){const t=ht||lh;if(!t||!t.parentNode){hideT();return;}if(t.classList.contains('comment-highlight')){const i=notes.findIndex(n=>n.spanEl===t);if(i!==-1)notes.splice(i,1);rNL();}unwrap(t);ht=null;lh=null;hideT();};
+window.clearAllHighlights=function(){document.querySelectorAll('.highlight,.comment-highlight').forEach(unwrap);notes=[];rNL();ht=null;lh=null;hideT();};
+function unwrap(el){const p=el.parentNode;if(!p)return;while(el.firstChild)p.insertBefore(el.firstChild,el);p.removeChild(el);p.normalize();}
+function toggleNotesPanel(){np.classList.toggle('visible');}
+window.openNoteInput=function(){if(!sr||sr.collapsed){hideT();return;}ntp.textContent=st.length>110?st.slice(0,110)+'…':st;nta.value='';nio.classList.add('visible');setTimeout(()=>nta.focus(),50);};
+window.cancelNote=function(){nio.classList.remove('visible');hideT();window.getSelection().removeAllRanges();sr=null;};
+window.saveNote=function(){const nt=nta.value.trim();if(!nt){nta.focus();return;}if(!sr||sr.collapsed){window.cancelNote();return;}const s=document.createElement('span');s.className='comment-highlight';const tt=document.createElement('span');tt.className='comment-tooltip';tt.textContent=nt;try{s.appendChild(sr.extractContents());}catch(e){}s.appendChild(tt);sr.insertNode(s);notes.push({id:nid++,text:st.slice(0,80),noteText:nt,spanEl:s});rNL();nio.classList.remove('visible');hideT();window.getSelection().removeAllRanges();sr=null;};
+function rNL(){const c=notes.length;nc.textContent=c;nc.style.display=c>0?'inline':'none';if(c===0){nl.innerHTML='<p class="notes-empty">No notes yet.</p>';return;}nl.innerHTML=notes.map(n=>'<div class="note-item"><div style="display:flex;justify-content:space-between"><div class="note-item-text">"'+esc(n.text)+'"</div><button class="note-item-delete" onclick="deleteNote('+n.id+')">&#10005;</button></div><div class="note-item-content">'+esc(n.noteText)+'</div></div>').join('');}
+window.deleteNote=function(id){const i=notes.findIndex(n=>n.id===id);if(i===-1)return;const n=notes[i];if(n.spanEl&&n.spanEl.parentNode)unwrap(n.spanEl);notes.splice(i,1);rNL();};
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+window.closeResultsModal=function(){document.getElementById('results-modal').classList.add('hidden');};
+window.retakeTest=function(){document.querySelectorAll('input,select').forEach(e=>{e.disabled=false;});db.disabled=false;document.querySelectorAll('.correct,.incorrect,.correct-answer-highlight').forEach(e=>e.classList.remove('correct','incorrect','correct-answer-highlight'));document.querySelectorAll('.correct-answer-display').forEach(e=>e.remove());document.querySelectorAll('input[type="text"]').forEach(e=>e.value='');document.querySelectorAll('select').forEach(e=>e.value='');document.querySelectorAll('input[type="radio"]').forEach(e=>e.checked=false);document.querySelectorAll('.subQuestion').forEach(b=>b.classList.remove('correct','incorrect','answered','active'));resetTimer();document.getElementById('results-modal').classList.add('hidden');switchToPart(1);uall();};
+// Initialize
+startTimer();switchToPart(1);document.body.addEventListener('input',uall);document.body.addEventListener('change',uall);db.addEventListener('click',checkAnswers);ttb.addEventListener('click',toggleTimer);trb.addEventListener('click',resetTimer);nmb.addEventListener('click',toggleNight);ntb.addEventListener('click',toggleNotesPanel);zib.addEventListener('click',()=>adjZoom(10));zob.addEventListener('click',()=>adjZoom(-10));rz.addEventListener('mousedown',initResize);initHL();
+});
+</script>
+</body>
+</html>

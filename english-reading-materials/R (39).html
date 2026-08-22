@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Full Reading Practice</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #f1f2ec;
+            --text: #1a1a1a;
+            --text-muted: #555;
+            --text-light: #888;
+            --border: #e0e0e0;
+            --border-medium: #ccc;
+            --header-bg: #ffffff;
+            --panel-bg: #ffffff;
+            --nav-bg: #ffffff;
+            --input-bg: #ffffff;
+            --example-bg: #f9f9f9;
+            --context-menu-bg: #ffffff;
+            --modal-bg: #ffffff;
+            --timer-color: #333;
+            --resizer-bg: #f0f0f0;
+            --active-blue: #4a90e2;
+            --correct-bg: #e9f7ef;
+            --incorrect-bg: #f8d7da;
+            --correct-border: #28a745;
+            --incorrect-border: #dc3545;
+            --highlight-color: #ffeb3b;
+            --note-color: #a5d6a7;
+            --subq-bg: #ffffff;
+            --subq-border: #ccc;
+            --subq-text: #333;
+            --footer-btn-bg: #f0f0f0;
+            --footer-btn-border: #ccc;
+            --passage-title: #2c3e50;
+            --result-row-bg: transparent;
+            --toolbar-bg: #1a1a2e;
+            --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        body.night-mode {
+            --bg: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #252525;
+            --text: #e0e0e0;
+            --text-muted: #aaa;
+            --text-light: #777;
+            --border: #333;
+            --border-medium: #444;
+            --header-bg: #1a1a1a;
+            --panel-bg: #1a1a1a;
+            --nav-bg: #1a1a1a;
+            --input-bg: #252525;
+            --example-bg: #252525;
+            --context-menu-bg: #2a2a2a;
+            --modal-bg: #1e1e1e;
+            --timer-color: #e0e0e0;
+            --resizer-bg: #2a2a2a;
+            --active-blue: #64b5f6;
+            --correct-bg: #1a3a2a;
+            --incorrect-bg: #3a1a1a;
+            --correct-border: #4caf50;
+            --incorrect-border: #f44336;
+            --highlight-color: #f9a825;
+            --note-color: #388e3c;
+            --subq-bg: #252525;
+            --subq-border: #444;
+            --subq-text: #ccc;
+            --footer-btn-bg: #2a2a2a;
+            --footer-btn-border: #444;
+            --passage-title: #90caf9;
+            --result-row-bg: #1e1e1e;
+            --toolbar-bg: #0d0d1a;
+            --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            background-color: var(--header-bg);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            height: 60px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 16px; }
+
+        .timer-container {
+            display: flex;
+            position: relative;
+            cursor: default;
+            color: var(--timer-color);
+            font-size: 16px;
+            font-weight: 500;
+            align-items: center;
+        }
+
+        .timer-controls { display: flex; align-items: center; gap: 8px; margin-left: 15px; }
+        .timer-controls button {
+            background: var(--footer-btn-bg);
+            border: 1px solid var(--border-medium);
+            border-radius: 50%;
+            padding: 0; cursor: pointer;
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background-color 0.2s;
+        }
+        .timer-controls button:hover { background: var(--border); }
+        .timer-controls button svg { width: 20px; height: 20px; fill: var(--timer-color); }
+
+        #night-mode-btn {
+            background: var(--footer-btn-bg);
+            border: 1px solid var(--border-medium);
+            border-radius: 20px;
+            padding: 5px 12px; cursor: pointer;
+            font-size: 13px; font-weight: 600;
+            color: var(--text);
+            display: flex; align-items: center; gap: 6px;
+            transition: all 0.2s; white-space: nowrap;
+        }
+        #night-mode-btn:hover { background: var(--border); }
+        #night-mode-btn .moon-icon { font-size: 15px; }
+
+        .telegram-link {
+            color: #0088cc; text-decoration: none;
+            font-weight: 600; font-size: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .telegram-link:hover { text-decoration: underline; }
+        .telegram-link::before {
+            content: '';
+            display: inline-block;
+            width: 20px; height: 20px;
+            background-color: currentColor;
+            -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-1.37.2-1.64l16.56-6.4c.75-.29 1.4.22 1.2.94l-2.67 12.61c-.22.95-1.13 1.18-1.78.73l-4.5-3.32l-2.23 2.15c-.47.44-1.29.21-1.48-.37z"/></svg>');
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-1.37.2-1.64l16.56-6.4c.75-.29 1.4.22 1.2.94l-2.67 12.61c-.22.95-1.13 1.18-1.78.73l-4.5-3.32l-2.23 2.15c-.47.44-1.29.21-1.48-.37z"/></svg>');
+            background-size: contain; background-repeat: no-repeat;
+        }
+
+        .main-container {
+            margin-top: 60px;
+            display: flex; flex-direction: column;
+            background: var(--bg);
+            height: calc(100vh - 60px);
+            transition: background-color 0.3s;
+        }
+
+        .panels-container { display: flex; flex: 1; overflow: hidden; }
+
+        .passage-panel {
+            flex: 1;
+            padding: 20px 20px 100px;
+            overflow-y: auto;
+            min-width: 200px;
+            background: var(--panel-bg);
+            transition: background-color 0.3s;
+        }
+
+        .reading-passage h4 {
+            font-size: 20px; font-weight: 700;
+            color: var(--passage-title);
+            line-height: 1.4; margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--active-blue);
+            padding-bottom: 8px;
+        }
+        .reading-passage p { margin-bottom: 1.2em; color: var(--text); line-height: 1.7; }
+        .reading-passage p strong { color: var(--text); }
+
+        /* Table styling for passage */
+        .passage-table {
+            width: 100%; border-collapse: collapse;
+            margin: 20px 0; font-size: 15px;
+        }
+        .passage-table th, .passage-table td {
+            border: 1px solid var(--border-medium);
+            padding: 10px 14px;
+            color: var(--text);
+            vertical-align: top;
+        }
+        .passage-table th {
+            background: var(--bg-tertiary);
+            font-weight: 700; text-align: center;
+        }
+        .passage-table tr:nth-child(even) { background: var(--bg-secondary); }
+
+        .questions-panel {
+            flex: 1;
+            padding: 20px 20px 100px;
+            overflow-y: auto;
+            min-width: 200px;
+            border-left: 1px solid var(--border);
+            background: var(--panel-bg);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .resizer {
+            width: 10px; cursor: col-resize;
+            background-color: var(--resizer-bg);
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="30" viewBox="0 0 10 30"><path d="M4 11h2v2H4zM4 15h2v2H4zM4 19h2v2H4z" fill="%23888"/></svg>');
+            background-repeat: no-repeat; background-position: center;
+            flex-shrink: 0; flex-grow: 0;
+            transition: background-color 0.3s;
+        }
+
+        .part-header {
+            background-color: var(--bg-tertiary);
+            padding: 15px 20px;
+            border: 1px solid var(--border);
+            text-align: left;
+            margin: 10px 20px;
+            border-radius: 5px;
+            color: var(--text);
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .part-header p { margin: 0; }
+        .part-header p:first-child { margin-bottom: 5px; }
+
+        .question { margin-bottom: 40px; color: var(--text); }
+        .question p { margin-bottom: 10px; color: var(--text); }
+        .question ul { margin-top: 0; }
+        .question-prompt { margin-bottom: 20px; }
+        .question ul { list-style: none; padding-left: 0; }
+        .question ul li { margin-bottom: 5px; color: var(--text); }
+
+        .answer-input {
+            border: 1px solid var(--border-medium);
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--text);
+            padding: 2px 5px;
+            font-size: 16px;
+            text-align: center;
+            margin-right: 4px; margin-left: 4px;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+            height: 28px; width: 150px;
+        }
+        .answer-input.active-input {
+            border-color: var(--active-blue);
+            box-shadow: 0 0 3px 1px rgba(74,144,226,0.5);
+        }
+        .answer-input::placeholder { color: #999; font-weight: bold; text-align: center; }
+        .answer-input.correct { border-color: var(--correct-border); background-color: var(--correct-bg); }
+        .answer-input.incorrect { border-color: var(--incorrect-border); background-color: var(--incorrect-bg); color: var(--incorrect-border); }
+        .answer-input { z-index: 10; position: relative; pointer-events: auto; }
+
+        /* Narrow input for table completion */
+        .answer-input.narrow { width: 120px; }
+
+        .q-number { color: var(--text-light); font-size: 14px; font-weight: bold; }
+        .questions-container { width: 100%; }
+
+        .question li.correct { color: #155724; font-weight: bold; }
+        .question li.incorrect { color: #721c24; }
+        .question li.correct::before { content: '✔ '; color: #28a745; }
+        .question li.incorrect::before { content: '✖ '; color: #dc3545; }
+
+        .example-box {
+            border: 1px solid var(--border);
+            background-color: var(--example-bg);
+            padding: 15px; border-radius: 5px;
+            margin: 20px 0; color: var(--text);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        /* Table completion question */
+        .table-completion-container { margin-top: 15px; overflow-x: auto; }
+        .completion-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 15px; margin-bottom: 10px;
+        }
+        .completion-table th, .completion-table td {
+            border: 1px solid var(--border-medium);
+            padding: 10px 12px;
+            color: var(--text);
+            vertical-align: middle;
+        }
+        .completion-table th {
+            background: var(--bg-tertiary);
+            font-weight: 700; text-align: center;
+        }
+        .completion-table td:first-child {
+            font-weight: 600; white-space: nowrap;
+            background: var(--bg-secondary);
+            width: 110px;
+        }
+        .completion-table .answer-input { width: 130px; }
+
+        /* Navigation Arrows */
+        .nav-arrows {
+            position: fixed; bottom: 100px; right: 20px;
+            display: flex; gap: 5px; z-index: 101;
+        }
+        .nav-arrow {
+            width: 50px; height: 50px;
+            background: #333; color: white;
+            border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: bold;
+        }
+        body.night-mode .nav-arrow { background: #444; }
+        .nav-arrow:hover { background: #555; }
+        .nav-arrow:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Bottom Navigation */
+        .nav-row {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--nav-bg);
+            padding: 0;
+            display: flex; align-items: center;
+            height: 80px; z-index: 100;
+            border-top: 1px solid var(--border);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .footer__questionWrapper___1tZ46 {
+            display: flex; align-items: center; margin-right: 20px;
+        }
+
+        .footer__questionNo___3WNct {
+            background: none; border: none;
+            padding: 10px 15px;
+            font-size: 16px; font-weight: 600;
+            color: var(--text); cursor: pointer;
+            display: flex; align-items: center; gap: 5px;
+            transition: background-color 0.2s;
+        }
+        .footer__questionNo___3WNct:hover { background-color: var(--bg-secondary); }
+
+        .section-prefix { font-size: 16px; }
+        .sectionNr { font-size: 16px; font-weight: bold; }
+        .attemptedCount { font-size: 14px; color: var(--text-muted); margin-left: 5px; font-weight: 400; }
+
+        @media (max-width: 768px) { .attemptedCount { display: none; } }
+        .footer__questionWrapper___1tZ46.selected .attemptedCount { display: none; }
+
+        .footer__subquestionWrapper___9GgoP {
+            display: none; gap: 2px; margin-left: 10px;
+        }
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP { display: flex; }
+
+        .subQuestion {
+            width: 32px; height: 32px;
+            border: 1px solid var(--subq-border);
+            background: var(--subq-bg); color: var(--subq-text);
+            font-size: 14px; font-weight: 500;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; border-radius: 2px;
+        }
+        .subQuestion.answered { background-color: #6c8ebf; color: white; border-color: #5a7aad; }
+        .subQuestion.correct { background-color: #28a745; color: white; border-color: #28a745; }
+        .subQuestion.incorrect { background-color: #dc3545; color: white; border-color: #dc3545; }
+        .subQuestion:hover { background-color: var(--bg-secondary); border-color: var(--text-light); }
+        .subQuestion.active { background-color: var(--active-blue); color: white; border-color: var(--active-blue); }
+
+        .sr-only {
+            position: absolute; width: 1px; height: 1px; padding: 0;
+            margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
+            white-space: nowrap; border: 0;
+        }
+
+        .footer__deliverButton___3FM07 {
+            margin-left: auto; margin-right: 20px;
+            background-color: var(--footer-btn-bg);
+            color: var(--text);
+            border: 1px solid var(--footer-btn-border);
+            padding: 12px 20px; border-radius: 4px;
+            font-size: 16px; font-weight: 600;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+            transition: background-color 0.2s, border-color 0.2s;
+            min-width: 170px; justify-content: center;
+        }
+        .footer__deliverButton___3FM07:hover { background-color: var(--border); border-color: var(--text-light); }
+        .footer__deliverButton___3FM07:disabled { background: var(--bg-secondary); color: var(--text-muted); cursor: not-allowed; border-color: var(--border); }
+        .hidden { display: none !important; }
+
+        /* TRUE/FALSE/NOT GIVEN */
+        .tf-question {
+            margin-bottom: 25px; padding: 10px 0;
+            border-radius: 4px;
+            transition: border-color 0.3s, background-color 0.3s;
+            color: var(--text);
+        }
+        .tf-question-line {
+            display: flex; align-items: flex-start;
+            margin-bottom: 15px; padding: 5px 0; border-radius: 4px;
+        }
+        .tf-question-number {
+            border: 2px solid var(--border-medium);
+            padding: 2px 8px; margin-right: 10px; border-radius: 3px;
+            font-weight: bold; transition: border-color 0.3s;
+            display: inline-block; color: var(--text); flex-shrink: 0;
+        }
+        .tf-question-text { padding-top: 3px; color: var(--text); }
+        .tf-options { padding-left: 5px; }
+        .tf-option {
+            display: flex; margin-bottom: 12px;
+            cursor: pointer; align-items: center; color: var(--text);
+        }
+        .tf-option input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
+        .tf-question.correct .tf-question-line { background-color: var(--correct-bg); }
+        .tf-question.incorrect .tf-question-line { background-color: var(--incorrect-bg); }
+
+        /* Matching form */
+        .matching-form-container { margin-top: 20px; }
+        .matching-form-row {
+            display: flex; align-items: flex-start; margin-bottom: 14px; gap: 12px;
+        }
+        .matching-form-label { flex: 1; color: var(--text); padding-top: 4px; font-size: 15px; }
+        .matching-form-row select.answer-input { width: 90px; flex-shrink: 0; }
+        .matching-form-row.correct { background-color: var(--correct-bg); border-left: 3px solid var(--correct-border); padding-left: 8px; border-radius: 4px; }
+        .matching-form-row.incorrect { background-color: var(--incorrect-bg); border-left: 3px solid var(--incorrect-border); padding-left: 8px; border-radius: 4px; }
+
+        /* Multiple choice */
+        .multi-choice-question {
+            margin-bottom: 20px; padding: 10px; border-radius: 4px;
+            border: 3px solid transparent;
+            transition: border-color 0.3s, background-color 0.3s; color: var(--text);
+        }
+        .multi-choice-option {
+            margin-bottom: 10px; padding: 8px; border-radius: 4px;
+            transition: background-color 0.3s; color: var(--text);
+        }
+        .multi-choice-option label { display: flex; align-items: flex-start; cursor: pointer; font-size: 16px; color: var(--text); }
+        .multi-choice-option input[type="checkbox"],
+        .multi-choice-option input[type="radio"] { margin-right: 12px; transform: scale(1.3); accent-color: var(--active-blue); flex-shrink: 0; margin-top: 3px; }
+        .multi-choice-option.correct { background-color: var(--correct-bg); }
+        .multi-choice-option.incorrect { background-color: var(--incorrect-bg); }
+
+        /* Summary completion inline */
+        .summary-text { line-height: 2.6; font-size: 16px; color: var(--text); }
+        .summary-text .answer-input { width: 140px; }
+
+        /* Results Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.75);
+            z-index: 2000; display: flex; justify-content: center; align-items: center;
+        }
+        .modal-overlay.hidden { display: none; }
+        .modal-content {
+            background: var(--modal-bg);
+            padding: 25px; border-radius: 12px;
+            width: 90%; max-width: 600px; max-height: 80vh;
+            display: flex; flex-direction: column;
+            position: relative; border: 1px solid var(--border);
+            transition: background-color 0.3s;
+        }
+        .modal-close-btn {
+            position: absolute; top: 10px; right: 15px;
+            background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-muted);
+        }
+        .modal-content h2 { text-align: center; margin-bottom: 15px; color: var(--text); }
+        .results-summary {
+            display: flex; justify-content: space-around; margin-bottom: 20px;
+            font-size: 18px; font-weight: bold; text-align: center;
+            border-bottom: 1px solid var(--border); padding-bottom: 15px; color: var(--text);
+        }
+        .results-details-container { overflow-y: auto; padding-right: 10px; }
+        .result-row {
+            display: grid; grid-template-columns: 40px 1fr 1fr;
+            gap: 15px; padding: 8px 5px;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px; color: var(--text);
+        }
+        .result-row.incorrect { background-color: var(--incorrect-bg); }
+        .result-row .q-num { font-weight: bold; }
+        .result-row .user-ans { color: var(--text-muted); }
+        .result-row .correct-ans { color: var(--correct-border); font-weight: 500; }
+        .correct-answer-display { font-weight: bold; color: #28a745; margin-left: 10px; font-size: 14px; }
+        .correct-answer-highlight, .tf-option.correct-answer-highlight, .multi-choice-option.correct-answer-highlight {
+            background-color: var(--correct-bg) !important;
+            border: 1px solid var(--correct-border) !important;
+            border-radius: 4px; padding: 4px;
+        }
+
+        /* Highlight Toolbar */
+        .highlight-toolbar {
+            position: fixed; display: none;
+            background: var(--toolbar-bg);
+            border-radius: 8px;
+            box-shadow: var(--toolbar-shadow);
+            z-index: 2000; padding: 6px 8px;
+            gap: 4px; align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: opacity 0.15s ease;
+        }
+        .highlight-toolbar.visible { display: flex; }
+        .toolbar-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+            padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;
+            font-size: 14px; font-weight: 600; transition: all 0.15s; white-space: nowrap;
+        }
+        .toolbar-btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+        .toolbar-btn.btn-yellow { background: #f9a825; color: #1a1a1a; }
+        .toolbar-btn.btn-green  { background: #43a047; color: #fff; }
+        .toolbar-btn.btn-pink   { background: #e91e63; color: #fff; }
+        .toolbar-btn.btn-blue   { background: #1976d2; color: #fff; }
+        .toolbar-btn.btn-clear  { background: #757575; color: #fff; }
+        .toolbar-btn.btn-note   { background: #ff6f00; color: #fff; }
+        .toolbar-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.2); margin: 0 2px; }
+
+        .highlight { background-color: #ffeb3b; border-radius: 2px; }
+        .highlight.hl-green { background-color: #a5d6a7; }
+        .highlight.hl-pink  { background-color: #f48fb1; }
+        .highlight.hl-blue  { background-color: #90caf9; }
+
+        body.night-mode .highlight          { background-color: #f9a825; color: #000; }
+        body.night-mode .highlight.hl-green { background-color: #388e3c; color: #fff; }
+        body.night-mode .highlight.hl-pink  { background-color: #c2185b; color: #fff; }
+        body.night-mode .highlight.hl-blue  { background-color: #1565c0; color: #fff; }
+
+        .comment-highlight {
+            background-color: #ffe082; position: relative;
+            cursor: help; border-bottom: 2px dotted #f57f17; border-radius: 2px;
+        }
+        body.night-mode .comment-highlight { background-color: #6d4c00; border-bottom-color: #ffa000; color: #ffe082; }
+        .comment-tooltip {
+            position: absolute; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%);
+            background: #212121; color: #fff;
+            padding: 8px 12px; border-radius: 6px;
+            font-size: 13px; max-width: 280px; white-space: normal;
+            z-index: 3000; opacity: 0; pointer-events: none;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .comment-tooltip::after {
+            content: ''; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); border: 6px solid transparent;
+            border-top-color: #212121;
+        }
+        .comment-highlight:hover .comment-tooltip { opacity: 1; }
+        #toolbar-selection-btns, #toolbar-highlight-btns { display: inline-flex; align-items: center; gap: 4px; }
+        .comment-highlight::after { content: '📝'; font-size: 11px; vertical-align: super; margin-left: 2px; }
+
+        /* Notes panel */
+        .notes-panel {
+            position: fixed; right: 20px; top: 70px;
+            width: 280px; max-height: calc(100vh - 170px);
+            background: var(--modal-bg); border: 1px solid var(--border);
+            border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            z-index: 500; overflow-y: auto;
+            display: none; flex-direction: column;
+            transition: background-color 0.3s;
+        }
+        .notes-panel.visible { display: flex; }
+        .notes-panel-header {
+            padding: 12px 16px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 700; font-size: 14px; color: var(--text);
+            background: var(--bg-secondary); border-radius: 10px 10px 0 0;
+        }
+        .notes-panel-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-muted); }
+        .notes-list { padding: 10px; flex: 1; }
+        .note-item { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; font-size: 13px; color: var(--text); }
+        .note-item-text { font-weight: 600; color: #f57f17; margin-bottom: 4px; font-size: 12px; }
+        .note-item-delete { background: none; border: none; color: var(--incorrect-border); cursor: pointer; font-size: 12px; float: right; padding: 0; }
+        .notes-empty { color: var(--text-muted); font-size: 13px; padding: 10px; text-align: center; }
+
+        .note-input-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 3000; display: none; align-items: center; justify-content: center;
+        }
+        .note-input-overlay.visible { display: flex; }
+        .note-input-box { background: var(--modal-bg); border-radius: 12px; padding: 24px; width: 380px; max-width: 90vw; box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: 1px solid var(--border); }
+        .note-input-box h3 { margin-bottom: 8px; font-size: 16px; color: var(--text); }
+        .note-input-box .selected-text-preview { background: var(--bg-secondary); border-left: 3px solid #f9a825; padding: 8px 10px; margin-bottom: 14px; font-size: 13px; color: var(--text-muted); border-radius: 0 4px 4px 0; max-height: 60px; overflow: hidden; }
+        .note-input-box textarea { width: 100%; min-height: 80px; padding: 10px; border: 1px solid var(--border-medium); border-radius: 6px; font-size: 14px; background: var(--input-bg); color: var(--text); resize: vertical; outline: none; font-family: inherit; }
+        .note-input-box textarea:focus { border-color: var(--active-blue); }
+        .note-input-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+        .note-input-actions button { padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; }
+        .btn-save-note { background: #f9a825; color: #1a1a1a; }
+        .btn-cancel-note { background: var(--bg-secondary); color: var(--text); border: 1px solid var(--border) !important; }
+
+        .active-question { outline: 2px solid var(--active-blue); border-radius: 4px; }
+
+        select.answer-input option { background: var(--input-bg); color: var(--text); }
+
+        /* Two-column checkbox question */
+        .two-answer-note { font-style: italic; color: var(--text-muted); font-size: 14px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="timer-container">
+                <span class="timer-display">60:00</span>
+                <div class="timer-controls">
+                    <button id="timer-toggle-btn" title="Pause/Resume Timer">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>
+                    </button>
+                    <button id="timer-reset-btn" title="Reset Timer">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                    </button>
+                </div>
+            </div>
+            <button id="night-mode-btn" title="Toggle Night Mode">
+                <span class="moon-icon">🌙</span> Night Mode
+            </button>
+            <button id="notes-toggle-btn" title="Show Notes" style="background: var(--footer-btn-bg); border: 1px solid var(--border-medium); border-radius: 20px; padding: 5px 12px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+                📝 Notes <span id="notes-count" style="background:#f9a825;color:#1a1a1a;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span>
+            </button>
+        </div>
+        <a href="https://t.me/ielts_material_full" target="_blank" class="telegram-link">Full Exam Materials</a>
+    </div>
+
+    <div class="main-container" id="main-container">
+        <div id="passage-header-container">
+            <div id="part-header-1" class="part-header">
+                <p><strong>Part 1</strong></p>
+                <p>Read the text and answer questions 1–13.</p>
+            </div>
+            <div id="part-header-2" class="part-header hidden">
+                <p><strong>Part 2</strong></p>
+                <p>Read the text and answer questions 14–27.</p>
+            </div>
+            <div id="part-header-3" class="part-header hidden">
+                <p><strong>Part 3</strong></p>
+                <p>Read the text and answer questions 28–40.</p>
+            </div>
+        </div>
+
+        <div class="panels-container">
+            <!-- ══════════════ PASSAGE PANEL ══════════════ -->
+            <div class="passage-panel" id="passage-panel">
+
+                <!-- PASSAGE 1: Trans-Australian Railway -->
+                <div id="passage-text-1" class="reading-passage">
+                    <h4>The Trans-Australian Railway (TAR)</h4>
+                    <p>Up until the first part of the 20th century, communications across the Australian continent were relatively undeveloped. Perth, the capital of Western Australia, remained isolated from Australia's eastern states until the Trans-Australian Railway (TAR) was built across the arid area known as the Nullarbor (No Trees) Plain. During the 19th century, the only form of transport between the west coast and the eastern cities was a long and often rough seavoyage across the Great Australian Bight, while the first east-west crossing of the Nullarbor Plain on foot was achieved by the English explorer Edward Eyre and his indigenous Australian guide Wylie in 1841. In 1877 a telegraph line was built across the plain, and it was this man-made structure that a mining engineer called Arthur Richardson followed, when he set out in 1896 to be the first to ride a bicycle around the Australian continent.</p>
+                    <p>The first railway in Western Australia had opened in 1871, and by 1896 there was a 313-mile line going eastwards through the inhospitable landscape as far as Kalgoorlie. This line was built alongside a pipeline carrying drinking water to the arid goldfields around Kalgoorlie. Meanwhile, in the south-east of the continent, a railway line from Port Augusta to Oodnadetta had opened in 1891. These early railways in both the east and the west were built to the narrow gauge of 3ft 6in.</p>
+                    <p>In 1901, the self-governing colonies of Queensland, New South Wales, Victoria, Tasmania, South Australia and Western Australia got together to form a federation. One of the incentives held out to Western Australia to become a member had been the promise of a trans-continental railway linking Perth with the eastern cities. A survey of the route across the featureless Nullarbor Plain was completed in 1909, and construction started to join the two existing railways at each end in 1912. Despite the onset of the First World War, work progressed until the two lines finally converged, at a site in an area of desert, in 1917. The railway's claim to fame is that its route includes the longest straight stretch — 297 miles — of straight track in the world. Although the existing railways at each end had been built to the narrow gauge, the new 1,052 mile stretch was built to the standard gauge of 4ft 8in. These two breaks of gauge would mean a true trans-continental service did not exist until 1970.</p>
+                    <p>Water supplies for steam engines on the TAR route were non-existent, as the railway did not cross a permanent watercourse along its entire length. To overcome this, the TAR line's original chief engineer had requested diesel engines, but his request was not granted, so steam haulage had to be supported by extra water tankers carried on each train. Australian-built, diesel electric engines eventually replaced steam haulage in 1951.</p>
+                    <p>As well as being an important freight route, the new line saw the introduction of the Trans Australian Express, a service which commenced running in 1917 to serve isolated communities and settlements along its route. For much of its long-running life, this twice-weekly train consisted solely of sleeping cars; seated accommodation was only included from 1981 until the service terminated ten years later. The route of the train was extended following the conversion to standard gauge of its narrow-gauge sections in 1970, but facing increased competition from air travel it last ran in June 1991.</p>
+                    <p>One long-lived curiosity of the trans-Australian network was the Tea and Sugar Train, which also started running in 1917. The train brought to communities along the route not only the necessities for everyday life, but also a butcher's shop, medical facilities and a cinema. It last ran in 1996.</p>
+                    <p>Despite the withdrawal of the Trans-Australian Express between Adelaide and Perth in 1991, the Indian Pacific service has operated between Sydney on the east coast and Perth since 1970, the year that the TAR route was completely converted to standard gauge. This service is operated by Great Southern Rail. It runs twice a week between Adelaide and Perth, and once a week between Sydney and Perth. The journey time for the complete 2,704-mile journey is 66½ hours westbound and 71¼ hours eastbound.</p>
+                    <p>The Indian Pacific service calls by at the isolated outback railway settlements of Pimba, which has a population of around fifty, Kingoonya, which only has a hotel, and Tarcoola, which has a population of around forty and is a junction for the south-north line to Darwin. It then travels to Cook, which, despite having a population of fewer than ten, is a scheduled stop, before crossing the Nullarbor Plain in a dead straight line for 297 miles to Loongana, which is uninhabited and is a request stop, and Rawlinna, also a request stop serving Australia's largest sheep station. Civilisation is eventually reached at Kalgoorlie before the last leg of the journey westwards to East Perth Station. The train has carriages with seating, sleeping cars, a restaurant car, and wagons conveying passengers' motor cars.</p>
+                </div>
+
+                <!-- PASSAGE 2: How Plants Fight Back -->
+                <div id="passage-text-2" class="reading-passage hidden">
+                    <h4>How plants fight back</h4>
+                    <p><strong>A</strong>&nbsp;&nbsp;Recent research has shown that plants are more aware of their environment and more active in their responses than was ever previously imagined. Simon Gilroy, a professor of botany at the University of Wisconsin-Madison in the USA, has spent much of his career trying to understand how plants work. Now, Gilroy and one of his postdoctoral researchers, Masatsugu Toyota, have produced a series of videos that shows how plants responded when they subjected them to wounds, including scissor cuts and caterpillar bites.</p>
+                    <p><strong>B</strong>&nbsp;&nbsp;Gilroy and Toyota discovered that when one part of a plant is attacked or damaged, a wave of calcium spreads throughout the rest of the plant. The calcium alerts the plant to danger and the need to deploy defence tactics. The team were able to see this by utilising a naturally occurring fluorescent-green protein which binds to the calcium, making its path visible.</p>
+                    <p>While scientists already knew that plants reacted to danger via an electrical charge that moves across the plant, they didn't know exactly how it happened. Gilroy and Toyota suspected it had something to do with calcium and were able to confirm their suspicions. They were also able to reveal how glutamate — an abundant neurotransmitter in animals — triggers this wave of calcium.</p>
+                    <p><strong>C</strong>&nbsp;&nbsp;The find was fortuitous given that Gilroy hadn't intended to study wounding at all. His real passion is understanding how plants sense gravity and seem to know which way is up — something that's proving extremely hard to work out. It was during the early stages of an experiment into gravity that Toyota came across the wounding response.</p>
+                    <p>'We work very intensely on the calcium signal, because it's a ubiquitous signal. Biology uses it absolutely everywhere,' explains Gilroy. 'It makes your heart beat, it makes your muscles contract. Plants use it for a lot of their signalling machinery. We had some hints that the gravity-sensing system is based around the calcium signal, and so we were developing the technology to image calcium cells in real-time.' It was during this process that Gilroy and Toyota realised they'd captured something never usually visible to humans.</p>
+                    <p><strong>D</strong>&nbsp;&nbsp;The team found that the calcium travels at one millimetre per second, fast enough to spread to other leaves in just a couple of minutes. From the data collected up to now, it appears that how far the calcium travels depends on the extent of the wound, or, as Gilroy puts it, 'The more you hurt it, the louder it screams.'</p>
+                    <p>That 'scream' can result in a range of responses. 'Plants are masters of chemistry,' says Gilroy. We deal with the world by running away from it, plants deal with the world by growing in response to it, or by making a tonne of stuff. That 'tonne of stuff' could be chemicals that poison a hungry insect, or that make the plant unattractive, tough or unpalatable. Some plants even make proteins that block the ability of a caterpillar's gut to digest the plant material. This is dinner that fights back.</p>
+                    <p><strong>E</strong>&nbsp;&nbsp;The next step for Gilroy and his team is to delve deeper into the signalling response on a cellular level, dissecting the genes and proteins responsible. In contrast to our understanding of human nerve cells, Gilroy admits that the equivalent responses in plants are still barely understood. He is also going to widen the scope of the study and look at other signals that plants send out — signals regarding temperature and changes in light and touch.</p>
+                    <p>Gilroy explains that there may be a wider use for the research, albeit a long way in the future. Once scientists have managed to identify the specific genes that make the signalling process work and can understand what happens when you switch those genes on and off, it's not hard to think about the potential. 'You can imagine that we should be able to take a crop plant and switch on its defences on-call,' says Gilroy. 'We're nowhere near that point yet, but once we get there — say you're in a field and you predict there's going to be an outbreak of some pest, you could go in and pre-defend all of the plants in the field, but you do it on-call so the plants aren't wasting their resources defending themselves the whole time.'</p>
+                    <p><strong>F</strong>&nbsp;&nbsp;For now, though, Gilroy is happy to simply increase understanding of plants. He is energetic in his insistence that they are not the inactive and unreceptive organisms that people generally believe them to be. For that reason, he's as enthusiastic about the way the videos bring the response process to life as he is about the future potential of the research. 'When you look at a plant, just because it doesn't do what we do, and it doesn't move, that doesn't mean it isn't doing anything. They're hugely dynamic organisms,' he says.</p>
+                </div>
+
+                <!-- PASSAGE 3: Conscious and Unconscious Thought -->
+                <div id="passage-text-3" class="reading-passage hidden">
+                    <h4>Conscious and Unconscious Thought</h4>
+                    <p>Great scientists and artists have long known about the unconscious mind. The founder of psychoanalysis, Sigmund Freud, argued that most of our real motivation lies below conscious awareness and that we require the services of a psychoanalyst to explain ourselves to ourselves. Even those celebrated scientists who believe that Freud exaggerated the importance of the unconscious argue that it is a part of the in our minds which we should learn to control and take advantage of.</p>
+                    <p>The great mathematician Alfred North Whitehead seemed to be a supporter of unconscious mental processing when he said: 'It is a profoundly erroneous truism, repeated by all copybooks and by eminent people making speeches, that we should cultivate the habit of thinking about what we are doing. The precise opposite is the case.' What Whitehead meant by this is that some of the greatest breakthroughs in creativity occur when a problem is consciously shelved for a while — 'don't think about it, just sleep on it' — after which the unconscious mind offers a solution. This is a process which psychoanalysts call 'incubation'.</p>
+                    <p>Now the latest psychological research confirms that we can all incubate a problem to our own advantage. Ap Dijksterhuis, a psychologist at the University of Amsterdam, has recently published a series of experiments in which students were presented with complex everyday problems to solve. In one experiment they were given the opportunity to think carefully about a decision; in another experiment they were distracted by an irrelevant task whilst making a decision. The surprising result, published in the Journal of Personality and Social Psychology, was that 'unconscious' thinkers made the better decisions.</p>
+                    <p>Timothy Wilson and colleagues from the University of Virginia's psychology department conducted another experiment. Participants were presented with five posters and asked to choose one to take home. A little later, they were telephoned and asked how satisfied they were with their choice — a measure of whether they had made the right decision from a subjective point of view. Some participants had picked their poster straight away, whereas others were asked to analyse carefully the pros and cons of each poster. It turned out that people who had analysed were less satisfied with their choice than people who had not applied logic. Paradoxically, it seems that those who had consciously weighed up the various attributes had made relatively poor decisions.</p>
+                    <p>The conclusion that has to be drawn from current research suggests the somewhat counter-intuitive idea that the more complex a problem is, the less likely it becomes that conscious thought can contribute much. If a dilemma is particularly difficult, a lot of information has to be taken into account and it appears that conscious thought is not good at this. The message is that when it comes to intricate problems with many variables, you should let the unconscious deal with it.</p>
+                    <p>Using dreaming is one way of doing this. Dreams are the part of sleep most strongly correlated with rapid eye movement (REM) and have been associated with enhanced creativity and novel solutions. The latest research suggests that, if you want to enhance unconscious problem-solving, you should try to think about your problems immediately after dreaming. In a recent experiment, psychiatrist Matthew Walker and colleagues from the Laboratory of Neurophysiology at Harvard Medical School woke up half of their experimental subjects immediately after REM sleep, and the other half just after sleep with no dreams, and then asked them to solve crossword puzzles. REM awakenings provided a 32 per cent advantage in the number of puzzles solved, compared with non-REM awakenings.</p>
+                    <p>But you don't have to be asleep to use the unconscious mind. When you are not thinking of anything in particular, which is why daydreams are so useful in the quest for creativity. Daniel Goleman, the famous psychologist who proposed the theory of 'emotional intelligence', urges us to be more aware of, and discount, a key obstacle that the conscious mind imposes on the unconscious: that of self-censorship. This is the voice that whispers to you, 'they'll think I'm foolish' or 'that will never work', keeping you imprisoned within the boundaries of what is deemed acceptable. Howard Gardner, a professor of cognition and education at Harvard University, suggests that we free ourselves from the straitjacket of always doing things the same way. In seeking to go beyond the routine and conventional, you will gain confidence in trusting your unconscious, he says.</p>
+                </div>
+            </div>
+
+            <div class="resizer" id="resizer"></div>
+
+            <!-- ══════════════ QUESTIONS PANEL ══════════════ -->
+            <div class="questions-panel" id="questions-panel">
+
+                <!-- ── PASSAGE 1 QUESTIONS ── -->
+                <div id="questions-1" class="question-set">
+                    <div class="questions-container">
+
+                        <!-- Q1-8: Table Completion -->
+                        <div class="question" data-q-start="1" data-q-end="8">
+                            <div class="question-prompt">
+                                <p><strong>Questions 1–8</strong><br>Complete the table below.</p>
+                                <p>Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                                <p>Write your answers in boxes 1–8 on your answer sheet.</p>
+                            </div>
+                            <div class="table-completion-container">
+                                <table class="completion-table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Early long-distance communications in Australia</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>19th century</td>
+                                            <td data-q-start="1" data-q-end="1">Lack of public transport across the continent resulted in people travelling by <input type="text" class="answer-input narrow" id="q1" placeholder="1"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1841</td>
+                                            <td data-q-start="2" data-q-end="2">An explorer walked across the Nullarbor Plain with the help of a <input type="text" class="answer-input narrow" id="q2" placeholder="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1877</td>
+                                            <td data-q-start="3" data-q-end="3">Equipment for the <input type="text" class="answer-input narrow" id="q3" placeholder="3"> was installed in the Nullarbor Plain</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1896</td>
+                                            <td data-q-start="4" data-q-end="4">A new railway line in Western Australia followed the route of a <input type="text" class="answer-input narrow" id="q4" placeholder="4"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>1901</td>
+                                            <td data-q-start="5" data-q-end="5">The prospect of an interstate railway persuaded Western Australia to join a <input type="text" class="answer-input narrow" id="q5" placeholder="5"></td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">1917</td>
+                                            <td data-q-start="6" data-q-end="6">TAR was completed in a <input type="text" class="answer-input narrow" id="q6" placeholder="6"> location</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-q-start="7" data-q-end="7">The <input type="text" class="answer-input narrow" id="q7" placeholder="7"> section of TAR was longer than that in any other country</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-q-start="8" data-q-end="8">The new 4ft 8½ inch TAR track was a <input type="text" class="answer-input narrow" id="q8" placeholder="8"> width</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Q9-13: TRUE/FALSE/NOT GIVEN -->
+                        <div class="question" data-q-start="9" data-q-end="13">
+                            <div class="question-prompt">
+                                <p><strong>Questions 9–13</strong><br>Do the following statements agree with the information given in Reading Passage 1?</p>
+                                <p>In boxes 9–13 on your answer sheet, write</p>
+                                <ul>
+                                    <li><strong>TRUE</strong>&nbsp;&nbsp;if the statement agrees with the information</li>
+                                    <li><strong>FALSE</strong>&nbsp;&nbsp;if the statement contradicts the information</li>
+                                    <li><strong>NOT GIVEN</strong>&nbsp;&nbsp;if there is no information on this</li>
+                                </ul>
+                            </div>
+                            <div class="tf-question" data-q-start="9" data-q-end="9">
+                                <div class="tf-question-line"><span class="tf-question-number">9</span><span class="tf-question-text">The first chief engineer's recommendation for TAR trains was fully implemented.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q9" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q9" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q9" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="10" data-q-end="10">
+                                <div class="tf-question-line"><span class="tf-question-number">10</span><span class="tf-question-text">The Trans-Australian Express was popular with both local residents and tourists.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q10" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q10" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q10" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="11" data-q-end="11">
+                                <div class="tf-question-line"><span class="tf-question-number">11</span><span class="tf-question-text">Demand for Trans-Australian Express services eventually fell due to the availability of alternative transport.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q11" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q11" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q11" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="12" data-q-end="12">
+                                <div class="tf-question-line"><span class="tf-question-number">12</span><span class="tf-question-text">The Tea and Sugar Train provided health services as well as food supplies.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q12" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q12" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q12" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="13" data-q-end="13">
+                                <div class="tf-question-line"><span class="tf-question-number">13</span><span class="tf-question-text">The entire journey of the Indian Pacific train takes longer in one direction than in another.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q13" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q13" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q13" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ── PASSAGE 2 QUESTIONS ── -->
+                <div id="questions-2" class="question-set hidden">
+                    <div class="questions-container">
+
+                        <!-- Q14-18: Section matching -->
+                        <div class="question" data-q-start="14" data-q-end="18">
+                            <div class="question-prompt">
+                                <p><strong>Questions 14–18</strong><br>Reading Passage 2 has six sections, <strong>A–F</strong>.</p>
+                                <p>Which section contains the following information?</p>
+                                <p>Write the correct letter, <strong>A–F</strong>, in boxes 14–18 on your answer sheet.</p>
+                                <p><strong>NB</strong> You may use any letter more than once.</p>
+                            </div>
+                            <div class="matching-form-container">
+                                <div class="matching-form-row" data-q-start="14" data-q-end="14">
+                                    <label for="q14" class="matching-form-label"><strong>14</strong>&nbsp;&nbsp;An explanation of how scientists were able to observe plants sending warning signals</label>
+                                    <select class="answer-input" id="q14"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                                <div class="matching-form-row" data-q-start="15" data-q-end="15">
+                                    <label for="q15" class="matching-form-label"><strong>15</strong>&nbsp;&nbsp;Examples of the means used by scientists to provoke plants' signalling response</label>
+                                    <select class="answer-input" id="q15"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                                <div class="matching-form-row" data-q-start="16" data-q-end="16">
+                                    <label for="q16" class="matching-form-label"><strong>16</strong>&nbsp;&nbsp;Reference to the idea that we could one day manipulate plants' signalling abilities</label>
+                                    <select class="answer-input" id="q16"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                                <div class="matching-form-row" data-q-start="17" data-q-end="17">
+                                    <label for="q17" class="matching-form-label"><strong>17</strong>&nbsp;&nbsp;The purpose of the research which led to Gilroy and Toyota's discovery</label>
+                                    <select class="answer-input" id="q17"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                                <div class="matching-form-row" data-q-start="18" data-q-end="18">
+                                    <label for="q18" class="matching-form-label"><strong>18</strong>&nbsp;&nbsp;A comparison regarding levels of scientific knowledge about responses in plants and humans</label>
+                                    <select class="answer-input" id="q18"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q19-23: Summary completion (one word) -->
+                        <div class="question" data-q-start="19" data-q-end="23">
+                            <div class="question-prompt">
+                                <p><strong>Questions 19–23</strong><br>Complete the summary below.</p>
+                                <p>Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                                <p>Write your answers in boxes 19–23 on your answer sheet.</p>
+                            </div>
+                            <div class="example-box">
+                                <p style="font-weight:700;margin-bottom:10px;">Gilroy and Toyota's research</p>
+                                <div class="summary-text">
+                                    <p>As part of their research at the University of Wisconsin-Madison, Simon Gilroy and Masatsugu Toyota made several <input type="text" class="answer-input" id="q19" placeholder="19" data-q-start="19" data-q-end="19"> revealing plants' reactions to cuts, bites and other <input type="text" class="answer-input" id="q20" placeholder="20" data-q-start="20" data-q-end="20">.</p>
+                                    <p>These indicated how the spread of calcium warns plants about the presence of <input type="text" class="answer-input" id="q21" placeholder="21" data-q-start="21" data-q-end="21">. The use of a brightly coloured <input type="text" class="answer-input" id="q22" placeholder="22" data-q-start="22" data-q-end="22"> enabled the researchers to see the movement of calcium through the plant. The research also showed how <input type="text" class="answer-input" id="q23" placeholder="23" data-q-start="23" data-q-end="23"> activates the release of calcium in the plant.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q24-25: Choose TWO (aspects of calcium signal) -->
+                        <div class="question" data-q-start="24" data-q-end="25">
+                            <div class="question-prompt">
+                                <p><strong>Questions 24 and 25</strong><br>Choose <strong>TWO</strong> letters, <strong>A–E</strong>.</p>
+                                <p>Which <strong>TWO</strong> aspects of the calcium signal in plants does the writer mention?</p>
+                                <p class="two-answer-note">Select exactly two answers.</p>
+                            </div>
+                            <div class="multi-choice-question" data-q-start="24" data-q-end="25">
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q24_25" value="A"> A&nbsp;&nbsp;the volume of calcium released following an attack</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q24_25" value="B"> B&nbsp;&nbsp;the rate at which calcium flows through plants</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q24_25" value="C"> C&nbsp;&nbsp;the different parts of the plant where calcium is produced</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q24_25" value="D"> D&nbsp;&nbsp;the species of plants which produce calcium as a warning signal</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q24_25" value="E"> E&nbsp;&nbsp;the link between the severity of an attack and the distance calcium moves</label></div>
+                            </div>
+                        </div>
+
+                        <!-- Q26-27: Choose TWO (future plans) -->
+                        <div class="question" data-q-start="26" data-q-end="27">
+                            <div class="question-prompt">
+                                <p><strong>Questions 26 and 27</strong><br>Choose <strong>TWO</strong> letters, <strong>A–E</strong>.</p>
+                                <p>Gilroy's team have made certain plans for the future.</p>
+                                <p>Which <strong>TWO</strong> plans are mentioned by the writer?</p>
+                                <p class="two-answer-note">Select exactly two answers.</p>
+                            </div>
+                            <div class="multi-choice-question" data-q-start="26" data-q-end="27">
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q26_27" value="A"> A&nbsp;&nbsp;research plants' reactions to heat and cold</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q26_27" value="B"> B&nbsp;&nbsp;use their findings to help grow a greater variety of crops</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q26_27" value="C"> C&nbsp;&nbsp;investigate warning signals in organisms other than plants</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q26_27" value="D"> D&nbsp;&nbsp;analyse further the chemical processes involved in signalling responses</label></div>
+                                <div class="multi-choice-option"><label><input type="checkbox" name="q26_27" value="E"> E&nbsp;&nbsp;conduct studies to compare human cell and plant cell behavior</label></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ── PASSAGE 3 QUESTIONS ── -->
+                <div id="questions-3" class="question-set hidden">
+                    <div class="questions-container">
+
+                        <!-- Q28-31: Matching people -->
+                        <div class="question" data-q-start="28" data-q-end="31">
+                            <div class="question-prompt">
+                                <p><strong>Questions 28–31</strong><br>Match each statement with the correct person, <strong>A–F</strong>.</p>
+                                <p>Write the correct letter, <strong>A–F</strong>, in boxes 28–31 on your answer sheet.</p>
+                            </div>
+                            <div class="example-box" style="font-size:15px;">
+                                <p><strong>List of People</strong></p>
+                                <ul style="list-style:none;padding-left:0;margin-top:8px;">
+                                    <li style="margin-bottom:4px;"><strong>A</strong>&nbsp;&nbsp;Alfred North Whitehead</li>
+                                    <li style="margin-bottom:4px;"><strong>B</strong>&nbsp;&nbsp;Ap Dijksterhuis</li>
+                                    <li style="margin-bottom:4px;"><strong>C</strong>&nbsp;&nbsp;Timothy Wilson</li>
+                                    <li style="margin-bottom:4px;"><strong>D</strong>&nbsp;&nbsp;Matthew Walker</li>
+                                    <li style="margin-bottom:4px;"><strong>E</strong>&nbsp;&nbsp;Daniel Goleman</li>
+                                    <li style="margin-bottom:4px;"><strong>F</strong>&nbsp;&nbsp;Howard Gardner</li>
+                                </ul>
+                            </div>
+                            <div class="matching-form-container">
+                                <div class="matching-form-row" data-q-start="28" data-q-end="28">
+                                    <label for="q28" class="matching-form-label"><strong>28</strong>&nbsp;&nbsp;People find it easier to solve problems at a particular point in the sleep cycle.</label>
+                                    <select class="answer-input" id="q28" style="width:70px;"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                                <div class="matching-form-row" data-q-start="29" data-q-end="29">
+                                    <label for="q29" class="matching-form-label"><strong>29</strong>&nbsp;&nbsp;People should change their general behaviour patterns in order to benefit more from the unconscious.</label>
+                                    <select class="answer-input" id="q29" style="width:70px;"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                                <div class="matching-form-row" data-q-start="30" data-q-end="30">
+                                    <label for="q30" class="matching-form-label"><strong>30</strong>&nbsp;&nbsp;When solving problems, people should try to ignore negative thoughts.</label>
+                                    <select class="answer-input" id="q30" style="width:70px;"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                                <div class="matching-form-row" data-q-start="31" data-q-end="31">
+                                    <label for="q31" class="matching-form-label"><strong>31</strong>&nbsp;&nbsp;People can come up with ideas which are more innovative if they temporarily put a problem aside.</label>
+                                    <select class="answer-input" id="q31" style="width:70px;"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q32-34: Summary completion (no more than two words) -->
+                        <div class="question" data-q-start="32" data-q-end="34">
+                            <div class="question-prompt">
+                                <p><strong>Questions 32–34</strong><br>Complete the summary below.</p>
+                                <p>Choose <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</p>
+                                <p>Write your answers in boxes 32–34 on your answer sheet.</p>
+                            </div>
+                            <div class="example-box">
+                                <div class="summary-text">
+                                    <p>Many scientists argue that people should make better use of their unconscious mind. Alfred North Whitehead, for example, gave support for the idea of <input type="text" class="answer-input" id="q32" placeholder="32" data-q-start="32" data-q-end="32" style="width:160px;">: a term for people deliberately ignoring a problem over a period of time.</p>
+                                    <p>Experiments in Amsterdam that required students to consider a tricky situation found them making good decisions while carrying out an unconnected <input type="text" class="answer-input" id="q33" placeholder="33" data-q-start="33" data-q-end="33" style="width:140px;">. Similarly, an experiment in Virginia which required subjects to make a selection from a number of different <input type="text" class="answer-input" id="q34" placeholder="34" data-q-start="34" data-q-end="34" style="width:140px;"> found people feeling happier with their decisions if they had made them quickly.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q35-40: TRUE/FALSE/NOT GIVEN -->
+                        <div class="question" data-q-start="35" data-q-end="40">
+                            <div class="question-prompt">
+                                <p><strong>Questions 35–40</strong><br>Do the following statements agree with the information given in Reading Passage 3?</p>
+                                <p>In boxes 35–40 on your answer sheet, write</p>
+                                <ul>
+                                    <li><strong>TRUE</strong>&nbsp;&nbsp;if the statement agrees with the information</li>
+                                    <li><strong>FALSE</strong>&nbsp;&nbsp;if the statement contradicts the information</li>
+                                    <li><strong>NOT GIVEN</strong>&nbsp;&nbsp;if there is no information on this</li>
+                                </ul>
+                            </div>
+                            <div class="tf-question" data-q-start="35" data-q-end="35">
+                                <div class="tf-question-line"><span class="tf-question-number">35</span><span class="tf-question-text">Our unconscious mind helps us more than our conscious mind with complex problems.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q35" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q35" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q35" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="36" data-q-end="36">
+                                <div class="tf-question-line"><span class="tf-question-number">36</span><span class="tf-question-text">Resting before going to sleep can result in improved solutions to problems.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q36" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q36" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q36" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="37" data-q-end="37">
+                                <div class="tf-question-line"><span class="tf-question-number">37</span><span class="tf-question-text">Problems are more likely to be solved after dreamless sleep.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q37" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q37" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q37" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="38" data-q-end="38">
+                                <div class="tf-question-line"><span class="tf-question-number">38</span><span class="tf-question-text">Matthew Walker's team assessed their subjects using a memory test.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q38" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q38" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q38" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="39" data-q-end="39">
+                                <div class="tf-question-line"><span class="tf-question-number">39</span><span class="tf-question-text">Daydreams are more helpful to the unconscious than dreams which occur during sleep.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q39" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q39" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q39" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                            <div class="tf-question" data-q-start="40" data-q-end="40">
+                                <div class="tf-question-line"><span class="tf-question-number">40</span><span class="tf-question-text">People often create their own barriers to problem-solving.</span></div>
+                                <div class="tf-options">
+                                    <label class="tf-option"><input type="radio" name="q40" value="TRUE"> TRUE</label>
+                                    <label class="tf-option"><input type="radio" name="q40" value="FALSE"> FALSE</label>
+                                    <label class="tf-option"><input type="radio" name="q40" value="NOT GIVEN"> NOT GIVEN</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div><!-- end questions-panel -->
+        </div>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+        <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-row" aria-label="Questions">
+        <div class="footer__questionWrapper___1tZ46 selected multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+                <span>
+                    <span class="section-prefix">Part </span>
+                    <span class="sectionNr">1</span>
+                    <span class="attemptedCount">0 of 13</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(1)"><span class="sr-only">Q1</span>1</button>
+                <button class="subQuestion" onclick="goToQuestion(2)"><span class="sr-only">Q2</span>2</button>
+                <button class="subQuestion" onclick="goToQuestion(3)"><span class="sr-only">Q3</span>3</button>
+                <button class="subQuestion" onclick="goToQuestion(4)"><span class="sr-only">Q4</span>4</button>
+                <button class="subQuestion" onclick="goToQuestion(5)"><span class="sr-only">Q5</span>5</button>
+                <button class="subQuestion" onclick="goToQuestion(6)"><span class="sr-only">Q6</span>6</button>
+                <button class="subQuestion" onclick="goToQuestion(7)"><span class="sr-only">Q7</span>7</button>
+                <button class="subQuestion" onclick="goToQuestion(8)"><span class="sr-only">Q8</span>8</button>
+                <button class="subQuestion" onclick="goToQuestion(9)"><span class="sr-only">Q9</span>9</button>
+                <button class="subQuestion" onclick="goToQuestion(10)"><span class="sr-only">Q10</span>10</button>
+                <button class="subQuestion" onclick="goToQuestion(11)"><span class="sr-only">Q11</span>11</button>
+                <button class="subQuestion" onclick="goToQuestion(12)"><span class="sr-only">Q12</span>12</button>
+                <button class="subQuestion" onclick="goToQuestion(13)"><span class="sr-only">Q13</span>13</button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+                <span>
+                    <span class="section-prefix">Part </span>
+                    <span class="sectionNr">2</span>
+                    <span class="attemptedCount">0 of 14</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(14)">14</button>
+                <button class="subQuestion" onclick="goToQuestion(15)">15</button>
+                <button class="subQuestion" onclick="goToQuestion(16)">16</button>
+                <button class="subQuestion" onclick="goToQuestion(17)">17</button>
+                <button class="subQuestion" onclick="goToQuestion(18)">18</button>
+                <button class="subQuestion" onclick="goToQuestion(19)">19</button>
+                <button class="subQuestion" onclick="goToQuestion(20)">20</button>
+                <button class="subQuestion" onclick="goToQuestion(21)">21</button>
+                <button class="subQuestion" onclick="goToQuestion(22)">22</button>
+                <button class="subQuestion" onclick="goToQuestion(23)">23</button>
+                <button class="subQuestion" onclick="goToQuestion(24)">24</button>
+                <button class="subQuestion" onclick="goToQuestion(25)">25</button>
+                <button class="subQuestion" onclick="goToQuestion(26)">26</button>
+                <button class="subQuestion" onclick="goToQuestion(27)">27</button>
+            </div>
+        </div>
+
+        <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+            <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+                <span>
+                    <span class="section-prefix">Part </span>
+                    <span class="sectionNr">3</span>
+                    <span class="attemptedCount">0 of 13</span>
+                </span>
+            </button>
+            <div class="footer__subquestionWrapper___9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(28)">28</button>
+                <button class="subQuestion" onclick="goToQuestion(29)">29</button>
+                <button class="subQuestion" onclick="goToQuestion(30)">30</button>
+                <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+                <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+                <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+                <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+                <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+                <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+                <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+                <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+                <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+                <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+            </div>
+        </div>
+
+        <button id="deliver-button" class="footer__deliverButton___3FM07">
+            <span>✓</span><span>Check Answers</span>
+        </button>
+    </nav>
+
+    <!-- Highlight Toolbar -->
+    <div id="highlightToolbar" class="highlight-toolbar">
+        <span id="toolbar-selection-btns">
+            <button class="toolbar-btn btn-yellow" onclick="applyHighlight('hl-yellow')">🟡</button>
+            <button class="toolbar-btn btn-green"  onclick="applyHighlight('hl-green')">🟢</button>
+            <button class="toolbar-btn btn-pink"   onclick="applyHighlight('hl-pink')">🔴</button>
+            <button class="toolbar-btn btn-blue"   onclick="applyHighlight('hl-blue')">🔵</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-note"   onclick="openNoteInput()">📝 Note</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-clear"  onclick="clearThisHighlight()">✕ Remove</button>
+            <button class="toolbar-btn btn-clear"  onclick="clearAllHighlights()">⊘ Clear All</button>
+        </span>
+        <span id="toolbar-highlight-btns" style="display:none">
+            <button class="toolbar-btn btn-yellow" onclick="recolorHighlight('hl-yellow')">🟡</button>
+            <button class="toolbar-btn btn-green"  onclick="recolorHighlight('hl-green')">🟢</button>
+            <button class="toolbar-btn btn-pink"   onclick="recolorHighlight('hl-pink')">🔴</button>
+            <button class="toolbar-btn btn-blue"   onclick="recolorHighlight('hl-blue')">🔵</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-note"   onclick="openNoteInput()">📝 Note</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn btn-clear"  onclick="clearThisHighlight()">✕ Remove</button>
+            <button class="toolbar-btn btn-clear"  onclick="clearAllHighlights()">⊘ Clear All</button>
+        </span>
+    </div>
+
+    <!-- Notes Panel -->
+    <div id="notesPanel" class="notes-panel">
+        <div class="notes-panel-header">
+            <span>📝 My Notes</span>
+            <button class="notes-panel-close" onclick="toggleNotesPanel()">✕</button>
+        </div>
+        <div class="notes-list" id="notesList">
+            <p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p>
+        </div>
+    </div>
+
+    <!-- Note Input Modal -->
+    <div id="noteInputOverlay" class="note-input-overlay">
+        <div class="note-input-box">
+            <h3>Add a Note</h3>
+            <div class="selected-text-preview" id="noteTextPreview"></div>
+            <textarea id="noteTextarea" placeholder="Type your note here..."></textarea>
+            <div class="note-input-actions">
+                <button class="btn-cancel-note" onclick="cancelNote()">Cancel</button>
+                <button class="btn-save-note"   onclick="saveNote()">Save Note</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+            <h2>Results</h2>
+            <div class="results-summary">
+                <p>Score: <span id="results-score"></span> / 40</p>
+                <p>IELTS Band: <span id="results-band"></span></p>
+            </div>
+            <div id="results-details" class="results-details-container"></div>
+            <div style="text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                <button onclick="retakeTest()" style="background:#4a90e2;color:#fff;border:none;border-radius:6px;padding:10px 28px;font-size:15px;font-weight:700;cursor:pointer;">🔄 Retake Test</button>
+                <button onclick="closeResultsModal()" style="background:var(--footer-btn-bg);color:var(--text);border:1px solid var(--border-medium);border-radius:6px;padding:10px 22px;font-size:15px;font-weight:600;cursor:pointer;margin-left:12px;">Review Answers</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // ═══════════════════════════════════════════════════
+        //  CORRECT ANSWERS
+        // ═══════════════════════════════════════════════════
+        // Q1-8: table completion (one word)
+        // Q9-13: TRUE/FALSE/NOT GIVEN (passage 1)
+        // Q14-18: section matching A-F
+        // Q19-23: summary completion (one word)
+        // Q24-25: choose TWO from A-E (calcium aspects)
+        // Q26-27: choose TWO from A-E (future plans)
+        // Q28-31: matching people A-F
+        // Q32-34: summary completion (≤2 words)
+        // Q35-40: TRUE/FALSE/NOT GIVEN (passage 3)
+
+        const correctAnswers = {
+            // Passage 1 - Table completion
+            '1':  ['sea'],
+            '2':  ['guide'],
+            '3':  ['telegraph'],
+            '4':  ['pipeline', 'telegraph'],  // the text says "followed the route of a" - it's actually the telegraph line (not pipeline) in 1896; Richardson followed the telegraph line
+            '5':  ['federation'],
+            '6':  ['desert'],
+            '7':  ['straight'],
+            '8':  ['standard'],
+            // Passage 1 - TRUE/FALSE/NOT GIVEN
+            '9':  'FALSE',        // engineer requested diesel but was not granted
+            '10': 'NOT GIVEN',    // no info about tourists
+            '11': 'TRUE',         // faced increased competition from air travel
+            '12': 'TRUE',         // medical facilities + necessities
+            '13': 'TRUE',         // 66.5 westbound, 71.25 eastbound
+            // Passage 2 - Section matching
+            '14': 'B',
+            '15': 'A',
+            '16': 'E',
+            '17': 'C',
+            '18': 'E',
+            // Passage 2 - Summary completion
+            '19': 'videos',
+            '20': 'wounds',
+            '21': 'danger',
+            '22': 'protein',
+            '23': 'glutamate',
+            // Passage 2 - Choose TWO (calcium aspects) - correct: B and E
+            '24': 'B',
+            '25': 'E',
+            // Passage 2 - Choose TWO (future plans) - correct: A and D
+            '26': 'A',
+            '27': 'D',
+            // Passage 3 - Matching people
+            '28': 'D',  // Matthew Walker - REM sleep / sleep cycle
+            '29': 'F',  // Howard Gardner - change behaviour patterns
+            '30': 'E',  // Daniel Goleman - ignore negative thoughts (self-censorship)
+            '31': 'A',  // Alfred North Whitehead - incubation / putting problem aside
+            // Passage 3 - Summary completion
+            '32': 'incubation',
+            '33': 'task',
+            '34': 'posters',
+            // Passage 3 - TRUE/FALSE/NOT GIVEN
+            '35': 'TRUE',
+            '36': 'NOT GIVEN',
+            '37': 'FALSE',    // REM (dream) sleep was better, not dreamless
+            '38': 'FALSE',    // crossword puzzles, not memory test
+            '39': 'NOT GIVEN',
+            '40': 'TRUE',     // self-censorship = own barriers
+        };
+
+        // Special grouped questions (choose TWO)
+        const groupedQuestions = {
+            '24_25': { correct: ['B', 'E'], name: 'q24_25' },
+            '26_27': { correct: ['A', 'D'], name: 'q26_27' },
+        };
+
+        // STATE
+        let currentPassage = 1;
+        let currentQuestion = 1;
+        let selectedRange = null;
+        let selectedText = '';
+        let highlightTarget = null;
+        let lastAppliedHighlight = null;
+        let timeInSeconds = 3600;
+        let timerInterval;
+        let activeQuestionElement = null;
+        let notes = [];
+        let nextNoteId = 1;
+
+        // DOM
+        const timerDisplay      = document.querySelector('.timer-display');
+        const timerToggleButton = document.getElementById('timer-toggle-btn');
+        const timerResetButton  = document.getElementById('timer-reset-btn');
+        const deliverButton     = document.getElementById('deliver-button');
+        const resizer           = document.getElementById('resizer');
+        const passagePanel      = document.getElementById('passage-panel');
+        const questionsPanel    = document.getElementById('questions-panel');
+        const highlightToolbar  = document.getElementById('highlightToolbar');
+        const nightModeBtn      = document.getElementById('night-mode-btn');
+        const notesToggleBtn    = document.getElementById('notes-toggle-btn');
+        const notesPanel        = document.getElementById('notesPanel');
+        const notesList         = document.getElementById('notesList');
+        const notesCount        = document.getElementById('notes-count');
+        const noteInputOverlay  = document.getElementById('noteInputOverlay');
+        const noteTextarea      = document.getElementById('noteTextarea');
+        const noteTextPreview   = document.getElementById('noteTextPreview');
+
+        const playIcon  = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>';
+        const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+        // ═══════════════════════════════════════════════════
+        //  INIT
+        // ═══════════════════════════════════════════════════
+        function initialize() {
+            startTimer();
+            switchToPart(1);
+            document.body.addEventListener('input', updateAllIndicators);
+            document.body.addEventListener('change', updateAllIndicators);
+            deliverButton.addEventListener('click', checkAnswers);
+            timerToggleButton.addEventListener('click', toggleTimer);
+            timerResetButton.addEventListener('click', resetTimer);
+            nightModeBtn.addEventListener('click', toggleNightMode);
+            notesToggleBtn.addEventListener('click', toggleNotesPanel);
+            resizer.addEventListener('mousedown', initResize, false);
+            initializeHighlightToolbar();
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  NIGHT MODE
+        // ═══════════════════════════════════════════════════
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const isNight = document.body.classList.contains('night-mode');
+            nightModeBtn.innerHTML = isNight
+                ? '<span class="moon-icon">☀️</span> Day Mode'
+                : '<span class="moon-icon">🌙</span> Night Mode';
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  PART-AWARE INPUT LOOKUP
+        // ═══════════════════════════════════════════════════
+        function getPartId(qNum) {
+            if (qNum <= 13) return 'questions-1';
+            if (qNum <= 27) return 'questions-2';
+            return 'questions-3';
+        }
+
+        function getInputForQuestion(qNum) {
+            const section = document.getElementById(getPartId(qNum));
+            if (!section) return null;
+            return section.querySelector(`#q${qNum}`) || null;
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  CHECK ANSWERS
+        // ═══════════════════════════════════════════════════
+        function checkAnswers() {
+            // Reveal all sections temporarily to read all inputs
+            const hidden = document.querySelectorAll('.question-set.hidden, .reading-passage.hidden, .part-header.hidden');
+            hidden.forEach(s => s.classList.remove('hidden'));
+
+            document.querySelectorAll('input, select, textarea').forEach(el => { el.disabled = true; });
+            deliverButton.disabled = true;
+            clearInterval(timerInterval);
+
+            // Clear previous marking
+            document.querySelectorAll('.correct, .incorrect, .correct-answer-highlight').forEach(el => {
+                el.classList.remove('correct', 'incorrect', 'correct-answer-highlight');
+            });
+            document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+
+            let score = 0;
+            const detailsContainer = document.getElementById('results-details');
+            detailsContainer.innerHTML = '';
+
+            // --- Handle grouped "choose TWO" questions ---
+            const groupResults = {};
+            for (const [key, grp] of Object.entries(groupedQuestions)) {
+                const checked = [...document.querySelectorAll(`input[name="${grp.name}"]:checked`)].map(i => i.value).sort();
+                const correct = [...grp.correct].sort();
+                const [q1, q2] = key.split('_').map(Number);
+
+                // Score: each correct selection = 1 mark
+                let g1Correct = false, g2Correct = false;
+                if (correct.length === 2) {
+                    g1Correct = checked.includes(correct[0]);
+                    g2Correct = checked.includes(correct[1]);
+                }
+                groupResults[q1] = { userChecked: checked, correct: correct, isCorrect: g1Correct };
+                groupResults[q2] = { userChecked: checked, correct: correct, isCorrect: g2Correct };
+
+                if (g1Correct) score++;
+                if (g2Correct) score++;
+
+                // Visual feedback
+                document.querySelectorAll(`input[name="${grp.name}"]`).forEach(cb => {
+                    const opt = cb.closest('.multi-choice-option');
+                    if (!opt) return;
+                    if (cb.checked && correct.includes(cb.value)) opt.classList.add('correct');
+                    else if (cb.checked && !correct.includes(cb.value)) opt.classList.add('incorrect');
+                    else if (!cb.checked && correct.includes(cb.value)) opt.classList.add('correct-answer-highlight');
+                });
+            }
+
+            // --- Handle all questions 1-40 ---
+            for (let i = 1; i <= 40; i++) {
+                const key = String(i);
+                const correctAns = correctAnswers[key];
+                let userAnswer = '';
+                let isCorrect = false;
+                let userDisplay = 'Not Answered';
+                let correctDisplay = '';
+
+                // Skip if handled as grouped
+                if (groupResults[i] !== undefined) {
+                    const gr = groupResults[i];
+                    userDisplay = gr.userChecked.join(', ') || 'Not Answered';
+                    correctDisplay = gr.correct.join(' or ');
+                    isCorrect = gr.isCorrect;
+                    detailsContainer.innerHTML += `<div class="result-row ${isCorrect ? '' : 'incorrect'}"><span class="q-num">${i}</span><span class="user-ans">${userDisplay}</span><span class="correct-ans">${correctDisplay}</span></div>`;
+                    const navBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+                    if (navBtn) { navBtn.classList.remove('answered','active'); navBtn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+                    continue;
+                }
+
+                // Radio buttons (T/F/NG)
+                const radios = document.querySelectorAll(`input[name="q${i}"][type="radio"]`);
+                if (radios.length > 0) {
+                    const checked = document.querySelector(`input[name="q${i}"]:checked`);
+                    if (checked) {
+                        userAnswer = checked.value;
+                        userDisplay = userAnswer;
+                        isCorrect = userAnswer === correctAns;
+                        const lbl = checked.closest('.tf-option, .multi-choice-option');
+                        if (lbl) lbl.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    }
+                    correctDisplay = correctAns || '';
+
+                    const qContainer = radios[0].closest('.tf-question, .multi-choice-question');
+                    if (qContainer) {
+                        if (!isCorrect) {
+                            qContainer.classList.add('incorrect');
+                            const correctOpt = qContainer.querySelector(`input[value="${correctAns}"]`);
+                            if (correctOpt) {
+                                const lbl = correctOpt.closest('.tf-option, .multi-choice-option');
+                                if (lbl) lbl.classList.add('correct-answer-highlight');
+                            }
+                        }
+                    }
+                    if (isCorrect) score++;
+
+                } else {
+                    // Text or select
+                    const inputEl = getInputForQuestion(i);
+                    if (inputEl && inputEl.tagName === 'SELECT') {
+                        userAnswer = inputEl.value;
+                        userDisplay = userAnswer || 'Not Answered';
+                        correctDisplay = Array.isArray(correctAns) ? correctAns[0] : (correctAns || '');
+                        isCorrect = Array.isArray(correctAns)
+                            ? correctAns.map(a => a.toUpperCase()).includes(userAnswer.toUpperCase())
+                            : userAnswer === correctAns;
+
+                        const row = inputEl.closest('.matching-form-row') || inputEl;
+                        if (isCorrect) {
+                            score++;
+                            row.classList.add('correct');
+                        } else {
+                            row.classList.add('incorrect');
+                            const sp = document.createElement('span');
+                            sp.className = 'correct-answer-display';
+                            sp.innerHTML = `&nbsp;➜&nbsp;<span class="correct-answer-highlight">${correctDisplay}</span>`;
+                            inputEl.insertAdjacentElement('afterend', sp);
+                        }
+
+                    } else if (inputEl && inputEl.tagName === 'INPUT') {
+                        userAnswer = inputEl.value.trim();
+                        userDisplay = userAnswer || 'Not Answered';
+                        const answers = Array.isArray(correctAns) ? correctAns : [correctAns];
+                        correctDisplay = answers[0] || '';
+                        isCorrect = answers.some(a => userAnswer.toLowerCase() === a.toLowerCase());
+
+                        inputEl.classList.add(isCorrect ? 'correct' : 'incorrect');
+                        if (isCorrect) {
+                            score++;
+                        } else {
+                            const sp = document.createElement('span');
+                            sp.className = 'correct-answer-display';
+                            sp.innerHTML = `&nbsp;➜&nbsp;<span class="correct-answer-highlight">${correctDisplay}</span>`;
+                            inputEl.insertAdjacentElement('afterend', sp);
+                        }
+                    } else {
+                        correctDisplay = Array.isArray(correctAns) ? correctAns.join('/') : (correctAns || '');
+                    }
+                }
+
+                detailsContainer.innerHTML += `<div class="result-row ${isCorrect ? '' : 'incorrect'}"><span class="q-num">${i}</span><span class="user-ans">${userDisplay}</span><span class="correct-ans">${correctDisplay || '—'}</span></div>`;
+                const navBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+                if (navBtn) { navBtn.classList.remove('answered','active'); navBtn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+            }
+
+            document.getElementById('results-score').textContent = score;
+            document.getElementById('results-band').textContent  = calculateBandScore(score);
+            document.getElementById('results-modal').classList.remove('hidden');
+        }
+
+        function calculateBandScore(score) {
+            const map = {40:9.0,39:9.0,38:8.5,37:8.5,36:8.0,35:8.0,34:7.5,33:7.5,32:7.0,31:7.0,30:7.0,29:6.5,28:6.5,27:6.5,26:6.0,25:6.0,24:6.0,23:5.5,22:5.5,21:5.5,20:5.5,19:5.0,18:5.0,17:5.0,16:5.0,15:5.0,14:4.5,13:4.5,12:4.0,11:4.0,10:4.0,9:3.5,8:3.5,7:3.0,6:3.0,5:2.5,4:2.5,3:2.0,2:2.0,1:1.0,0:0.0};
+            return map[score] !== undefined ? map[score] : '0.0';
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  PART SWITCHING & NAVIGATION
+        // ═══════════════════════════════════════════════════
+        function switchToPart(partNumber) {
+            currentPassage = partNumber;
+            document.querySelectorAll('.reading-passage, .question-set, .part-header').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`passage-text-${partNumber}`).classList.remove('hidden');
+            document.getElementById(`questions-${partNumber}`).classList.remove('hidden');
+            document.getElementById(`part-header-${partNumber}`).classList.remove('hidden');
+            document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, i) => {
+                w.classList.toggle('selected', (i + 1) === partNumber);
+            });
+            const firstQ = {1: 1, 2: 14, 3: 28}[partNumber];
+            goToQuestion(firstQ);
+        }
+
+        function goToQuestion(questionNumber) {
+            currentQuestion = questionNumber;
+            let part = 1;
+            if (questionNumber >= 14 && questionNumber <= 27) part = 2;
+            else if (questionNumber >= 28) part = 3;
+
+            if (currentPassage !== part) {
+                currentPassage = part;
+                document.querySelectorAll('.reading-passage, .question-set, .part-header').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`passage-text-${part}`).classList.remove('hidden');
+                document.getElementById(`questions-${part}`).classList.remove('hidden');
+                document.getElementById(`part-header-${part}`).classList.remove('hidden');
+                document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, i) => {
+                    w.classList.toggle('selected', (i + 1) === part);
+                });
+            }
+
+            if (activeQuestionElement) activeQuestionElement.classList.remove('active-question', 'active-input');
+
+            // For grouped questions (24-25 and 26-27), point to the block
+            let targetEl = null;
+            const section = document.getElementById(getPartId(questionNumber));
+
+            // Try direct id first (text/select inputs)
+            if (section) targetEl = section.querySelector(`#q${questionNumber}`);
+
+            // For radio groups, find the tf-question or multi-choice-question block
+            if (!targetEl) {
+                const radioEl = document.querySelector(`input[name="q${questionNumber}"]`);
+                if (radioEl) targetEl = radioEl.closest('.tf-question, .multi-choice-question, .question');
+            }
+
+            // For grouped checkboxes (24/25, 26/27) find the block
+            if (!targetEl) {
+                const grpMap = {24:'q24_25', 25:'q24_25', 26:'q26_27', 27:'q26_27'};
+                if (grpMap[questionNumber]) {
+                    const cb = document.querySelector(`input[name="${grpMap[questionNumber]}"]`);
+                    if (cb) targetEl = cb.closest('.multi-choice-question, .question');
+                }
+            }
+
+            if (targetEl) {
+                activeQuestionElement = targetEl;
+                if (targetEl.tagName === 'INPUT' || targetEl.tagName === 'SELECT') {
+                    targetEl.classList.add('active-input');
+                } else {
+                    targetEl.classList.add('active-question');
+                }
+                scrollIntoViewIfNeeded(targetEl);
+            }
+
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('active'));
+            const activeNav = document.querySelector(`.subQuestion[onclick="goToQuestion(${currentQuestion})"]`);
+            if (activeNav) activeNav.classList.add('active');
+
+            document.querySelectorAll('.answer-input').forEach(el => el.classList.remove('active-input'));
+            const inp = getInputForQuestion(currentQuestion);
+            if (inp) {
+                inp.classList.add('active-input');
+                if (typeof inp.focus === 'function') inp.focus();
+            }
+        }
+
+        window.nextQuestion     = () => { if (currentQuestion < 40) goToQuestion(currentQuestion + 1); };
+        window.previousQuestion = () => { if (currentQuestion > 1)  goToQuestion(currentQuestion - 1); };
+        window.goToQuestion     = goToQuestion;
+        window.switchToPart     = switchToPart;
+
+        function scrollIntoViewIfNeeded(element) {
+            const panel = element.closest('.questions-panel, .passage-panel');
+            if (!panel) return;
+            const pr = panel.getBoundingClientRect();
+            const er = element.getBoundingClientRect();
+            if (er.top < pr.top || er.bottom > pr.bottom) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  ANSWERED INDICATORS
+        // ═══════════════════════════════════════════════════
+        function isQuestionAnswered(qNum) {
+            // Radio
+            if (document.querySelector(`input[name="q${qNum}"]:checked`)) return true;
+            // Grouped checkbox
+            const grpMap = {24:'q24_25', 25:'q24_25', 26:'q26_27', 27:'q26_27'};
+            if (grpMap[qNum] && document.querySelector(`input[name="${grpMap[qNum]}"]:checked`)) return true;
+            // Text / select
+            const el = getInputForQuestion(qNum);
+            if (el) {
+                if (el.tagName === 'INPUT' && el.value.trim()) return true;
+                if (el.tagName === 'SELECT' && el.value) return true;
+            }
+            return false;
+        }
+
+        function updateAllIndicators() {
+            updateAttemptedCount(1, 1, 13);
+            updateAttemptedCount(2, 14, 27);
+            updateAttemptedCount(3, 28, 40);
+            document.querySelectorAll('.subQuestion').forEach(btn => {
+                const qNum = parseInt(btn.textContent, 10);
+                if (!isNaN(qNum)) btn.classList.toggle('answered', isQuestionAnswered(qNum));
+            });
+        }
+
+        function updateAttemptedCount(part, start, end) {
+            let answered = 0;
+            for (let i = start; i <= end; i++) if (isQuestionAnswered(i)) answered++;
+            const wrappers = document.querySelectorAll('.footer__questionWrapper___1tZ46');
+            const w = wrappers[part - 1];
+            if (w) {
+                const span = w.querySelector('.attemptedCount');
+                if (span) span.textContent = `${answered} of ${end - start + 1}`;
+            }
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  TIMER
+        // ═══════════════════════════════════════════════════
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeInSeconds--;
+                updateTimerDisplay();
+                if (timeInSeconds <= 0) { clearInterval(timerInterval); timerDisplay.textContent = "Time's up!"; }
+            }, 1000);
+            timerToggleButton.innerHTML = pauseIcon;
+        }
+
+        function pauseTimer() { clearInterval(timerInterval); timerToggleButton.innerHTML = playIcon; }
+
+        function toggleTimer() {
+            timerToggleButton.innerHTML.includes('M6 19h4V5H6v14z') ? pauseTimer() : startTimer();
+        }
+
+        function resetTimer() {
+            timeInSeconds = 3600;
+            updateTimerDisplay();
+            startTimer();
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeInSeconds / 60);
+            const s = timeInSeconds % 60;
+            timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  RESIZER
+        // ═══════════════════════════════════════════════════
+        function initResize(e) {
+            e.preventDefault();
+            const startX = e.clientX;
+            const startWidth = passagePanel.offsetWidth;
+            const drag = e => {
+                const w = startWidth + e.clientX - startX;
+                if (w > 200 && (document.body.clientWidth - w - resizer.offsetWidth) > 200) {
+                    passagePanel.style.flex = `0 0 ${w}px`;
+                }
+            };
+            const stop = () => { window.removeEventListener('mousemove', drag); window.removeEventListener('mouseup', stop); };
+            window.addEventListener('mousemove', drag);
+            window.addEventListener('mouseup', stop);
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  HIGHLIGHT TOOLBAR
+        // ═══════════════════════════════════════════════════
+        function initializeHighlightToolbar() {
+            const panels = [passagePanel, questionsPanel];
+            const selectionBtns = document.getElementById('toolbar-selection-btns');
+            const highlightBtns = document.getElementById('toolbar-highlight-btns');
+
+            document.addEventListener('selectionchange', () => {
+                const sel = window.getSelection();
+                if (sel && !sel.isCollapsed && sel.toString().trim().length > 0) {
+                    const range = sel.getRangeAt(0);
+                    if (panels.some(p => p.contains(range.commonAncestorContainer))) {
+                        selectedRange = range.cloneRange();
+                        selectedText = sel.toString();
+                    }
+                }
+            });
+
+            document.addEventListener('mouseup', e => {
+                if (highlightToolbar.contains(e.target)) return;
+                if (noteInputOverlay.contains(e.target)) return;
+                const sel = window.getSelection();
+                const overHighlight = e.target.closest('.highlight, .comment-highlight');
+                if (overHighlight && (!sel || sel.isCollapsed)) {
+                    highlightTarget = overHighlight;
+                    lastAppliedHighlight = null;
+                    selectedRange = null;
+                    selectionBtns.style.display = 'none';
+                    highlightBtns.style.display = 'inline';
+                    positionAndShowToolbar(e);
+                    return;
+                }
+                if (sel && !sel.isCollapsed && sel.toString().trim().length > 0) {
+                    const range = sel.getRangeAt(0);
+                    if (panels.some(p => p.contains(range.commonAncestorContainer))) {
+                        highlightTarget = null;
+                        lastAppliedHighlight = null;
+                        const startNode = range.startContainer;
+                        const existingHL = (startNode.nodeType === 3 ? startNode.parentElement : startNode).closest('.highlight, .comment-highlight');
+                        if (existingHL) highlightTarget = existingHL;
+                        selectionBtns.style.display = 'inline';
+                        highlightBtns.style.display = 'none';
+                        positionAndShowToolbar(e);
+                        return;
+                    }
+                }
+                hideToolbar();
+            });
+
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') hideToolbar(); });
+            passagePanel.addEventListener('scroll', hideToolbar);
+            questionsPanel.addEventListener('scroll', hideToolbar);
+        }
+
+        function positionAndShowToolbar(e) {
+            highlightToolbar.classList.add('visible');
+            requestAnimationFrame(() => {
+                const tbW = highlightToolbar.offsetWidth || 300;
+                const tbH = highlightToolbar.offsetHeight || 44;
+                let left = e.pageX - tbW / 2;
+                let top  = e.pageY - tbH - 14;
+                if (left < 8) left = 8;
+                if (left + tbW > window.innerWidth - 8) left = window.innerWidth - tbW - 8;
+                if (top < 68) top = e.pageY + 14;
+                highlightToolbar.style.left = left + 'px';
+                highlightToolbar.style.top  = top  + 'px';
+            });
+        }
+
+        function hideToolbar() { highlightToolbar.classList.remove('visible'); }
+
+        window.applyHighlight = function(colorClass) {
+            if (!selectedRange || selectedRange.collapsed) { hideToolbar(); return; }
+            try {
+                const span = document.createElement('span');
+                span.className = 'highlight ' + colorClass;
+                span.appendChild(selectedRange.extractContents());
+                selectedRange.insertNode(span);
+                lastAppliedHighlight = span;
+            } catch(e) {}
+            hideToolbar();
+            window.getSelection().removeAllRanges();
+            selectedRange = null;
+        };
+
+        window.recolorHighlight = function(colorClass) {
+            if (!highlightTarget) { hideToolbar(); return; }
+            highlightTarget.className = 'highlight ' + colorClass;
+            highlightTarget = null;
+            hideToolbar();
+        };
+
+        window.clearThisHighlight = function() {
+            const target = highlightTarget || lastAppliedHighlight;
+            if (!target || !target.parentNode) { hideToolbar(); return; }
+            if (target.classList.contains('comment-highlight')) {
+                const idx = notes.findIndex(n => n.spanEl === target);
+                if (idx !== -1) notes.splice(idx, 1);
+                renderNotesList();
+            }
+            unwrapElement(target);
+            highlightTarget = null; lastAppliedHighlight = null;
+            hideToolbar();
+        };
+
+        window.clearAllHighlights = function() {
+            document.querySelectorAll('.highlight, .comment-highlight').forEach(unwrapElement);
+            notes = [];
+            renderNotesList();
+            highlightTarget = null; lastAppliedHighlight = null;
+            hideToolbar();
+        };
+
+        function unwrapElement(el) {
+            const parent = el.parentNode;
+            if (!parent) return;
+            while (el.firstChild) parent.insertBefore(el.firstChild, el);
+            parent.removeChild(el);
+            parent.normalize();
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  NOTES
+        // ═══════════════════════════════════════════════════
+        function toggleNotesPanel() { notesPanel.classList.toggle('visible'); }
+        window.toggleNotesPanel = toggleNotesPanel;
+
+        window.openNoteInput = function() {
+            if (!selectedRange || selectedRange.collapsed) return;
+            noteTextPreview.textContent = selectedText.length > 120 ? selectedText.slice(0, 120) + '…' : selectedText;
+            noteTextarea.value = '';
+            noteInputOverlay.classList.add('visible');
+            setTimeout(() => noteTextarea.focus(), 50);
+        };
+
+        window.cancelNote = function() {
+            noteInputOverlay.classList.remove('visible');
+            hideToolbar();
+            window.getSelection().removeAllRanges();
+            selectedRange = null;
+        };
+
+        window.saveNote = function() {
+            const noteText = noteTextarea.value.trim();
+            if (!noteText) { noteTextarea.focus(); return; }
+            if (!selectedRange || selectedRange.collapsed) { cancelNote(); return; }
+            const span = document.createElement('span');
+            span.className = 'comment-highlight';
+            const tooltip = document.createElement('span');
+            tooltip.className = 'comment-tooltip';
+            tooltip.textContent = noteText;
+            try { span.appendChild(selectedRange.extractContents()); } catch(e) {}
+            span.appendChild(tooltip);
+            selectedRange.insertNode(span);
+            const noteObj = { id: nextNoteId++, text: selectedText.slice(0, 80), noteText, spanEl: span };
+            notes.push(noteObj);
+            renderNotesList();
+            noteInputOverlay.classList.remove('visible');
+            hideToolbar();
+            window.getSelection().removeAllRanges();
+            selectedRange = null;
+        };
+
+        function renderNotesList() {
+            const count = notes.length;
+            notesCount.textContent = count;
+            notesCount.style.display = count > 0 ? 'inline' : 'none';
+            if (count === 0) {
+                notesList.innerHTML = '<p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p>';
+                return;
+            }
+            notesList.innerHTML = notes.map(n => `
+                <div class="note-item" id="note-${n.id}">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div class="note-item-text">"${escHtml(n.text)}${n.text.length >= 80 ? '…' : ''}"</div>
+                        <button class="note-item-delete" onclick="deleteNote(${n.id})">✕</button>
+                    </div>
+                    <div class="note-item-content">${escHtml(n.noteText)}</div>
+                </div>`).join('');
+        }
+
+        window.deleteNote = function(id) {
+            const idx = notes.findIndex(n => n.id === id);
+            if (idx === -1) return;
+            const note = notes[idx];
+            if (note.spanEl && note.spanEl.parentNode) unwrapElement(note.spanEl);
+            notes.splice(idx, 1);
+            renderNotesList();
+        };
+
+        function escHtml(str) {
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        // ═══════════════════════════════════════════════════
+        //  MODAL
+        // ═══════════════════════════════════════════════════
+        window.closeResultsModal = function() {
+            document.getElementById('results-modal').classList.add('hidden');
+        };
+
+        window.retakeTest = function() {
+            document.querySelectorAll('input, select, textarea').forEach(el => { el.disabled = false; });
+            deliverButton.disabled = false;
+            document.querySelectorAll('.correct, .incorrect, .correct-answer-highlight').forEach(el => {
+                el.classList.remove('correct', 'incorrect', 'correct-answer-highlight');
+            });
+            document.querySelectorAll('.correct-answer-display').forEach(el => el.remove());
+            document.querySelectorAll('input[type="text"]').forEach(el => { el.value = ''; });
+            document.querySelectorAll('select').forEach(el => { el.value = ''; });
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => { el.checked = false; });
+            document.querySelectorAll('.subQuestion').forEach(btn => {
+                btn.classList.remove('correct', 'incorrect', 'answered', 'active');
+            });
+            resetTimer();
+            document.getElementById('results-modal').classList.add('hidden');
+            switchToPart(1);
+            updateAllIndicators();
+        };
+
+        initialize();
+    });
+    </script>
+</body>
+</html>

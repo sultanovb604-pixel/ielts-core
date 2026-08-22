@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Practice - The Strange World of Sight</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            /* Light mode variables */
+            --bg-color: #f5f7fa;
+            --container-bg: white;
+            --text-color: #2c3e50;
+            --title-color: #2c5282;
+            --border-color: #e8f4f8;
+            --button-bg: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            --button-hover-bg: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --reset-bg: linear-gradient(135deg, #ed64a6 0%, #d53f8c 100%);
+            --reset-hover-bg: linear-gradient(135deg, #d53f8c 0%, #b83280 100%);
+            --section-bg: linear-gradient(135deg, #f8fbff 0%, #fefefe 100%);
+            --question-bg: #f8f9fa;
+            --correct-bg: #f0fff4;
+            --correct-border: #38a169;
+            --incorrect-bg: #fff5f5;
+            --incorrect-border: #e53e3e;
+            --table-border: #e2e8f0;
+            --table-header-bg: #f7fafc;
+            --input-bg: white;
+            --input-border: #e2e8f0;
+            --input-focus-border: #4299e1;
+            --toggle-bg: #e6f3ff;
+            --toggle-border: #4299e1;
+            --toggle-header-bg: #4299e1;
+            --toggle-header-hover: #3182ce;
+            --toggle-text: white;
+            --instructions-bg: #f7fafc;
+            --instructions-text: #4a5568;
+            --score-bg: #e6f3ff;
+            --result-reference: #edf2f7;
+            --link-color: #4299e1;
+        }
+        .night-mode {
+            /* Dark mode variables */
+            --bg-color: #1a202c;
+            --container-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --title-color: #63b3ed;
+            --border-color: #4a5568;
+            --button-bg: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            --button-hover-bg: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            --reset-bg: linear-gradient(135deg, #9f7aea 0%, #7c3aed 100%);
+            --reset-hover-bg: linear-gradient(135deg, #7c3aed 0%, #6b46c1 100%);
+            --section-bg: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --question-bg: #4a5568;
+            --correct-bg: #2f855a;
+            --correct-border: #38a169;
+            --incorrect-bg: #c53030;
+            --incorrect-border: #e53e3e;
+            --table-border: #4a5568;
+            --table-header-bg: #2d3748;
+            --input-bg: #4a5568;
+            --input-border: #4a5568;
+            --input-focus-border: #63b3ed;
+            --toggle-bg: #2d3748;
+            --toggle-border: #63b3ed;
+            --toggle-header-bg: #2b6cb0;
+            --toggle-header-hover: #2c5282;
+            --toggle-text: #e2e8f0;
+            --instructions-bg: #2d3748;
+            --instructions-text: #cbd5e0;
+            --score-bg: #2d3748;
+            --result-reference: #4a5568;
+            --link-color: #63b3ed;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .mode-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .highlight-toggle {
+            position: absolute;
+            top: 15px;
+            right: 150px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .highlight-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .passage-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            border-right: 2px solid var(--border-color);
+            background: var(--section-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .questions-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: var(--section-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .passage-title {
+            color: var(--title-color);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 3px solid var(--input-focus-border);
+            padding-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .passage-subtitle {
+            color: var(--text-color);
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 25px;
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .passage-content {
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        .passage-content p {
+            margin-bottom: 18px;
+            text-indent: 20px;
+        }
+        .passage-content h3 {
+            color: var(--title-color);
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .questions-title {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            background: var(--question-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--input-focus-border);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .question-group {
+            margin-bottom: 30px;
+            background: var(--question-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--correct-border);
+            transition: background-color 0.3s;
+        }
+        .question-group h3 {
+            color: var(--text-color);
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .question-group p {
+            margin-bottom: 10px;
+            font-style: italic;
+            color: var(--instructions-text);
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: var(--container-bg);
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .question label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .question input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .question input[type="text"]:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .question select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .question select:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .multiple-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background: var(--toggle-bg);
+        }
+        .submit-btn, .reset-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .reset-btn {
+            background: var(--reset-bg);
+        }
+        .submit-btn:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+        .reset-btn:hover {
+            background: var(--reset-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(237, 100, 166, 0.3);
+        }
+        .submit-btn:active, .reset-btn:active {
+            transform: translateY(1px);
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--instructions-bg);
+            border-radius: 10px;
+            display: none;
+            color: var(--text-color);
+        }
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+        .result-item.correct {
+            background: var(--correct-bg);
+            border-left-color: var(--correct-border);
+        }
+        .result-item.incorrect {
+            background: var(--incorrect-bg);
+            border-left-color: var(--incorrect-border);
+        }
+        .result-item h4 {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .result-item .user-answer {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .result-item .correct-answer {
+            font-weight: 600;
+            color: var(--correct-border);
+        }
+        .score {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color);
+            background: var(--score-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .table th, .table td {
+            border: 1px solid var(--table-border);
+            padding: 10px;
+            text-align: left;
+            background: var(--container-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .table th {
+            background: var(--table-header-bg);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .table-question input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 2px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 13px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .table-question input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+        }
+        .instructions-toggle {
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .instructions-header {
+            padding: 12px 15px;
+            background: var(--toggle-header-bg);
+            color: var(--toggle-text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        .instructions-header:hover {
+            background: var(--toggle-header-hover);
+        }
+        .instructions-content {
+            padding: 15px;
+            display: none;
+            background: var(--instructions-bg);
+            color: var(--instructions-text);
+            font-style: italic;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .instructions-content.show {
+            display: block;
+        }
+        .arrow {
+            transition: transform 0.3s;
+        }
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+        .inline-input {
+            display: inline-block;
+            width: 160px;
+            max-width: 160px;
+            padding: 2px 6px;
+            border: 1px solid var(--input-focus-border);
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--input-bg);
+            margin: 0 2px;
+            height: 24px;
+            color: var(--text-color);
+        }
+        .inline-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            background: var(--input-bg);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        /* True/False/Not Given radio buttons */
+        .tfng-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .tfng-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+        }
+        .tfng-option:hover {
+            background: var(--toggle-bg);
+        }
+        .tfng-option input[type="radio"] {
+            margin: 0;
+        }
+        /* Highlight feature */
+        .highlight-yellow, .highlight-green {
+            cursor: pointer;
+        }
+        .highlight-yellow {
+            background-color: yellow;
+        }
+        .highlight-green {
+            background-color: #90ee90;
+        }
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        .modal-content {
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .modal-content a {
+            color: var(--link-color);
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
+        .modal-content button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-content button:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+        }
+        /* Timer controller styles */
+        .timer-controller {
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .timer-controller h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+        #timer-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 10px 0;
+            background: var(--container-bg);
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .timer-input {
+            width: 60px;
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid var(--input-border);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .timer-input:focus {
+            border-color: var(--input-focus-border);
+        }
+        .timer-btn {
+            padding: 8px 16px;
+            margin: 5px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .timer-btn:hover {
+            background: var(--button-hover-bg);
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            .passage-section, .questions-section {
+                width: 100%;
+                padding: 15px;
+            }
+            .passage-section {
+                border-right: none;
+                border-bottom: 2px solid var(--border-color);
+                max-height: 50vh;
+            }
+        }
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+        @keyframes ripple {
+            to { transform: scale(2.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle">🌙 Night Mode</button>
+    <button class="highlight-toggle" id="highlightToggle">Switch to Green</button>
+
+    <div class="container">
+        <div class="passage-section">
+            <h1 class="passage-title">READING PASSAGE 3</h1>
+            <p class="passage-subtitle">You should spend about 20 minutes on Questions 27-40, which are based on Reading Passage 3 below.</p>
+            <div class="passage-content">
+                <h3>The strange world of sight</h3>
+                <p><strong>A</strong> Seeing is believing, it is said. But, asks Richard Gregory, could it be the other way round? Two of the great British men of the 17th century, the philosopher John Locke and the physicist Isaac Newton, were both aware that objects are not coloured, and that against all appearances light is not coloured either. This is still not generally recognised even now, 300 years later, because it seems so implausible. Yet it tells us something very important – that perceptions are not identical with what we perceive, and may be very different.</p>
+                <p><strong>B</strong> The most accurate historical account of perception is that of the 19th-century German scientist Hermann von Helmholtz. However, it was ridiculed at the time. Von Helmholtz thought that perceptions are unconscious inferences we make based on a combination of clues provided by the eyes and other senses, and knowledge of the world. This idea of unconscious inference for perception preceded, by several years, the psychoanalyst Freud's notion of the unconscious, which was also initially treated with derision because it undermined the notion of humans as pre-eminently rational beings who could be held responsible for their actions and awarded blame or praise accordingly.</p>
+                <p><strong>C</strong> Crucially, perception of the present depends on rich, though of course not always correct or appropriate, knowledge from the past. We interpret sense data (what we hear, touch, taste, see and smell) from the present according to what we already know. This raises the question: if we see the present through memory, why aren't past and present confused? The pioneering Russian neurologist Alexander Luria described the case of Mr. S, who had a remarkable memory. However, he was prone to just such confusions, for example mistaking seeing his clock for remembering it, and so failing to get up in the morning. This suggests that perhaps an important function of perception is to underline the present. Individual perceptions have a vividness that is rare for memories, which might be how we are able to separate them. Try this: look at something for a few seconds, and then shut your eyes and visualise it in memory. You will almost certainly find that the memory is pale by comparison with the perception. Perhaps this is why past and present are not normally confused. Luria's Mr. S had exceptionally vivid memories, and rich synesthesia (experiencing perceptions from another sense as well as the one being stimulated, such as musical notes experienced as colours), which may be why he confused seeing with having seen.</p>
+                <p><strong>D</strong> The complexity of processes involved in how we see first impressed itself on me 45 years ago. With my colleague Jean Wallace, I studied the rare case of Sydney Bradford, a man who had been born blind but, through a corneal graft at the age of 52, suddenly found himself able to see. Almost immediately after the operation he was able to ‘see’ but he could only see those things that he already knew about, having experienced them through touch. It was his touch memories that enabled him to perceive them with his eyes. When Bradford was first taken to the zoo, he proved utterly unable to see an elephant because he had no knowledge to make sense of his perceptions.</p>
+                <p><strong>E</strong> The more recent case in California of Mike May, who was also born blind, is similar. Since his operation, his sight has gradually improved as he learns to see, for example, by understanding how shadows represent depth and tell us about the shape of things. Some of the consequences of May's new-found vision were less happy. He had been a champion blind skier, but following the operation, he would have to shut his eyes while skiing to block out what he now found was a terrifying sight.</p>
+                <p><strong>F</strong> But acceptance of this intimate connection between memory and perception, even though it was first noticed in the 17th century, has been slow in brain science. Despite the fact that state-of-the-art brain imaging shows that perception animates parts of the brain associated with both present information and memory, most research on memory and perception is still undertaken as if these were separate processes. Seeing used to be thought of as taking place only in the eyes, and in quite specialised brain regions, but now it seems that half the brain is occupied with seeing, requiring a lot of energy. Perhaps this is why we shut our eyes for a rest.</p>
+                <p><strong>G</strong> It is not just extreme cases like Mike May, but also much more common errors of seeing – illusions – that can reveal the crucial role of memory in governing what we (think we) see. Perception depends on specific knowledge and probabilities. Our brains calculate the likelihood of what is out there, and when too far-fetched, perceptions are rejected. A dramatic and discomforting example is looking at the two sides of a face-mask. From the front it is a convex shape with the nose sticking out. Then if the mask is rotated, the back of the mask will be seen as convex, though we know that it must be concave. It is almost, if not quite, impossible to sketch the back of a hollow mask to look as it is – hollow. Science often learns from what does not happen: people not seeing a hollow face as hollow is the most revealing experiment on perception. The unsettling truth from brain science is that even people with no visual impairment see what, at some level, they expect to see, and often miss things as they really are.</p>
+            </div>
+        </div>
+        <div class="questions-section">
+            <div class="timer-controller">
+                <h3>Timer (set your time)</h3>
+                <div id="timer-display">20:00</div>
+                <input type="number" id="timer-min" class="timer-input" min="0" value="20">
+                <input type="number" id="timer-sec" class="timer-input" min="0" max="59" value="00">
+                <button id="set-timer" class="timer-btn">Set</button>
+                <button id="start-timer" class="timer-btn">Start</button>
+                <button id="pause-timer" class="timer-btn">Pause</button>
+                <button id="reset-timer" class="timer-btn">Reset</button>
+            </div>
+            <h2 class="questions-title">Questions 27-40</h2>
+            <div class="question-group">
+                <h3>Questions 27-30</h3>
+                <p>Choose the correct letter, A, B, C or D.<br>Write the correct letter in boxes 27-30 on your answer sheet.</p>
+                <div class="question">
+                    <label>27 Why does the writer refer to Locke and Newton in the first paragraph?</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q27" value="A"> A to indicate that his article will cover several scientific fields</label>
+                        <label class="tfng-option"><input type="radio" name="q27" value="B"> B to stress how much physics has changed in 400 years</label>
+                        <label class="tfng-option"><input type="radio" name="q27" value="C"> C to persuade the reader to take him seriously</label>
+                        <label class="tfng-option"><input type="radio" name="q27" value="D"> D to point out that his notions are not new</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>28 According to the writer, why was Freud's theory of the unconscious mocked?</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q28" value="A"> A It was too complex for his contemporaries to understand</label>
+                        <label class="tfng-option"><input type="radio" name="q28" value="B"> B It involved criticism of the way people behaved in society</label>
+                        <label class="tfng-option"><input type="radio" name="q28" value="C"> C People felt that it devalued the accepted concept of humanity</label>
+                        <label class="tfng-option"><input type="radio" name="q28" value="D"> D People assumed that it was intended as a joke</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>29 The writer describes Mr S failing to get up in order to demonstrate</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q29" value="A"> A how realistic most people's memories are</label>
+                        <label class="tfng-option"><input type="radio" name="q29" value="B"> B how hard it is to tell dreaming and waking apart</label>
+                        <label class="tfng-option"><input type="radio" name="q29" value="C"> C how unusual it is to mistake a perception for a memory</label>
+                        <label class="tfng-option"><input type="radio" name="q29" value="D"> D how valuable knowledge of the past can be</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>30 What point is the writer making in the text as a whole?</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q30" value="A"> A Perception involves much more than the data collected by the eyes.</label>
+                        <label class="tfng-option"><input type="radio" name="q30" value="B"> B Learning to see as an adult can be a time-consuming process.</label>
+                        <label class="tfng-option"><input type="radio" name="q30" value="C"> C Science is failing to devote enough attention to sight.</label>
+                        <label class="tfng-option"><input type="radio" name="q30" value="D"> D Human perception is remarkably reliable</label>
+                    </div>
+                </div>
+            </div>
+            <div class="question-group">
+                <h3>Questions 31-36</h3>
+                <p>Do the following statements agree with the views of the writer in Reading Passage 3?<br>
+In boxes 31–36 on your answer sheet, write<br>
+<strong>YES</strong> if the statement agrees with the views of the writer<br>
+<strong>NO</strong> if the statement contradicts the views of the writer<br>
+<strong>NOT GIVEN</strong> if it is impossible to say what the writer thinks about this</p>
+                <div class="question">
+                    <label>31 Sydney Bradford relied on recollections of objects he had been told about to help him see after his operation.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q31" value="YES"> YES</label>
+                        <label class="tfng-option"><input type="radio" name="q31" value="NO"> NO</label>
+                        <label class="tfng-option"><input type="radio" name="q31" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>32 People who only start to see as adults can learn to see as other people do in time.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q32" value="YES"> YES</label>
+                        <label class="tfng-option"><input type="radio" name="q32" value="NO"> NO</label>
+                        <label class="tfng-option"><input type="radio" name="q32" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>33 People who have gained their sight as adults find certain activities harder to do than before.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q33" value="YES"> YES</label>
+                        <label class="tfng-option"><input type="radio" name="q33" value="NO"> NO</label>
+                        <label class="tfng-option"><input type="radio" name="q33" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>34 It is evident now that sight involves the eyes and one particular area of the brain.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q34" value="YES"> YES</label>
+                        <label class="tfng-option"><input type="radio" name="q34" value="NO"> NO</label>
+                        <label class="tfng-option"><input type="radio" name="q34" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>35 The mask experiment is particularly useful in training people who are regaining their sight.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q35" value="YES"> YES</label>
+                        <label class="tfng-option"><input type="radio" name="q35" value="NO"> NO</label>
+                        <label class="tfng-option"><input type="radio" name="q35" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>36 People with perfect vision can fail to interpret objects correctly under certain circumstances.</label>
+                    <div class="tfng-options">
+                        <label class="tfng-option"><input type="radio" name="q36" value="YES"> YES</label>
+                        <label class="tfng-option"><input type="radio" name="q36" value="NO"> NO</label>
+                        <label class="tfng-option"><input type="radio" name="q36" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+            </div>
+            <div class="question-group">
+                <h3>Questions 37-40</h3>
+                <p>Complete the summary using the list of words, A-J, below.<br>
+Write the correct letter, A-J, in boxes 37–40 on your answer sheet.</p>
+                <h4>The mask experiment</h4>
+                <p>In this experiment, having looked at the front of a simple face-mask, subjects look at the reverse. However, the subjects are convinced that they are still looking at a mask which is <input type="text" name="q37" class="inline-input"> in shape. They believe that the <input type="text" name="q38" class="inline-input"> is poking out in the normal manner because that is what they are used to seeing. Attempting to make a <input type="text" name="q39" class="inline-input"> of the mask in this orientation leads to the same problem. The subjects fail to see a concave form because of the <input type="text" name="q40" class="inline-input"> they have that the features of a face stick out.</p>
+                <div class="options-list">
+                    <p>A back</p>
+                    <p>B concave</p>
+                    <p>C depression</p>
+                    <p>D convex</p>
+                    <p>E face</p>
+                    <p>F nose</p>
+                    <p>G round</p>
+                    <p>H preconception</p>
+                    <p>I drawing</p>
+                    <p>J sensation</p>
+                </div>
+            </div>
+            <button class="submit-btn" id="submitBtn">Submit Test</button>
+            <button class="reset-btn" id="resetBtn">Reset Test</button>
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+    <script>
+        const correctAnswers = {
+            q27: 'D',
+            q28: 'C',
+            q29: 'D',
+            q30: 'A',
+            q31: 'NO',
+            q32: 'NOT GIVEN',
+            q33: 'YES',
+            q34: 'NO',
+            q35: 'NOT GIVEN',
+            q36: 'YES',
+            q37: 'D',
+            q38: 'F',
+            q39: 'I',
+            q40: 'H'
+        };
+
+        // Toggle night mode
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const modeToggle = document.getElementById('modeToggle');
+            modeToggle.textContent = document.body.classList.contains('night-mode') ? '☀️ Day Mode' : '🌙 Night Mode';
+        }
+
+        // Ripple effect
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+            circle.classList.add('ripple');
+            const ripple = button.getElementsByClassName('ripple')[0];
+            if (ripple) ripple.remove();
+            button.appendChild(circle);
+        }
+
+        // Submit test
+        function submitTest() {
+            let score = 0;
+            const resultsDiv = document.getElementById('results');
+            let resultsHTML = '<div class="score">Your Score: ';
+            for (let i = 27; i <= 40; i++) {
+                let userAnswer;
+                if (i <= 36) {
+                    userAnswer = document.querySelector(`input[name="q${i}"]:checked`) ? document.querySelector(`input[name="q${i}"]:checked`).value : '';
+                } else {
+                    userAnswer = document.querySelector(`input[name="q${i}"]`) ? document.querySelector(`input[name="q${i}"]`).value.trim().toUpperCase() : '';
+                }
+                const correct = correctAnswers[`q${i}`];
+                const isCorrect = userAnswer === correct;
+                if (isCorrect) score++;
+                const className = isCorrect ? 'correct' : 'incorrect';
+                resultsHTML += `<div class="result-item ${className}">
+                    Question ${i}<br>
+                    Your answer: ${userAnswer || 'No answer'}<br>
+                    Correct answer: ${correct}
+                </div>`;
+            }
+            resultsHTML = '<div class="score">Your Score: ' + score + '/14</div>' + resultsHTML;
+            resultsDiv.innerHTML = resultsHTML;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({behavior: 'smooth'});
+        }
+
+        // Reset test
+        function resetTest() {
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('input[type="text"]').forEach(el => el.value = '');
+            document.getElementById('results').style.display = 'none';
+        }
+
+        // Highlight
+        let currentHighlightClass = 'highlight-yellow';
+        document.addEventListener('mouseup', () => {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                if (!range.collapsed) {
+                    const span = document.createElement('span');
+                    span.className = currentHighlightClass;
+                    range.surroundContents(span);
+                    selection.removeAllRanges();
+                }
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('highlight-yellow') || e.target.classList.contains('highlight-green')) {
+                const span = e.target;
+                const parent = span.parentNode;
+                while (span.firstChild) parent.insertBefore(span.firstChild, span);
+                parent.removeChild(span);
+                parent.normalize();
+            }
+        });
+
+        // Timer
+        let initialTime = 1200;
+        let timerTime = initialTime;
+        let timerInterval = null;
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerTime / 60);
+            const seconds = timerTime % 60;
+            document.getElementById('timer-display').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+        updateTimerDisplay();
+
+        document.getElementById('set-timer').addEventListener('click', () => {
+            const min = parseInt(document.getElementById('timer-min').value) || 0;
+            const sec = parseInt(document.getElementById('timer-sec').value) || 0;
+            initialTime = min * 60 + sec;
+            timerTime = initialTime;
+            updateTimerDisplay();
+        });
+
+        document.getElementById('start-timer').addEventListener('click', () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    if (timerTime > 0) {
+                        timerTime--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        alert('Time is up!');
+                    }
+                }, 1000);
+            }
+        });
+
+        document.getElementById('pause-timer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById('reset-timer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerTime = initialTime;
+            updateTimerDisplay();
+        });
+
+        // Event listeners
+        document.getElementById('modeToggle').addEventListener('click', toggleNightMode);
+        document.getElementById('highlightToggle').addEventListener('click', () => {
+            currentHighlightClass = currentHighlightClass === 'highlight-yellow' ? 'highlight-green' : 'highlight-yellow';
+            document.getElementById('highlightToggle').textContent = currentHighlightClass === 'highlight-yellow' ? 'Switch to Green' : 'Switch to Yellow';
+        });
+        document.getElementById('submitBtn').addEventListener('click', submitTest);
+        document.getElementById('resetBtn').addEventListener('click', resetTest);
+        // Add ripple to buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', createRipple);
+        });
+    </script>
+</body>
+</html>
