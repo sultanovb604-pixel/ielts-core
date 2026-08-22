@@ -1,0 +1,1300 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Practice - Paternity Leave</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            /* Light mode variables */
+            --bg-color: #f5f7fa;
+            --container-bg: white;
+            --text-color: #2c3e50;
+            --title-color: #2c5282;
+            --border-color: #e8f4f8;
+            --button-bg: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            --button-hover-bg: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --reset-bg: linear-gradient(135deg, #ed64a6 0%, #d53f8c 100%);
+            --reset-hover-bg: linear-gradient(135deg, #d53f8c 0%, #b83280 100%);
+            --section-bg: linear-gradient(135deg, #f8fbff 0%, #fefefe 100%);
+            --question-bg: #f8f9fa;
+            --correct-bg: #f0fff4;
+            --correct-border: #38a169;
+            --incorrect-bg: #fff5f5;
+            --incorrect-border: #e53e3e;
+            --table-border: #e2e8f0;
+            --table-header-bg: #f7fafc;
+            --input-bg: white;
+            --input-border: #e2e8f0;
+            --input-focus-border: #4299e1;
+            --toggle-bg: #e6f3ff;
+            --toggle-border: #4299e1;
+            --toggle-header-bg: #4299e1;
+            --toggle-header-hover: #3182ce;
+            --toggle-text: white;
+            --instructions-bg: #f7fafc;
+            --instructions-text: #4a5568;
+            --score-bg: #e6f3ff;
+            --result-reference: #edf2f7;
+            --link-color: #4299e1;
+        }
+        .night-mode {
+            /* Dark mode variables */
+            --bg-color: #1a202c;
+            --container-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --title-color: #63b3ed;
+            --border-color: #4a5568;
+            --button-bg: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            --button-hover-bg: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            --reset-bg: linear-gradient(135deg, #9f7aea 0%, #7c3aed 100%);
+            --reset-hover-bg: linear-gradient(135deg, #7c3aed 0%, #6b46c1 100%);
+            --section-bg: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --question-bg: #4a5568;
+            --correct-bg: #2f855a;
+            --correct-border: #38a169;
+            --incorrect-bg: #c53030;
+            --incorrect-border: #e53e3e;
+            --table-border: #4a5568;
+            --table-header-bg: #2d3748;
+            --input-bg: #4a5568;
+            --input-border: #4a5568;
+            --input-focus-border: #63b3ed;
+            --toggle-bg: #2d3748;
+            --toggle-border: #63b3ed;
+            --toggle-header-bg: #2b6cb0;
+            --toggle-header-hover: #2c5282;
+            --toggle-text: #e2e8f0;
+            --instructions-bg: #2d3748;
+            --instructions-text: #cbd5e0;
+            --score-bg: #2d3748;
+            --result-reference: #4a5568;
+            --link-color: #63b3ed;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .mode-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .highlight-toggle {
+            position: absolute;
+            top: 15px;
+            right: 150px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .highlight-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .passage-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            border-right: 2px solid var(--border-color);
+            background: var(--section-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .questions-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: var(--section-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .passage-title {
+            color: var(--title-color);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 3px solid var(--input-focus-border);
+            padding-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .passage-subtitle {
+            color: var(--text-color);
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 25px;
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .passage-content {
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        .passage-content p {
+            margin-bottom: 18px;
+            text-indent: 20px;
+        }
+        .passage-content h3 {
+            color: var(--title-color);
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .questions-title {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            background: var(--question-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--input-focus-border);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .question-group {
+            margin-bottom: 30px;
+            background: var(--question-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--correct-border);
+            transition: background-color 0.3s;
+        }
+        .question-group h3 {
+            color: var(--text-color);
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .question-group p {
+            margin-bottom: 10px;
+            font-style: italic;
+            color: var(--instructions-text);
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: var(--container-bg);
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .question label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .question input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .question input[type="text"]:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .question select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .question select:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .multiple-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background: var(--toggle-bg);
+        }
+        .submit-btn, .reset-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .reset-btn {
+            background: var(--reset-bg);
+        }
+        .submit-btn:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+        .reset-btn:hover {
+            background: var(--reset-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(237, 100, 166, 0.3);
+        }
+        .submit-btn:active, .reset-btn:active {
+            transform: translateY(1px);
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--instructions-bg);
+            border-radius: 10px;
+            display: none;
+            color: var(--text-color);
+        }
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+        .result-item.correct {
+            background: var(--correct-bg);
+            border-left-color: var(--correct-border);
+        }
+        .result-item.incorrect {
+            background: var(--incorrect-bg);
+            border-left-color: var(--incorrect-border);
+        }
+        .result-item h4 {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .result-item .user-answer {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .result-item .correct-answer {
+            font-weight: 600;
+            color: var(--correct-border);
+        }
+        .score {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color);
+            background: var(--score-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .table th, .table td {
+            border: 1px solid var(--table-border);
+            padding: 10px;
+            text-align: left;
+            background: var(--container-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .table th {
+            background: var(--table-header-bg);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .table-question input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 2px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 13px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .table-question input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+        }
+        .instructions-toggle {
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .instructions-header {
+            padding: 12px 15px;
+            background: var(--toggle-header-bg);
+            color: var(--toggle-text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        .instructions-header:hover {
+            background: var(--toggle-header-hover);
+        }
+        .instructions-content {
+            padding: 15px;
+            display: none;
+            background: var(--instructions-bg);
+            color: var(--instructions-text);
+            font-style: italic;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .instructions-content.show {
+            display: block;
+        }
+        .arrow {
+            transition: transform 0.3s;
+        }
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+        .inline-input {
+            display: inline-block;
+            width: 160px;
+            max-width: 160px;
+            padding: 2px 6px;
+            border: 1px solid var(--input-focus-border);
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--input-bg);
+            margin: 0 2px;
+            height: 24px;
+            color: var(--text-color);
+        }
+        .inline-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            background: var(--input-bg);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        /* True/False/Not Given radio buttons */
+        .tfng-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .tfng-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+        }
+        .tfng-option:hover {
+            background: var(--toggle-bg);
+        }
+        .tfng-option input[type="radio"] {
+            margin: 0;
+        }
+        /* Highlight feature */
+        .highlight-yellow, .highlight-green {
+            cursor: pointer;
+        }
+        .highlight-yellow {
+            background-color: yellow;
+        }
+        .highlight-green {
+            background-color: #90ee90;
+        }
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        .modal-content {
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .modal-content a {
+            color: var(--link-color);
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
+        .modal-content button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-content button:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+        }
+        /* Timer controller styles */
+        .timer-controller {
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .timer-controller h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+        #timer-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 10px 0;
+            background: var(--container-bg);
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .timer-input {
+            width: 60px;
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            text-align: center;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .timer-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .timer-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .timer-btn:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+        .timer-btn:active {
+            transform: translateY(1px);
+        }
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            .passage-section, .questions-section {
+                width: 100%;
+                padding: 15px;
+                overflow: visible;
+            }
+            .passage-section {
+                border-right: none;
+                border-bottom: 2px solid var(--border-color);
+                max-height: 50vh;
+                overflow-y: auto;
+            }
+            .questions-section {
+                position: relative;
+            }
+            .results.fullscreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1000;
+                background: var(--container-bg);
+                overflow-y: auto;
+                margin: 0;
+                border-radius: 0;
+                padding: 20px;
+                padding-top: 60px; /* Space for close button */
+            }
+            .close-results {
+                position: fixed;
+                top: 15px;
+                right: 15px;
+                z-index: 1001;
+                background: #e53e3e;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            }
+            .submit-btn, .reset-btn {
+                padding: 18px;
+                font-size: 18px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .submit-btn:active, .reset-btn:active {
+                transform: translateY(1px);
+                background: var(--button-hover-bg);
+            }
+            .reset-btn:active {
+                background: var(--reset-hover-bg);
+            }
+            .tfng-options {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .tfng-option {
+                width: 100%;
+                padding: 8px;
+            }
+            .modal-content {
+                max-width: 90%;
+                padding: 20px;
+            }
+        }
+        @media (max-width: 768px) and (orientation: portrait) {
+            .passage-title {
+                font-size: 16px;
+            }
+            .passage-subtitle {
+                font-size: 12px;
+            }
+            .questions-title {
+                font-size: 16px;
+            }
+            .passage-content {
+                font-size: 13px;
+            }
+            .question-group {
+                font-size: 13px;
+            }
+            .question-group h3 {
+                font-size: 15px;
+            }
+            .question label {
+                font-size: 13px;
+            }
+            .inline-input {
+                width: 120px;
+                height: 20px;
+                font-size: 12px;
+            }
+            .table {
+                font-size: 11px;
+            }
+            .table th, .table td {
+                font-size: 11px;
+                padding: 6px;
+            }
+            .submit-btn, .reset-btn {
+                padding: 15px;
+                font-size: 16px;
+            }
+            .instructions-header {
+                font-size: 12px;
+            }
+            .instructions-content {
+                font-size: 11px;
+            }
+            .results {
+                font-size: 13px;
+            }
+            .score {
+                font-size: 20px;
+            }
+        }
+        @media (max-width: 768px) and (orientation: landscape) {
+            .passage-title {
+                font-size: 12px;
+            }
+            .passage-subtitle {
+                font-size: 8px;
+            }
+            .questions-title {
+                font-size: 12px;
+            }
+            .passage-content {
+                font-size: 8px;
+            }
+            .question-group {
+                font-size: 8px;
+            }
+            .question-group h3 {
+                font-size: 9px;
+            }
+            .question label {
+                font-size: 8px;
+            }
+            .inline-input {
+                width: 60px;
+                height: 16px;
+                font-size: 7px;
+            }
+            .table {
+                font-size: 6px;
+            }
+            .table th, .table td {
+                font-size: 6px;
+                padding: 2px;
+            }
+            .submit-btn, .reset-btn {
+                padding: 6px;
+                font-size: 9px;
+            }
+            .instructions-header {
+                font-size: 8px;
+            }
+            .instructions-content {
+                font-size: 7px;
+            }
+        }
+        /* Ripple effect for button */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle">🌙 Night Mode</button>
+    <button class="highlight-toggle" id="highlightToggle">Switch to Green</button>
+    <div class="container">
+        <div class="passage-section">
+            <h1 class="passage-title">READING PASSAGE 2</h1>
+            <p class="passage-subtitle">You should spend about 20 minutes on Questions 14–26, which are based on Reading Passage 2 below.</p>
+            <div class="passage-content">
+                <h2 style="color: var(--title-color); font-size: 24px; margin-bottom: 15px; text-align: center;">Paternity Leave</h2>
+                <p>Men have long been discouraged from playing an equal role at home. That is at last starting to change</p>
+                <p><strong>A</strong> At a course for fathers-to-be in New York, participants are introduced to baby maintenance for beginners: how to keep their babies fed, warm and clean. The City Dads Group was founded when Matt Schneider and Lances Somerfeld became fathers and discovered that people saw their place as firmly outside the home. New York was full of parents' support groups, but nearly all were aimed at mothers. Frustrated, the friends set up their own group, which has spread to 17 cities in the USA, helping fathers who want to get involved from day one.</p>
+                <p><strong>B</strong> In general, legal and financial support for new parents is better than it has ever been. According to the International Labor Organization (ILO), 85% of countries now provide at least 12 weeks' maternity leave. In all but two of the 185 countries it surveys, mothers are entitled to some leave paid for by the state, companies or some combination of the two. Although only a third of countries meet the ILO's recommended minimum of at least 14 weeks off for new mothers, paid at two-thirds their salary and funded publicly, the picture is improving.</p>
+                <p>But how many countries meet the ILO's guidelines on paternity leave? None because no such guidelines exist. Though it published detailed advice regarding female employees, the organization has drawn up no formal recommendations on fathers' rights and duties. Until recently, national governments have been similarly uninterested; less than half of countries offer paternity leave of any sort. Only around half a dozen offer new fathers more than a fortnight, and companies, not the state, usually foot the bill for the costs of paternity leave. In the eyes of most people, responsibility for bringing up baby still falls squarely on the mother.</p>
+                <p><strong>C</strong> Now a different view is slowly emerging, as growing evidence suggests that children benefit from seeing more of their fathers. But much of the demand for a shift in approaches to childcare has come from women, who have started to conclude that they are victims as well as beneficiaries of generous maternity-leave policies.</p>
+                <p><strong>D</strong> This may appear paradoxical, as most countries have found that when they offer decent maternity leave, they increase female employment. If women have no right to take time off, or are entitled only to short or poorly paid spells of absence, many have little choice but to leave the workforce when their baby is born. If they can take a few months of paid leave before returning to their old job, they are more likely to continue working. But it turns out that long maternity breaks have unintended consequences. Time away from the labour market reduce women's earning power, as their skills degrade and they miss chances to gain experience and win promotion. Moving into senior management becomes particularly hard, partly because of discrimination by bosses and hiring committees, who reject candidates they think may be away a lot, and partly because many high-level jobs are hard to combine with serial leave-taking. And the effect is magnified when lengthy maternity leave is combined with policies to encourage part-time work, which tempt more women back into the labour force but keep them in junior position.</p>
+                <p><strong>E</strong> Rather than simply cutting maternity leave in response to such findings, a growing number of governments are trying to spread the child-rearing burden (or joy, depending on how one looks at it). Britain recently became the latest country to combine maternity and paternity leave into a single chunk of parental leave, to be split between mother and father however they see fit. Several European countries, as well as Australia and New Zealand, already have such a system.</p>
+                <p>The problem is that dads tend not to take up the offer. In Austria, the Czech Republic and Poland, where all parental leave is transferable, only about 3% of dads make use of it. In Britain, the government estimates that 2-8% of dads will take more than their existing fortnight.</p>
+                <p>The main reason for low take-up by fathers is financial: even pre-childbirth, women are paid less than men, meaning that their salaries are easier to forgo during a period of unpaid or low-paid leave. But pressure related to culture also weigh heavily. Mothers still tend to be seen as the main carers, with dads portrayed in domestic terms as blundering sidekicks or well-meaning buffoons.</p>
+                <p><strong>F</strong> To overcome these obstacles, some countries are giving fathers a firm nudge. In a few, including Chile, Italy and Portugal, paternity leave is compulsory. Others offer incentives that are hard to turn down. Sweden grants a bonus to parents who share leave more equally.</p>
+                <p>Swedish fathers now account for more than a fifth of all parental leave taken, compared with almost none when shared leave was introduced. Germany introduced the same system and saw the proportion of fathers taking time off rise from 3% in 2006 to 32% in 2013, and Poland has switched to gender-specific quotas, replacing the previous system of shared leave.</p>
+                <p>Where leave is well-paid and not seen as 'belonging' to the mother, fathers seem willing to request it. State meddling in what has historically been regarded as a natural division of labour may annoy some people. But traditional maternity leave, which channels men into breadwinning and women into child-rearing, is hardly neutral. And shared involvement by parents stands to improve women's careers, children's development and perhaps even dads' life satisfaction.</p>
+            </div>
+        </div>
+        <div class="questions-section">
+            <div class="timer-controller">
+                <h3>Timer (set your time)</h3>
+                <div id="timer-display">20:00</div>
+                <input type="number" id="timer-min" class="timer-input" min="0" value="20" placeholder="Min">
+                <input type="number" id="timer-sec" class="timer-input" min="0" max="59" value="00" placeholder="Sec">
+                <button id="set-timer" class="timer-btn">Set</button>
+                <button id="start-timer" class="timer-btn">Start</button>
+                <button id="pause-timer" class="timer-btn">Pause</button>
+                <button id="reset-timer" class="timer-btn">Reset</button>
+            </div>
+            <h2 class="questions-title">Questions 14-26</h2>
+            <div class="question-group">
+                <h3>Questions 14-19</h3>
+                <p>Reading Passage 2 has six paragraphs, A-F.</p>
+                <p>Choose the correct heading for each paragraph from the list of headings below.</p>
+                <p>Write the correct number, i-viii, in boxes 14-19 on your answer sheet.</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions1')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow1">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions1">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <h4>List of Headings</h4>
+                <p>i Opposition by employers to parental leave</p>
+                <p>ii An illustration of a trend in one country</p>
+                <p>iii An explanation for the limited success of government initiatives</p>
+                <p>iv Pressure for change from an unlikely source</p>
+                <p>v The need for cooperation at a global level</p>
+                <p>vi The contrast in attitudes towards leave for mothers and fathers</p>
+                <p>vii A range of measures to encourage more equal responsibility</p>
+                <p>viii The implications of maternity leave</p>
+                <div class="question">
+                    <label>14 Paragraph A</label>
+                    <select id="q14">
+                        <option value="">Select</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>15 Paragraph B</label>
+                    <select id="q15">
+                        <option value="">Select</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>16 Paragraph C</label>
+                    <select id="q16">
+                        <option value="">Select</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>17 Paragraph D</label>
+                    <select id="q17">
+                        <option value="">Select</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>18 Paragraph E</label>
+                    <select id="q18">
+                        <option value="">Select</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                    </select>
+                </div>
+                <div class="question">
+                    <label>19 Paragraph F</label>
+                    <select id="q19">
+                        <option value="">Select</option>
+                        <option value="i">i</option>
+                        <option value="ii">ii</option>
+                        <option value="iii">iii</option>
+                        <option value="iv">iv</option>
+                        <option value="v">v</option>
+                        <option value="vi">vi</option>
+                        <option value="vii">vii</option>
+                        <option value="viii">viii</option>
+                    </select>
+                </div>
+            </div>
+            <div class="question-group">
+                <h3>Questions 20-21</h3>
+                <p>Choose TWO letters, A-E</p>
+                <p>Write the correct letters in boxes 20 and 21 on your answer sheet</p>
+                <p>According to the writer, which TWO problems may be caused by maternity leave?</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions2')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow2">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions2">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <div class="multiple-options">
+                    <label class="option"><input type="checkbox" name="q20_21" value="A"> A women may be less effective at work after maternity leave.</label>
+                    <label class="option"><input type="checkbox" name="q20_21" value="B"> B women may find it difficult to find suitable part-time work</label>
+                    <label class="option"><input type="checkbox" name="q20_21" value="C"> C women may find they are paid less for doing the same work</label>
+                    <label class="option"><input type="checkbox" name="q20_21" value="D"> D women’s chances of professional advancement may be effected</label>
+                    <label class="option"><input type="checkbox" name="q20_21" value="E"> E women’s pay may be insufficient to support them during maternity leave.</label>
+                </div>
+            </div>
+            <div class="question-group">
+                <h3>Questions 22-26</h3>
+                <p>Complete the summary below.</p>
+                <p>Choose ONE WORD ONLY from the passage for each answer.</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions3')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow3">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions3">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <h4>Encouraging more fathers to take paternity leave</h4>
+                <p>Even in countries where paternity leave is easy to get, few fathers make use of it, chiefly for <input type="text" id="q22" class="inline-input" placeholder="22" autocomplete="off" spellcheck="false"> reasons. However, issues connected with <input type="text" id="q23" class="inline-input" placeholder="23" autocomplete="off" spellcheck="false">, including traditional views of male and female roles in the family, may also play a part.</p>
+                <p>Some countries, such as Chile, have made it <input type="text" id="q24" class="inline-input" placeholder="24" autocomplete="off" spellcheck="false"> for men to take paternity leave. Sweden and Germany both offer a bonus to families where parents share leave, and in Poland, mothers and fathers each have <input type="text" id="q25" class="inline-input" placeholder="25" autocomplete="off" spellcheck="false"> of leave which are specified for them.</p>
+                <p>Sharing children in this way may be good for both mothers and fathers, and may also support the <input type="text" id="q26" class="inline-input" placeholder="26" autocomplete="off" spellcheck="false"> of the child.</p>
+            </div>
+            <button class="submit-btn" id="submitBtn">Submit Test</button>
+            <button class="reset-btn" id="resetBtn">Reset Test</button>
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+    <script>
+        // Correct answers
+        const correctAnswers = {
+            q14: 'ii',
+            q15: 'vi',
+            q16: 'iv',
+            q17: 'viii',
+            q18: 'iii',
+            q19: 'vii',
+            q20_21: ['A', 'D'].sort(),
+            q22: 'financial',
+            q23: 'culture',
+            q24: 'compulsory',
+            q25: 'quotas',
+            q26: 'development'
+        };
+
+        // Toggle instructions
+        function toggleInstructions(instructionsId) {
+            const content = document.getElementById(instructionsId);
+            const arrow = document.getElementById(instructionsId.replace('instructions', 'arrow'));
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                arrow.classList.remove('rotated');
+            } else {
+                content.classList.add('show');
+                arrow.classList.add('rotated');
+            }
+        }
+
+        // Toggle night mode
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const modeToggle = document.getElementById('modeToggle');
+            if (document.body.classList.contains('night-mode')) {
+                modeToggle.textContent = '☀️ Day Mode';
+                modeToggle.style.background = 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)';
+            } else {
+                modeToggle.textContent = '🌙 Night Mode';
+                modeToggle.style.background = 'linear-gradient(135deg, #4299e1 0%, #3182ce 100%)';
+            }
+        }
+
+        // Ripple effect for button
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.classList.add("ripple");
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            button.appendChild(circle);
+        }
+
+        // Submit test function
+        function submitTest() {
+            const userAnswers = {};
+            let score = 0;
+
+            // Headings 14-19 (selects)
+            for (let i = 14; i <= 19; i++) {
+                const element = document.getElementById(`q${i}`);
+                userAnswers[`q${i}`] = element ? element.value : '';
+            }
+
+            // Multiple choice 20-21 (checkboxes)
+            const selected20_21 = Array.from(document.querySelectorAll('input[name="q20_21"]:checked')).map(input => input.value).sort();
+            userAnswers['q20_21'] = selected20_21;
+
+            // Text inputs 22-26
+            for (let i = 22; i <= 26; i++) {
+                const element = document.getElementById(`q${i}`);
+                userAnswers[`q${i}`] = element ? element.value.trim().toLowerCase() : '';
+            }
+
+            // Calculate score and generate results
+            let resultsHTML = '';
+
+            // For 14-19
+            for (let i = 14; i <= 19; i++) {
+                const qKey = `q${i}`;
+                const userAnswer = userAnswers[qKey];
+                const correctAnswer = correctAnswers[qKey];
+                let isCorrect = userAnswer === correctAnswer;
+                if (isCorrect) score++;
+                const resultClass = isCorrect ? 'correct' : 'incorrect';
+                const statusIcon = isCorrect ? '✅' : '❌';
+                resultsHTML += `
+                    <div class="result-item ${resultClass}">
+                        <h4>${statusIcon} Question ${i}</h4>
+                        <p><strong>Your answer:</strong> <span class="user-answer">${userAnswer || 'No answer provided'}</span></p>
+                        <p><strong>Correct answer:</strong> <span class="correct-answer">${correctAnswer}</span></p>
+                    </div>
+                `;
+            }
+
+            // For 20-21
+            const qKey2021 = 'q20_21';
+            const userAnswer2021 = userAnswers[qKey2021];
+            const correctAnswer2021 = correctAnswers[qKey2021];
+            let isCorrect2021 = userAnswer2021.length === correctAnswer2021.length && userAnswer2021.every((val, idx) => val === correctAnswer2021[idx]);
+            if (isCorrect2021) score += 2;
+            const resultClass2021 = isCorrect2021 ? 'correct' : 'incorrect';
+            const statusIcon2021 = isCorrect2021 ? '✅' : '❌';
+            resultsHTML += `
+                <div class="result-item ${resultClass2021}">
+                    <h4>${statusIcon2021} Questions 20-21</h4>
+                    <p><strong>Your answer:</strong> <span class="user-answer">${userAnswer2021.join(', ') || 'No answer provided'}</span></p>
+                    <p><strong>Correct answer:</strong> <span class="correct-answer">${correctAnswer2021.join(', ')}</span></p>
+                </div>
+            `;
+
+            // For 22-26
+            for (let i = 22; i <= 26; i++) {
+                const qKey = `q${i}`;
+                const userAnswer = userAnswers[qKey];
+                const correctAnswer = correctAnswers[qKey];
+                let isCorrect = userAnswer === correctAnswer;
+                if (isCorrect) score++;
+                const resultClass = isCorrect ? 'correct' : 'incorrect';
+                const statusIcon = isCorrect ? '✅' : '❌';
+                resultsHTML += `
+                    <div class="result-item ${resultClass}">
+                        <h4>${statusIcon} Question ${i}</h4>
+                        <p><strong>Your answer:</strong> <span class="user-answer">${userAnswer || 'No answer provided'}</span></p>
+                        <p><strong>Correct answer:</strong> <span class="correct-answer">${correctAnswer}</span></p>
+                    </div>
+                `;
+            }
+
+            const percentage = Math.round((score / 13) * 100);
+            let gradeColor = '#e53e3e';
+            if (percentage >= 70) gradeColor = '#38a169';
+            else if (percentage >= 50) gradeColor = '#d69e2e';
+
+            const finalResultsHTML = `
+                <div class="score" style="color: ${gradeColor}">
+                    Your Score: ${score}/13 (${percentage}%)
+                </div>
+                ${resultsHTML}
+            `;
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = finalResultsHTML;
+            resultsDiv.style.display = 'block';
+
+            // Add close button for mobile
+            if (window.innerWidth <= 768) {
+                resultsDiv.classList.add('fullscreen');
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'close-results';
+                closeBtn.innerHTML = '&times;';
+                closeBtn.onclick = function() {
+                    resultsDiv.style.display = 'none';
+                    resultsDiv.classList.remove('fullscreen');
+                    closeBtn.remove();
+                };
+                document.body.appendChild(closeBtn);
+            }
+
+            // Scroll to results
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Reset test function
+        function resetTest() {
+            // Clear selects 14-19
+            for (let i = 14; i <= 19; i++) {
+                const element = document.getElementById(`q${i}`);
+                if (element) element.value = '';
+            }
+
+            // Clear checkboxes 20-21
+            document.querySelectorAll('input[name="q20_21"]').forEach(input => input.checked = false);
+
+            // Clear text 22-26
+            for (let i = 22; i <= 26; i++) {
+                const element = document.getElementById(`q${i}`);
+                if (element) element.value = '';
+            }
+
+            // Hide and clear results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'none';
+            resultsDiv.innerHTML = '';
+            resultsDiv.classList.remove('fullscreen');
+            const closeBtn = document.querySelector('.close-results');
+            if (closeBtn) closeBtn.remove();
+
+            // Scroll to top
+            setTimeout(() => {
+                document.querySelector('.questions-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Highlight feature
+        document.addEventListener('mouseup', handleHighlight);
+        document.addEventListener('touchend', handleHighlight);
+        function handleHighlight(e) {
+            let selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                let range = selection.getRangeAt(0);
+                if (!range.collapsed) {
+                    let commonAncestor = range.commonAncestorContainer;
+                    let parentElement = commonAncestor.nodeType === 3 ? commonAncestor.parentNode : commonAncestor;
+                    if (parentElement.closest('.passage-content, .question-group')) {
+                        if (!parentElement.closest('input, select')) {
+                            let span = document.createElement('span');
+                            span.className = currentHighlightClass;
+                            try {
+                                range.surroundContents(span);
+                            } catch (err) {
+                                console.log('Cannot surround range:', err);
+                            }
+                            selection.removeAllRanges();
+                        }
+                    }
+                }
+            }
+        }
+
+        // Removal of highlight
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('highlight-yellow') || e.target.classList.contains('highlight-green')) {
+                let span = e.target;
+                let fragment = document.createDocumentFragment();
+                while (span.firstChild) {
+                    fragment.appendChild(span.firstChild);
+                }
+                span.parentNode.replaceChild(fragment, span);
+                span.parentNode.normalize();
+            }
+        });
+
+        // Timer logic
+        let initialTime = 1200; // Default 20 minutes in seconds
+        let timerTime = initialTime;
+        let timerInterval = null;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerTime / 60);
+            const seconds = timerTime % 60;
+            document.getElementById('timer-display').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Initialize button event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const modeToggle = document.getElementById('modeToggle');
+            const highlightToggle = document.getElementById('highlightToggle');
+            const setTimer = document.getElementById('set-timer');
+            const startTimer = document.getElementById('start-timer');
+            const pauseTimer = document.getElementById('pause-timer');
+            const resetTimer = document.getElementById('reset-timer');
+            window.currentHighlightClass = 'highlight-yellow';
+
+            // Add ripple effect to buttons
+            submitBtn.addEventListener('click', createRipple);
+            submitBtn.addEventListener('touchstart', createRipple);
+            resetBtn.addEventListener('click', createRipple);
+            resetBtn.addEventListener('touchstart', createRipple);
+            setTimer.addEventListener('click', createRipple);
+            setTimer.addEventListener('touchstart', createRipple);
+            startTimer.addEventListener('click', createRipple);
+            startTimer.addEventListener('touchstart', createRipple);
+            pauseTimer.addEventListener('click', createRipple);
+            pauseTimer.addEventListener('touchstart', createRipple);
+            resetTimer.addEventListener('click', createRipple);
+            resetTimer.addEventListener('touchstart', createRipple);
+            highlightToggle.addEventListener('click', createRipple);
+            highlightToggle.addEventListener('touchstart', createRipple);
+
+            // Add submit and reset functionality
+            submitBtn.addEventListener('click', submitTest);
+            submitBtn.addEventListener('touchend', function(e) {
+                e.preventDefault(); // Prevent double-tap zoom
+                submitTest();
+            });
+            resetBtn.addEventListener('click', resetTest);
+            resetBtn.addEventListener('touchend', function(e) {
+                e.preventDefault(); // Prevent double-tap zoom
+                resetTest();
+            });
+
+            // Add night mode toggle
+            modeToggle.addEventListener('click', toggleNightMode);
+
+            // Add highlight color toggle
+            highlightToggle.addEventListener('click', function() {
+                currentHighlightClass = currentHighlightClass === 'highlight-yellow' ? 'highlight-green' : 'highlight-yellow';
+                highlightToggle.textContent = currentHighlightClass === 'highlight-yellow' ? 'Switch to Green' : 'Switch to Yellow';
+            });
+
+            // Timer events
+            setTimer.addEventListener('click', () => {
+                const min = parseInt(document.getElementById('timer-min').value) || 0;
+                const sec = parseInt(document.getElementById('timer-sec').value) || 0;
+                initialTime = min * 60 + sec;
+                timerTime = initialTime;
+                updateTimerDisplay();
+            });
+            startTimer.addEventListener('click', () => {
+                if (!timerInterval) {
+                    timerInterval = setInterval(() => {
+                        if (timerTime > 0) {
+                            timerTime--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(timerInterval);
+                            alert('Time is up!');
+                        }
+                    }, 1000);
+                }
+            });
+            pauseTimer.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            });
+            resetTimer.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timerTime = initialTime;
+                updateTimerDisplay();
+            });
+
+            // Initial timer display
+            updateTimerDisplay();
+        });
+    </script>
+</body>
+</html>

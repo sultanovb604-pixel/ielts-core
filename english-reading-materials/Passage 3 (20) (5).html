@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Test - Robert Louis Stevenson</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(1200px 600px at 10% 0%, #eef2ff, transparent),
+                        radial-gradient(1200px 600px at 90% 100%, #dbeafe, transparent),
+                        #f1f5f9;
+            overflow: hidden;
+            color: #1f2937;
+        }
+        .test-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .test-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #d1d5db;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header__logo img {
+            height: 48px;
+            transition: transform 0.3s ease;
+        }
+        .header__logo img:hover {
+            transform: scale(1.1);
+        }
+        .header__timer {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            border: 1px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+        .header__icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .header__icon {
+            font-size: 1.5rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .header__icon:hover {
+            color: #2563eb;
+            transform: scale(1.15);
+        }
+        .settings-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .settings-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 32rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-3rem); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, #3b82f6, #1e40af);
+            color: #ffffff;
+        }
+        .settings-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        .settings-close {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+        .settings-close:hover {
+            color: #fed7e2;
+        }
+        .settings-body {
+            padding: 1.5rem;
+            background: #f9fafb;
+        }
+        .settings-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .settings-option:hover {
+            background: #eff6ff;
+        }
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+        .settings-option i {
+            margin-right: 0.75rem;
+            width: 1.25rem;
+            text-align: center;
+            color: #2563eb;
+        }
+        .settings-option span {
+            font-size: 1.1rem;
+        }
+        .sectionRubric {
+            margin: 1.5rem;
+            padding: 1.25rem;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .sectionRubric h2 {
+            font-size: 1.25rem;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        .passage-container {
+            width: 45%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            background: #f9fafb;
+            border-right: 1px solid #d1d5db;
+            position: relative;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        .passage-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .passage-container::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        .passage-container::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 4px;
+        }
+        .questions-container {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            background: #f9fafb;
+            user-select: text;
+            -webkit-user-select: text;
+            position: relative;
+        }
+        .questions-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .questions-container::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        .questions-container::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 4px;
+        }
+        .highlight {
+            border-radius: 0.25rem;
+            padding: 0 0.25rem;
+        }
+        .highlight.yellow { background: rgba(254, 243, 199, 0.5); }
+        .highlight.green { background: rgba(187, 247, 208, 0.5); }
+        .highlight.pink { background: rgba(251, 207, 232, 0.5); }
+        .highlight.blue { background: rgba(191, 219, 254, 0.5); }
+        .highlight-toolbar {
+            position: fixed;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1000;
+            padding: 0.5rem;
+            transform: translate(-50%, -100%);
+            margin-top: -0.5rem;
+        }
+        .highlight-toolbar button {
+            background: none;
+            border: none;
+            width: 2rem;
+            height: 2rem;
+            cursor: pointer;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        .highlight-toolbar button:hover {
+            background: #eff6ff;
+            transform: scale(1.1);
+        }
+        .highlight-toolbar button.remove {
+            color: #ef4444;
+        }
+        .divider {
+            width: 14px;
+            background: #e5e7eb;
+            cursor: col-resize;
+            position: relative;
+        }
+        .divider-handle {
+            width: 6px;
+            height: 60px;
+            background: #6b7280;
+            border-radius: 4px;
+            position: absolute;
+            top: 50%;
+            left: 4px;
+            transform: translateY(-50%);
+        }
+        .question {
+            margin-bottom: 2rem;
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+        .question:hover {
+            transform: translateY(-2px);
+        }
+        .question-rubric {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .question-rubric h3 {
+            margin: 0 0 0.5rem;
+            color: #2563eb;
+        }
+        .question-rubric p {
+            margin: 0.25rem 0;
+            color: #4b5563;
+        }
+        .multiple-choice {
+            margin-top: 1rem;
+        }
+        .multiple-choice label {
+            display: block;
+            margin: 0.5rem 0;
+            font-size: 1rem;
+            color: #1f2937;
+            cursor: pointer;
+        }
+        .multiple-choice input[type="radio"] {
+            margin-right: 0.75rem;
+            accent-color: #2563eb;
+        }
+        .true-false {
+            margin-top: 1rem;
+        }
+        .true-false label {
+            display: block;
+            margin: 0.5rem 0;
+            font-size: 1rem;
+            color: #1f2937;
+            cursor: pointer;
+        }
+        .true-false input[type="radio"] {
+            margin-right: 0.75rem;
+            accent-color: #2563eb;
+        }
+        .note-input {
+            display: inline-block;
+            width: 8rem;
+            height: 1.5rem;
+            border: 2px dashed #6b7280;
+            border-radius: 0.5rem;
+            margin: 0 0.25rem;
+            padding: 0 0.5rem;
+            color: #6b7280;
+            font-weight: 600;
+            background: #eff6ff;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .note-input:focus {
+            border-color: #2563eb;
+            background: #dbeafe;
+            color: #1f2937;
+            border-style: solid;
+            outline: none;
+        }
+        .note-input.correct {
+            background: #ecfdf5;
+            border-color: #10b981;
+            border-style: solid;
+        }
+        .note-input.incorrect {
+            background: #fef2f2;
+            border-color: #ef4444;
+            border-style: solid;
+        }
+        .note-feedback {
+            margin-left: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .note-feedback.correct {
+            color: #10b981;
+        }
+        .note-feedback.incorrect {
+            color: #ef4444;
+        }
+        .footer {
+            background: #ffffff;
+            border-top: 1px solid #d1d5db;
+            padding: 1.25rem;
+            box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.05);
+        }
+        .nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .footer__questionWrapper {
+            display: flex;
+            align-items: center;
+        }
+        .footer__questionNo {
+            background: none;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2563eb;
+            transition: all 0.2s ease;
+        }
+        .footer__questionNo:hover {
+            color: #1e40af;
+        }
+        .footer__subquestionWrapper {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: 1.25rem;
+        }
+        .subQuestion {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: 1px solid #d1d5db;
+            background: #f3f4f6;
+            margin: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4b5563;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .subQuestion.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        .subQuestion.attempted {
+            background: #60a5fa;
+            color: #ffffff;
+        }
+        .footer__deliverButton {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .footer__deliverButton:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+        .footer__deliverButton:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+        .submission-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .submission-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 48rem;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .submission-content h2 {
+            margin-top: 0;
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 0.75rem;
+            font-size: 1.75rem;
+        }
+        .submission-content p {
+            margin-bottom: 1.5rem;
+            color: #4b5563;
+            font-size: 1.1rem;
+        }
+        .answers-section {
+            margin-top: 1.5rem;
+        }
+        .answers-section h3 {
+            color: #2563eb;
+            margin-bottom: 1.25rem;
+            font-size: 1.25rem;
+        }
+        .answer-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            border-left: 6px solid #d1d5db;
+            background: #f9fafb;
+        }
+        .answer-item.correct {
+            border-left-color: #10b981;
+            background: #ecfdf5;
+        }
+        .answer-item.incorrect {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        .answer-text {
+            font-weight: 600;
+        }
+        .correct-answer {
+            color: #10b981;
+            margin-left: 0.75rem;
+        }
+        .incorrect-answer {
+            color: #ef4444;
+            margin-left: 0.75rem;
+        }
+        .answer-status {
+            float: right;
+            margin-left: 1rem;
+        }
+        .correct-status {
+            color: #10b981;
+        }
+        .incorrect-status {
+            color: #ef4444;
+        }
+        .submission-buttons {
+            margin-top: 1.5rem;
+            text-align: right;
+        }
+        .submission-buttons button {
+            padding: 0.75rem 1.5rem;
+            margin-left: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .submission-buttons .confirm {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+        }
+        .submission-buttons .confirm:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+        .score-display {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #eff6ff;
+            border-radius: 0.75rem;
+        }
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 0.75rem 0;
+        }
+        .score-total {
+            font-size: 1.25rem;
+            color: #4b5563;
+        }
+        .performance-rating {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 1.25rem 0;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        .excellent { color: #065f46; background: #ecfdf5; }
+        .very-good { color: #047857; background: #ecfdf5; }
+        .good { color: #34d399; background: #ecfdf5; }
+        .fair { color: #d97706; background: #fefce8; }
+        .poor { color: #dc2626; background: #fef2f2; }
+        .band-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 0.75rem 0;
+        }
+        .highlight-color {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            border: 1px solid #d1d5db;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .highlight-color:hover {
+            transform: scale(1.2);
+        }
+        .highlight-color.yellow { background: #fef3c7; }
+        .highlight-color.green { background: #bbf7d0; }
+        .highlight-color.pink { background: #fbcfe8; }
+        .highlight-color.blue { background: #bfdbfe; }
+        .answer-comparison {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            display: none;
+        }
+        .answer-comparison h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+        .correct-highlight {
+            background: rgba(16, 185, 129, 0.3);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        }
+        .incorrect-highlight {
+            background: rgba(239, 68, 68, 0.3);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        }
+        .time-spent {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        #passageContent {
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+        #passageContent h2 {
+            margin: 1.5rem 0 1rem 0;
+            line-height: 1.4;
+        }
+        #passageContent p {
+            margin: 1.2rem 0;
+            text-align: justify;
+            line-height: 1.7;
+        }
+        #passageContent p:first-of-type {
+            margin-top: 1rem;
+        }
+        /* Dark Mode Styles */
+        .dark-mode {
+            background: #1f2937;
+            color: #f9fafb;
+        }
+        .dark-mode .header {
+            background: #374151;
+            border-bottom-color: #4b5563;
+        }
+        .dark-mode .header__timer {
+            background: #4b5563;
+            color: #bfdbfe;
+            border-color: #60a5fa;
+        }
+        .dark-mode .passage-container,
+        .dark-mode .questions-container {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        .dark-mode .sectionRubric,
+        .dark-mode .question {
+            background: #4b5563;
+            border-color: #6b7280;
+        }
+        .dark-mode .footer {
+            background: #374151;
+            border-top-color: #4b5563;
+        }
+        .dark-mode .subQuestion {
+            background: #6b7280;
+            border-color: #9ca3af;
+            color: #f9fafb;
+        }
+        .dark-mode .subQuestion.active {
+            background: #60a5fa;
+            border-color: #60a5fa;
+        }
+        .dark-mode .subQuestion.attempted {
+            background: #93c5fd;
+        }
+        .dark-mode .footer__deliverButton {
+            background: #60a5fa;
+        }
+        .dark-mode .footer__deliverButton:hover {
+            background: #3b82f6;
+        }
+        .dark-mode .settings-content {
+            background: #4b5563;
+        }
+        .dark-mode .settings-body {
+            background: #374151;
+        }
+        .dark-mode .settings-option:hover {
+            background: #6b7280;
+        }
+        .dark-mode .submission-content {
+            background: #4b5563;
+            color: #f9fafb;
+        }
+        .dark-mode .score-display {
+            background: #6b7280;
+        }
+        .dark-mode .answer-item {
+            background: #374151;
+            border-left-color: #6b7280;
+        }
+        .dark-mode .answer-item.correct {
+            border-left-color: #34d399;
+            background: #064e3b;
+        }
+        .dark-mode .answer-item.incorrect {
+            border-left-color: #f87171;
+            background: #7f1d1d;
+        }
+        .dark-mode .highlight-toolbar {
+            background: #4b5563;
+            border-color: #6b7280;
+        }
+        .dark-mode .note-input {
+            background: #6b7280;
+            color: #f9fafb;
+            border-color: #9ca3af;
+        }
+        .dark-mode .note-input:focus {
+            background: #93c5fd;
+            border-color: #3b82f6;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-wrapper">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__logo">
+                <img src="https://d2snzxottmona5.cloudfront.net/releases/3.46.0/images/logo/ielts.svg" alt="IELTS Logo">
+                <a href="http://mini-ielts.com" target="_blank" class="text-blue-600 font-bold ml-4 flex items-center gap-2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-.38.24-1.07.70-.96.66-1.89 1.28-1.89 1.28s-.17.11-.49.03c-.32-.08-.72-.26-1.16-.47-.54-.26-1.17-.53-1.17-.53s-.87-.55.62-1.14c.32-.13 1.96-.84 2.99-1.20 1.05-.37 2.86-1.01 2.86-1.01s1.02-.40 1.02 0z" fill="#2563eb"/>
+                    </svg>
+                    FULL EXAM MATERIALS
+                </a>
+            </div>
+            <div class="header__timer" id="testTimer">00:00</div>
+            <div class="header__icons">
+                <i class="fas fa-adjust header__icon" id="contrastToggle" title="Dark mode" aria-label="Switch to dark mode"></i>
+                <i class="fas fa-text-height header__icon" id="textSizeToggle" title="Text size" aria-label="Text size level 1"></i>
+                <i class="fas fa-circle-question header__icon" title="Tips" onclick="alert('For questions 27-31, choose the correct letter A-D. For questions 32-35, select True, False, or Not Given based on the passage. For questions 36-40, complete the notes using the list of words A-I. Use the highlighter to mark important text. Click Submit to see your score and IELTS band estimate.')"></i>
+            </div>
+        </header>
+        <!-- Settings Modal -->
+        <div class="settings-modal" id="settingsModal">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h2>Options</h2>
+                    <button class="settings-close" id="settingsClose">&times;</button>
+                </div>
+                <div class="settings-body">
+                    <div class="settings-option" id="submitOption">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Go to submission page</span>
+                    </div>
+                    <div class="settings-option" id="contrastOption">
+                        <i class="fas fa-adjust"></i>
+                        <span>Dark mode</span>
+                    </div>
+                    <div class="settings-option" id="textSizeOption">
+                        <i class="fas fa-text-height"></i>
+                        <span>Text size</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="test-container">
+            <!-- Passage Section -->
+            <div class="passage-container" id="passage-container">
+                <div class="sectionRubric">
+                    <h2>Reading Passage</h2>
+                    <p>You should spend about 20 minutes on Questions 27-40, which are based on the Reading Passage below.</p>
+                </div>
+                <div class="highlight-toolbar" id="highlightToolbar">
+                    <button class="highlight-color yellow" data-color="yellow" title="Yellow highlight"></button>
+                    <button class="highlight-color green" data-color="green" title="Green highlight"></button>
+                    <button class="highlight-color pink" data-color="pink" title="Pink highlight"></button>
+                    <button class="highlight-color blue" data-color="blue" title="Blue highlight"></button>
+                    <button class="remove" title="Remove highlight"><i class="fas fa-times"></i></button>
+                </div>
+                <div id="passageContent">
+                    <h2 class="text-center text-xl font-bold text-gray-800">Robert Louis Stevenson</h2>
+                    <p>A Scottish novelist, poet, essayist, and travel writer, Robert Louis Stevenson was born at 8 Howard Place, Edinburgh, Scotland, on 13 November 1850. It has been more than 100 years since his death. Stevenson was a writer who caused conflicting opinions about his works. On one hand, he was often highly praised for his expert prose and style by many English-language critics. On the other hand, others criticized the religious themes in his works, often misunderstanding Stevenson’s own religious beliefs. Since his death a century before, critics and biographers have disagreed on the legacy of Stevenson’s writing. Two biographers, KF and CP, wrote a biography about Stevenson with a clear focus. They chose not to criticize aspects of Stevenson’s personal life. Instead, they focused on his writing, and gave high praise to his writing style and skill.</p>
+    
+                    <p>The literary pendulum has swung these days. Different critics have different opinions towards Robert Louis Stevenson’s works. Though today, Stevenson is one of the most translated authors in the world, his works have sustained a wide variety of negative criticism throughout his life. It was like a complete reversal of polarity—from highly positive to slightly less positive to clearly negative; after being highly praised as a great writer, he became an example of an author with corrupt ethics and lack of moral. Many literary critics passed his works off as children’s stories or horror stories, and thought to have little social value in an educational setting. Stevenson’s works were often excluded from the literature curriculum because of their controversial nature. These debates remain, and many critics still assert that despite his skill, his literary works still lack moral value.</p>
+                    
+                    <p>One of the main reasons why Stevenson’s literary works attracted so much criticism was due to the genre of his writing. Stevenson mainly wrote adventure stories, which was part of a popular and entertaining writing fad at the time. Many of us believe adventure stories are exciting, offer engaging characters, action, and mystery but ultimately can’t teach moral principles. The plot points are one-dimensional and rarely offer a deeper moral meaning, instead focusing on exciting and shocking plot twists and thrilling events. His works were even criticised by fellow authors. Though Stevenson’s works have deeply influenced Oscar Wilde, Wilde often joked that Stevenson would have written better works if he wasn’t born in Scotland. Other authors came to Stevenson’s defence, including Galsworthy who claimed that Stevenson is a greater writer than Thomas Hardy.</p>
+                    
+                    <p>Despite Wilde’s criticism, Stevenson’s Scottish identity was an integral part of his written works. Although Stevenson’s works were not popular in Scotland when he was alive, many modern Scottish literary critics claim that Sir Walter Scott and Robert Louis Stevenson are the most influential writers in the history of Scotland. While many critics exalt Sir Walter Scott as a literary genius because of his technical ability, others argue that Stevenson deserves the same recognition for his natural ability to capture stories and characters in words. Many of Scott’s works were taken more seriously as literature for their depth due to their tragic themes, but fans of Stevenson praise his unique style of story-telling and capture of human nature. Stevenson’s works, unlike other British authors, captured the unique day to day life of average Scottish people. Many literary critics point to this as a flaw of his works. According to the critics, truly important literature should transcend local culture and stories. However, many critics praise the local taste of his literature. To this day, Stevenson’s works provide valuable insight to life in Scotland during the 19th century.</p>
+                    
+                    <p>Despite much debate of Stevenson’s writing topics, his writing was not the only source of attention for critics. Stevenson’s personal life often attracted a lot of attention from his fans and critics alike. Some even argue that his personal life eventually outshone his writing. Stevenson had been plagued with health problems his whole life, and often had to live in much warmer climates than the cold, dreary weather of Scotland in order to recover. So he took his family to a south pacific island Samoa, which was a controversial decision at that time. However, Stevenson did not regret the decision. The sea air and thrill of adventure complimented the themes of his writing, and for a time restored his health. From there, Stevenson gained a love of traveling, and for nearly three years he wandered the eastern and central Pacific. Much of his works reflected this love of travel and adventure that Stevenson experienced in the Pacific islands. It was as a result of this biographical attention that the feeling grew that interest in Stevenson’s life had taken the place of interest in his works. Whether critics focus on his writing subjects, his religious beliefs, or his eccentric lifestyle of travel and adventure, people from the past and present have different opinions about Stevenson as an author. Today, he remains a controversial yet widely popular figure in Western literature.</p>
+                </div>
+            </div>
+            <!-- Divider -->
+            <div class="divider" id="divider">
+                <div class="divider-handle"></div>
+            </div>
+            <!-- Questions Section -->
+            <div class="questions-container" id="questions-container">
+                <!-- Questions 27-31 - Multiple Choice -->
+                <div class="question">
+                    <div class="question-rubric">
+                        <h3>Questions 27-31</h3>
+                        <p>Choose the correct letter, A, B, C or D.</p>
+                        <p>Write the correct letter in boxes 27-31 on your answer sheet.</p>
+                    </div>
+                    <div class="question-content">
+                        <div class="multiple-choice">
+                            <p>27. Stevenson's biographers KF and CP</p>
+                            <label><input type="radio" name="q27" value="A"> A. Underestimated the role of family played in Stevenson's life.</label>
+                            <label><input type="radio" name="q27" value="B"> B. Overestimated the writer's works in literature history.</label>
+                            <label><input type="radio" name="q27" value="C"> C. Exaggerated Stevenson's religious belief in his works.</label>
+                            <label><input type="radio" name="q27" value="D"> D. Elevated Stevenson's role as a writer.</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <p>28. The main point of the second paragraph is</p>
+                            <label><input type="radio" name="q28" value="A"> A. The public gives a more fair criticism to Stevenson's works.</label>
+                            <label><input type="radio" name="q28" value="B"> B. Recent criticism has been justified.</label>
+                            <label><input type="radio" name="q28" value="C"> C. The style of Stevenson's works overweigh his faults in his life.</label>
+                            <label><input type="radio" name="q28" value="D"> D. Stevenson's works’ drawback is lack of ethical nature.</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <p>29. According to the author, adventure stories</p>
+                            <label><input type="radio" name="q29" value="A"> A. Do not provide plot twists well.</label>
+                            <label><input type="radio" name="q29" value="B"> B. Cannot be used by writers to show moral values.</label>
+                            <label><input type="radio" name="q29" value="C"> C. Are more fashionable art forms.</label>
+                            <label><input type="radio" name="q29" value="D"> D. Can be found in other's works but not in Stevenson's.</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <p>30. What does the author say about Stevenson's works?</p>
+                            <label><input type="radio" name="q30" value="A"> A. They describe the life of people in Scotland.</label>
+                            <label><input type="radio" name="q30" value="B"> B. They are commonly regarded as real literature.</label>
+                            <label><input type="radio" name="q30" value="C"> C. They were popular during Stevenson's life.</label>
+                            <label><input type="radio" name="q30" value="D"> D. They transcend the local culture and stories.</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <p>31. The lifestyle of Stevenson</p>
+                            <label><input type="radio" name="q31" value="A"> A. Made his family envy him so much.</label>
+                            <label><input type="radio" name="q31" value="B"> B. Should be responsible for his death.</label>
+                            <label><input type="radio" name="q31" value="C"> C. Gained more attention from the public than his works.</label>
+                            <label><input type="radio" name="q31" value="D"> D. Didn’t prepare well for his life in Samoa.</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Questions 32-35 - True/False/Not Given -->
+                <div class="question">
+                    <div class="question-rubric">
+                        <h3>Questions 32-35</h3>
+                        <p>Do the following statements agree with the information given in the Reading Passage?</p>
+                        <p>Choose <strong>TRUE</strong> if the statement agrees with the information, <strong>FALSE</strong> if the statement contradicts the information, or <strong>NOT GIVEN</strong> if there is no information on this.</p>
+                    </div>
+                    <div class="question-content">
+                        <div class="true-false">
+                            <p>32. Although Oscar Wilde admired Robert Louis Stevenson very much, he believed Stevenson could have written greater works.</p>
+                            <label><input type="radio" name="q32" value="TRUE"> TRUE</label>
+                            <label><input type="radio" name="q32" value="FALSE"> FALSE</label>
+                            <label><input type="radio" name="q32" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="true-false">
+                            <p>33. Robert Louis Stevenson encouraged Oscar Wilde to start writing at first.</p>
+                            <label><input type="radio" name="q33" value="TRUE"> TRUE</label>
+                            <label><input type="radio" name="q33" value="FALSE"> FALSE</label>
+                            <label><input type="radio" name="q33" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="true-false">
+                            <p>34. Galsworthy thought Hardy is greater writer than Stevenson is.</p>
+                            <label><input type="radio" name="q34" value="TRUE"> TRUE</label>
+                            <label><input type="radio" name="q34" value="FALSE"> FALSE</label>
+                            <label><input type="radio" name="q34" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                        <div class="true-false">
+                            <p>35. Critics only paid attention to Robert Louis Stevenson's writing topics.</p>
+                            <label><input type="radio" name="q35" value="TRUE"> TRUE</label>
+                            <label><input type="radio" name="q35" value="FALSE"> FALSE</label>
+                            <label><input type="radio" name="q35" value="NOT GIVEN"> NOT GIVEN</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Questions 36-40 - Note Completion -->
+                <div class="question">
+                    <div class="question-rubric">
+                        <h3>Questions 36-40</h3>
+                        <p>Complete the notes using the list of words, A-I, below.</p>
+                        <p><strong>Sir Walter Scott and Robert Louis Stevenson</strong></p>
+                        <p>A lot of people believe that Sir Walter Scott and Robert Louis Stevenson are the most influential writers in the history of Scotland, but Sir Walter Scott is more proficient in <input type="text" class="note-input" name="q36" id="q36" maxlength="2" placeholder="36">, while Stevenson has better <input type="text" class="note-input" name="q37" id="q37" maxlength="2" placeholder="37">. Scott’s books illustrate <input type="text" class="note-input" name="q38" id="q38" maxlength="2" placeholder="38">, especially in terms of tragedy, but a lot of readers prefer Stevenson's <input type="text" class="note-input" name="q39" id="q39" maxlength="2" placeholder="39">. What's more, Stevenson's understanding of <input type="text" class="note-input" name="q40" id="q40" maxlength="2" placeholder="40"> made his works have the most unique expression of Scottish people.</p>
+                        <p><strong>List of words</strong></p>
+                        <p>A. Natural ability</p>
+                        <p>B. Romance</p>
+                        <p>C. Colorful language</p>
+                        <p>D. Critical acclaim</p>
+                        <p>E. Humor</p>
+                        <p>F. Technical control</p>
+                        <p>G. Storytelling</p>
+                        <p>H. Depth</p>
+                        <p>I. Human nature</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <nav class="nav-row perScorableItem" aria-label="Questions">
+                <div class="footer__questionWrapper selected multiple" role="tablist">
+                    <button role="tab" class="footer__questionNo" data-sectionid="128121930" tabindex="-1">
+                        <span>
+                            <span aria-hidden="true" class="section-prefix">Part </span>
+                            <span class="sectionNr" aria-hidden="true">1</span>
+                        </span>
+                    </button>
+                    <div class="footer__subquestionWrapper">
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="27" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 27</span>
+                            <span aria-hidden="true">27</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="28" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 28</span>
+                            <span aria-hidden="true">28</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="29" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 29</span>
+                            <span aria-hidden="true">29</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="30" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 30</span>
+                            <span aria-hidden="true">30</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="31" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 31</span>
+                            <span aria-hidden="true">31</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="32" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 32</span>
+                            <span aria-hidden="true">32</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="33" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 33</span>
+                            <span aria-hidden="true">33</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="34" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 34</span>
+                            <span aria-hidden="true">34</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="35" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 35</span>
+                            <span aria-hidden="true">35</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="36" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 36</span>
+                            <span aria-hidden="true">36</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="37" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 37</span>
+                            <span aria-hidden="true">37</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="38" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 38</span>
+                            <span aria-hidden="true">38</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="39" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 39</span>
+                            <span aria-hidden="true">39</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                        <button class="subQuestion" data-contentrevisionid="128121896" data-ordernumber="40" data-sectionid="128121930" tabindex="0">
+                            <span class="sr-only">Question 40</span>
+                            <span aria-hidden="true">40</span>
+                            <span class="sr-only">Not attempted</span>
+                        </button>
+                    </div>
+                </div>
+                <button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton">
+                    <i class="fas fa-check"></i> Submit
+                </button>
+            </nav>
+        </footer>
+    </div>
+    <!-- Submission Modal -->
+    <div class="submission-modal" id="submissionModal">
+        <div class="submission-content">
+            <h2 id="submissionTitle">Test Results</h2>
+            <div class="score-display">
+                <div>Your Score:</div>
+                <div class="score-number" id="userScore">0</div>
+                <div class="score-total">out of <span id="totalQuestions">14</span></div>
+                <div class="band-score" id="bandScore">Band: 0.0</div>
+                <div class="performance-rating" id="performanceRating">Poor - Needs Improvement</div>
+            </div>
+            <div class="time-spent" id="timeSpent"></div>
+            <p id="submissionMessage">Here are your answers with the correct solutions:</p>
+            <div class="answers-section">
+                <h3>Your Answers:</h3>
+                <div id="answersList"></div>
+            </div>
+            <div class="submission-buttons">
+                <button class="confirm" id="closeSubmission">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- Answer Comparison -->
+    <div class="answer-comparison" id="answerComparison">
+        <h3>Answer Comparison</h3>
+        <p>Your answers are highlighted below. Correct answers are marked in <span class="correct-highlight">green</span>, incorrect answers in <span class="incorrect-highlight">red</span>.</p>
+    </div>
+    <script>
+        // Correct answers with detailed explanations
+        const correctAnswers = {
+            27: "D",
+            28: "D",
+            29: "B",
+            30: "A",
+            31: "C",
+            32: "TRUE",
+            33: "NOT GIVEN",
+            34: "FALSE",
+            35: "FALSE",
+            36: "F",
+            37: "A",
+            38: "H",
+            39: "G",
+            40: "I"
+        };
+
+        const answerExplanations = {
+            27: "D - Paragraph 1 states that biographers KF and CP focused on Stevenson’s writing and gave high praise to his writing style and skill, effectively elevating his role as a writer.",
+            28: "D - Paragraph 2 discusses the negative criticism of Stevenson’s works, emphasizing that critics assert his literary works lack moral value, which is the main drawback highlighted.",
+            29: "B - Paragraph 3 explains that adventure stories, like those Stevenson wrote, are believed by many to be unable to teach moral principles, focusing instead on exciting plot twists.",
+            30: "A - Paragraph 4 notes that Stevenson’s works captured the unique day-to-day life of average Scottish people, describing life in Scotland.",
+            31: "C - Paragraph 5 states that interest in Stevenson’s personal life, particularly his travels, grew to the point that it took the place of interest in his works.",
+            32: "TRUE - Paragraph 3 mentions that Oscar Wilde, despite being influenced by Stevenson, joked that Stevenson would have written better works if not born in Scotland, implying he believed Stevenson could have achieved greater works.",
+            33: "NOT GIVEN - The passage does not provide any information about Stevenson encouraging Oscar Wilde to start writing.",
+            34: "FALSE - Paragraph 3 states that Galsworthy claimed Stevenson is a greater writer than Thomas Hardy, contradicting the statement that Galsworthy thought Hardy was greater.",
+            35: "FALSE - Paragraph 5 indicates that critics focused on Stevenson’s writing topics, religious beliefs, and eccentric lifestyle, not only his writing topics.",
+            36: "F - Paragraph 4 states that critics exalt Sir Walter Scott for his technical ability, which matches 'Technical control'.",
+            37: "A - Paragraph 4 notes that others argue Stevenson deserves recognition for his natural ability to capture stories and characters.",
+            38: "H - Paragraph 4 mentions that Scott’s works were taken seriously for their depth due to tragic themes.",
+            39: "G - Paragraph 4 highlights that fans praise Stevenson’s unique style of storytelling.",
+            40: "I - Paragraph 4 emphasizes Stevenson’s capture of human nature as a key aspect of his works, especially in expressing the life of Scottish people."
+        };
+
+        // Timer functionality
+        let totalSeconds = 0;
+        const timerElement = document.getElementById('testTimer');
+        let testSubmitted = false;
+        let userAnswers = {};
+        let startTime = new Date();
+        let resultsShown = false;
+        let isDarkMode = false;
+
+        function updateTimer() {
+            if (testSubmitted) return;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            totalSeconds++;
+        }
+
+        function disableAllInputs() {
+            document.querySelectorAll('input[type="text"], input[type="radio"]').forEach(input => {
+                input.disabled = true;
+            });
+            document.getElementById('deliver-button').disabled = true;
+            document.removeEventListener('mouseup', handleTextSelection);
+        }
+
+        function showSubmissionModal(title, message) {
+            const modal = document.getElementById('submissionModal');
+            document.getElementById('submissionTitle').textContent = title;
+            document.getElementById('submissionMessage').textContent = message;
+
+            const endTime = new Date();
+            const timeDiff = endTime - startTime;
+            const minutes = Math.floor(timeDiff / 60000);
+            const seconds = Math.floor((timeDiff % 60000) / 1000);
+            document.getElementById('timeSpent').textContent = `Time spent: ${minutes}m ${seconds}s`;
+
+            const answersList = document.getElementById('answersList');
+            answersList.innerHTML = '';
+            let score = 0;
+            userAnswers = {};
+
+            // Multiple Choice (27-31)
+            for (let i = 27; i <= 31; i++) {
+                const input = document.querySelector(`input[name="q${i}"]:checked`);
+                const userAnswer = input ? input.value : '';
+                userAnswers[i] = userAnswer;
+                const correctAnswer = correctAnswers[i];
+                const isCorrect = userAnswer === correctAnswer;
+                if (isCorrect && userAnswer !== '') score++;
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                const displayAnswer = userAnswer || 'Not answered';
+                answerItem.innerHTML = `
+                    <div class="answer-text">Question ${i}: ${displayAnswer}</div>
+                    <span class="${isCorrect ? 'correct-answer' : 'incorrect-answer'}">(Correct answer: ${correctAnswer})</span>
+                    <span class="answer-status ${isCorrect ? 'correct-status' : 'incorrect-status'}">
+                        ${isCorrect ? '✓' : '✗'}
+                    </span>
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #6b7280; font-style: italic;">
+                        ${answerExplanations[i]}
+                    </div>
+                `;
+                answersList.appendChild(answerItem);
+            }
+
+            // True/False/Not Given (32-35)
+            for (let i = 32; i <= 35; i++) {
+                const input = document.querySelector(`input[name="q${i}"]:checked`);
+                const userAnswer = input ? input.value : '';
+                userAnswers[i] = userAnswer;
+                const correctAnswer = correctAnswers[i];
+                const isCorrect = userAnswer === correctAnswer;
+                if (isCorrect && userAnswer !== '') score++;
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                const displayAnswer = userAnswer || 'Not answered';
+                answerItem.innerHTML = `
+                    <div class="answer-text">Question ${i}: ${displayAnswer}</div>
+                    <span class="${isCorrect ? 'correct-answer' : 'incorrect-answer'}">(Correct answer: ${correctAnswer})</span>
+                    <span class="answer-status ${isCorrect ? 'correct-status' : 'incorrect-status'}">
+                        ${isCorrect ? '✓' : '✗'}
+                    </span>
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #6b7280; font-style: italic;">
+                        ${answerExplanations[i]}
+                    </div>
+                `;
+                answersList.appendChild(answerItem);
+            }
+
+            // Note Completion (36-40)
+            for (let i = 36; i <= 40; i++) {
+                const input = document.querySelector(`[name="q${i}"]`);
+                const userAnswer = input.value.trim().toUpperCase();
+                userAnswers[i] = userAnswer;
+                const correctAnswer = correctAnswers[i];
+                const isCorrect = userAnswer === correctAnswer;
+                if (isCorrect && userAnswer !== '') score++;
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                const displayAnswer = userAnswer || 'Not answered';
+                answerItem.innerHTML = `
+                    <div class="answer-text">Question ${i}: ${displayAnswer}</div>
+                    <span class="${isCorrect ? 'correct-answer' : 'incorrect-answer'}">(Correct answer: ${correctAnswer})</span>
+                    <span class="answer-status ${isCorrect ? 'correct-status' : 'incorrect-status'}">
+                        ${isCorrect ? '✓' : '✗'}
+                    </span>
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #6b7280; font-style: italic;">
+                        ${answerExplanations[i]}
+                    </div>
+                `;
+                answersList.appendChild(answerItem);
+            }
+
+            // Update score display
+            document.getElementById('userScore').textContent = score;
+            document.getElementById('totalQuestions').textContent = "14";
+
+            // Calculate IELTS band score
+            const bandScore = calculateBandScore(score);
+            document.getElementById('bandScore').textContent = `Band: ${bandScore.toFixed(1)}`;
+
+            // Performance rating
+            let rating, ratingClass;
+            if (score >= 13) {
+                rating = "Excellent!";
+                ratingClass = "excellent";
+            } else if (score >= 11) {
+                rating = "Very Good";
+                ratingClass = "very-good";
+            } else if (score >= 9) {
+                rating = "Good";
+                ratingClass = "good";
+            } else if (score >= 7) {
+                rating = "Fair";
+                ratingClass = "fair";
+            } else {
+                rating = "Poor - Needs Improvement";
+                ratingClass = "poor";
+            }
+            const ratingElement = document.getElementById('performanceRating');
+            ratingElement.textContent = rating;
+            ratingElement.className = `performance-rating ${ratingClass}`;
+
+            if (testSubmitted) {
+                highlightAnswers(correctAnswers);
+            }
+
+            modal.style.display = 'flex';
+            resultsShown = true;
+            const submitButton = document.getElementById('deliver-button');
+            submitButton.innerHTML = '<i class="fas fa-eye"></i> Show My Results';
+            submitButton.disabled = false;
+        }
+
+        function calculateBandScore(score) {
+            if (score >= 13) return 9.0;
+            if (score >= 12) return 8.5;
+            if (score >= 11) return 8.0;
+            if (score >= 10) return 7.5;
+            if (score >= 9) return 7.0;
+            if (score >= 8) return 6.5;
+            if (score >= 7) return 6.0;
+            if (score >= 6) return 5.5;
+            if (score >= 5) return 5.0;
+            if (score >= 4) return 4.5;
+            return 0.0;
+        }
+
+        function highlightAnswers(correctAnswers) {
+            // Multiple Choice (27-31)
+            for (let i = 27; i <= 31; i++) {
+                const inputs = document.querySelectorAll(`input[name="q${i}"]`);
+                const userAnswer = userAnswers[i] || '';
+                const correctAnswer = correctAnswers[i];
+                inputs.forEach(input => {
+                    input.classList.remove('correct', 'incorrect');
+                    if (input.checked) {
+                        input.classList.add(input.value === correctAnswer ? 'correct' : 'incorrect');
+                        const feedback = document.createElement('span');
+                        feedback.className = `note-feedback ${input.value === correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = input.value === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}`;
+                        if (!input.parentNode.nextElementSibling || !input.parentNode.nextElementSibling.classList.contains('note-feedback')) {
+                            input.parentNode.appendChild(feedback);
+                        }
+                    }
+                });
+            }
+
+            // True/False/Not Given (32-35)
+            for (let i = 32; i <= 35; i++) {
+                const inputs = document.querySelectorAll(`input[name="q${i}"]`);
+                const userAnswer = userAnswers[i] || '';
+                const correctAnswer = correctAnswers[i];
+                inputs.forEach(input => {
+                    input.classList.remove('correct', 'incorrect');
+                    if (input.checked) {
+                        input.classList.add(input.value === correctAnswer ? 'correct' : 'incorrect');
+                        const feedback = document.createElement('span');
+                        feedback.className = `note-feedback ${input.value === correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = input.value === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}`;
+                        if (!input.parentNode.nextElementSibling || !input.parentNode.nextElementSibling.classList.contains('note-feedback')) {
+                            input.parentNode.appendChild(feedback);
+                        }
+                    }
+                });
+            }
+
+            // Note Completion (36-40)
+            for (let i = 36; i <= 40; i++) {
+                const input = document.querySelector(`[name="q${i}"]`);
+                const userAnswer = userAnswers[i];
+                const correctAnswer = correctAnswers[i];
+                input.classList.remove('correct', 'incorrect');
+                if (userAnswer && userAnswer !== '') {
+                    input.classList.add(userAnswer === correctAnswer ? 'correct' : 'incorrect');
+                    input.style.borderColor = userAnswer === correctAnswer ? '#10b981' : '#ef4444';
+                    const feedback = document.createElement('span');
+                    feedback.className = `note-feedback ${userAnswer === correctAnswer ? 'correct' : 'incorrect'}`;
+                    feedback.textContent = userAnswer === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}`;
+                    if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('note-feedback')) {
+                        input.parentNode.appendChild(feedback);
+                    }
+                }
+            }
+
+            document.getElementById('answerComparison').style.display = 'block';
+        }
+
+        // Submission Handling
+        document.getElementById('deliver-button').addEventListener('click', function() {
+            if (resultsShown) {
+                document.getElementById('submissionModal').style.display = 'flex';
+                return;
+            }
+            if (testSubmitted) return;
+            if (confirm('Are you sure you want to submit your test? You won\'t be able to make changes after submission.')) {
+                clearInterval(timerInterval);
+                testSubmitted = true;
+                disableAllInputs();
+                showSubmissionModal('Test Submitted', 'Thank you for completing the test.');
+            }
+        });
+
+        document.getElementById('closeSubmission').addEventListener('click', function() {
+            document.getElementById('submissionModal').style.display = 'none';
+            highlightAnswers(correctAnswers);
+        });
+
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Settings Modal
+        const settingsModal = document.getElementById('settingsModal');
+        const settingsClose = document.getElementById('settingsClose');
+
+        document.getElementById('contrastToggle').addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            settingsModal.style.display = 'flex';
+        });
+
+        settingsClose.addEventListener('click', function() {
+            settingsModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === settingsModal) {
+                settingsModal.style.display = 'none';
+            }
+            if (event.target === document.getElementById('submissionModal')) {
+                document.getElementById('submissionModal').style.display = 'none';
+            }
+        });
+
+        // Draggable Divider
+        const divider = document.getElementById('divider');
+        const passageContainer = document.getElementById('passage-container');
+        const questionsContainer = document.getElementById('questions-container');
+        let isDragging = false;
+        let startX, startPassageWidth;
+
+        divider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startPassageWidth = parseInt(document.defaultView.getComputedStyle(passageContainer).width, 10);
+            document.body.style.cursor = 'col-resize';
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            e.preventDefault();
+        });
+
+        function onMouseMove(e) {
+            if (!isDragging) return;
+            const containerWidth = document.querySelector('.test-container').offsetWidth;
+            const newPassageWidth = startPassageWidth + e.clientX - startX;
+            const minWidth = containerWidth * 0.3;
+            const maxWidth = containerWidth * 0.7;
+            if (newPassageWidth >= minWidth && newPassageWidth <= maxWidth) {
+                passageContainer.style.width = `${newPassageWidth}px`;
+            }
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            document.body.style.cursor = '';
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        divider.addEventListener('selectstart', (e) => {
+            if (isDragging) e.preventDefault();
+        });
+
+        // Question Navigation
+        document.querySelectorAll('.subQuestion').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.subQuestion').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-selected', 'true');
+
+                const questionNumber = this.getAttribute('data-ordernumber');
+                let targetQuestion;
+                if (questionNumber >= 27 && questionNumber <= 31) {
+                    targetQuestion = document.querySelector('.question:nth-of-type(1)');
+                } else if (questionNumber >= 32 && questionNumber <= 35) {
+                    targetQuestion = document.querySelector('.question:nth-of-type(2)');
+                } else if (questionNumber >= 36 && questionNumber <= 40) {
+                    targetQuestion = document.querySelector('.question:nth-of-type(3)');
+                }
+
+                if (targetQuestion) {
+                    targetQuestion.scrollIntoView({ behavior: 'smooth' });
+                    targetQuestion.style.transition = 'background-color 0.3s ease';
+                    targetQuestion.style.backgroundColor = isDarkMode ? '#6b7280' : '#dbeafe';
+                    setTimeout(() => {
+                        targetQuestion.style.backgroundColor = isDarkMode ? '#374151' : '#ffffff';
+                    }, 1000);
+                }
+            });
+        });
+
+        // Highlighting
+        const highlightToolbar = document.getElementById('highlightToolbar');
+        let selectedText = '';
+        let selectedRange = null;
+        let currentHighlightColor = null;
+
+        document.querySelectorAll('#passageContent, .questions-container').forEach(element => {
+            element.style.userSelect = 'text';
+            element.style.webkitUserSelect = 'text';
+        });
+
+        function handleTextSelection() {
+            const selection = window.getSelection();
+            selectedText = selection.toString().trim();
+            if (selectedText.length > 0 && isTextInContent(selection)) {
+                selectedRange = selection.getRangeAt(0);
+                const rangeRect = selectedRange.getBoundingClientRect();
+                highlightToolbar.style.display = 'flex';
+                highlightToolbar.style.top = `${rangeRect.top + window.scrollY - 45}px`;
+                highlightToolbar.style.left = `${rangeRect.left + window.scrollX + (rangeRect.width / 2)}px`;
+            } else {
+                if (!highlightToolbar.contains(document.activeElement)) {
+                    highlightToolbar.style.display = 'none';
+                }
+            }
+        }
+
+        function isTextInContent(selection) {
+            if (!selection.rangeCount) return false;
+            const range = selection.getRangeAt(0);
+            const passageContent = document.getElementById('passageContent');
+            const questionsContainer = document.querySelector('.questions-container');
+            return passageContent.contains(range.commonAncestorContainer) || 
+                   questionsContainer.contains(range.commonAncestorContainer);
+        }
+
+        document.addEventListener('mouseup', handleTextSelection);
+
+        document.addEventListener('mousedown', function(e) {
+            if (!highlightToolbar.contains(e.target)) {
+                highlightToolbar.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.highlight-color').forEach(button => {
+            button.addEventListener('click', function() {
+                currentHighlightColor = button.dataset.color;
+                applyHighlight();
+            });
+        });
+
+        function applyHighlight() {
+            if (selectedText && selectedRange) {
+                const span = document.createElement('span');
+                span.className = `highlight ${currentHighlightColor}`;
+                span.textContent = selectedText;
+                selectedRange.deleteContents();
+                selectedRange.insertNode(span);
+                window.getSelection().removeAllRanges();
+                highlightToolbar.style.display = 'none';
+            }
+        }
+
+        document.querySelector('.remove').addEventListener('click', function() {
+            if (selectedRange) {
+                const parent = selectedRange.commonAncestorContainer.parentElement;
+                if (parent.classList.contains('highlight')) {
+                    const textNode = document.createTextNode(parent.textContent);
+                    parent.replaceWith(textNode);
+                }
+                window.getSelection().removeAllRanges();
+                highlightToolbar.style.display = 'none';
+            }
+        });
+
+        // Dark Mode Toggle
+        document.getElementById('contrastToggle').addEventListener('click', function(e) {
+            if (e.button === 0) {
+                isDarkMode = !isDarkMode;
+                document.body.classList.toggle('dark-mode', isDarkMode);
+                document.getElementById('contrastOption').querySelector('span').textContent = isDarkMode ? 'Light mode' : 'Dark mode';
+                this.setAttribute('aria-label', isDarkMode ? 'Switch to light mode' : 'Switch to dark mode');
+            }
+        });
+
+        // Text Size Adjustment
+        let textSizeLevel = 1;
+        const textSizes = ['1rem', '1.1rem', '1.25rem', '1.5rem'];
+        document.getElementById('textSizeToggle').addEventListener('click', function() {
+            textSizeLevel = (textSizeLevel + 1) % textSizes.length;
+            document.getElementById('passageContent').style.fontSize = textSizes[textSizeLevel];
+            document.querySelector('.questions-container').style.fontSize = textSizes[textSizeLevel];
+            document.getElementById('textSizeOption').querySelector('span').textContent = `Text size (${textSizeLevel + 1}/4)`;
+            this.setAttribute('aria-label', `Text size level ${textSizeLevel + 1}`);
+        });
+
+        // Settings Options
+        document.getElementById('submitOption').addEventListener('click', function() {
+            settingsModal.style.display = 'none';
+            document.getElementById('deliver-button').click();
+        });
+
+        document.getElementById('contrastOption').addEventListener('click', function() {
+            document.getElementById('contrastToggle').click();
+            settingsModal.style.display = 'none';
+        });
+
+        document.getElementById('textSizeOption').addEventListener('click', function() {
+            document.getElementById('textSizeToggle').click();
+        });
+
+        // Mark questions as attempted
+        function markQuestionAttempted(questionNumber) {
+            const button = document.querySelector(`.subQuestion[data-ordernumber="${questionNumber}"]`);
+            if (button && !button.classList.contains('attempted')) {
+                button.classList.add('attempted');
+                button.querySelector('.sr-only:last-child').textContent = 'Attempted';
+            }
+        }
+
+        // Monitor input changes to mark questions as attempted
+        // Multiple Choice (27-31)
+        document.querySelectorAll('input[name^="q"][type="radio"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const questionNumber = this.name.replace('q', '');
+                if (this.checked) {
+                    markQuestionAttempted(questionNumber);
+                }
+            });
+        });
+
+        // Note Completion (36-40)
+        document.querySelectorAll('input[name^="q"][type="text"]').forEach(input => {
+            input.addEventListener('input', function() {
+                const questionNumber = this.name.replace('q', '');
+                if (this.value.trim() !== '') {
+                    markQuestionAttempted(questionNumber);
+                }
+            });
+        });
+
+        // Initialize ARIA attributes for question navigation
+        document.querySelectorAll('.subQuestion').forEach(button => {
+            button.setAttribute('aria-selected', 'false');
+            button.setAttribute('role', 'tab');
+            button.setAttribute('aria-controls', `question-${button.getAttribute('data-ordernumber')}`);
+        });
+
+        // Set first question button as active on page load
+        const firstQuestionButton = document.querySelector('.subQuestion[data-ordernumber="27"]');
+        if (firstQuestionButton) {
+            firstQuestionButton.classList.add('active');
+            firstQuestionButton.setAttribute('aria-selected', 'true');
+        }
+    </script>
+</body>
+</html>

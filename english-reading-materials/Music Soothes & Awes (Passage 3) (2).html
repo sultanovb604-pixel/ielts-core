@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Practice - Music Soothes and Awes – and May Help Us Heal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            /* Light mode variables */
+            --bg-color: #f5f7fa;
+            --container-bg: white;
+            --text-color: #2c3e50;
+            --title-color: #2c5282;
+            --border-color: #e8f4f8;
+            --button-bg: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            --button-hover-bg: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            --reset-bg: linear-gradient(135deg, #ed64a6 0%, #d53f8c 100%);
+            --reset-hover-bg: linear-gradient(135deg, #d53f8c 0%, #b83280 100%);
+            --section-bg: linear-gradient(135deg, #f8fbff 0%, #fefefe 100%);
+            --question-bg: #f8f9fa;
+            --correct-bg: #f0fff4;
+            --correct-border: #38a169;
+            --incorrect-bg: #fff5f5;
+            --incorrect-border: #e53e3e;
+            --table-border: #e2e8f0;
+            --table-header-bg: #f7fafc;
+            --input-bg: white;
+            --input-border: #e2e8f0;
+            --input-focus-border: #4299e1;
+            --toggle-bg: #e6f3ff;
+            --toggle-border: #4299e1;
+            --toggle-header-bg: #4299e1;
+            --toggle-header-hover: #3182ce;
+            --toggle-text: white;
+            --instructions-bg: #f7fafc;
+            --instructions-text: #4a5568;
+            --score-bg: #e6f3ff;
+            --result-reference: #edf2f7;
+            --link-color: #4299e1;
+        }
+        .night-mode {
+            /* Dark mode variables */
+            --bg-color: #1a202c;
+            --container-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --title-color: #63b3ed;
+            --border-color: #4a5568;
+            --button-bg: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+            --button-hover-bg: linear-gradient(135deg, #2c5282 0%, #1a365d 100%);
+            --reset-bg: linear-gradient(135deg, #9f7aea 0%, #7c3aed 100%);
+            --reset-hover-bg: linear-gradient(135deg, #7c3aed 0%, #6b46c1 100%);
+            --section-bg: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            --question-bg: #4a5568;
+            --correct-bg: #2f855a;
+            --correct-border: #38a169;
+            --incorrect-bg: #c53030;
+            --incorrect-border: #e53e3e;
+            --table-border: #4a5568;
+            --table-header-bg: #2d3748;
+            --input-bg: #4a5568;
+            --input-border: #4a5568;
+            --input-focus-border: #63b3ed;
+            --toggle-bg: #2d3748;
+            --toggle-border: #63b3ed;
+            --toggle-header-bg: #2b6cb0;
+            --toggle-header-hover: #2c5282;
+            --toggle-text: #e2e8f0;
+            --instructions-bg: #2d3748;
+            --instructions-text: #cbd5e0;
+            --score-bg: #2d3748;
+            --result-reference: #4a5568;
+            --link-color: #63b3ed;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .mode-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .highlight-toggle {
+            position: absolute;
+            top: 15px;
+            right: 150px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .highlight-toggle:hover {
+            background: var(--button-hover-bg);
+        }
+        .passage-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            border-right: 2px solid var(--border-color);
+            background: var(--section-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .questions-section {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: var(--section-bg);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .passage-title {
+            color: var(--title-color);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 3px solid var(--input-focus-border);
+            padding-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .passage-subtitle {
+            color: var(--text-color);
+            font-size: 16px;
+            font-style: italic;
+            margin-bottom: 25px;
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .passage-content {
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: justify;
+        }
+        .passage-content p {
+            margin-bottom: 18px;
+            text-indent: 20px;
+        }
+        .passage-content h3 {
+            color: var(--title-color);
+            font-size: 20px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .questions-title {
+            color: var(--text-color);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            background: var(--question-bg);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--input-focus-border);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .question-group {
+            margin-bottom: 30px;
+            background: var(--question-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--correct-border);
+            transition: background-color 0.3s;
+        }
+        .question-group h3 {
+            color: var(--text-color);
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .question-group p {
+            margin-bottom: 10px;
+            font-style: italic;
+            color: var(--instructions-text);
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: var(--container-bg);
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .question label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .question input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .question input[type="text"]:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .question select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .question select:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .multiple-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background: var(--toggle-bg);
+        }
+        .submit-btn, .reset-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .reset-btn {
+            background: var(--reset-bg);
+        }
+        .submit-btn:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+        .reset-btn:hover {
+            background: var(--reset-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(237, 100, 166, 0.3);
+        }
+        .submit-btn:active, .reset-btn:active {
+            transform: translateY(1px);
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--instructions-bg);
+            border-radius: 10px;
+            display: none;
+            color: var(--text-color);
+        }
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--border-color);
+            transition: background-color 0.3s;
+        }
+        .result-item.correct {
+            background: var(--correct-bg);
+            border-left-color: var(--correct-border);
+        }
+        .result-item.incorrect {
+            background: var(--incorrect-bg);
+            border-left-color: var(--incorrect-border);
+        }
+        .result-item h4 {
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+        .result-item .user-answer {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .result-item .correct-answer {
+            font-weight: 600;
+            color: var(--correct-border);
+        }
+        .score {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-color);
+            background: var(--score-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .table th, .table td {
+            border: 1px solid var(--table-border);
+            padding: 10px;
+            text-align: left;
+            background: var(--container-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .table th {
+            background: var(--table-header-bg);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .table-question input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 2px solid var(--input-border);
+            border-radius: 4px;
+            font-size: 13px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        .table-question input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+        }
+        .instructions-toggle {
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .instructions-header {
+            padding: 12px 15px;
+            background: var(--toggle-header-bg);
+            color: var(--toggle-text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        .instructions-header:hover {
+            background: var(--toggle-header-hover);
+        }
+        .instructions-content {
+            padding: 15px;
+            display: none;
+            background: var(--instructions-bg);
+            color: var(--instructions-text);
+            font-style: italic;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .instructions-content.show {
+            display: block;
+        }
+        .arrow {
+            transition: transform 0.3s;
+        }
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+        .inline-input {
+            display: inline-block;
+            width: 160px;
+            max-width: 160px;
+            padding: 2px 6px;
+            border: 1px solid var(--input-focus-border);
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--input-bg);
+            margin: 0 2px;
+            height: 24px;
+            color: var(--text-color);
+        }
+        .inline-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            background: var(--input-bg);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        /* Yes/No/Not Given radio buttons */
+        .ynng-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .ynng-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+        }
+        .ynng-option:hover {
+            background: var(--toggle-bg);
+        }
+        .ynng-option input[type="radio"] {
+            margin: 0;
+        }
+        /* Multiple choice radio buttons */
+        .mc-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .mc-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            transition: background-color 0.2s;
+        }
+        .mc-option:hover {
+            background: var(--toggle-bg);
+        }
+        .mc-option input[type="radio"] {
+            margin: 0;
+        }
+        /* Highlight feature */
+        .highlight-yellow, .highlight-green {
+            cursor: pointer;
+        }
+        .highlight-yellow {
+            background-color: yellow;
+        }
+        .highlight-green {
+            background-color: #90ee90;
+        }
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        .modal-content {
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .modal-content a {
+            color: var(--link-color);
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
+        .modal-content button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-content button:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+        }
+        /* Timer controller styles */
+        .timer-controller {
+            text-align: center;
+            background: var(--toggle-bg);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .timer-controller h3 {
+            color: var(--title-color);
+            margin-bottom: 10px;
+        }
+        #timer-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin: 10px 0;
+            background: var(--container-bg);
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .timer-input {
+            width: 60px;
+            padding: 8px;
+            margin: 5px;
+            border: 2px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            text-align: center;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .timer-input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .timer-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .timer-btn:hover {
+            background: var(--button-hover-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+        .timer-btn:active {
+            transform: translateY(1px);
+        }
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            .passage-section, .questions-section {
+                width: 100%;
+                padding: 15px;
+                overflow: visible;
+            }
+            .passage-section {
+                border-right: none;
+                border-bottom: 2px solid var(--border-color);
+                max-height: 50vh;
+                overflow-y: auto;
+            }
+            .questions-section {
+                position: relative;
+            }
+            .results.fullscreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1000;
+                background: var(--container-bg);
+                overflow-y: auto;
+                margin: 0;
+                border-radius: 0;
+                padding: 20px;
+                padding-top: 60px; /* Space for close button */
+            }
+            .close-results {
+                position: fixed;
+                top: 15px;
+                right: 15px;
+                z-index: 1001;
+                background: #e53e3e;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            }
+            .submit-btn, .reset-btn {
+                padding: 18px;
+                font-size: 18px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .submit-btn:active, .reset-btn:active {
+                transform: translateY(1px);
+                background: var(--button-hover-bg);
+            }
+            .reset-btn:active {
+                background: var(--reset-hover-bg);
+            }
+            .ynng-options {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .ynng-option {
+                width: 100%;
+                padding: 8px;
+            }
+            .mc-options {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .mc-option {
+                width: 100%;
+                padding: 8px;
+            }
+            .modal-content {
+                max-width: 90%;
+                padding: 20px;
+            }
+        }
+        @media (max-width: 768px) and (orientation: portrait) {
+            .passage-title {
+                font-size: 16px;
+            }
+            .passage-subtitle {
+                font-size: 12px;
+            }
+            .questions-title {
+                font-size: 16px;
+            }
+            .passage-content {
+                font-size: 13px;
+            }
+            .question-group {
+                font-size: 13px;
+            }
+            .question-group h3 {
+                font-size: 15px;
+            }
+            .question label {
+                font-size: 13px;
+            }
+            .inline-input {
+                width: 120px;
+                height: 20px;
+                font-size: 12px;
+            }
+            .table {
+                font-size: 11px;
+            }
+            .table th, .table td {
+                font-size: 11px;
+                padding: 6px;
+            }
+            .submit-btn, .reset-btn {
+                padding: 15px;
+                font-size: 16px;
+            }
+            .instructions-header {
+                font-size: 12px;
+            }
+            .instructions-content {
+                font-size: 11px;
+            }
+            .results {
+                font-size: 13px;
+            }
+            .score {
+                font-size: 20px;
+            }
+        }
+        @media (max-width: 768px) and (orientation: landscape) {
+            .passage-title {
+                font-size: 12px;
+            }
+            .passage-subtitle {
+                font-size: 8px;
+            }
+            .questions-title {
+                font-size: 12px;
+            }
+            .passage-content {
+                font-size: 8px;
+            }
+            .question-group {
+                font-size: 8px;
+            }
+            .question-group h3 {
+                font-size: 9px;
+            }
+            .question label {
+                font-size: 8px;
+            }
+            .inline-input {
+                width: 60px;
+                height: 16px;
+                font-size: 7px;
+            }
+            .table {
+                font-size: 6px;
+            }
+            .table th, .table td {
+                font-size: 6px;
+                padding: 2px;
+            }
+            .submit-btn, .reset-btn {
+                padding: 6px;
+                font-size: 9px;
+            }
+            .instructions-header {
+                font-size: 8px;
+            }
+            .instructions-content {
+                font-size: 7px;
+            }
+        }
+        /* Ripple effect for button */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="mode-toggle" id="modeToggle">🌙 Night Mode</button>
+    <button class="highlight-toggle" id="highlightToggle">Switch to Green</button>
+    <div class="container">
+        <div class="passage-section">
+            <h1 class="passage-title">READING PASSAGE 3</h1>
+            <p class="passage-subtitle">You should spend about 20 minutes on Questions 27–40, which are based on Reading Passage 3 below.</p>
+            <div class="passage-content">
+                <h2 style="color: var(--title-color); font-size: 24px; margin-bottom: 15px; text-align: center;">Music soothes and awes – and may help us heal</h2>
+                <p>Tapping into the brain’s ability to process music, researchers are using songs and sounds in novel ways</p>
+                <p>Dan Ellsey, 33, was sitting in his wheelchair, his virtually useless arms and weak torso strapped to the chair for safety. As we were introduced, he arched his back, grinned broadly and aimed the power of his dark brown eyes at me, as if eye contact were his only means of transcending the prison of his body.</p>
+                <p>But it isn’t. In the last few years, Ellsey, who was born with cerebral palsy, has discovered another, almost miraculous way of expressing himself: composing music with a special computerized system called Hyperscore. For Ellsey, as for most human beings, music has almost inexplicable power. It can rouse armies to battle, soothe babies to sleep, communicate peaks of joy and depths of sorrow that mere words cannot.</p>
+                <p>Why evolution would have endowed our brains with the neural machinery to make music is a mystery. ‘It’s unclear why humans are so uniquely sensitive to music. Certainly, music shares many features with spoken language, and our brains are particularly developed to process the rapid tones and segments of sound that are common to both,’ said neurologist and author Dr Oliver Sacks, whose latest book is Musicophilia: Tales of Music and the Brain. ‘Some researchers,’ he added in an e-mail interview, ‘think that in primitive cultures, music and speech were not distinct. Other researchers debate which came first in evolution, speech or song.’ What is clear is that the brain is abundantly wired to process music.</p>
+                <p>Scientists at the Montreal Neurological Institute and Hospital, for instance, have found dramatic evidence on brain scans that the chills, or visceral feelings of awe, that people report when listening to their favorite music are real. Reactions to music appear to vary greatly. Music that a person likes, but not music that is disliked, activates the higher thinking centers in the brain’s cortex and, perhaps more importantly, the ‘ancient circuitry, the motivation and reward system,’ according to experimental psychologist Robert Zatorre, a member of the Montreal team. This primeval part of the brain also governs basic drives such as hunger, thirst and sex, suggesting that the brain may consider music on a par with them.</p>
+                <p>Music has the power not just to awe but also to heal. If a person has a stroke on the left side of the brain, where the speech centers in most people are, that ‘wipes out a major part of communication,’ said Dr Gottfried Schlaug, chief of the Cerebrovascular Disorder Division and Stroke Recovery Laboratory at Beth Israel Deaconess Medical Center. But if the right side, where a lot of music is processed, is intact, some stroke patients can use ‘melodic intonation therapy,’ which involves singing using two tones relatively close in pitch, to communicate. Schlaug’s research suggests that with intensive therapy, some patients can even move from this two-tone singing back to actual speech.</p>
+                <p>Stroke patients with gait problems also profit from music therapy. At the Center for Biomedical Research in Music at Colorado State University in Fort Collins, director Michael Thaut and his team have shown that people who are partially paralyzed on one side of the body can be retrained to walk faster and in a more coordinated way if they practice walking rhythmically, cued by music or a metronome. Combining rhythmic training with physical therapy also helps stroke patients recover gait faster. ‘Music helps us organize our movement,’ said Kathleen Howland, a music therapist who teaches at Lesley University in Cambridge in the USA. In fact, researchers have found that auditory signals are more powerful than visual signals in coordinating movement in healthy people.</p>
+                <p>Patients undergoing colonoscopy seem to feel less pain and need fewer sedative drugs if they listen to music during the procedure, according to several studies. But not all studies have been so clear-cut. A 2007 review by the Cochrane Collaboration, a nonprofit, international organization that evaluates medical research, pooled data from 51 pain studies and concluded that, although listening to music can reduce the intensity of pain and the need for narcotic drugs, the benefit, overall, was small.</p>
+                <p>A number of studies, however, show that music therapy can reduce pain, such as a 2001 study on burn patients, whose burns must be frequently scraped to reduce dead tissue. Music therapy may improve mental state and functioning in people with schizophrenia, and communication in children with autistic spectrum disorders, according to Cochrane reviews. Babies, as any parent knows, clearly respond to music. Premature infants who listen to lullabies learn to suck better and gain more weight than those who don't get music therapy. Deforia Lane, director of music therapy at the University Hospitals Ireland Cancer Center in Cleveland, has found an improvement in immune response among hospitalized children who played, sang and created music, compared with children who did not get music therapy. Indeed, the list of potential benefits from music therapy seems long. And for people such as Ellsey, the benefits can be nothing short of liberating.</p>
+            </div>
+        </div>
+        <div class="questions-section">
+            <div class="timer-controller">
+                <h3>Timer (set your time)</h3>
+                <div id="timer-display">20:00</div>
+                <input type="number" id="timer-min" class="timer-input" min="0" value="20" placeholder="Min">
+                <input type="number" id="timer-sec" class="timer-input" min="0" max="59" value="00" placeholder="Sec">
+                <button id="set-timer" class="timer-btn">Set</button>
+                <button id="start-timer" class="timer-btn">Start</button>
+                <button id="pause-timer" class="timer-btn">Pause</button>
+                <button id="reset-timer" class="timer-btn">Reset</button>
+            </div>
+            <h2 class="questions-title">Questions 27-40</h2>
+            <div class="question-group">
+                <h3>Questions 27–32</h3>
+                <p>Do the following statements agree with the views of the writer in Reading Passage 3?</p>
+                <p>In boxes 27–32 on your answer sheet, write</p>
+                <p>YES if the statement agrees with the views of the writer</p>
+                <p>NO if the statement contradicts the views of the writer</p>
+                <p>NOT GIVEN if it is impossible to say what the writer thinks about this</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions1')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow1">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions1">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <div class="question">
+                    <label>27 Dan Ellsey has been able to communicate through music since he was very young.</label>
+                    <div class="ynng-options">
+                        <label class="ynng-option"><input type="radio" name="q27" value="YES"> YES</label>
+                        <label class="ynng-option"><input type="radio" name="q27" value="NO"> NO</label>
+                        <label class="ynng-option"><input type="radio" name="q27" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>28 Armies respond to music that is loud and rhythmic.</label>
+                    <div class="ynng-options">
+                        <label class="ynng-option"><input type="radio" name="q28" value="YES"> YES</label>
+                        <label class="ynng-option"><input type="radio" name="q28" value="NO"> NO</label>
+                        <label class="ynng-option"><input type="radio" name="q28" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>29 Researchers have determined why people react so emotionally to music.</label>
+                    <div class="ynng-options">
+                        <label class="ynng-option"><input type="radio" name="q29" value="YES"> YES</label>
+                        <label class="ynng-option"><input type="radio" name="q29" value="NO"> NO</label>
+                        <label class="ynng-option"><input type="radio" name="q29" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>30 Both music and speech are composed of sound segments.</label>
+                    <div class="ynng-options">
+                        <label class="ynng-option"><input type="radio" name="q30" value="YES"> YES</label>
+                        <label class="ynng-option"><input type="radio" name="q30" value="NO"> NO</label>
+                        <label class="ynng-option"><input type="radio" name="q30" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>31 It is clear that song developed more quickly than speech.</label>
+                    <div class="ynng-options">
+                        <label class="ynng-option"><input type="radio" name="q31" value="YES"> YES</label>
+                        <label class="ynng-option"><input type="radio" name="q31" value="NO"> NO</label>
+                        <label class="ynng-option"><input type="radio" name="q31" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>32 Emotional reactions to music have been scientifically demonstrated.</label>
+                    <div class="ynng-options">
+                        <label class="ynng-option"><input type="radio" name="q32" value="YES"> YES</label>
+                        <label class="ynng-option"><input type="radio" name="q32" value="NO"> NO</label>
+                        <label class="ynng-option"><input type="radio" name="q32" value="NOT GIVEN"> NOT GIVEN</label>
+                    </div>
+                </div>
+            </div>
+            <div class="question-group">
+                <h3>Questions 33–35</h3>
+                <p>Choose the correct letter, A, B, C or D.</p>
+                <p>Write the correct letter in boxes 33–35 on your answer sheet.</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions2')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow2">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions2">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <div class="question">
+                    <label>33 According to the article, music stimulates higher brain activity when it</label>
+                    <div class="mc-options">
+                        <label class="mc-option"><input type="radio" name="q33" value="A"> A provokes hunger.</label>
+                        <label class="mc-option"><input type="radio" name="q33" value="B"> B requires thought.</label>
+                        <label class="mc-option"><input type="radio" name="q33" value="C"> C is soothing.</label>
+                        <label class="mc-option"><input type="radio" name="q33" value="D"> D is pleasing.</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>34 According to Dr Schlaug’s research, some stroke patients may regain speech if</label>
+                    <div class="mc-options">
+                        <label class="mc-option"><input type="radio" name="q34" value="A"> A they practise making sounds that are close together.</label>
+                        <label class="mc-option"><input type="radio" name="q34" value="B"> B they reactivate the left side of the brain.</label>
+                        <label class="mc-option"><input type="radio" name="q34" value="C"> C they receive music therapy daily.</label>
+                        <label class="mc-option"><input type="radio" name="q34" value="D"> D they listen to tunes in groups.</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <label>35 According to the Cochrane Collaboration review, some research into the link between music and pain relief suggests</label>
+                    <div class="mc-options">
+                        <label class="mc-option"><input type="radio" name="q35" value="A"> A the value of music is underestimated.</label>
+                        <label class="mc-option"><input type="radio" name="q35" value="B"> B the value of music may be limited.</label>
+                        <label class="mc-option"><input type="radio" name="q35" value="C"> C more studies are needed in these areas.</label>
+                        <label class="mc-option"><input type="radio" name="q35" value="D"> D patients welcome this research.</label>
+                    </div>
+                </div>
+            </div>
+            <div class="question-group">
+                <h3>Questions 36–40</h3>
+                <p>Complete each sentence with the correct ending, A–H, below.</p>
+                <p>Write the correct letter, A–H, in boxes 36–40 on your answer sheet.</p>
+                <div class="instructions-toggle">
+                    <div class="instructions-header" onclick="toggleInstructions('instructions3')">
+                        <span>📋 Instructions</span>
+                        <span class="arrow" id="arrow3">▼</span>
+                    </div>
+                    <div class="instructions-content" id="instructions3">
+                        Instructions on how to deal with these questions will be soon written here
+                    </div>
+                </div>
+                <p>36 Burn victims who receive music therapy <input type="text" id="q36" class="inline-input" placeholder="36" autocomplete="off" spellcheck="false"></p>
+                <p>37 People with schizophrenia who receive music therapy <input type="text" id="q37" class="inline-input" placeholder="37" autocomplete="off" spellcheck="false"></p>
+                <p>38 Autistic children who receive music therapy <input type="text" id="q38" class="inline-input" placeholder="38" autocomplete="off" spellcheck="false"></p>
+                <p>39 Premature babies who receive music therapy <input type="text" id="q39" class="inline-input" placeholder="39" autocomplete="off" spellcheck="false"></p>
+                <p>40 Hospitalised children who receive music therapy <input type="text" id="q40" class="inline-input" placeholder="40" autocomplete="off" spellcheck="false"></p>
+                <p>A rely less on drugs.</p>
+                <p>B get heavier.</p>
+                <p>C exhibit improved social interaction.</p>
+                <p>D experience psychological benefits.</p>
+                <p>E sleep more soundly.</p>
+                <p>F suffer less discomfort.</p>
+                <p>G accept their situation more easily.</p>
+                <p>H have stronger resistance to disease.</p>
+            </div>
+            <button class="submit-btn" id="submitBtn">Submit Test</button>
+            <button class="reset-btn" id="resetBtn">Reset Test</button>
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+    <script>
+        // Correct answers
+        const correctAnswers = {
+            q27: 'NO',
+            q28: 'NOT GIVEN',
+            q29: 'NO',
+            q30: 'YES',
+            q31: 'NO',
+            q32: 'YES',
+            q33: 'D',
+            q34: 'A',
+            q35: 'B',
+            q36: 'F',
+            q37: 'D',
+            q38: 'C',
+            q39: 'B',
+            q40: 'H'
+        };
+
+        // Toggle instructions
+        function toggleInstructions(instructionsId) {
+            const content = document.getElementById(instructionsId);
+            const arrow = document.getElementById(instructionsId.replace('instructions', 'arrow'));
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                arrow.classList.remove('rotated');
+            } else {
+                content.classList.add('show');
+                arrow.classList.add('rotated');
+            }
+        }
+
+        // Toggle night mode
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const modeToggle = document.getElementById('modeToggle');
+            if (document.body.classList.contains('night-mode')) {
+                modeToggle.textContent = '☀️ Day Mode';
+                modeToggle.style.background = 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)';
+            } else {
+                modeToggle.textContent = '🌙 Night Mode';
+                modeToggle.style.background = 'linear-gradient(135deg, #4299e1 0%, #3182ce 100%)';
+            }
+        }
+
+        // Ripple effect for button
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.classList.add("ripple");
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            button.appendChild(circle);
+        }
+
+        // Submit test function
+        function submitTest() {
+            const userAnswers = {};
+            let score = 0;
+            // YN NG questions 27-32 (radios)
+            for (let i = 27; i <= 32; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                userAnswers[`q${i}`] = selected ? selected.value : '';
+            }
+            // MC questions 33-35 (radios)
+            for (let i = 33; i <= 35; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                userAnswers[`q${i}`] = selected ? selected.value : '';
+            }
+            // Text inputs 36-40
+            for (let i = 36; i <= 40; i++) {
+                const element = document.getElementById(`q${i}`);
+                userAnswers[`q${i}`] = element ? element.value.trim().toUpperCase() : '';
+            }
+            // Calculate score and generate results
+            let resultsHTML = '';
+            for (let i = 27; i <= 40; i++) {
+                const qKey = `q${i}`;
+                const userAnswer = userAnswers[qKey];
+                const correctAnswer = correctAnswers[qKey];
+                const isCorrect = userAnswer === correctAnswer;
+                if (isCorrect) score++;
+                const resultClass = isCorrect ? 'correct' : 'incorrect';
+                const statusIcon = isCorrect ? '✅' : '❌';
+                resultsHTML += `
+                    <div class="result-item ${resultClass}">
+                        <h4>${statusIcon} Question ${i}</h4>
+                        <p><strong>Your answer:</strong> <span class="user-answer">${userAnswer || 'No answer provided'}</span></p>
+                        <p><strong>Correct answer:</strong> <span class="correct-answer">${correctAnswer}</span></p>
+                    </div>
+                `;
+            }
+            const percentage = Math.round((score / 14) * 100);
+            let gradeColor = '#e53e3e';
+            if (percentage >= 70) gradeColor = '#38a169';
+            else if (percentage >= 50) gradeColor = '#d69e2e';
+            const finalResultsHTML = `
+                <div class="score" style="color: ${gradeColor}">
+                    Your Score: ${score}/14 (${percentage}%)
+                </div>
+                ${resultsHTML}
+            `;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = finalResultsHTML;
+            resultsDiv.style.display = 'block';
+            // Add close button for mobile
+            if (window.innerWidth <= 768) {
+                resultsDiv.classList.add('fullscreen');
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'close-results';
+                closeBtn.innerHTML = '&times;';
+                closeBtn.onclick = function() {
+                    resultsDiv.style.display = 'none';
+                    resultsDiv.classList.remove('fullscreen');
+                    closeBtn.remove();
+                };
+                document.body.appendChild(closeBtn);
+            }
+            // Scroll to results
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Reset test function
+        function resetTest() {
+            // Clear radios 27-35
+            for (let i = 27; i <= 35; i++) {
+                document.querySelectorAll(`input[name="q${i}"]`).forEach(input => input.checked = false);
+            }
+            // Clear text 36-40
+            for (let i = 36; i <= 40; i++) {
+                const element = document.getElementById(`q${i}`);
+                if (element) element.value = '';
+            }
+            // Hide and clear results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'none';
+            resultsDiv.innerHTML = '';
+            resultsDiv.classList.remove('fullscreen');
+            const closeBtn = document.querySelector('.close-results');
+            if (closeBtn) closeBtn.remove();
+            // Scroll to top
+            setTimeout(() => {
+                document.querySelector('.questions-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Highlight feature
+        document.addEventListener('mouseup', handleHighlight);
+        document.addEventListener('touchend', handleHighlight);
+        function handleHighlight(e) {
+            let selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                let range = selection.getRangeAt(0);
+                if (!range.collapsed) {
+                    let commonAncestor = range.commonAncestorContainer;
+                    let parentElement = commonAncestor.nodeType === 3 ? commonAncestor.parentNode : commonAncestor;
+                    if (parentElement.closest('.passage-content, .question-group')) {
+                        if (!parentElement.closest('input, select')) {
+                            let span = document.createElement('span');
+                            span.className = currentHighlightClass;
+                            try {
+                                range.surroundContents(span);
+                            } catch (err) {
+                                console.log('Cannot surround range:', err);
+                            }
+                            selection.removeAllRanges();
+                        }
+                    }
+                }
+            }
+        }
+        // Removal of highlight
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('highlight-yellow') || e.target.classList.contains('highlight-green')) {
+                let span = e.target;
+                let fragment = document.createDocumentFragment();
+                while (span.firstChild) {
+                    fragment.appendChild(span.firstChild);
+                }
+                span.parentNode.replaceChild(fragment, span);
+                span.parentNode.normalize();
+            }
+        });
+
+        // Timer logic
+        let initialTime = 1200; // Default 20 minutes in seconds
+        let timerTime = initialTime;
+        let timerInterval = null;
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerTime / 60);
+            const seconds = timerTime % 60;
+            document.getElementById('timer-display').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Initialize button event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const modeToggle = document.getElementById('modeToggle');
+            const highlightToggle = document.getElementById('highlightToggle');
+            const setTimer = document.getElementById('set-timer');
+            const startTimer = document.getElementById('start-timer');
+            const pauseTimer = document.getElementById('pause-timer');
+            const resetTimer = document.getElementById('reset-timer');
+            window.currentHighlightClass = 'highlight-yellow';
+            // Add ripple effect to buttons
+            submitBtn.addEventListener('click', createRipple);
+            submitBtn.addEventListener('touchstart', createRipple);
+            resetBtn.addEventListener('click', createRipple);
+            resetBtn.addEventListener('touchstart', createRipple);
+            setTimer.addEventListener('click', createRipple);
+            setTimer.addEventListener('touchstart', createRipple);
+            startTimer.addEventListener('click', createRipple);
+            startTimer.addEventListener('touchstart', createRipple);
+            pauseTimer.addEventListener('click', createRipple);
+            pauseTimer.addEventListener('touchstart', createRipple);
+            resetTimer.addEventListener('click', createRipple);
+            resetTimer.addEventListener('touchstart', createRipple);
+            highlightToggle.addEventListener('click', createRipple);
+            highlightToggle.addEventListener('touchstart', createRipple);
+            // Add submit and reset functionality
+            submitBtn.addEventListener('click', submitTest);
+            submitBtn.addEventListener('touchend', function(e) {
+                e.preventDefault(); // Prevent double-tap zoom
+                submitTest();
+            });
+            resetBtn.addEventListener('click', resetTest);
+            resetBtn.addEventListener('touchend', function(e) {
+                e.preventDefault(); // Prevent double-tap zoom
+                resetTest();
+            });
+            // Add night mode toggle
+            modeToggle.addEventListener('click', toggleNightMode);
+            // Add highlight color toggle
+            highlightToggle.addEventListener('click', function() {
+                currentHighlightClass = currentHighlightClass === 'highlight-yellow' ? 'highlight-green' : 'highlight-yellow';
+                highlightToggle.textContent = currentHighlightClass === 'highlight-yellow' ? 'Switch to Green' : 'Switch to Yellow';
+            });
+            // Timer events
+            setTimer.addEventListener('click', () => {
+                const min = parseInt(document.getElementById('timer-min').value) || 0;
+                const sec = parseInt(document.getElementById('timer-sec').value) || 0;
+                initialTime = min * 60 + sec;
+                timerTime = initialTime;
+                updateTimerDisplay();
+            });
+            startTimer.addEventListener('click', () => {
+                if (!timerInterval) {
+                    timerInterval = setInterval(() => {
+                        if (timerTime > 0) {
+                            timerTime--;
+                            updateTimerDisplay();
+                        } else {
+                            clearInterval(timerInterval);
+                            alert('Time is up!');
+                        }
+                    }, 1000);
+                }
+            });
+            pauseTimer.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            });
+            resetTimer.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timerTime = initialTime;
+                updateTimerDisplay();
+            });
+            // Initial timer display
+            updateTimerDisplay();
+        });
+    </script>
+</body>
+</html>

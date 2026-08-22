@@ -1,0 +1,2275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Reading Test - Complete Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(1200px 600px at 10% 0%, #eef2ff, transparent),
+                        radial-gradient(1200px 600px at 90% 100%, #dbeafe, transparent),
+                        #f1f5f9;
+            overflow: hidden;
+            color: #1f2937;
+        }
+        .test-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .test-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        /* Header styles */
+        .header {
+            background: #ffffff;
+            border-bottom: 1px solid #d1d5db;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .header__logo img {
+            height: 48px;
+            transition: transform 0.3s ease;
+        }
+        .header__logo img:hover {
+            transform: scale(1.1);
+        }
+        .header__timer {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            border: 1px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+        .header__icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .header__icon {
+            font-size: 1.5rem;
+            color: #4b5563;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .header__icon:hover {
+            color: #2563eb;
+            transform: scale(1.15);
+        }
+        /* Passage Navigation */
+        .passage-nav {
+            display: flex;
+            background: #ffffff;
+            border-bottom: 1px solid #d1d5db;
+            padding: 0.5rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .passage-nav button {
+            padding: 0.75rem 1.5rem;
+            margin-right: 1rem;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .passage-nav button:hover {
+            background: #e5e7eb;
+        }
+        .passage-nav button.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        /* Settings Modal */
+        .settings-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .settings-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 32rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.4s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-3rem); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, #3b82f6, #1e40af);
+            color: #ffffff;
+        }
+        .settings-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        .settings-close {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+        .settings-close:hover {
+            color: #fed7e2;
+        }
+        .settings-body {
+            padding: 1.5rem;
+            background: #f9fafb;
+        }
+        .settings-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .settings-option:hover {
+            background: #eff6ff;
+        }
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+        .settings-option i {
+            margin-right: 0.75rem;
+            width: 1.25rem;
+            text-align: center;
+            color: #2563eb;
+        }
+        .settings-option span {
+            font-size: 1.1rem;
+        }
+        /* Section Rubric */
+        .sectionRubric {
+            margin: 1.5rem;
+            padding: 1.25rem;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .sectionRubric h2 {
+            font-size: 1.25rem;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+        /* Passage and Questions Containers */
+        .passage-container {
+            width: 45%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            background: #f9fafb;
+            border-right: 1px solid #d1d5db;
+            position: relative;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+        .passage-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .passage-container::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        .passage-container::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 4px;
+        }
+        .questions-container {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            background: #f9fafb;
+            user-select: text;
+            -webkit-user-select: text;
+            position: relative;
+        }
+        .questions-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .questions-container::-webkit-scrollbar-track {
+            background: #e5e7eb;
+        }
+        .questions-container::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 4px;
+        }
+        /* Highlight Styles */
+        .highlight {
+            border-radius: 0.25rem;
+            padding: 0 0.25rem;
+        }
+        .highlight.yellow { background: rgba(254, 243, 199, 0.5); }
+        .highlight.green { background: rgba(187, 247, 208, 0.5); }
+        .highlight.pink { background: rgba(251, 207, 232, 0.5); }
+        .highlight.blue { background: rgba(191, 219, 254, 0.5); }
+        .highlight-toolbar {
+            position: fixed;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1000;
+            padding: 0.5rem;
+            transform: translate(-50%, -100%);
+            margin-top: -0.5rem;
+        }
+        .highlight-toolbar button {
+            background: none;
+            border: none;
+            width: 2rem;
+            height: 2rem;
+            cursor: pointer;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        .highlight-toolbar button:hover {
+            background: #eff6ff;
+            transform: scale(1.1);
+        }
+        .highlight-toolbar button.remove {
+            color: #ef4444;
+        }
+        /* Divider */
+        .divider {
+            width: 14px;
+            background: #e5e7eb;
+            cursor: col-resize;
+            position: relative;
+        }
+        .divider-handle {
+            width: 6px;
+            height: 60px;
+            background: #6b7280;
+            border-radius: 4px;
+            position: absolute;
+            top: 50%;
+            left: 4px;
+            transform: translateY(-50%);
+        }
+        /* Question Styles */
+        .question {
+            margin-bottom: 2rem;
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+        .question:hover {
+            transform: translateY(-2px);
+        }
+        .question-rubric {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .question-rubric h3 {
+            margin: 0 0 0.5rem;
+            color: #2563eb;
+        }
+        .question-rubric p {
+            margin: 0.25rem 0;
+            color: #4b5563;
+        }
+        /* True/False/Not Given */
+        .tfng-option {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        .tfng-option select {
+            width: 6rem;
+            margin-right: 0.75rem;
+            padding: 0.25rem;
+            border: 2px dashed #6b7280;
+            border-radius: 0.5rem;
+            text-align: center;
+            background: #ffffff;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+        .tfng-option select:focus {
+            border-color: #2563eb;
+            background: #dbeafe;
+            border-style: solid;
+            outline: none;
+        }
+        .tfng-option label {
+            font-size: 1rem;
+            color: #1f2937;
+        }
+        /* Sentence Completion */
+        .sentence-completion {
+            margin-top: 1.5rem;
+        }
+        .sentence-completion p {
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        .note-input {
+            display: inline-block;
+            width: 8rem;
+            height: 1.5rem;
+            border: 2px dashed #6b7280;
+            border-radius: 0.5rem;
+            margin: 0 0.25rem;
+            padding: 0 0.5rem;
+            color: #6b7280;
+            font-weight: 600;
+            background: #eff6ff;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .note-input:focus {
+            border-color: #2563eb;
+            background: #dbeafe;
+            color: #1f2937;
+            border-style: solid;
+            outline: none;
+        }
+        .note-input.correct {
+            background: #ecfdf5;
+            border-color: #10b981;
+            border-style: solid;
+        }
+        .note-input.incorrect {
+            background: #fef2f2;
+            border-color: #ef4444;
+            border-style: solid;
+        }
+        .note-feedback {
+            margin-left: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .note-feedback.correct {
+            color: #10b981;
+        }
+        .note-feedback.incorrect {
+            color: #ef4444;
+        }
+        /* Footer */
+        .footer {
+            background: #ffffff;
+            border-top: 1px solid #d1d5db;
+            padding: 1.25rem;
+            box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.05);
+        }
+        .nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .footer__questionWrapper {
+            display: flex;
+            align-items: center;
+        }
+        .footer__questionNo {
+            background: none;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2563eb;
+            transition: all 0.2s ease;
+        }
+        .footer__questionNo:hover {
+            color: #1e40af;
+        }
+        .footer__subquestionWrapper {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: 1.25rem;
+        }
+        .subQuestion {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: 1px solid #d1d5db;
+            background: #f3f4f6;
+            margin: 0.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4b5563;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .subQuestion.active {
+            background: #2563eb;
+            color: #ffffff;
+            border-color: #2563eb;
+        }
+        .subQuestion.attempted {
+            background: #60a5fa;
+            color: #ffffff;
+        }
+        .footer__deliverButton {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .footer__deliverButton:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+        .footer__deliverButton:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+        /* Submission Modal */
+        .submission-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .submission-content {
+            background: #ffffff;
+            width: 90%;
+            max-width: 48rem;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .submission-content h2 {
+            margin-top: 0;
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 0.75rem;
+            font-size: 1.75rem;
+        }
+        .submission-content p {
+            margin-bottom: 1.5rem;
+            color: #4b5563;
+            font-size: 1.1rem;
+        }
+        .answers-section {
+            margin-top: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .answers-section h3 {
+            color: #2563eb;
+            margin-bottom: 1.25rem;
+            font-size: 1.25rem;
+        }
+        .answer-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            border-left: 6px solid #d1d5db;
+            background: #f9fafb;
+        }
+        .answer-item.correct {
+            border-left-color: #10b981;
+            background: #ecfdf5;
+        }
+        .answer-item.incorrect {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        .answer-text {
+            font-weight: 600;
+        }
+        .correct-answer {
+            color: #10b981;
+            margin-left: 0.75rem;
+        }
+        .incorrect-answer {
+            color: #ef4444;
+            margin-left: 0.75rem;
+        }
+        .answer-status {
+            float: right;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+        .correct-status {
+            color: #10b981;
+        }
+        .incorrect-status {
+            color: #ef4444;
+        }
+        .submission-buttons {
+            margin-top: 1.5rem;
+            text-align: right;
+        }
+        .submission-buttons button {
+            padding: 0.75rem 1.5rem;
+            margin-left: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .submission-buttons .confirm {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+        }
+        .submission-buttons .confirm:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+        /* Score Display */
+        .score-display {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #eff6ff;
+            border-radius: 0.75rem;
+        }
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 0.75rem 0;
+        }
+        .score-total {
+            font-size: 1.25rem;
+            color: #4b5563;
+        }
+        .performance-rating {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 1.25rem 0;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        .excellent { color: #065f46; background: #ecfdf5; }
+        .very-good { color: #047857; background: #ecfdf5; }
+        .good { color: #34d399; background: #ecfdf5; }
+        .fair { color: #d97706; background: #fefce8; }
+        .poor { color: #dc2626; background: #fef2f2; }
+        .band-score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin: 0.75rem 0;
+        }
+        /* Highlight Colors */
+        .highlight-color {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 50%;
+            border: 1px solid #d1d5db;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .highlight-color:hover {
+            transform: scale(1.2);
+        }
+        .highlight-color.yellow { background: #fef3c7; }
+        .highlight-color.green { background: #bbf7d0; }
+        .highlight-color.pink { background: #fbcfe8; }
+        .highlight-color.blue { background: #bfdbfe; }
+        /* Answer Comparison */
+        .answer-comparison {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: #f9fafb;
+            border-radius: 0.75rem;
+            display: none;
+        }
+        .answer-comparison h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+        .correct-highlight {
+            background: rgba(16, 185, 129, 0.3);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        }
+        .incorrect-highlight {
+            background: rgba(239, 68, 68, 0.3);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        }
+        .dropdown-answer {
+            margin-left: 0.75rem;
+            font-weight: normal;
+        }
+        .dropdown-answer.correct {
+            color: #10b981;
+        }
+        .dropdown-answer.incorrect {
+            color: #ef4444;
+        }
+        .time-spent {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 1.25rem;
+            text-align: center;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        /* Passage Content Styling */
+        #passageContent {
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+        #passageContent h2 {
+            margin: 1.5rem 0 1rem 0;
+            line-height: 1.4;
+        }
+        #passageContent p {
+            margin: 1.2rem 0;
+            text-align: justify;
+            line-height: 1.7;
+        }
+        #passageContent p:first-of-type {
+            margin-top: 1rem;
+        }
+        /* Flow Chart Styling */
+        .flow-chart {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #f9fafb;
+        }
+        .flow-step {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid #2563eb;
+            background: #ffffff;
+            border-radius: 0.25rem;
+        }
+        .flow-input {
+            display: inline-block;
+            width: 10rem;
+            height: 1.5rem;
+            border: 2px dashed #6b7280;
+            border-radius: 0.5rem;
+            margin: 0 0.25rem;
+            padding: 0 0.5rem;
+            color: #6b7280;
+            font-weight: 600;
+            background: #eff6ff;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .flow-input:focus {
+            border-color: #2563eb;
+            background: #dbeafe;
+            color: #1f2937;
+            border-style: solid;
+            outline: none;
+        }
+        /* Diagram Styling */
+        .diagram-container {
+            text-align: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            background: #f9fafb;
+        }
+        .diagram-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.25rem;
+        }
+        .diagram-label {
+            font-weight: 600;
+            margin-top: 0.5rem;
+            color: #1f2937;
+        }
+        /* Matching Information Styles */
+        .matching-info-option {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        .matching-info-option input {
+            width: 3rem;
+            margin-right: 0.75rem;
+            padding: 0.25rem;
+            border: 2px dashed #6b7280;
+            border-radius: 0.5rem;
+            text-align: center;
+            background: #ffffff;
+            color: #1f2937;
+            font-size: 1rem;
+            height: 1.5rem;
+        }
+        .matching-info-option input:focus {
+            border-color: #2563eb;
+            background: #dbeafe;
+            border-style: solid;
+            outline: none;
+        }
+        .matching-info-option label {
+            font-size: 1rem;
+            color: #1f2937;
+        }
+        /* Matching People Styles */
+        .matching-people-option {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        .matching-people-option select {
+            width: 4rem;
+            margin-right: 0.75rem;
+            padding: 0.25rem;
+            border: 2px dashed #6b7280;
+            border-radius: 0.5rem;
+            text-align: center;
+            background: #ffffff;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+        .matching-people-option select:focus {
+            border-color: #2563eb;
+            background: #dbeafe;
+            border-style: solid;
+            outline: none;
+        }
+        .matching-people-option label {
+            font-size: 1rem;
+            color: #1f2937;
+        }
+        /* Multiple Choice */
+        .multiple-choice-option {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem 0;
+        }
+        .multiple-choice-option input[type="radio"] {
+            margin-right: 0.75rem;
+        }
+        .multiple-choice-option label {
+            font-size: 1rem;
+            color: #1f2937;
+        }
+        /* YES/NO/NOT GIVEN Options */
+        .ynng-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .ynng-option {
+            display: flex;
+            align-items: center;
+            margin-right: 1rem;
+        }
+        /* Dropdown for Sentence Completion */
+        .sentence-dropdown {
+            display: inline-block;
+            width: 3rem;
+            height: 1.75rem;
+            border: 2px dashed #6b7280;
+            border-radius: 0.5rem;
+            margin: 0 0.25rem;
+            padding: 0 0.5rem;
+            color: #6b7280;
+            font-weight: 600;
+            background: #eff6ff;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .sentence-dropdown:focus {
+            border-color: #2563eb;
+            background: #dbeafe;
+            color: #1f2937;
+            border-style: solid;
+            outline: none;
+        }
+        .sentence-dropdown.correct {
+            background: #ecfdf5;
+            border-color: #10b981;
+            border-style: solid;
+        }
+        .sentence-dropdown.incorrect {
+            background: #fef2f2;
+            border-color: #ef4444;
+            border-style: solid;
+        }
+        /* Passage Content Styling */
+        .passage-paragraph {
+            margin: 1.2rem 0;
+            text-align: justify;
+            line-height: 1.7;
+        }
+        .passage-label {
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        .option-list {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #f9fafb;
+        }
+        .option-list p {
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+        /* Passage Containers */
+        .passage-content {
+            display: none;
+        }
+        .passage-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-wrapper">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__logo">
+                <img src="https://d2snzxottmona5.cloudfront.net/releases/3.46.0/images/logo/ielts.svg" alt="IELTS Logo">
+            </div>
+            <div class="header__timer" id="testTimer">00:00</div>
+            <div class="header__icons">
+                <i class="fas fa-text-height header__icon" id="textSizeToggle" title="Text size"></i>
+                <i class="fas fa-circle-question header__icon" title="Tips" onclick="alert('Complete all three reading passages. Use the navigation buttons to switch between passages. Answer all questions and click Submit to see your score and IELTS band estimate.')"></i>
+            </div>
+        </header>
+        
+        <!-- Passage Navigation -->
+        <div class="passage-nav">
+            <button id="passage1Btn" class="active">Passage 1: Walking With Dinosaurs</button>
+            <button id="passage2Btn">Passage 2: The Robots are Coming</button>
+            <button id="passage3Btn">Passage 3: Endangered Languages</button>
+        </div>
+        
+        <!-- Settings Modal -->
+        <div class="settings-modal" id="settingsModal">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h2>Options</h2>
+                    <button class="settings-close" id="settingsClose">&times;</button>
+                </div>
+                <div class="settings-body">
+                    <div class="settings-option">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Go to submission page</span>
+                    </div>
+                    <div class="settings-option" id="textSizeOption">
+                        <i class="fas fa-text-height"></i>
+                        <span>Text size</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-container">
+            <!-- Passage Section -->
+            <div class="passage-container" id="passage-container">
+                <div class="sectionRubric">
+                    <h2>Reading Passage</h2>
+                    <p>You should spend about 20 minutes on each passage and its questions.</p>
+                </div>
+                <div class="highlight-toolbar" id="highlightToolbar">
+                    <button class="highlight-color yellow" data-color="yellow" title="Yellow highlight"></button>
+                    <button class="highlight-color green" data-color="green" title="Green highlight"></button>
+                    <button class="highlight-color pink" data-color="pink" title="Pink highlight"></button>
+                    <button class="highlight-color blue" data-color="blue" title="Blue highlight"></button>
+                    <button class="remove" title="Remove highlight"><i class="fas fa-times"></i></button>
+                </div>
+                
+                <!-- Passage 1 Content -->
+                <div id="passage1Content" class="passage-content active">
+                    <h2 class="text-center text-xl font-bold text-gray-800">Walking With Dinosaurs</h2>
+                    <p><strong>A</strong></p>
+                    <p>The tools that Peter L. Falkingham and his colleagues at Manchester University are making will likely change the way we think about how dinosaurs and other prehistoric animals behaved.</p>
+                    <p>The media occasionally portrays paleontologists or those who research prehistoric life, as meticulously clearing stones from around a large dinosaur bone while they camp in the desert. Peter Falkingham hasn't exactly been doing that lately, which is the problem. Instead, he stares at a screen nonstop throughout the day. Not because he's busy, but rather because he works in the relatively new field of computational paleontology. Few people may be aware that when a skeleton or new species is discovered, research truly begins. What we really want to understand is how extinct animals and plants behaved in their natural habitats. Drs. Bill Sellers and Phil Manning of the University of Manchester employ a "genetic algorithm" to analyze the movements and stalking patterns of prehistoric creatures like dinosaurs and our ancestors. A sort of computer code known as a genetic algorithm has the ability to "evolve" and update itself.</p>
+                    
+                    <p><strong>B</strong></p>
+                    <p>The surviving bones of a complete dinosaur skeleton may teach scientists a great deal about the animal, but they do not offer the full image, which a computer can attempt to complete. A scanned skeleton and known muscle locations are provided to the computer model. The model then randomly activates the muscles. This, somewhat unexpectedly, ends in the animal falling on its face almost often. Therefore, the computer modifies the activation sequence and tries again... typically with the same outcome. The modeling dinosaurs rapidly "evolve." If an improvement is detected, the computer discards the previous pattern and utilizes the new one as the basis for future modifications.</p>
+                    
+                    <p><strong>C</strong></p>
+                    <p>The muscle activation pattern finally develops into a stable mode of locomotion, the optimal solution is reached, and the dinosaur is able to walk, run, chase, and graze. Assuming that natural selection also generates the optimal solution, the modeled species should exhibit comparable behavior to its extinct relative. Moreover, using the same method applied to actual animals (humans, emus, and ostriches), peak computer speeds were comparable to those attained in reality. By comparing their virtual results to actual measurements of current species, the Manchester team of paleontologists may have confidence in the calculated data representing how extinct prehistoric animals, such as dinosaurs, traveled.</p>
+                    
+                    <p><strong>D</strong></p>
+                    <p>The group from Manchester University has modeled a huge carnivorous dinosaur using computer simulations. The spines that run over its back give rise to its common name, "high-spined lizard," or "acrocanthosaurus." It is theorized by scientists that they propped up a hump that accumulated fat and water reserves, although this is purely conjectural. Many people also think that a sail was supported by the spines. One group thinks it was a blood-flushable display, while another other thinks it was a thermostat. Perhaps both factors were involved. The narrow breadth and frail jaws of the cranium make it look disproportionate to the massive weight of the body. The feet are especially remarkable because of how little they are in proportion to the rest of the animal. Its large, broad tail and powerful leg muscles allow it to move swiftly and are used to aid in locomotion. It walked on its rear legs, while its front legs were small and equipped with vicious claws.</p>
+                    
+                    <p><strong>E</strong></p>
+                    <p>Falkingham is analyzing historical footprints with modeling tools to learn more about the migratory patterns of extinct animals. Today's trackers, who study the habitats of wild animals, are able to determine the kind of animal that left behind a set of footprints, as well as the animal's speed and, in some cases, gender. However, applying the same logic to a fossil trail is far more challenging. Knowing the circumstances under which the path was formed, particularly with regard to the mud or silt that the animal walked on, may be very helpful. These issues can be answered via experiments, however, there are a staggering amount of potential impacts. Physically recreating each incident with a box of mud is a tedious and error-prone procedure. Simulators on computers can help in this endeavor.</p>
+                    
+                    <p><strong>F</strong></p>
+                    <p>Falkingham mimics prehistoric mud by simulating a volume of mud and manipulating the moisture level, consistency, and other variables. The virtual mud is then marked with a virtual foot. Inside this footprint, which can be separated and studied from any angle, the stress values may be retrieved and calculated. By running hundreds of these simulations concurrently on supercomputers, Falkingham may be able to begin to understand what sorts of imprints may be expected if an animal walked in a given way over a specific type of ground. Scientists may more securely interpret fossil tracks with the assistance of the diversity in the recreated trails. Computational approaches in paleontology are becoming more popular by the year. As computer power increases, so will the number of problems that can be addressed and questions that can be answered.</p>
+                </div>
+                
+                <!-- Passage 2 Content -->
+                <div id="passage2Content" class="passage-content">
+                    <h2 class="text-center text-xl font-bold text-gray-800">The Robots are Coming</h2>
+                    <p><strong>What is the current state of play in Artificial Intelligence?</strong></p>
+                    <p><strong>A</strong></p>
+                    <p>Can robots advance so far they become the ultimate threat to our existence? Some scientists say no, and dismiss the very idea of Artificial Intelligence. The human brain, they argue, is the most complicated system ever created, and any machine designed to reproduce human thought is bound to fail. Physicist Roger Penrose of Oxford University and others [ = some academics ] believe that machines are physically incapable of human thought = doubt the possibility of creating Artificial Intelligence. Colin McGinn of Rutgers University backs this up when he says that Artificial Intelligence "is like sheep trying to do complicated psychoanalysis. They just don't have the conceptual equipment they need in their limited brains".</p>
+                    <p><strong>B</strong></p>
+                    <p>Artificial Intelligence, or Al, is different from most technologies in that scientists still understand very little about how intelligence works. Physicists have a good understanding of Newtonian mechanics and the quantum theory of atoms and molecules, whereas the basic laws of intelligence remain a mystery. But a sizable number of mathematicians and computer scientists, who are specialists in the area, are optimistic about the possibilities. To them, it is only a matter of time before a thinking machine walks out of the laboratory. Over the years, various problems have impeded all efforts to create robots. To attack these difficulties, researchers tried to use the 'top-down approach', using a computer in an attempt to program all the essential rules onto a single disc. By inserting this into a machine, it would then become self- aware and attain human-like intelligence.</p>
+                    <p><strong>C</strong></p>
+                    <p>In the 1950s and 1960s, great progress was made, but the shortcomings of these prototype robots soon became clear. They were huge and took hours to navigate across a room. Meanwhile, a fruit fly, with a brain containing only a fraction of the computing power, can effortlessly navigate in three dimensions. Our brains, like the fruit fly's, unconsciously recognize what we see by performing countless calculations. This unconscious awareness of patterns is exactly what computers are missing. The second problem is the robots' lack of common sense. Humans know that water is wet and that mothers are older than their daughters. But there is no mathematics that can express these truths. Children learn the intuitive laws of biology and physics by interacting with the real world. Robots know only what has been programmed into them.</p>
+                    <p><strong>D</strong></p>
+                    <p>Because of the limitations of the top-down approach to Artificial Intelligence, attempts have been made to use a 'bottom-up' approach instead – that is, to try to imitate evolution and the way a baby learns. Rodney Brooks was the director of MIT's Artificial Intelligence Laboratory, famous for its lumbering 'top-down' walking robots. He changed the course of research when he explored the unorthodox idea of tiny 'insectoid' robots that learned to walk by bumping into things instead of computing mathematically the precise position of their feet. Today many of the descendants of Brooks' insectoid robots are on Mars gathering data for NASA (The National Aeronautics and Space Administration), running across the dusty landscape of the planet. For all their successes in mimicking the behavior of insects, however, robots using neural networks have performed miserably when their programmers have tried to duplicate in them the behavior of higher organisms such as mammals. MIT's Marvin Minsky summarizes the problems of Al: 'The history of Al is sort of funny because the first real accomplishments were beautiful things, like a machine that could do well in a maths course. But then we started to try to make machines that could answer questions about simple children's stories. There's no machine today that can do that.'</p>
+                    <p><strong>E</strong></p>
+                    <p>There are people who believe that eventually there will be a combination between the top-down and bottom-up, which may provide the key to Artificial Intelligence. As adults, we blend the two approaches. It has been suggested that our emotions represent the quality that most distinguishes us as humans, that it is impossible for machines ever to have emotions. Computer expert Hans Moravec thinks that in the future robots will be programmed with emotions such as fear to protect themselves so that they can signal to humans when their batteries are running low, for example. Emotions are vital in decision-making. People who have suffered a certain kind of brain injury lose the ability to experience emotions and become unable to make decisions. Without emotions to guide them, they debate endlessly over their options. Moravec points out that as robots become more intelligent and are able to make choices, they could likewise become paralyzed with indecision. To aid them, robots of the future might need to have emotions hardwired into their brains.</p>
+                    <p><strong>F</strong></p>
+                    <p>There is no universal consensus as to whether machines can be conscious, or even, in human terms, what consciousness means. Minsky suggests the thinking process in our brain is not localized but spread out, with different centers competing with one another at any given time. Consciousness may then be viewed as a sequence of thoughts and images issuing from these different, smaller 'minds', each one competing for our attention. Robots might eventually attain a 'silicon consciousness'. Robots, in fact, might one day embody an architecture for thinking and processing information that is different from ours – but also indistinguishable. If that happens, the question of whether they really 'understand' becomes largely irrelevant. A robot that has perfect mastery of syntax, for all practical purposes, understands what is being said.</p>
+                </div>
+                
+                <!-- Passage 3 Content -->
+                <div id="passage3Content" class="passage-content">
+                    <h2 class="text-center text-xl font-bold text-gray-800">ENDANGERED LANGUAGES</h2>
+                    
+                    <p class="passage-paragraph"><span class="passage-label">A.</span> 'Nevermind whales, save the languages,' says Peter Monaghan, a graduate of the Australian National University. Worried about the loss of rainforests and the ozone layer? Well, neither of those is doing any worse than a large majority of the 6,000 to 7,000 languages that remain in use on Earth. One-half of the survivors will almost certainly be gone by 2050, while 40% more will probably be well on their way out. In their place, almost all humans will speak one of a handful of mega languages – Mandarin, English, and Spanish.</p>
+
+                    <p class="passage-paragraph"><span class="passage-label">B.</span> Linguists know what causes languages to disappear, but less often remarked is what happens on the way to disappearance: languages' vocabularies, grammar, and expressive potential all diminish as one language is replaced by another. 'Say a community goes over from speaking a traditional Aboriginal language to speaking a creole', says Australian Nick Evans, a leading authority on Aboriginal languages, 'you leave behind a language where there's a very fine vocabulary for the landscape. All that is gone in a creole. You've just got a few words like "gum tree" or whatever. As speakers become less able to express the wealth of knowledge that has filled ancestors' lives with meaning over millennia, it's no wonder that communities become demoralized.'</p>
+
+                    <p class="passage-paragraph"><span class="passage-label">C.</span> If the losses are so huge, why are relatively few linguists combating the situation? Australian linguists, at least, have done their part, having produced an impressive body of work on traditional languages. An Australian government initiative of the 1970s resulted in good documentation of most of the 130 remaining Aboriginal languages. In England, another Australian, Peter Austin, has directed one of the world's most active efforts to limit language loss, at the University of London. Austin heads a program that has trained many documentary linguists in England as well as in language-loss hotspots such as West Africa and South America.</p>
+
+                    <p class="passage-paragraph"><span class="passage-label">D.</span> At linguistics meetings in the US, where the endangered language issue has of late been something of a flavor of the month, there is growing evidence that not all approaches to the preservation of languages will be particularly helpful. Some linguists are boasting, for example, of more and more sophisticated means of capturing languages: digital recording and storage, and internet and mobile phone technologies. But these are encouraging a 'quick dash' style of recording trips: fly-in, switch on a digital recorder, fly home, download to the hard drive, and store gathered material for future research. That's not quite what some endangered-language specialists have been seeking for more than 30 years. Most loud and untiring has been Michael Krauss, of the University of Alaska. He has complained that linguists are playing with non-essentials while most of their raw data is disappearing.</p>
+
+                    <p class="passage-paragraph"><span class="passage-label">E.</span> Who is to blame? That prominent linguists Noam Chomsky, Krauss, and many others. Or, more precisely, they blame those linguists who have been obsessed with his approaches. Linguists who go out into the communities to study, document, and describe languages, argue that theoretical linguists, who draw conclusions about how languages work, have had so much influence that linguistics has largely ignored the continuing disappearance of languages. Chomsky, from his post at the Massachusetts Institute of Technology, has been a great man of theoretical linguistics for longer than he has been known as a political commentator. His landmark work of 1957 argues that all languages exhibit certain universal grammatical features, encoded in the human mind. American linguists, in particular, have focused largely on theoretical concerns ever since, even while doubts have mounted about Chomsky's universal.</p>
+
+                    <p class="passage-paragraph"><span class="passage-label">F.</span> Austin and Co. are in no doubt that because languages are unique, even if they do tend to have common underlying features, creating dictionaries and grammar requires prolonged and dedicated work. This requires that documentary linguists observe not only languages' structural subtleties but also related social, historical, and political factors. Such work calls for persistent funding of field scientists who may sometimes have to venture into harsh and even hazardous places. Once there, they may face difficulties such as community suspicion. As Nick Evans says, a community who speaks an endangered language may have reasons to doubt or even oppose efforts to preserve it. They may have seen support and funding for such work come and go. They may have given up using the language with their children, believing they will benefit from speaking a more widely understood one. Plenty of students continue to be drawn to the intellectual thrill of linguistics fieldwork. That's all the more reason to clear away barriers, contend, Evans, Austin, and others.</p>
+
+                    <p class="passage-paragraph"><span class="passage-label">G.</span> The highest barrier, they agree, is that the linguistics profession's emphasis on theory gradually wears down the enthusiasm of linguists who work in communities. Chomsky disagrees. He has recently begun to speak in support of language preservation. But his linguistic, as opposed to humanitarian, argument is, let's say, unsentimental: the loss of a language, he states, 'is much more of a tragedy for linguists whose interests are mostly theoretical, like me, than for linguists who focus on describing specific languages, since it means the permanent loss of the most relevant data for general theoretical work'. At the moment, few institutions award doctorates for such work, and that's the way it should be, he reasons. In linguistics, as in every other discipline, he believes that good descriptive work requires thorough theoretical understanding and should also contribute to building new theories. But that's precisely what documentation does, objects Evans. The process of immersion in a language, to extract, analyze and sum it up, deserves a Ph.D. because it is 'the most demanding intellectual task a linguist can engage in'.</p>
+                </div>
+            </div>
+            
+            <!-- Divider -->
+            <div class="divider" id="divider">
+                <div class="divider-handle"></div>
+            </div>
+            
+            <!-- Questions Section -->
+            <div class="questions-container" id="questions-container">
+                <!-- Passage 1 Questions -->
+                <div id="questions1Content" class="passage-content active">
+                    <!-- Questions 1-6 - Yes/No/Not Given -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 1-6</h3>
+                            <p>Do the following statements agree with the information given in Reading Passage 1?</p>
+                            <p>In boxes 1-6 on your answer sheet, write</p>
+                            <p><strong>YES</strong> if the statement agrees with the information</p>
+                            <p><strong>NO</strong> if the statement contradicts the information</p>
+                            <p><strong>NOT GIVEN</strong> if there is no information on this</p>
+                        </div>
+                        <div class="question-content">
+                            <div class="tfng-option">
+                                <select name="q1" id="q1">
+                                    <option value="" disabled selected>1</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                    <option value="NOT GIVEN">NOT GIVEN</option>
+                                </select>
+                                <label for="q1">Peter Falkingham does very little fieldwork related to his studies of the ancient era at this point.</label>
+                            </div>
+                            <div class="tfng-option">
+                                <select name="q2" id="q2">
+                                    <option value="" disabled selected>2</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                    <option value="NOT GIVEN">NOT GIVEN</option>
+                                </select>
+                                <label for="q2">Sellers' and Manning's computerized dinosaur model often requires many tries before it can stand on its hind legs.</label>
+                            </div>
+                            <div class="tfng-option">
+                                <select name="q3" id="q3">
+                                    <option value="" disabled selected>3</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                    <option value="NOT GIVEN">NOT GIVEN</option>
+                                </select>
+                                <label for="q3">When applied to persons, the Sellers and Manning computer model represented them moving faster than their bodies could.</label>
+                            </div>
+                            <div class="tfng-option">
+                                <select name="q4" id="q4">
+                                    <option value="" disabled selected>4</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                    <option value="NOT GIVEN">NOT GIVEN</option>
+                                </select>
+                                <label for="q4">Concerns have been raised by a few paleontologists regarding the Manchester team's findings on dinosaur mobility.</label>
+                            </div>
+                            <div class="tfng-option">
+                                <select name="q5" id="q5">
+                                    <option value="" disabled selected>5</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                    <option value="NOT GIVEN">NOT GIVEN</option>
+                                </select>
+                                <label for="q5">A skilled tracker can identify fossilized animal tracks just as readily as those left by living creatures.</label>
+                            </div>
+                            <div class="tfng-option">
+                                <select name="q6" id="q6">
+                                    <option value="" disabled selected>6</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                    <option value="NOT GIVEN">NOT GIVEN</option>
+                                </select>
+                                <label for="q6">It has been discovered that the studies done on the composition of ancient mud were wrong.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Questions 7-9 - Diagram Labeling -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 7-9</h3>
+                            <p>Label the diagram below.</p>
+                            <p>Write <strong>NO MORE THAN TWO WORDS</strong> from the passage for each answer.</p>
+                            <p>Write your answers in boxes <strong>7-9</strong> on your answer sheet.</p>
+                        </div>
+                        <div class="question-content">
+                            <div class="diagram-container">
+                                <img src="https://websitecmscdn.s3.ap-south-1.amazonaws.com/a_model_of_an_acrocanthosaurus_535071e17b.png?updated_at=2023-02-03T07:54:52.100Z" alt="Acrocanthosaurus Diagram" class="diagram-image">
+                                <div class="diagram-label">Acrocanthosaurus</div>
+                            </div>
+                            <div class="sentence-completion">
+                                <p>Dinosaur's name comes from spines. One theory: they were necessary to hold up a <input type="text" class="note-input" name="q7" id="q7" maxlength="20" placeholder="7"> which helped control body heat.</p>
+                                <p>Skull is <input type="text" class="note-input" name="q8" id="q8" maxlength="20" placeholder="8"> compared with rest of body.</p>
+                                <p><input type="text" class="note-input" name="q9" id="q9" maxlength="20" placeholder="9"> made easier by wide tail and highly developed muscles in legs.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Questions 10-13 - Flowchart Completion -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 10-13</h3>
+                            <p>Complete the flowchart below.</p>
+                            <p>Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.</p>
+                            <p>Write your answers in boxes <strong>10-13</strong> on your answer sheet.</p>
+                        </div>
+                        <div class="question-content">
+                            <div class="flow-chart">
+                                <div class="flow-step">Mud is stimulated by paying attention to its texture, thickness, and <input type="text" class="flow-input" name="q10" id="q10" maxlength="20" placeholder="10"> content.</div>
+                                <div class="flow-step">A virtual foot leaves a muddy imprint.</div>
+                                <div class="flow-step"><input type="text" class="flow-input" name="q11" id="q11" maxlength="20" placeholder="11"> levels are detected in the footprint.</div>
+                                <div class="flow-step">Numerous models link footprints to various <input type="text" class="flow-input" name="q12" id="q12" maxlength="20" placeholder="12"> types.</div>
+                                <div class="flow-step">It is possible to read <input type="text" class="flow-input" name="q13" id="q13" maxlength="20" placeholder="13"> more accurately.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Passage 2 Questions -->
+                <div id="questions2Content" class="passage-content">
+                    <!-- Questions 14-20 - Matching Information -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 14-20</h3>
+                            <p>Reading Passage 2 has six paragraphs, A-F.</p>
+                            <p>Which paragraph contains the following information?</p>
+                            <p>Write the correct letter A-F in boxes 14-20 on your answer sheet.</p>
+                            <p><strong>NB</strong> You may use any letter more than once.</p>
+                        </div>
+                        <div class="question-content">
+                            <div class="matching-info-option">
+                                <input type="text" class="note-input" name="q14" id="q14" maxlength="1" placeholder="A-F">
+                                <label for="q14">14. An insect that proves the superiority of natural intelligence over Artificial Intelligence</label>
+                            </div>
+                            <div class="matching-info-option">
+                                <input type="text" class="note-input" name="q15" id="q15" maxlength="1" placeholder="A-F">
+                                <label for="q15">15. Robots being able to benefit from their mistakes</label>
+                            </div>
+                            <div class="matching-info-option">
+                                <input type="text" class="note-input" name="q16" id="q16" maxlength="1" placeholder="A-F">
+                                <label for="q16">16. Many researchers not being put off believing that Artificial Intelligence will eventually be developed</label>
+                            </div>
+                            <div class="matching-info-option">
+                                <input type="text" class="note-input" name="q17" id="q17" maxlength="1" placeholder="A-F">
+                                <label for="q17">17. An innovative approach that is having limited success</label>
+                            </div>
+                            <div class="matching-info-option">
+                                <input type="text" class="note-input" name="q18" id="q18" maxlength="1" placeholder="A-F">
+                                <label for="q18">18. The possibility of creating Artificial Intelligence being doubted by some academics</label>
+                            </div>
+                            <div class="matching-info-option">
+                                <input type="text" class="note-input" name="q19" id="q19" maxlength="1" placeholder="A-F">
+                                <label for="q19">19. No generally accepted agreement of what our brains do</label>
+                            </div>
+                            <div class="matching-info-option">
+                                <input type="text" class="note-input" name="q20" id="q20" maxlength="1" placeholder="A-F">
+                                <label for="q20">20. Robots not being able to extend the intelligence in the same way as humans</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Questions 21-23 - Matching People -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 21-23</h3>
+                            <p>Look at the following people (Questions 21-23) and the list of statements below.</p>
+                            <p>Match each person with the correct statement A-E.</p>
+                            <p>Write the correct letter A-E in boxes 21-23 on your answer sheet.</p>
+                        </div>
+                        <div class="question-content">
+                            <div class="matching-people-option">
+                                <select name="q21" id="q21">
+                                    <option value="" disabled selected>21</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                                <label for="q21">Colin McGinn</label>
+                            </div>
+                            <div class="matching-people-option">
+                                <select name="q22" id="q22">
+                                    <option value="" disabled selected>22</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                                <label for="q22">Marvin Minsky</label>
+                            </div>
+                            <div class="matching-people-option">
+                                <select name="q23" id="q23">
+                                    <option value="" disabled selected>23</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                </select>
+                                <label for="q23">Hans Moravec</label>
+                            </div>
+                            <p><strong>List of Statements</strong></p>
+                            <ol type="A">
+                                <li>A. Artificial Intelligence may require something equivalent to feelings in order to succeed.</li>
+                                <li>B. Different kinds of people use different parts of the brain.</li>
+                                <li>C. Tests involving fiction have defeated Artificial Intelligence so far.</li>
+                                <li>D. People have intellectual capacities which do not exist in computers.</li>
+                                <li>E. People have no reason to be frightened of robots.</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <!-- Questions 24-26 - Note Completion -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 24-26</h3>
+                            <p>Complete the notes below.</p>
+                            <p>Choose <strong>ONE WORD ONLY</strong> from the passage for each answer.</p>
+                            <p>Write your answers in boxes <strong>24-26</strong> on your answer sheet.</p>
+                        </div>
+                        <div class="question-content">
+                            <div class="note-completion">
+                                <p class="text-center font-bold">When will we have a thinking machine?</p>
+                                <p>Despite some advances, early robots had certain weaknesses. They were given the information they needed on a <input type="text" class="note-input" name="q24" id="q24" maxlength="20" placeholder="24">. This was known as the 'top-down' approach and enabled them to do certain tasks but they were unable to recognize <input type="text" class="note-input" name="q25" id="q25" maxlength="20" placeholder="25"> nor did they have any intuition or ability to make decisions based on experience. Rodney Brooks tried a different approach. Robots similar to those invented by Brooks are to be found on <input type="text" class="note-input" name="q26" id="q26" maxlength="20" placeholder="26"> where they are collecting information.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Passage 3 Questions -->
+                <div id="questions3Content" class="passage-content">
+                    <!-- Questions 27-32 - YES/NO/NOT GIVEN -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 27-32</h3>
+                            <p>Do the following statements agree with the views of the author in Reading Passage 3?</p>
+                            <p>Write in boxes 27-32 on your answer sheet</p>
+                            <p><strong>YES</strong>: if the statement matches the information<br>
+                            <strong>NO</strong>: if the statement does not match the information<br>
+                            <strong>NOT GIVEN</strong>: if no information is available</p>
+                        </div>
+                        <div class="question-content">
+                            <p><strong>27.</strong> By 2050 only a small number of languages will be flourishing.</p>
+                            <div class="ynng-options">
+                                <div class="ynng-option">
+                                    <input type="radio" name="q27" id="q27yes" value="YES">
+                                    <label for="q27yes">YES</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q27" id="q27no" value="NO">
+                                    <label for="q27no">NO</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q27" id="q27ng" value="NOT GIVEN">
+                                    <label for="q27ng">NOT GIVEN</label>
+                                </div>
+                            </div>
+
+                            <p><strong>28.</strong> Australian academics' efforts to record existing Aboriginal languages have been too limited.</p>
+                            <div class="ynng-options">
+                                <div class="ynng-option">
+                                    <input type="radio" name="q28" id="q28yes" value="YES">
+                                    <label for="q28yes">YES</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q28" id="q28no" value="NO">
+                                    <label for="q28no">NO</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q28" id="q28ng" value="NOT GIVEN">
+                                    <label for="q28ng">NOT GIVEN</label>
+                                </div>
+                            </div>
+
+                            <p><strong>29.</strong> The use of technology in language research is proving unsatisfactory in some respects.</p>
+                            <div class="ynng-options">
+                                <div class="ynng-option">
+                                    <input type="radio" name="q29" id="q29yes" value="YES">
+                                    <label for="q29yes">YES</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q29" id="q29no" value="NO">
+                                    <label for="q29no">NO</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q29" id="q29ng" value="NOT GIVEN">
+                                    <label for="q29ng">NOT GIVEN</label>
+                                </div>
+                            </div>
+
+                            <p><strong>30.</strong> Chomsky's political views have overshadowed his academic work.</p>
+                            <div class="ynng-options">
+                                <div class="ynng-option">
+                                    <input type="radio" name="q30" id="q30yes" value="YES">
+                                    <label for="q30yes">YES</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q30" id="q30no" value="NO">
+                                    <label for="q30no">NO</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q30" id="q30ng" value="NOT GIVEN">
+                                    <label for="q30ng">NOT GIVEN</label>
+                                </div>
+                            </div>
+
+                            <p><strong>31.</strong> Documentary linguistics studies require long-term financial support.</p>
+                            <div class="ynng-options">
+                                <div class="ynng-option">
+                                    <input type="radio" name="q31" id="q31yes" value="YES">
+                                    <label for="q31yes">YES</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q31" id="q31no" value="NO">
+                                    <label for="q31no">NO</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q31" id="q31ng" value="NOT GIVEN">
+                                    <label for="q31ng">NOT GIVEN</label>
+                                </div>
+                            </div>
+
+                            <p><strong>32.</strong> Chomsky's attitude to disappearing languages is too emotional.</p>
+                            <div class="ynng-options">
+                                <div class="ynng-option">
+                                    <input type="radio" name="q32" id="q32yes" value="YES">
+                                    <label for="q32yes">YES</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q32" id="q32no" value="NO">
+                                    <label for="q32no">NO</label>
+                                </div>
+                                <div class="ynng-option">
+                                    <input type="radio" name="q32" id="q32ng" value="NOT GIVEN">
+                                    <label for="q32ng">NOT GIVEN</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Questions 33-36 - Multiple Choice -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 33-36</h3>
+                            <p>Choose the correct letter, A, B, C, or D.</p>
+                            <p>Write your answers in boxes 33-36 on your answer sheet.</p>
+                        </div>
+                        <div class="question-content">
+                            <p><strong>33.</strong> The writer mentions rainforests and the ozone layer …</p>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q33" id="q33a" value="A">
+                                <label for="q33a">A because he believes anxiety about environmental issues is unfounded.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q33" id="q33b" value="B">
+                                <label for="q33b">B to demonstrate that academics in different disciplines share the same problems.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q33" id="q33c" value="C">
+                                <label for="q33c">C because they exemplify what is wrong with the attitudes of some academics.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q33" id="q33d" value="D">
+                                <label for="q33d">D to make the point that the public should be equally concerned about languages.</label>
+                            </div>
+
+                            <p><strong>34.</strong> What does Nick Evans say about speakers of creole?</p>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q34" id="q34a" value="A">
+                                <label for="q34a">A They lose the ability to express ideas that are part of their culture.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q34" id="q34b" value="B">
+                                <label for="q34b">B Older and younger members of the community have difficulty communicating.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q34" id="q34c" value="C">
+                                <label for="q34c">C They express their ideas more clearly and concisely than most people.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q34" id="q34d" value="D">
+                                <label for="q34d">D Accessing practical information causes problems for them.</label>
+                            </div>
+
+                            <p><strong>35.</strong> What is similar about West Africa and South America, from the linguist's point of view?</p>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q35" id="q35a" value="A">
+                                <label for="q35a">A The English language is widely used by academics and teachers.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q35" id="q35b" value="B">
+                                <label for="q35b">B The documentary linguists who work there were trained by Australians.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q35" id="q35c" value="C">
+                                <label for="q35c">C Local languages are disappearing rapidly in both places.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q35" id="q35d" value="D">
+                                <label for="q35d">D There are now only a few undocumented languages there.</label>
+                            </div>
+
+                            <p><strong>36.</strong> Michael Krauss has frequently pointed out that …</p>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q36" id="q36a" value="A">
+                                <label for="q36a">A Linguists are failing to record languages before they die out.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q36" id="q36b" value="B">
+                                <label for="q36b">B Linguists have made poor use of improvements in technology.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q36" id="q36c" value="C">
+                                <label for="q36c">C Linguistics has declined in popularity as an academic subject.</label>
+                            </div>
+                            <div class="multiple-choice-option">
+                                <input type="radio" name="q36" id="q36d" value="D">
+                                <label for="q36d">D Linguistics departments are underfunded in most universities.</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Questions 37-40 - Sentence Completion -->
+                    <div class="question">
+                        <div class="question-rubric">
+                            <h3>Questions 37-40</h3>
+                            <p>Complete each sentence with the correct ending A–G below.</p>
+                            <p>Write the correct letter A–G in boxes 37-40 on your answer sheet.</p>
+                        </div>
+                        <div class="question-content">
+                            <div class="option-list">
+                                <p>A even though it is in danger of disappearing.</p>
+                                <p>B provided that it has a strong basis in theory.</p>
+                                <p>C although it may share certain universal characteristics.</p>
+                                <p>D because there is a practical advantage to it.</p>
+                                <p>E so long as the drawbacks are clearly understood.</p>
+                                <p>F in spite of the prevalence of theoretical linguistics.</p>
+                                <p>G until they realize what is involved.</p>
+                            </div>
+
+                            <p><strong>37.</strong> Linguists like Peter Austin believe that every language is unique …</p>
+                            <select class="sentence-dropdown" name="q37" id="q37">
+                                <option value="">-</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                            </select>
+
+                            <p><strong>38.</strong> Nick Evans suggests a community may resist attempts to save its language …</p>
+                            <select class="sentence-dropdown" name="q38" id="q38">
+                                <option value="">-</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                            </select>
+
+                            <p><strong>39.</strong> Many young researchers are interested in doing practical research …</p>
+                            <select class="sentence-dropdown" name="q39" id="q39">
+                                <option value="">-</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                            </select>
+
+                            <p><strong>40.</strong> Chomsky supports work in descriptive linguistics …</p>
+                            <select class="sentence-dropdown" name="q40" id="q40">
+                                <option value="">-</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <nav class="nav-row perScorableItem" aria-label="Questions">
+                <div class="footer__questionWrapper selected multiple" role="tablist">
+                    <button role="tab" class="footer__questionNo" data-sectionid="128121930" tabindex="-1">
+                        <span>
+                            <span aria-hidden="true" class="section-prefix">Passage </span>
+                            <span class="sectionNr" aria-hidden="true" id="currentPassageNumber">1</span>
+                        </span>
+                    </button>
+                    <div class="footer__subquestionWrapper" id="questionButtons">
+                        <!-- Question buttons will be dynamically generated -->
+                    </div>
+                </div>
+                <button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton">
+                    <i class="fas fa-check"></i> Submit
+                </button>
+            </nav>
+        </footer>
+    </div>
+    
+    <!-- Submission Modal -->
+    <div class="submission-modal" id="submissionModal">
+        <div class="submission-content">
+            <h2 id="submissionTitle">Test Results</h2>
+            <div class="score-display">
+                <div>Your Score:</div>
+                <div class="score-number" id="userScore">0</div>
+                <div class="score-total">out of <span id="totalQuestions">40</span></div>
+                <div class="band-score" id="bandScore">Band: 0.0</div>
+                <div class="performance-rating" id="performanceRating">Poor - Needs Improvement</div>
+            </div>
+            <div class="time-spent" id="timeSpent"></div>
+            <p id="submissionMessage">Here are your answers with the correct solutions:</p>
+            <div class="answers-section">
+                <h3>Your Answers:</h3>
+                <div id="answersList"></div>
+            </div>
+            <div class="submission-buttons">
+                <button class="confirm" id="closeSubmission">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Answer Comparison -->
+    <div class="answer-comparison" id="answerComparison">
+        <h3>Answer Comparison</h3>
+        <p>Your answers are highlighted below. Correct answers are marked in <span class="correct-highlight">green</span>, incorrect answers in <span class="incorrect-highlight">red</span>.</p>
+    </div>
+
+    <script>
+        // Correct answers for all three passages
+        const correctAnswers = {
+            // Passage 1
+            1: "YES",
+            2: "YES",
+            3: "NO",
+            4: "NOT GIVEN",
+            5: "NO",
+            6: "NOT GIVEN",
+            7: "sail",
+            8: "narrow",
+            9: "locomotion",
+            10: "moisture",
+            11: "stress",
+            12: "ground",
+            13: "fossil tracks",
+            
+            // Passage 2
+            14: "C",
+            15: "E",
+            16: "B",
+            17: "D",
+            18: "A",
+            19: "F",
+            20: "C",
+            21: "D",
+            22: "C",
+            23: "A",
+            24: "disc",
+            25: "patterns",
+            26: "Mars",
+            
+            // Passage 3
+            27: "YES",
+            28: "NO",
+            29: "YES",
+            30: "NOT GIVEN",
+            31: "YES",
+            32: "NO",
+            33: "D",
+            34: "A",
+            35: "C",
+            36: "A",
+            37: "C",
+            38: "A",
+            39: "F",
+            40: "B"
+        };
+
+        // Statement titles for display in submission modal (Passage 2)
+        const statementTitles = {
+            "A": "Artificial Intelligence may require something equivalent to feelings in order to succeed.",
+            "B": "Different kinds of people use different parts of the brain.",
+            "C": "Tests involving fiction have defeated Artificial Intelligence so far.",
+            "D": "People have intellectual capacities which do not exist in computers.",
+            "E": "People have no reason to be frightened of robots."
+        };
+
+        // Detailed answer explanations
+        const answerExplanations = {
+            // Passage 1
+            1: "YES - The passage states that Peter Falkingham hasn't been doing fieldwork lately and instead stares at a screen all day (Paragraph A).",
+            2: "YES - The passage explains that the computer model often results in the animal falling on its face and requires multiple attempts (Paragraph B).",
+            3: "NO - The passage states that when applied to humans, the computer speeds were comparable to those attained in reality (Paragraph C).",
+            4: "NOT GIVEN - The passage does not mention any concerns raised by paleontologists about the Manchester team's findings.",
+            5: "NO - The passage explains that applying the same logic to fossil trails is far more challenging than with modern tracks (Paragraph E).",
+            6: "NOT GIVEN - The passage does not mention anything about studies on ancient mud composition being wrong.",
+            7: "sail - Many people think that a sail was supported by the spines (Paragraph D).",
+            8: "narrow - The narrow breadth and frail jaws of the cranium make it look disproportionate (Paragraph D).",
+            9: "locomotion - Its large, broad tail and powerful leg muscles allow it to move swiftly and are used to aid in locomotion (Paragraph D).",
+            10: "moisture - Falkingham mimics prehistoric mud by manipulating the moisture level, consistency, and other variables (Paragraph F).",
+            11: "stress - Inside this footprint, the stress values may be retrieved and calculated (Paragraph F).",
+            12: "ground - Falkingham may be able to understand what sorts of imprints may be expected if an animal walked over a specific type of ground (Paragraph F).",
+            13: "fossil tracks - Scientists may more securely interpret fossil tracks with the assistance of the diversity in the recreated trails (Paragraph F).",
+            
+            // Passage 2
+            14: "C - Paragraph C compares the fruit fly's effortless navigation with the robots' inability, showing the superiority of natural intelligence.",
+            15: "E - Paragraph E discusses how robots might need emotions to avoid indecision and make decisions, implying they can learn from mistakes.",
+            16: "B - Paragraph B mentions that many specialists are optimistic about the possibilities of AI.",
+            17: "D - Paragraph D describes the bottom-up approach, which has had limited success (e.g., insect-like robots).",
+            18: "A - Paragraph A presents the view of some academics (Penrose and McGinn) who doubt the possibility of AI.",
+            19: "F - Paragraph F states there is no universal consensus on consciousness.",
+            20: "C - Paragraph C explains that robots lack the ability to recognize patterns and common sense, which humans have.",
+            21: "D - Colin McGinn is quoted in Paragraph A comparing AI to sheep trying to do psychoanalysis, implying that humans have intellectual capacities that computers don't.",
+            22: "C - Marvin Minsky is quoted in Paragraph D about the history of AI, specifically that machines cannot answer questions about children's stories.",
+            23: "A - Hans Moravec is discussed in Paragraph E, suggesting that robots need emotions to make decisions.",
+            24: "disc - The passage states that the top-down approach used a disc (Paragraph B).",
+            25: "patterns - The passage states that computers lack the unconscious awareness of patterns (Paragraph C).",
+            26: "Mars - The passage states that Brooks' robots are on Mars (Paragraph D).",
+            
+            // Passage 3
+            27: "Paragraph A, 3rd Line. One-half of the survivors will show growing evidence that not all approaches to this will almost certainly be gone by 2050, while 40% more preservation of languages will be particularly will probably be well on their way out. In their place, helpful. As the line here states that a huge number of languages will perish away by 2050.",
+            28: "Paragraph B, 4th Line. 'Say a community goes over from speaking a traditional Aboriginal language to speaking a creole*,' says Australian Nick Evans, a leading authority on Aboriginal languages, 'you leave behind a language where there's a very fine vocabulary for the landscape. All that is gone in a creole. The Australian academies have tried to preserve Aboriginal languages as they have explained here in the sentence above. They have put efforts to sustain these languages.",
+            29: "Paragraph D, 4th Line. Some linguists are boasting, for example, of more and more sophisticated means of capturing languages: digital recording and storage, and internet and mobile phone technologies. But these are encouraging the 'quick dash' style of recording trips: fly-in, switch on a digital recorder, fly home, download to the hard drive, and store gathered material for future research. They believe that up to some aspects, technology is not helping to preserve the languages, like, digital recording and storage are encouraging a quick recording which just stays in a hard drive stored and not used until in need. Hence, the answer is yes.",
+            30: "Not Available. No information regarding Chwoksy's views affecting his work has been mentioned in the passage. Hence, the answer is not given.",
+            31: "Paragraph F, 3rd Line. This requires that documentary linguists observe not only languages' structural subtleties but also related social, historical, and political factors. Such work calls for persistent funding of field scientists who may sometimes have to venture into harsh and even hazardous places. To do a study, documentary linguists require to study a list of factors, which not only requires time but also monetary resources, hence, the answer is yes.",
+            32: "Paragraph G, 4th Line. But his linguistic, as opposed to humanitarian, argument, is, let's say, unsentimental: the loss of a language, he states, 'is much more of a tragedy for linguists whose interests are mostly theoretical, like me, than for linguists who focus on describing specific languages, since it means the permanent loss of the most relevant data for general theoretical work'. As the line suggests, Chowksy was not an emotional man as he stated without any sentiments regarding the loss of languages. Hence, the answer is no.",
+            33: "Paragraph A, 1st Line. 'Nevermind whales, save the languages', says Peter Monaghan, a graduate of the Australian National University Worried about the loss of rainforests and the ozone.",
+            34: "Paragraph B, 5th Line. Australian Nick Evans, a leading authority on Aboriginal languages, 'You leave behind a language where there's a very fine vocabulary for the landscape. All that is gone in a creole.",
+            35: "Paragraph C, 7th Line. Austin heads a program that has trained many documentary linguists in England as well as in language-loss hotspots such as West Africa and South America. Both places are losing their local languages at a rapid pace.",
+            36: "Paragraph D, 10th Line. Most loud and untiring has been Michael Krauss, of the University of Alaska. He has often complained that linguists are playing with non-essentials while most of their raw data is disappearing. Krauss mentioned that linguists are late in recording the raw data which disappears before they get to it because they are busy with non-essential things.",
+            37: "Paragraph F, 1st Line. Austin and Co. are in no doubt that because languages are unique, even if they do tend to have common underlying features, creating dictionaries and grammar requires prolonged and dedicated work.",
+            38: "Paragraph F, 8th Line. As Nick Evans says, a community who speaks an endangered language may have reasons to doubt or even oppose efforts to preserve it.",
+            39: "Paragraph E, 3rd Line. Linguists who go out into communities to study, document, and describe languages, argue that theoretical linguists, who draw conclusions about how languages work, have had so much influence that linguistics has largely ignored the continuing disappearance of languages.",
+            40: "Paragraph G, 10th Line. In linguistics, as in every other discipline, he believes that good descriptive work requires thorough theoretical understanding and should also contribute to building new theories. Chowksy believes that if linguistics has a good theory basis, then it is worth supporting."
+        };
+
+        // Timer functionality
+        let totalSeconds = 0;
+        const timerElement = document.getElementById('testTimer');
+        let testSubmitted = false;
+        let userAnswers = {};
+        let startTime = new Date();
+        let resultsShown = false;
+        let currentPassage = 1;
+
+        function updateTimer() {
+            if (testSubmitted) return;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            totalSeconds++;
+        }
+
+        function disableAllInputs() {
+            document.querySelectorAll('input[type="text"], select, input[type="radio"]').forEach(input => {
+                input.disabled = true;
+            });
+            document.getElementById('deliver-button').disabled = true;
+            document.removeEventListener('mouseup', handleTextSelection);
+        }
+
+        function showSubmissionModal(title, message) {
+            const modal = document.getElementById('submissionModal');
+            document.getElementById('submissionTitle').textContent = title;
+            document.getElementById('submissionMessage').textContent = message;
+
+            const endTime = new Date();
+            const timeDiff = endTime - startTime;
+            const minutes = Math.floor(timeDiff / 60000);
+            const seconds = Math.floor((timeDiff % 60000) / 1000);
+            document.getElementById('timeSpent').textContent = `Time spent: ${minutes}m ${seconds}s`;
+
+            const answersList = document.getElementById('answersList');
+            answersList.innerHTML = '';
+            let score = 0;
+            userAnswers = {};
+
+            // Check all questions from 1 to 40
+            for (let i = 1; i <= 40; i++) {
+                let userAnswer, displayAnswer;
+                let input;
+                
+                if (i <= 6 || (i >= 14 && i <= 20) || (i >= 27 && i <= 32)) {
+                    // YES/NO/NOT GIVEN or Matching Information questions
+                    if (i <= 6 || (i >= 27 && i <= 32)) {
+                        const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                        userAnswer = selectedOption ? selectedOption.value : 'Not answered';
+                        displayAnswer = userAnswer;
+                    } else if (i >= 14 && i <= 20) {
+                        input = document.querySelector(`[name="q${i}"]`);
+                        userAnswer = input.value.toUpperCase().trim();
+                        displayAnswer = userAnswer || 'Not answered';
+                    }
+                } else if (i >= 21 && i <= 23) {
+                    // Matching People questions
+                    input = document.querySelector(`[name="q${i}"]`);
+                    userAnswer = input.value.toUpperCase().trim();
+                    displayAnswer = userAnswer ? `${userAnswer}. ${statementTitles[userAnswer]}` : 'Not answered';
+                } else if (i >= 33 && i <= 36) {
+                    // Multiple Choice questions
+                    const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                    userAnswer = selectedOption ? selectedOption.value : 'Not answered';
+                    displayAnswer = userAnswer;
+                } else if (i >= 37 && i <= 40) {
+                    // Sentence Completion with dropdowns
+                    input = document.querySelector(`[name="q${i}"]`);
+                    userAnswer = input.value.toUpperCase().trim();
+                    displayAnswer = userAnswer || 'Not answered';
+                } else {
+                    // Text input questions (7-13, 24-26)
+                    input = document.querySelector(`[name="q${i}"]`);
+                    userAnswer = input.value.trim().toLowerCase();
+                    displayAnswer = userAnswer || 'Not answered';
+                }
+                
+                userAnswers[i] = userAnswer;
+                const correctAnswer = correctAnswers[i];
+                const normalize = (idx, val) => {
+                    if (val == null) return '';
+                    const textSet = ((idx >= 7 && idx <= 13) || (idx >= 24 && idx <= 26));
+                    return textSet ? String(val).trim().toLowerCase() : String(val).trim().toUpperCase();
+                };
+                const isCorrect = (userAnswer && normalize(i, userAnswer) === normalize(i, correctAnswer));
+                if (isCorrect) score++;
+                
+                let correctDisplay;
+                if (i >= 21 && i <= 23) {
+                    correctDisplay = `${correctAnswer}. ${statementTitles[correctAnswer]}`;
+                } else {
+                    correctDisplay = correctAnswer;
+                }
+                
+                const answerItem = document.createElement('div');
+                answerItem.className = `answer-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                answerItem.innerHTML = `
+                    <div class="answer-text">Question ${i}: ${displayAnswer}</div>
+                    <span class="${isCorrect ? 'correct-answer' : 'incorrect-answer'}">(Correct answer: ${correctDisplay})</span>
+                    <span class="answer-status ${isCorrect ? 'correct-status' : 'incorrect-status'}">
+                        ${isCorrect ? '✓' : '✗'}
+                    </span>
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #6b7280; font-style: italic;">
+                        ${answerExplanations[i]}
+                    </div>
+                `;
+                answersList.appendChild(answerItem);
+            }
+
+            // Update score display
+            document.getElementById('userScore').textContent = score;
+            document.getElementById('totalQuestions').textContent = "40";
+
+            // Calculate IELTS band score
+            const bandScore = calculateBandScore(score);
+            document.getElementById('bandScore').textContent = `Band: ${bandScore.toFixed(1)}`;
+
+            // Performance rating
+            let rating, ratingClass;
+            if (score >= 36) {
+                rating = "Excellent!";
+                ratingClass = "excellent";
+            } else if (score >= 32) {
+                rating = "Very Good";
+                ratingClass = "very-good";
+            } else if (score >= 28) {
+                rating = "Good";
+                ratingClass = "good";
+            } else if (score >= 24) {
+                rating = "Fair";
+                ratingClass = "fair";
+            } else {
+                rating = "Poor - Needs Improvement";
+                ratingClass = "poor";
+            }
+            const ratingElement = document.getElementById('performanceRating');
+            ratingElement.textContent = rating;
+            ratingElement.className = `performance-rating ${ratingClass}`;
+
+            if (testSubmitted) {
+                highlightAnswers(correctAnswers);
+            }
+
+            modal.style.display = 'flex';
+            resultsShown = true;
+            const submitButton = document.getElementById('deliver-button');
+            submitButton.innerHTML = '<i class="fas fa-eye"></i> Show My Results';
+            submitButton.disabled = false;
+        }
+
+        function calculateBandScore(score) {
+            if (score >= 39) return 9.0;
+            if (score >= 37) return 8.5;
+            if (score >= 35) return 8.0;
+            if (score >= 33) return 7.5;
+            if (score >= 30) return 7.0;
+            if (score >= 27) return 6.5;
+            if (score >= 23) return 6.0;
+            if (score >= 19) return 5.5;
+            if (score >= 15) return 5.0;
+            if (score >= 13) return 4.5;
+            return 0.0;
+        }
+
+        function highlightAnswers(correctAnswers) {
+            for (let i = 1; i <= 40; i++) {
+                let input;
+                
+                if (i <= 6 || (i >= 27 && i <= 32) || (i >= 33 && i <= 36)) {
+                    // Radio button questions
+                    const userAnswer = userAnswers[i];
+                    const correctAnswer = correctAnswers[i];
+                    const options = document.querySelectorAll(`input[name="q${i}"]`);
+                    
+                    options.forEach(opt => {
+                        const label = opt.nextElementSibling;
+                        if (label) {
+                            label.classList.remove('correct-highlight', 'incorrect-highlight');
+                            if (opt.value === correctAnswer) {
+                                label.classList.add('correct-highlight');
+                            } else if (userAnswer !== 'Not answered' && opt.value === userAnswer) {
+                                label.classList.add('incorrect-highlight');
+                            }
+                        }
+                    });
+                    
+                    if (userAnswer !== 'Not answered') {
+                        const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                        const parent = selectedOption ? selectedOption.parentNode : document.querySelector(`input[name="q${i}"]`).parentNode;
+                        const feedback = document.createElement('span');
+                        feedback.className = `dropdown-answer ${userAnswer === correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = userAnswer === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}`;
+                        
+                        if (!parent.nextElementSibling || !parent.nextElementSibling.classList.contains('dropdown-answer')) {
+                            parent.parentNode.appendChild(feedback);
+                        }
+                    }
+                } else if (i >= 14 && i <= 20) {
+                    // Matching Information questions
+                    input = document.querySelector(`[name="q${i}"]`);
+                    const userAnswer = userAnswers[i];
+                    const correctAnswer = correctAnswers[i];
+                    
+                    input.classList.remove('correct', 'incorrect');
+                    if (userAnswer && userAnswer !== 'Not answered') {
+                        input.classList.add(userAnswer === correctAnswer ? 'correct' : 'incorrect');
+                        input.style.borderColor = userAnswer === correctAnswer ? '#10b981' : '#ef4444';
+                        
+                        const feedback = document.createElement('span');
+                        feedback.className = `note-feedback ${userAnswer === correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = userAnswer === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}`;
+                        
+                        if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('note-feedback')) {
+                            input.parentNode.appendChild(feedback);
+                        }
+                    }
+                } else if (i >= 21 && i <= 23) {
+                    // Matching People questions
+                    input = document.querySelector(`[name="q${i}"]`);
+                    const userAnswer = userAnswers[i];
+                    const correctAnswer = correctAnswers[i];
+                    
+                    input.classList.remove('correct', 'incorrect');
+                    if (userAnswer && userAnswer !== 'Not answered') {
+                        input.classList.add(userAnswer === correctAnswer ? 'correct' : 'incorrect');
+                        input.style.borderColor = userAnswer === correctAnswer ? '#10b981' : '#ef4444';
+                        
+                        const feedback = document.createElement('span');
+                        feedback.className = `note-feedback ${userAnswer === correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = userAnswer === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}. ${statementTitles[correctAnswer]}`;
+                        
+                        if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('note-feedback')) {
+                            input.parentNode.appendChild(feedback);
+                        }
+                    }
+                } else if (i >= 37 && i <= 40) {
+                    // Sentence Completion with dropdowns
+                    input = document.querySelector(`[name="q${i}"]`);
+                    const userAnswer = userAnswers[i];
+                    const correctAnswer = correctAnswers[i];
+                    
+                    input.classList.remove('correct', 'incorrect');
+                    if (userAnswer && userAnswer !== 'Not answered') {
+                        input.classList.add(userAnswer === correctAnswer ? 'correct' : 'incorrect');
+                        input.style.borderColor = userAnswer === correctAnswer ? '#10b981' : '#ef4444';
+                        
+                        const feedback = document.createElement('span');
+                        feedback.className = `note-feedback ${userAnswer === correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = userAnswer === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}`;
+                        
+                        if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('note-feedback')) {
+                            input.parentNode.appendChild(feedback);
+                        }
+                    }
+                } else {
+                    // Text input questions (7-13, 24-26)
+                    input = document.querySelector(`[name="q${i}"]`);
+                    const userAnswer = userAnswers[i];
+                    const correctAnswer = correctAnswers[i];
+                    
+                    input.classList.remove('correct', 'incorrect');
+                    if (userAnswer && userAnswer !== 'Not answered') {
+                        input.classList.add(userAnswer === correctAnswer ? 'correct' : 'incorrect');
+                        input.style.borderColor = userAnswer === correctAnswer ? '#10b981' : '#ef4444';
+                        
+                        const feedback = document.createElement('span');
+                        feedback.className = `note-feedback ${userAnswer === correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = userAnswer === correctAnswer ? '✓ Correct' : `✗ Correct: ${correctAnswer}`;
+                        
+                        if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('note-feedback')) {
+                            input.parentNode.appendChild(feedback);
+                        }
+                    }
+                }
+            }
+            
+            document.getElementById('answerComparison').style.display = 'block';
+        }
+
+        // Passage navigation
+        function switchPassage(passageNumber) {
+            currentPassage = passageNumber;
+            
+            // Update passage buttons
+            document.querySelectorAll('.passage-nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`passage${passageNumber}Btn`).classList.add('active');
+            
+            // Update passage content
+            document.querySelectorAll('.passage-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`passage${passageNumber}Content`).classList.add('active');
+            document.getElementById(`questions${passageNumber}Content`).classList.add('active');
+            
+            // Update current passage number in footer
+            document.getElementById('currentPassageNumber').textContent = passageNumber;
+            
+            // Update question buttons
+            updateQuestionButtons(passageNumber);
+        }
+
+        // Update question buttons based on current passage
+        function updateQuestionButtons(passageNumber) {
+            const questionButtonsContainer = document.getElementById('questionButtons');
+            questionButtonsContainer.innerHTML = '';
+            
+            let startQuestion, endQuestion;
+            
+            switch(passageNumber) {
+                case 1:
+                    startQuestion = 1;
+                    endQuestion = 13;
+                    break;
+                case 2:
+                    startQuestion = 14;
+                    endQuestion = 26;
+                    break;
+                case 3:
+                    startQuestion = 27;
+                    endQuestion = 40;
+                    break;
+            }
+            
+            for (let i = startQuestion; i <= endQuestion; i++) {
+                const button = document.createElement('button');
+                button.className = 'subQuestion';
+                button.setAttribute('data-ordernumber', i);
+                button.setAttribute('data-sectionid', '128121930');
+                button.tabIndex = 0;
+                
+                button.innerHTML = `
+                    <span class="sr-only">Question ${i}</span>
+                    <span aria-hidden="true">${i}</span>
+                    <span class="sr-only">Not attempted</span>
+                `;
+                
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.subQuestion').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Scroll to the question
+                    const questionElement = document.querySelector(`[name="q${i}"]`);
+                    if (questionElement) {
+                        questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        questionElement.focus();
+                    }
+                });
+                
+                questionButtonsContainer.appendChild(button);
+            }
+            
+            // Activate the first question button
+            if (questionButtonsContainer.firstChild) {
+                questionButtonsContainer.firstChild.classList.add('active');
+            }
+        }
+
+        // Initialize the test
+        function initializeTest() {
+            // Set up passage navigation
+            document.getElementById('passage1Btn').addEventListener('click', () => switchPassage(1));
+            document.getElementById('passage2Btn').addEventListener('click', () => switchPassage(2));
+            document.getElementById('passage3Btn').addEventListener('click', () => switchPassage(3));
+            
+            // Initialize question buttons for first passage
+            updateQuestionButtons(1);
+            
+            // Start the timer
+            const timerInterval = setInterval(updateTimer, 1000);
+            
+            // Submission Handling
+            document.getElementById('deliver-button').addEventListener('click', function() {
+                if (resultsShown) {
+                    document.getElementById('submissionModal').style.display = 'flex';
+                    return;
+                }
+                if (testSubmitted) return;
+                if (confirm('Are you sure you want to submit your test? You won\'t be able to make changes after submission.')) {
+                    clearInterval(timerInterval);
+                    testSubmitted = true;
+                    disableAllInputs();
+                    showSubmissionModal('Test Submitted', 'Thank you for completing the test.');
+                }
+            });
+
+            document.getElementById('closeSubmission').addEventListener('click', function() {
+                document.getElementById('submissionModal').style.display = 'none';
+                highlightAnswers(correctAnswers);
+            });
+            
+            // Mark questions as attempted when answered
+            document.querySelectorAll('select, input[type="text"], input[type="radio"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    let questionNumber;
+                    if (this.type === 'radio') {
+                        questionNumber = parseInt(this.name.replace('q', ''));
+                    } else {
+                        questionNumber = parseInt(this.name.replace('q', ''));
+                    }
+                    
+                    const questionButton = document.querySelector(`.subQuestion[data-ordernumber="${questionNumber}"]`);
+                    if (questionButton && (this.type !== 'radio' || this.checked || this.value)) {
+                        questionButton.classList.add('attempted');
+                    }
+                });
+            });
+            
+            // Text Size Functionality
+            let currentTextSize = 'normal';
+            const textSizes = {
+                small: '0.9rem',
+                normal: '1.05rem',
+                large: '1.2rem',
+                xlarge: '1.35rem'
+            };
+            const textSizeOrder = ['small', 'normal', 'large', 'xlarge'];
+
+            document.getElementById('textSizeToggle').addEventListener('click', function() {
+                const currentIndex = textSizeOrder.indexOf(currentTextSize);
+                const nextIndex = (currentIndex + 1) % textSizeOrder.length;
+                currentTextSize = textSizeOrder[nextIndex];
+                
+                const fontSize = textSizes[currentTextSize];
+                document.getElementById('passageContent').style.fontSize = fontSize;
+                document.querySelectorAll('.question-content, .question-rubric').forEach(el => {
+                    el.style.fontSize = fontSize;
+                });
+                
+                // Update title attribute to show current size
+                const sizeNames = { small: 'Small', normal: 'Normal', large: 'Large', xlarge: 'Extra Large' };
+                this.title = `Text size: ${sizeNames[currentTextSize]}`;
+            });
+            
+            // Highlighting functionality
+            const highlightToolbar = document.getElementById('highlightToolbar');
+            let selectedText = '';
+            let selectedRange = null;
+            let currentHighlightColor = null;
+
+            document.querySelectorAll('#passageContent, .questions-container').forEach(element => {
+                element.style.userSelect = 'text';
+                element.style.webkitUserSelect = 'text';
+            });
+
+            function handleTextSelection() {
+                const selection = window.getSelection();
+                selectedText = selection.toString().trim();
+                if (selectedText.length > 0 && isTextInContent(selection)) {
+                    selectedRange = selection.getRangeAt(0);
+                    const rangeRect = selectedRange.getBoundingClientRect();
+                    highlightToolbar.style.display = 'flex';
+                    highlightToolbar.style.top = `${rangeRect.top + window.scrollY - 45}px`;
+                    highlightToolbar.style.left = `${rangeRect.left + window.scrollX + (rangeRect.width / 2)}px`;
+                } else {
+                    if (!highlightToolbar.contains(document.activeElement)) {
+                        highlightToolbar.style.display = 'none';
+                    }
+                }
+            }
+
+            function isTextInContent(selection) {
+                if (!selection.rangeCount) return false;
+                const range = selection.getRangeAt(0);
+                const passageContent = document.getElementById('passage-container');
+                const questionsContainer = document.getElementById('questions-container');
+                return passageContent.contains(range.commonAncestorContainer) || 
+                       questionsContainer.contains(range.commonAncestorContainer);
+            }
+
+            document.addEventListener('mouseup', handleTextSelection);
+
+            document.addEventListener('mousedown', function(e) {
+                if (!highlightToolbar.contains(e.target)) {
+                    highlightToolbar.style.display = 'none';
+                }
+            });
+
+            document.querySelectorAll('.highlight-color').forEach(button => {
+                button.addEventListener('click', function() {
+                    currentHighlightColor = button.dataset.color;
+                    applyHighlight();
+                });
+            });
+
+            function applyHighlight() {
+                if (selectedRange && currentHighlightColor) {
+                    const span = document.createElement('span');
+                    span.className = `highlight ${currentHighlightColor}`;
+                    try {
+                        selectedRange.surroundContents(span);
+                    } catch (e) {
+                        console.error('Error applying highlight:', e);
+                    }
+                    window.getSelection().removeAllRanges();
+                    highlightToolbar.style.display = 'none';
+                }
+            }
+
+            document.querySelector('.highlight-toolbar .remove').addEventListener('click', function() {
+                if (selectedRange) {
+                    const ancestor = selectedRange.commonAncestorContainer;
+                    if (ancestor.nodeType === 3) { // Text node
+                        const parent = ancestor.parentNode;
+                        if (parent.classList.contains('highlight')) {
+                            const text = document.createTextNode(parent.innerHTML);
+                            parent.parentNode.replaceChild(text, parent);
+                        }
+                    }
+                    window.getSelection().removeAllRanges();
+                    highlightToolbar.style.display = 'none';
+                }
+            });
+            
+            // Draggable Divider
+            const divider = document.getElementById('divider');
+            const passageContainer = document.getElementById('passage-container');
+            const questionsContainer = document.getElementById('questions-container');
+            let isDragging = false;
+            let startX, startPassageWidth;
+
+            divider.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                startPassageWidth = parseInt(document.defaultView.getComputedStyle(passageContainer).width, 10);
+                document.body.style.cursor = 'col-resize';
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+                e.preventDefault();
+            });
+
+            function onMouseMove(e) {
+                if (!isDragging) return;
+                const containerWidth = document.querySelector('.test-container').offsetWidth;
+                const newPassageWidth = startPassageWidth + e.clientX - startX;
+                const minWidth = containerWidth * 0.3;
+                const maxWidth = containerWidth * 0.7;
+                if (newPassageWidth >= minWidth && newPassageWidth <= maxWidth) {
+                    passageContainer.style.width = `${newPassageWidth}px`;
+                }
+            }
+
+            function onMouseUp() {
+                isDragging = false;
+                document.body.style.cursor = '';
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+
+            divider.addEventListener('selectstart', (e) => {
+                if (isDragging) e.preventDefault();
+            });
+            
+            // Settings Modal
+            const settingsModal = document.getElementById('settingsModal');
+            const settingsClose = document.getElementById('settingsClose');
+            
+            document.getElementById('textSizeToggle').addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                settingsModal.style.display = 'flex';
+            });
+
+            settingsClose.addEventListener('click', function() {
+                settingsModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === settingsModal) {
+                    settingsModal.style.display = 'none';
+                }
+                if (event.target === document.getElementById('submissionModal')) {
+                    document.getElementById('submissionModal').style.display = 'none';
+                }
+            });
+            
+            // Settings Modal Options
+            document.querySelectorAll('.settings-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (this.textContent.includes('Go to submission page')) {
+                        if (!testSubmitted) {
+                            if (confirm('Are you sure you want to submit your test? You won\'t be able to make changes after submission.')) {
+                                clearInterval(timerInterval);
+                                testSubmitted = true;
+                                disableAllInputs();
+                                showSubmissionModal('Test Submitted', 'Thank you for completing the test.');
+                                settingsModal.style.display = 'none';
+                            }
+                        } else {
+                            document.getElementById('submissionModal').style.display = 'flex';
+                            settingsModal.style.display = 'none';
+                        }
+                    } else if (this.textContent.includes('Text size')) {
+                        document.getElementById('textSizeToggle').click();
+                        settingsModal.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Prevent context menu on passage content to avoid interference with highlight
+            document.getElementById('passage-container').addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+        }
+        
+
+        // Initialize the test when the page loads
+        window.addEventListener('load', initializeTest);
+    </script>
+
+<script>
+// Fallback to guarantee modal opens after clicking Submit
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('deliver-button');
+  const modal = document.getElementById('submissionModal');
+  if (btn && modal) {
+    btn.addEventListener('click', function(ev){
+      // Wait for existing handler; if modal still hidden, force it
+      setTimeout(function(){
+        try {
+          const style = window.getComputedStyle(modal);
+          if (style.display === 'none') {
+            try { showSubmissionModal('Test Submitted', 'Here are your answers and explanations:'); }
+            catch (e) { modal.style.display = 'flex'; }
+          }
+        } catch(e) {
+          modal.style.display = 'flex';
+        }
+      }, 0);
+    }, true);
+  }
+});
+</script>
+
+</body>
+</html>
