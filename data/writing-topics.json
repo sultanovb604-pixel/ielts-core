@@ -1,0 +1,102 @@
+[
+  {
+    "id": "writing-topic-task2-success",
+    "type": "task2",
+    "title": "Factors Behind Success in Life",
+    "category": "Society & Success",
+    "minWords": 250,
+    "recommendedMinutes": 40,
+    "prompt": "Some people believe that personal perseverance and hard work are the only prerequisites for achieving success in life, while others argue that external factors such as financial background, connections, and good fortune play a far more decisive role. Discuss both views and give your own opinion.",
+    "modelAnswerId": "writing-success-factors-model"
+  },
+  {
+    "id": "writing-topic-task2-resources",
+    "type": "task2",
+    "title": "Depletion of Natural Resources",
+    "category": "Environment & Ecology",
+    "minWords": 250,
+    "recommendedMinutes": 40,
+    "prompt": "The depletion of the world’s natural resources, such as fresh water and fossil fuels, is one of the most pressing ecological challenges of our era. What are the primary causes of this issue, and what viable solutions can be implemented to address it?",
+    "modelAnswerId": "writing-natural-resources-model"
+  },
+  {
+    "id": "writing-topic-task2-arts-science",
+    "type": "task2",
+    "title": "Relevance of Arts vs Science & Technology",
+    "category": "Education & Culture",
+    "minWords": 250,
+    "recommendedMinutes": 40,
+    "prompt": "In an era dominated by science and technological advancement, some people believe that the arts (such as literature, music, and painting) have lost their societal value. Why do the arts remain essential, and to what extent are they as important as scientific disciplines?",
+    "modelAnswerId": "writing-arts-vs-science-model"
+  },
+  {
+    "id": "writing-topic-task2-cycling",
+    "type": "task2",
+    "title": "Encouraging Bicycle Use in Modern Cities",
+    "category": "Urban Life & Health",
+    "minWords": 250,
+    "recommendedMinutes": 40,
+    "prompt": "In many modern cities, bicycle usage has declined significantly despite its proven environmental and health benefits. What factors contribute to this trend, and how can local governments promote cycling as an everyday mode of transport?",
+    "modelAnswerId": "writing-cycling-model"
+  },
+  {
+    "id": "writing-topic-task2-tech-youth",
+    "type": "task2",
+    "title": "Teenagers and Digital Technology Reliance",
+    "category": "Technology & Youth",
+    "minWords": 250,
+    "recommendedMinutes": 40,
+    "prompt": "Today’s teenagers rely heavily on digital devices and the internet for both educational pursuits and personal recreation. Do the advantages of this trend outweigh its potential drawbacks?",
+    "modelAnswerId": "writing-technology-model"
+  },
+  {
+    "id": "writing-topic-task2-remote-work",
+    "type": "task2",
+    "title": "Remote Work and Global Employment",
+    "category": "Work & Economy",
+    "minWords": 250,
+    "recommendedMinutes": 40,
+    "prompt": "An increasing number of companies are allowing employees to work entirely from home. Discuss the advantages and disadvantages of this development for both employers and employees.",
+    "modelAnswerId": "writing-success-factors-model"
+  },
+  {
+    "id": "writing-topic-task2-university-fees",
+    "type": "task2",
+    "title": "Free Higher Education for All Citizens",
+    "category": "Education & Policy",
+    "minWords": 250,
+    "recommendedMinutes": 40,
+    "prompt": "Some people believe that university education should be completely free for all students, funded by the government, while others argue that individuals should pay for their own higher education. Discuss both views and give your opinion.",
+    "modelAnswerId": "writing-success-factors-model"
+  },
+  {
+    "id": "writing-topic-task1-bamboo-process",
+    "type": "task1",
+    "title": "Industrial Process: Bamboo Textile Manufacturing",
+    "category": "Process Diagram",
+    "minWords": 150,
+    "recommendedMinutes": 20,
+    "prompt": "The diagram illustrates the sequential stages involved in manufacturing eco-friendly textile fibers from raw bamboo stalks. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+    "modelAnswerId": "writing-process-diagrams"
+  },
+  {
+    "id": "writing-topic-task1-sports-table",
+    "type": "task1",
+    "title": "Comparative Table: Youth Sports Participation",
+    "category": "Data Table",
+    "minWords": 150,
+    "recommendedMinutes": 20,
+    "prompt": "The table gives information regarding the percentage of male and female teenagers participating in four different sports in 2010 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+    "modelAnswerId": "writing-survey-table-model"
+  },
+  {
+    "id": "writing-topic-task1-zoo-map",
+    "type": "task1",
+    "title": "Map Transformation: City Wildlife Park (2000 vs 2025)",
+    "category": "Map Comparison",
+    "minWords": 150,
+    "recommendedMinutes": 20,
+    "prompt": "The maps show the layout of an urban zoological park in 2000 and the planned redevelopment for 2025. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+    "modelAnswerId": "writing-zoo-map-report"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "tests": [],
+  "results": [],
+  "readingAttempts": [],
+  "listeningAttempts": [],
+  "articleHighlights": [],
+  "vocabulary": [],
+  "olympiads": [],
+  "resources": [],
+  "users": [
+    {
+      "id": "3b26ab4d-af78-48dd-a87f-878a0f5f74bc",
+      "name": "QA Visual",
+      "username": "qa_visual2",
+      "grade": "beginner",
+      "learning": "",
+      "goal": "",
+      "plan": "free",
+      "authProvider": "password",
+      "salt": "9e121971eab43962df308d3df6b2d820",
+      "passwordHash": "647c0d58254aa27268fd9c788f7325c00456eac4cb64ee0e3c6afb74c0ec836bd7fcf0483df7a096ad00f183dd26f46e6219c1203f7705b50319b4a6b66ed75d",
+      "createdAt": "2026-08-12T03:58:02.778Z"
+    }
+  ]
+}

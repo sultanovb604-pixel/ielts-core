@@ -1,0 +1,158 @@
+{
+  "id": "article-chatgpt-humans",
+  "title": "ChatGPT and the Human Workforce",
+  "description": "What is AI chatbot phenomenon ChatGPT and could it replace humans? An in-depth technology report.",
+  "sourceFormat": "pdf-text",
+  "qualityStatus": "approved",
+  "lineCount": 62,
+  "characterCount": 3756,
+  "wordCount": 582,
+  "pageCount": 1,
+  "pageCoverage": 1,
+  "blocks": [
+    {
+      "kind": "paragraph",
+      "text": "Samantha Lock December 5, 2022 What is AI chatbot phenomenon ChatGPT and could it replace humans?",
+      "id": "p1-b1",
+      "page": 1
+    },
+    {
+      "kind": "heading",
+      "text": "What is the AI bot ChatGPT?",
+      "id": "p1-b2",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "ChatGPT is a prototype dialogue-based AI chatbot capable of understanding natural human language and generating impressively detailed human-like written text.",
+      "id": "p1-b3",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "It is the latest evolution of the GPT – or Generative Pre-Trained Transformer – family of text-generating AIs.",
+      "id": "p1-b4",
+      "page": 1
+    },
+    {
+      "kind": "heading",
+      "text": "Who made it?",
+      "id": "p1-b5",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "The new AI is the latest chatbot from the Elon Musk-founded independent research body OpenAI foundation.",
+      "id": "p1-b6",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "Musk co-founded the startup with other Silicon Valley investors including technology venture capitalist Sam Altman in late 2015, saying that the research centre would “advance digital intelligence in the way that is most likely to benefit humanity” according to a blog post at the time.",
+      "id": "p1-b7",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "The Twitter CEO has since left the board and distanced himself from the company, tweeting on Sunday that after he “learned” that OpenAI was accessing the platform’s database for “training”, he put a pause on it.",
+      "id": "p1-b8",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "“Need to understand more about governance structure [and] revenue plans going forward,” he said. “OpenAI was started as open-source and non-profit. Neither are still true.”",
+      "id": "p1-b9",
+      "page": 1
+    },
+    {
+      "kind": "heading",
+      "text": "How does it work?",
+      "id": "p1-b10",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "Trained by AI and machine learning, the system is designed to provide information and answer questions through a conversational interface.",
+      "id": "p1-b11",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "The AI is trained on a huge sample of text taken from the internet.",
+      "id": "p1-b12",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "OpenAI said the new AI was created with a focus on ease of use. “The dialogue format makes it possible for ChatGPT to answer follow-up questions, admit its mistakes, challenge incorrect premises, and reject inappropriate requests,” the research body said in a statement last week.",
+      "id": "p1-b13",
+      "page": 1
+    },
+    {
+      "kind": "heading",
+      "text": "How can it be used?",
+      "id": "p1-b14",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "Early users have described the technology as an alternative to Google because it is capable of providing descriptions, answers and solutions to complex questions including ways to write code, and solve layout problems and optimisation queries.",
+      "id": "p1-b15",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "Real-world applications could include generating content for websites, answering customer inquiries, providing recommendations as well as creating automated chatbots.",
+      "id": "p1-b16",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "Sam Altman, OpenAI CEO, said the system was “an early demo of what’s possible”. “Soon you will be able to have helpful assistants that talk to you, answer questions, and give advice. Later you can have something that goes off and does tasks for you. Eventually you can have something that goes off and discovers new knowledge for you.” Could ChatGPT replace humans?",
+      "id": "p1-b17",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "There has been speculation that professions dependent upon content production could be rendered obsolete, including everything from playwrights and professors to programmers and journalists.",
+      "id": "p1-b18",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "In the days since it was released, academics have generated responses to exam queries that they say would result in full marks if submitted by an undergraduate, and programmers have used the tool to solve coding challenges in obscure programming languages in a matter of seconds.",
+      "id": "p1-b19",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "The ability to generate human-like written text has prompted suggestions that the technology could replace journalists.",
+      "id": "p1-b20",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "However at its current stage, the chatbot lacks the nuance, critical-thinking skills or ethical decision-making ability that are essential for successful journalism.",
+      "id": "p1-b21",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "Its current knowledge base ends in 2021, rendering some queries and searches useless.",
+      "id": "p1-b22",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "ChatGPT can also give entirely wrong answers and present misinformation as fact, writing “plausible-sounding but incorrect or nonsensical answers”, the company concedes.",
+      "id": "p1-b23",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "OpenAI says that fixing this issue is difficult because there is no source of truth in the data they use to train the model and supervised training can also be misleading “because the ideal answer depends on what the model knows, rather than what the human demonstrator knows”.",
+      "id": "p1-b24",
+      "page": 1
+    }
+  ]
+}

@@ -1,0 +1,658 @@
+[
+  {
+    "id": "article-happiness-longevity",
+    "title": "Happier People Live Longer",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + practice",
+    "description": "Explore a seven-year Japanese study on happiness and longevity, then complete 13 IELTS-style questions.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-01-happiness-and-longevity.pdf"
+      },
+      {
+        "key": "practice",
+        "label": "Practice questions",
+        "file": "article-01-practice.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-einsteins-brain",
+    "title": "What Scientists Discovered About Einstein's Brain",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + practice",
+    "description": "Read about the anatomy and connectivity of Einstein's brain and test your understanding.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-02-einsteins-brain.pdf"
+      },
+      {
+        "key": "practice",
+        "label": "Practice questions",
+        "file": "article-02-practice.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-chatgpt-humans",
+    "title": "What Is ChatGPT and Could It Replace Humans?",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + LT",
+    "description": "A technology feature paired with vocabulary, collocations and language analysis.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-03-chatgpt.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-03-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-perfect-nap",
+    "title": "How to Take the Perfect Nap",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + LT",
+    "description": "A practical health article with an intermediate-to-advanced language takeaway.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-04-perfect-nap.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-04-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-cocoon-geometries",
+    "title": "Cocoon: A Game of Unusual Geometries",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + LT",
+    "description": "A New Scientist games column supported by vocabulary and grammar analysis.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-05-cocoon.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-05-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-ageism",
+    "title": "Over the Hill? Rethinking Ageism",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + LT",
+    "description": "Investigate how stereotypes about ageing affect health, behaviour and opportunity.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-06-ageism.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-06-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-hunting-missys-killer",
+    "title": "Hunting Missy's Killer",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Long-form article",
+    "description": "An investigative crime feature for mature learners. Contains sensitive subject matter.",
+    "contentWarning": "Mature crime content",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-07-hunting-missys-killer.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-a-stolen-life",
+    "title": "A Stolen Life",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Long-form article",
+    "description": "A narrative crime feature for mature learners. Contains sensitive subject matter.",
+    "contentWarning": "Mature crime content",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-08-a-stolen-life.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-thrill-seeking",
+    "title": "Going In for the Thrill",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Psychology article",
+    "description": "Discover why some people deliberately seek intense and risky experiences.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-09-thrill-seeking.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-alexander-the-great",
+    "title": "Alexander the Great: A Trail of Conquest",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + workbook",
+    "description": "A history reading paired with a nine-page language takeaway workbook.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-10-alexander-the-great.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language workbook",
+        "file": "article-10-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-critical-thinking",
+    "title": "Critical Thinking Is About Asking Better Questions",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Business article",
+    "description": "Learn how stronger questions improve analysis, decisions and problem-solving.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-11-critical-thinking.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-focus-digital-age",
+    "title": "How to Focus in the Digital Age",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + LT",
+    "description": "Study the science of attention and learn vocabulary for discussing digital distraction.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-12-focus-digital-age.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-12-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-ai-court",
+    "title": "Can AI Advise a Defendant in Court?",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "free",
+    "formatLabel": "Article + LT",
+    "description": "A legal-technology news article with topic-specific vocabulary and collocations.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-13-ai-in-court.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-13-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-sitting-smoking",
+    "title": "Sitting Is the New Smoking",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Article + LT",
+    "description": "A health feature on sedentary lifestyles, supported by targeted vocabulary work.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-14-sitting-is-the-new-smoking.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-14-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-dopamine-fasting",
+    "title": "Dopamine Fasting",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Article + LT",
+    "description": "Examine the idea of moderating high-stimulation habits and analyse its language.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-15-dopamine-fasting.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-15-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-nature-nurture",
+    "title": "Personality: Nature and Nurture",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Article + LT",
+    "description": "Read about Francis Galton's influence on the nature-versus-nurture debate.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-16-nature-and-nurture.pdf"
+      },
+      {
+        "key": "lt",
+        "label": "Language Takeaway",
+        "file": "article-16-language-takeaway.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-time-for-yourself",
+    "title": "Why Taking Time for Yourself Matters",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Wellbeing article",
+    "description": "A reflective feature on self-care, guilt and sustainable personal routines.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-17-time-for-yourself.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-aesthetic-brain",
+    "title": "The Aesthetic Brain",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Psychology article",
+    "description": "Explore how beauty and art affect the brain through the lens of neuroaesthetics.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-18-aesthetic-brain.pdf"
+      }
+    ]
+  },
+  {
+    "id": "article-stop-saying-fine",
+    "title": "Is It Time to Stop Saying We're Fine?",
+    "grade": "ielts",
+    "skill": "reading",
+    "type": "article",
+    "collection": "article",
+    "access": "premium",
+    "formatLabel": "Wellbeing article",
+    "description": "A feature on emotional honesty, vulnerability and healthier communication.",
+    "parts": [
+      {
+        "key": "article",
+        "label": "Article",
+        "file": "article-19-stop-saying-fine.pdf"
+      }
+    ]
+  },
+  {
+    "id": "writing-cycling-model",
+    "title": "Teacher Model: Encouraging Bicycle Use",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Teacher-written model",
+    "description": "A complete Task 2 problem-and-solution response on declining bicycle use with full lexical breakdown.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answer",
+        "file": "writing-01-cycling-model.pdf"
+      }
+    ]
+  },
+  {
+    "id": "writing-technology-model",
+    "title": "Teacher Model: Teenagers and Technology",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Teacher-written model",
+    "description": "A complete Task 2 response evaluating teenagers' reliance on technology for learning.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answer",
+        "file": "writing-02-technology-model.pdf"
+      }
+    ]
+  },
+  {
+    "id": "writing-survey-table-model",
+    "title": "Teacher Model: Sports Participation Table",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Teacher-written model",
+    "description": "A Task 1 table report comparing participation in six sports across three survey years.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answer",
+        "file": "writing-03-survey-table-model.pdf"
+      }
+    ]
+  },
+  {
+    "id": "writing-process-diagrams",
+    "title": "Process Diagram Model Answers: Bamboo Textiles",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Task 1 models",
+    "description": "Polished process descriptions covering bamboo textiles and sequential industrial procedures.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answers",
+        "file": "writing-04-process-diagrams.pdf"
+      }
+    ]
+  },
+  {
+    "id": "writing-young-people-idea-bank",
+    "title": "Writing Idea Bank: Young People and Technology",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "premium",
+    "formatLabel": "Idea bank",
+    "description": "Reusable arguments, supporting points and academic phrases for education and technology essays.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Idea bank",
+        "file": "writing-05-young-people-idea-bank.pdf"
+      }
+    ]
+  },
+  {
+    "id": "writing-introduction-bank",
+    "title": "Advanced Task 2 Introduction Bank",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Human-written models",
+    "description": "Twelve edited introductions for opinion, discussion, advantages, causes and two-part essays.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Introduction bank",
+        "file": "writing-06-introduction-bank.html"
+      }
+    ]
+  },
+  {
+    "id": "writing-success-factors-model",
+    "title": "Band 9.0 Model: Factors Behind Success in Life",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Discussion + Opinion",
+    "description": "A complete Band 8.5–9.0 essay discussing hard work vs external factors, with lexis bank.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answer",
+        "file": "writing-07-success-factors-model.html"
+      }
+    ]
+  },
+  {
+    "id": "writing-natural-resources-model",
+    "title": "Band 9.0 Model: Depletion of Natural Resources",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Causes & Solutions",
+    "description": "An advanced problem-and-solution essay on fossil fuel and water depletion with policy solutions.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answer",
+        "file": "writing-08-natural-resources-model.html"
+      }
+    ]
+  },
+  {
+    "id": "writing-arts-vs-science-model",
+    "title": "Band 9.0 Model: Relevance of Arts vs Science",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Two-Part Essay",
+    "description": "An essay evaluating why the arts remain indispensable in a technological world, citing O'tkan Kunlar.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answer",
+        "file": "writing-09-arts-vs-science-model.html"
+      }
+    ]
+  },
+  {
+    "id": "writing-zoo-map-report",
+    "title": "Band 9.0 Report: Australian Zoo Map Transformation",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Task 1 Map Report",
+    "description": "A Band 9.0 spatial report comparing zoo layout in 1990 with the current arrangement.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model report",
+        "file": "writing-10-zoo-map-report.html"
+      }
+    ]
+  },
+  {
+    "id": "writing-band9-grammar-guide",
+    "title": "Band 9.0 Grammar Structures Reference Guide",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Grammar Masterclass",
+    "description": "Comprehensive guide to Inverted Conditionals, Nominalisation, Cleft Sentences, and Participles.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Grammar guide",
+        "file": "writing-11-band9-grammar-guide.html"
+      }
+    ]
+  },
+  {
+    "id": "writing-map-process-vocab",
+    "title": "Task 1 Map & Process Vocabulary Practice",
+    "grade": "ielts",
+    "skill": "writing",
+    "type": "sample",
+    "collection": "writing-sample",
+    "access": "free",
+    "formatLabel": "Vocabulary & Error Correction",
+    "description": "Targeted error correction and collocations for spatial maps and cyclical process diagrams.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Vocab practice",
+        "file": "writing-12-map-process-vocab.html"
+      }
+    ]
+  },
+  {
+    "id": "speaking-part1-core-topics",
+    "title": "Speaking Part 1: Core Topics & Model Answers",
+    "grade": "ielts",
+    "skill": "speaking",
+    "type": "sample",
+    "collection": "speaking-question",
+    "access": "free",
+    "formatLabel": "Part 1 topics",
+    "description": "Master natural 3-sentence answers for Hometown, Work/Studies, and Daily Routines with examiner lexis.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answers",
+        "file": "speaking-01-part1-core-topics.html"
+      }
+    ]
+  },
+  {
+    "id": "speaking-part2-cue-cards",
+    "title": "Speaking Part 2: Essential Cue Cards & Monologues",
+    "grade": "ielts",
+    "skill": "speaking",
+    "type": "sample",
+    "collection": "speaking-sample",
+    "access": "free",
+    "formatLabel": "Cue cards (2 min)",
+    "description": "High-frequency cue cards with full 2-minute monologue structures, idiomatic phrases, and narrative coherence.",
+    "parts": [
+      {
+        "key": "sample",
+        "label": "Model answers",
+        "file": "speaking-02-part2-cue-cards.html"
+      }
+    ]
+  }
+]

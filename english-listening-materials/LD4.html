@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Listening Practice Test — Section 3 & 4</title>
+<style>
+  :root{
+    --blue:#0071BC; --border:#d0d0d0; --bg:#ffffff; --panel:#fafafa;
+    --text:#1a1a1a; --muted:#6b6b6b; --danger:#c0392b; --answered:#0071BC; --font-size:16px;
+  }
+  [data-scheme="black-yellow"]{ --bg:#000000; --panel:#000000; --text:#FFEB3B; --border:#FFEB3B; --muted:#e0d76a; }
+  [data-scheme="white-blue"]{ --bg:#00264d; --panel:#00264d; --text:#ffffff; --border:#a9c6e8; --muted:#cfe0f2; }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; margin:0; }
+  body{ font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); font-size:var(--font-size);
+    display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  button{ font-family:inherit; cursor:pointer; }
+
+  #startScreen{ flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:40px; }
+  #startScreen h1{ font-size:1.4em; margin-bottom:4px; }
+  #startScreen p{ max-width:560px; color:var(--muted); line-height:1.6; }
+  #startBtn{ margin-top:24px; background:var(--blue); color:#fff; border:none; padding:14px 36px; font-size:1em; border-radius:4px; }
+  #startBtn:hover{ background:#005a94; }
+  .warn-box{ border:1px solid var(--border); background:var(--panel); border-radius:4px; padding:16px 20px; margin-top:24px; max-width:560px; font-size:0.9em; color:var(--muted); text-align:left; }
+
+  #topBar{ display:none; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding:10px 18px; background:var(--panel); flex-shrink:0; }
+  #topBar .left b{ display:block; font-size:1em; }
+  #topBar .left span{ color:var(--muted); font-size:0.85em; }
+  #timer{ font-size:1.15em; font-weight:bold; padding:4px 14px; border-radius:4px; border:1px solid var(--border); }
+  #timer.warn{ color:#fff; background:var(--danger); border-color:var(--danger); animation:pulse 1s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.55;} }
+  #settingsBtn{ background:none; border:1px solid var(--border); border-radius:4px; width:34px; height:34px; font-size:1.1em; color:var(--text); }
+
+  #mainArea{ flex:1; overflow:hidden; display:none; }
+  #questionPanel{ height:100%; overflow-y:auto; padding:28px 40px; max-width:820px; margin:0 auto; }
+  .part-instructions{ border:1px solid var(--border); background:var(--panel); border-radius:4px; padding:14px 18px; margin-bottom:18px; font-size:0.92em; line-height:1.55; }
+  .part-instructions b{ display:block; margin-bottom:4px; }
+  .part-heading{ font-weight:bold; font-size:1.05em; margin:26px 0 14px; padding-top:14px; border-top:2px solid var(--border); }
+  .part-heading:first-of-type{ border-top:none; margin-top:0; padding-top:0; }
+  .form-title{ text-align:center; font-weight:bold; margin-bottom:14px; background:var(--panel); padding:8px; border:1px solid var(--border); letter-spacing:0.5px; }
+
+  .qnum{ display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border:1px solid var(--border); border-radius:3px; font-size:0.78em; font-weight:bold; flex-shrink:0; margin:0 4px; }
+  input[type=text]{ min-width:150px; padding:5px 8px; border:1px solid var(--border); border-radius:3px; font-size:1em; background:var(--bg); color:var(--text); }
+  input[type=text]:focus{ outline:2px solid var(--blue); }
+  .summary-block{ line-height:2.2; }
+  .sc-row{ display:flex; align-items:baseline; gap:8px; padding:10px 0; border-bottom:1px dotted var(--border); flex-wrap:wrap; line-height:1.6; }
+
+  .mcq-block{ padding:14px 0; border-bottom:1px dotted var(--border); }
+  .mcq-q{ display:flex; gap:8px; margin-bottom:8px; font-weight:bold; }
+  .mcq-opt{ display:flex; align-items:center; gap:8px; padding:4px 0 4px 30px; }
+  .mcq-opt input{ transform:scale(1.1); }
+  .mcq-opt label{ cursor:pointer; }
+
+  .select-box{ border:1px solid var(--border); border-radius:4px; padding:10px 16px; max-width:460px; margin:14px 0; }
+  .select-row{ display:flex; align-items:center; gap:10px; padding:6px 0; }
+  .select-row input{ transform:scale(1.15); }
+  .select-row label{ cursor:pointer; }
+  .select-row.disabled label{ color:var(--muted); }
+
+  mark.user-highlight{ background:#fff176; color:inherit; cursor:pointer; border-radius:2px; }
+  [data-scheme="black-yellow"] mark.user-highlight{ background:#3a5a99; color:#FFEB3B; }
+  [data-scheme="white-blue"] mark.user-highlight{ background:#ffd54f; color:#00264d; }
+  #highlightBtn{ position:absolute; display:none; background:var(--blue); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.82em; z-index:60; box-shadow:0 2px 6px rgba(0,0,0,0.25); }
+
+  #bottomNav{ display:none; align-items:center; gap:6px; padding:10px 18px; border-top:1px solid var(--border); background:var(--panel); flex-shrink:0; flex-wrap:wrap; }
+  .part-tab{ border:1px solid var(--border); background:var(--bg); color:var(--text); padding:5px 12px; border-radius:4px; font-size:0.8em; margin-right:10px; }
+  .part-tab.active{ background:var(--blue); color:#fff; border-color:var(--blue); }
+  .qbox{ width:28px; height:28px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); font-size:0.75em; display:flex; align-items:center; justify-content:center; position:relative; }
+  .qbox.answered{ background:var(--answered); color:#fff; border-color:var(--answered); }
+  #submitBtn{ margin-left:auto; background:var(--blue); color:#fff; border:none; padding:9px 22px; border-radius:4px; font-size:0.95em; }
+  #submitBtn:hover{ background:#005a94; }
+
+  .modal-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); align-items:center; justify-content:center; z-index:50; }
+  .modal{ background:var(--bg); color:var(--text); border-radius:6px; padding:24px 28px; width:340px; border:1px solid var(--border); }
+  .modal h3{ margin-top:0; }
+  .modal-section{ margin-bottom:16px; }
+  .modal-section label{ display:block; font-size:0.85em; color:var(--muted); margin-bottom:6px; }
+  .btn-group{ display:flex; gap:8px; flex-wrap:wrap; }
+  .btn-group button{ border:1px solid var(--border); background:var(--panel); color:var(--text); padding:6px 12px; border-radius:4px; font-size:0.85em; }
+  .btn-group button.active{ background:var(--blue); color:#fff; border-color:var(--blue); }
+  .modal-close{ background:var(--blue); color:#fff; border:none; padding:8px 18px; border-radius:4px; width:100%; margin-top:6px; }
+
+  #resultsScreen{ display:none; flex:1; overflow-y:auto; padding:40px; max-width:760px; margin:0 auto; width:100%; }
+  .score-hero{ text-align:center; border:1px solid var(--border); border-radius:6px; padding:26px; margin-bottom:26px; background:var(--panel); }
+  .score-hero .big{ font-size:2.4em; font-weight:bold; color:var(--blue); }
+  .review-row{ display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+  .review-row .num{ font-weight:bold; width:40px; flex-shrink:0; }
+  .review-row .correct{ color:#2e9e44; }
+  .review-row .incorrect{ color:var(--danger); text-decoration:line-through; }
+  .review-row .given{ display:block; font-size:0.9em; color:var(--muted); }
+  #tryAgainBtn{ display:block; margin:26px auto 0; background:var(--blue); color:#fff; border:none; padding:10px 26px; border-radius:4px; }
+  .note{ font-size:0.82em; color:var(--muted); line-height:1.6; margin-top:20px; border-top:1px dashed var(--border); padding-top:16px; }
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+  <h1>IELTS Listening Practice Test — Section 3 & 4</h1>
+  <p>Section 3 (Q21–30): multiple choice, multiple selection, and summary completion — a part-time course enquiry.<br>
+     Section 4 (Q31–40): sentence and summary completion — "Saving for the Future".</p>
+  <div class="warn-box">
+    <b>Before you start:</b><br>
+    • Follow the word-limit instruction printed above each question group.<br>
+    • Q24–25: select exactly two letters — the box won't let you tick a third.<br>
+    • Select any text in the question panel to highlight it.<br>
+    • Timer starts the moment you press Start.
+  </div>
+  <button id="startBtn" onclick="startTest()">Start Test</button>
+</div>
+
+<div id="topBar">
+  <div class="left"><b>Cambridge Assessment English</b><span>IELTS Listening — Section 3 & 4</span></div>
+  <div id="timer">20:00</div>
+  <button id="settingsBtn" onclick="toggleModal(true)" title="Settings">⚙</button>
+</div>
+
+<button id="highlightBtn" onclick="applyHighlight()">Highlight</button>
+<div id="mainArea">
+  <div id="questionPanel">
+
+    <div class="part-heading" id="p1anchor">SECTION 3 — Questions 21–30</div>
+    <div class="part-instructions"><b>Questions 21–23</b>
+      Choose the correct letter, A, B or C.
+    </div>
+
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">21</span>Andrew has worked at the hospital for</div>
+      <div class="mcq-opt"><input type="radio" name="q21" value="A" onchange="onAnswerInput(21)" id="q21a"><label for="q21a">A two years.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q21" value="B" onchange="onAnswerInput(21)" id="q21b"><label for="q21b">B three years.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q21" value="C" onchange="onAnswerInput(21)" id="q21c"><label for="q21c">C five years.</label></div>
+    </div>
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">22</span>During the course Andrew's employers will pay</div>
+      <div class="mcq-opt"><input type="radio" name="q22" value="A" onchange="onAnswerInput(22)" id="q22a"><label for="q22a">A his fees.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q22" value="B" onchange="onAnswerInput(22)" id="q22b"><label for="q22b">B his living costs.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q22" value="C" onchange="onAnswerInput(22)" id="q22c"><label for="q22c">C his salary.</label></div>
+    </div>
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">23</span>The part-time course lasts for</div>
+      <div class="mcq-opt"><input type="radio" name="q23" value="A" onchange="onAnswerInput(23)" id="q23a"><label for="q23a">A one whole year.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q23" value="B" onchange="onAnswerInput(23)" id="q23b"><label for="q23b">B 18 months.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q23" value="C" onchange="onAnswerInput(23)" id="q23c"><label for="q23c">C two years.</label></div>
+    </div>
+
+    <div class="part-instructions" style="margin-top:22px;"><b>Questions 24 and 25</b>
+      Choose TWO letters, A–E. What TWO types of coursework are required each month on the part-time course?
+    </div>
+    <div class="select-box" id="selectBox">
+      <div class="select-row"><input type="checkbox" value="A" id="optA" onchange="onSelectChange()"><label for="optA">A a case study</label></div>
+      <div class="select-row"><input type="checkbox" value="B" id="optB" onchange="onSelectChange()"><label for="optB">B an essay</label></div>
+      <div class="select-row"><input type="checkbox" value="C" id="optC" onchange="onSelectChange()"><label for="optC">C a survey</label></div>
+      <div class="select-row"><input type="checkbox" value="D" id="optD" onchange="onSelectChange()"><label for="optD">D a short report</label></div>
+      <div class="select-row"><input type="checkbox" value="E" id="optE" onchange="onSelectChange()"><label for="optE">E a study diary</label></div>
+    </div>
+
+    <div class="part-instructions" style="margin-top:22px;"><b>Questions 26–30</b>
+      Complete the summary below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.
+    </div>
+    <div class="form-title">MODULAR COURSES</div>
+    <div class="summary-block">
+      Students study <span class="qnum">26</span><input type="text" data-q="26" oninput="onAnswerInput(26)"> during each module.
+      A module takes <span class="qnum">27</span><input type="text" data-q="27" oninput="onAnswerInput(27)"> and the work is very
+      <span class="qnum">28</span><input type="text" data-q="28" oninput="onAnswerInput(28)">. To get a Diploma each student
+      has to study <span class="qnum">29</span><input type="text" data-q="29" oninput="onAnswerInput(29)"> and then work on
+      <span class="qnum">30</span><input type="text" data-q="30" oninput="onAnswerInput(30)"> in depth.
+    </div>
+
+    <div class="part-heading" id="p2anchor">SECTION 4 — Questions 31–40</div>
+    <div class="part-instructions"><b>Questions 31–35</b>
+      Complete the sentences below. Write NO MORE THAN THREE WORDS for each answer.
+    </div>
+    <div class="sc-row"><span class="qnum">31</span>According to George Bernard Shaw, men are supposed to understand
+      <input type="text" data-q="31" oninput="onAnswerInput(31)">, economics and finance.</div>
+    <div class="sc-row"><span class="qnum">32</span>However, women are more prepared to
+      <input type="text" data-q="32" oninput="onAnswerInput(32)"> about them.</div>
+    <div class="sc-row"><span class="qnum">33</span>Women tend to save for
+      <input type="text" data-q="33" oninput="onAnswerInput(33)"> and a house.</div>
+    <div class="sc-row"><span class="qnum">34</span>Men tend to save for
+      <input type="text" data-q="34" oninput="onAnswerInput(34)"> and for retirement.</div>
+    <div class="sc-row"><span class="qnum">35</span>Women who are left alone may have to pay for
+      <input type="text" data-q="35" oninput="onAnswerInput(35)"> when they are old.</div>
+
+    <div class="part-instructions" style="margin-top:22px;"><b>Questions 36–40</b>
+      Complete the summary below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.
+    </div>
+    <div class="form-title">SAVING FOR THE FUTURE</div>
+    <div class="summary-block">
+      Research indicates that many women only think about their financial future when a
+      <span class="qnum">36</span><input type="text" data-q="36" oninput="onAnswerInput(36)"> occurs. This is the worst time
+      to make decisions. It is best for women to start thinking about pensions when they are in their
+      <span class="qnum">37</span><input type="text" data-q="37" oninput="onAnswerInput(37)">. A good way for women to develop
+      their <span class="qnum">38</span><input type="text" data-q="38" oninput="onAnswerInput(38)"> in dealing with financial
+      affairs would be to attend classes in <span class="qnum">39</span><input type="text" data-q="39" oninput="onAnswerInput(39)">.
+      When investing in stocks and shares, it is suggested that women should put a high proportion of their savings in
+      <span class="qnum">40</span><input type="text" data-q="40" oninput="onAnswerInput(40)">. In such ways, women can have a
+      comfortable, independent retirement.
+    </div>
+
+  </div>
+</div>
+
+<div id="bottomNav">
+  <button class="part-tab active" onclick="jumpToPart(1)">Section 3</button>
+  <button class="part-tab" onclick="jumpToPart(2)">Section 4</button>
+  <div id="qboxes" style="display:flex; gap:4px; flex-wrap:wrap;"></div>
+  <button id="submitBtn" onclick="confirmSubmit()">Submit</button>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h3>Settings</h3>
+    <div class="modal-section"><label>Text size</label>
+      <div class="btn-group">
+        <button id="szStd" class="active" onclick="setTextSize('std')">Standard</button>
+        <button id="szLg" onclick="setTextSize('lg')">Large</button>
+      </div>
+    </div>
+    <div class="modal-section"><label>Colour scheme</label>
+      <div class="btn-group">
+        <button id="csStd" class="active" onclick="setScheme('standard')">Standard</button>
+        <button id="csBY" onclick="setScheme('black-yellow')">Black / Yellow</button>
+        <button id="csWB" onclick="setScheme('white-blue')">White / Blue</button>
+      </div>
+    </div>
+    <div class="modal-section"><label>Highlights</label>
+      <div class="btn-group"><button onclick="clearAllHighlights()">Clear all highlights</button></div>
+    </div>
+    <button class="modal-close" onclick="toggleModal(false)">Close</button>
+  </div>
+</div>
+
+<div id="resultsScreen">
+  <div class="score-hero"><div class="big" id="scoreBig">0 / 20</div><div>Raw score, Sections 3–4</div></div>
+  <div id="reviewList"></div>
+  <button id="tryAgainBtn" onclick="location.reload()">Try Again</button>
+  <div class="note">
+    This test covers Section 3 and Section 4 (Q21–40) of a full 40-question Listening test, so it isn't converted to
+    a band score on its own — official IELTS band conversion only applies across all 40 questions.
+  </div>
+</div>
+
+<script>
+const answerKey = {
+  21: ["b"], 22: ["a"], 23: ["c"],
+  26: ["full-time","full time"],
+  27: ["a term","one term"],
+  28: ["intensive"],
+  29: ["two modules","for two terms","two terms"],
+  30: ["a topic","one topic"],
+  31: ["politics"],
+  32: ["learn"],
+  33: ["childrens education","their childrens education"],
+  34: ["a car"],
+  35: ["nursing care"],
+  36: ["crisis"],
+  37: ["early twenties"],
+  38: ["confidence"],
+  39: ["money management"],
+  40: ["low-risk investments","low risk investments"]
+};
+const MULTISELECT_CORRECT = ["B","D"];
+const SC_QUESTIONS = [26,27,28,29,30,31,32,33,34,35,36,37,38,39,40];
+const MCQ_QUESTIONS = [21,22,23];
+const ALL_QUESTIONS = [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40];
+const TEST_SECONDS = 20 * 60;
+
+let secondsLeft = TEST_SECONDS;
+let timerHandle = null;
+
+/* ---------- NAV ---------- */
+function buildNav(){
+  const wrap = document.getElementById("qboxes");
+  wrap.innerHTML = "";
+  ALL_QUESTIONS.forEach(q=>{
+    const b = document.createElement("button");
+    b.className = "qbox"; b.id = "qbox-"+q; b.textContent = q;
+    b.onclick = () => jumpTo(q);
+    wrap.appendChild(b);
+  });
+}
+function jumpTo(q){
+  let el;
+  if(q===24 || q===25) el = document.getElementById("selectBox");
+  else el = document.querySelector(`[data-q="${q}"]`) || document.querySelector(`input[name="q${q}"]`);
+  if(el){ el.scrollIntoView({behavior:"smooth", block:"center"}); }
+}
+function jumpToPart(p){
+  document.getElementById(p===1 ? "p1anchor" : "p2anchor").scrollIntoView({behavior:"smooth", block:"start"});
+  document.querySelectorAll(".part-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".part-tab")[p-1].classList.add("active");
+}
+function onAnswerInput(q){
+  const box = document.getElementById("qbox-"+q);
+  let answered = false;
+  if(SC_QUESTIONS.includes(q)){
+    const el = document.querySelector(`[data-q="${q}"]`);
+    answered = el && el.value.trim() !== "";
+  } else {
+    answered = !!document.querySelector(`input[name="q${q}"]:checked`);
+  }
+  box.classList.toggle("answered", answered);
+}
+function onSelectChange(){
+  const boxes = Array.from(document.querySelectorAll('#selectBox input[type=checkbox]'));
+  const checked = boxes.filter(b=>b.checked);
+  boxes.forEach(b=>{
+    b.parentElement.classList.toggle("disabled", !b.checked && checked.length>=2);
+    b.disabled = !b.checked && checked.length>=2;
+  });
+  const done = checked.length === 2;
+  [24,25].forEach(q=>document.getElementById("qbox-"+q).classList.toggle("answered", done));
+}
+
+/* ---------- TIMER ---------- */
+function startTimer(){
+  timerHandle = setInterval(()=>{
+    secondsLeft--;
+    if(secondsLeft <= 0){ clearInterval(timerHandle); secondsLeft = 0; submitTest(); }
+    renderTimer();
+  },1000);
+  renderTimer();
+}
+function renderTimer(){
+  const m = Math.floor(secondsLeft/60).toString().padStart(2,"0");
+  const s = (secondsLeft%60).toString().padStart(2,"0");
+  const el = document.getElementById("timer");
+  el.textContent = `${m}:${s}`;
+  el.classList.toggle("warn", secondsLeft <= 120);
+}
+
+/* ---------- SETTINGS ---------- */
+function toggleModal(show){ document.getElementById("settingsModal").style.display = show ? "flex" : "none"; }
+function setTextSize(sz){
+  document.documentElement.style.setProperty("--font-size", sz==="lg" ? "19px" : "16px");
+  document.getElementById("szStd").classList.toggle("active", sz==="std");
+  document.getElementById("szLg").classList.toggle("active", sz==="lg");
+}
+function setScheme(scheme){
+  document.body.setAttribute("data-scheme", scheme==="standard" ? "" : scheme);
+  ["csStd","csBY","csWB"].forEach(id=>document.getElementById(id).classList.remove("active"));
+  ({"standard":"csStd","black-yellow":"csBY","white-blue":"csWB"}[scheme]) &&
+    document.getElementById({"standard":"csStd","black-yellow":"csBY","white-blue":"csWB"}[scheme]).classList.add("active");
+}
+
+/* ---------- START / SUBMIT ---------- */
+function startTest(){
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("topBar").style.display = "flex";
+  document.getElementById("mainArea").style.display = "block";
+  document.getElementById("bottomNav").style.display = "flex";
+  buildNav();
+  startTimer();
+}
+function confirmSubmit(){
+  const answeredCount = document.querySelectorAll(".qbox.answered").length;
+  const unanswered = ALL_QUESTIONS.length - answeredCount;
+  const msg = unanswered > 0 ? `You have ${unanswered} unanswered question(s). Submit anyway?` : "Submit your test?";
+  if(confirm(msg)) submitTest();
+}
+function normalize(str){ return (str||"").toLowerCase().trim().replace(/[£,.'’]/g,"").replace(/\s+/g," "); }
+
+function submitTest(){
+  clearInterval(timerHandle);
+  let score = 0;
+  const reviewList = document.getElementById("reviewList");
+  reviewList.innerHTML = "";
+
+  const singleQuestions = ALL_QUESTIONS.filter(q => q !== 24 && q !== 25);
+  singleQuestions.forEach(q=>{
+    let given = "", norm = "";
+    if(SC_QUESTIONS.includes(q)){
+      const el = document.querySelector(`[data-q="${q}"]`);
+      given = el ? (el.value || "") : "";
+      norm = normalize(given);
+    } else {
+      const checked = document.querySelector(`input[name="q${q}"]:checked`);
+      given = checked ? checked.value : "";
+      norm = normalize(given);
+    }
+    const accepted = answerKey[q];
+    const isCorrect = accepted.includes(norm);
+    if(isCorrect) score++;
+
+    const row = document.createElement("div");
+    row.className = "review-row";
+    row.id = "review-"+q;
+    row.innerHTML = `
+      <span class="num">${q}.</span>
+      <div>
+        <span class="${isCorrect ? 'correct' : 'incorrect'}">${accepted[0].toUpperCase()}</span>
+        ${!isCorrect ? `<span class="given">Your answer: ${given.trim() ? given : "(blank)"}</span>` : ""}
+      </div>`;
+    reviewList.appendChild(row);
+  });
+
+  // Q24-25 multi-select scoring
+  const selected = Array.from(document.querySelectorAll('#selectBox input:checked')).map(b=>b.value);
+  const msMatches = selected.filter(v=>MULTISELECT_CORRECT.includes(v));
+  score += msMatches.length;
+  const msRow = document.createElement("div");
+  msRow.className = "review-row";
+  msRow.innerHTML = `
+    <span class="num">24–25.</span>
+    <div>
+      <span class="${msMatches.length===2 ? 'correct' : ''}">${MULTISELECT_CORRECT.join(", ")}</span>
+      <span class="given">You selected: ${selected.length ? selected.join(", ") : "(none)"} — ${msMatches.length}/2 correct</span>
+    </div>`;
+  const anchor26 = document.getElementById("review-26");
+  if(anchor26) reviewList.insertBefore(msRow, anchor26); else reviewList.appendChild(msRow);
+
+  document.getElementById("scoreBig").textContent = `${score} / ${ALL_QUESTIONS.length}`;
+  document.getElementById("topBar").style.display = "none";
+  document.getElementById("mainArea").style.display = "none";
+  document.getElementById("bottomNav").style.display = "none";
+  document.getElementById("resultsScreen").style.display = "block";
+}
+
+/* ---------- HIGHLIGHTING ---------- */
+let pendingRange = null;
+
+document.addEventListener("mouseup", (e)=>{
+  const panel = document.getElementById("questionPanel");
+  const btn = document.getElementById("highlightBtn");
+  if(e.target === btn) return;
+  const sel = window.getSelection();
+  if(!sel || sel.isCollapsed || sel.rangeCount === 0){ btn.style.display = "none"; return; }
+  const range = sel.getRangeAt(0);
+  if(!panel.contains(range.commonAncestorContainer)){ btn.style.display = "none"; return; }
+  if(range.toString().trim() === ""){ btn.style.display = "none"; return; }
+  pendingRange = range.cloneRange();
+  const rect = range.getBoundingClientRect();
+  btn.style.left = Math.max(8, rect.left + rect.width/2 - 40) + "px";
+  btn.style.top = (rect.top + window.scrollY - 38) + "px";
+  btn.style.display = "block";
+});
+document.addEventListener("mousedown", (e)=>{
+  if(e.target.id !== "highlightBtn") document.getElementById("highlightBtn").style.display = "none";
+});
+
+function getTextNodesInRange(range){
+  const result = [];
+  const rootNode = range.commonAncestorContainer.nodeType === 3
+    ? range.commonAncestorContainer.parentNode
+    : range.commonAncestorContainer;
+  const walker = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, {
+    acceptNode(n){ return range.intersectsNode(n) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }
+  });
+  let node;
+  while(node = walker.nextNode()){
+    const start = (node === range.startContainer) ? range.startOffset : 0;
+    const end = (node === range.endContainer) ? range.endOffset : node.textContent.length;
+    if(end > start) result.push({node, start, end});
+  }
+  return result;
+}
+function removeHighlight(mark){
+  const text = document.createTextNode(mark.textContent);
+  mark.replaceWith(text);
+  text.parentNode.normalize();
+}
+function applyHighlight(){
+  if(!pendingRange) return;
+  const nodes = getTextNodesInRange(pendingRange);
+  nodes.forEach(({node, start, end})=>{
+    if(!node.parentNode) return;
+    const text = node.textContent;
+    const before = text.slice(0, start), mid = text.slice(start, end), after = text.slice(end);
+    if(!mid) return;
+    const mark = document.createElement("mark");
+    mark.className = "user-highlight";
+    mark.textContent = mid;
+    mark.onclick = ()=>removeHighlight(mark);
+    const frag = document.createDocumentFragment();
+    if(before) frag.appendChild(document.createTextNode(before));
+    frag.appendChild(mark);
+    if(after) frag.appendChild(document.createTextNode(after));
+    node.parentNode.replaceChild(frag, node);
+  });
+  window.getSelection().removeAllRanges();
+  document.getElementById("highlightBtn").style.display = "none";
+  pendingRange = null;
+}
+function clearAllHighlights(){
+  document.querySelectorAll("#questionPanel mark.user-highlight").forEach(removeHighlight);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "id": "article-happiness-longevity",
+  "title": "Can Positive Thinking Keep You Younger for Longer?",
+  "description": "Happier people live longer, even in cultures that value emotional restraint. Evidence from long-term longevity studies in Japan.",
+  "sourceFormat": "pdf-text",
+  "qualityStatus": "approved",
+  "lineCount": 46,
+  "characterCount": 3413,
+  "wordCount": 503,
+  "pageCount": 1,
+  "pageCoverage": 1,
+  "blocks": [
+    {
+      "kind": "paragraph",
+      "text": "Happier people live longer, even in cultures that value emotional restraint Happier Japanese adults live longer, according to a new study published in Health Psychology, which found that people who described themselves as unhappy faced a significantly higher risk of death over a seven‑year period. Happiness has long been linked to better health, but most of the evidence comes from Western countries. Researchers have questioned whether the same patterns hold in cultures where emotional expression is more restrained and where happiness may be defined differently.",
+      "id": "p1-b1",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "In Japan, for example, happiness is often associated with calmness and social harmony rather than excitement or personal achievement. Understanding whether happiness predicts longevity in such contexts helps clarify whether the link is universal or culturally specific. The research team, led by Akitomo Yasunaga of Aomori University of Health and Welfare, set out to determine whether happiness truly protects health—or whether the association disappears once factors like age, income, education, and physical health are taken into account. Previous studies have raised the possibility that unhappy people may simply be unhealthier to begin with, falsely suggesting that unhappiness shortens life when poor health is the real cause.",
+      "id": "p1-b2",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "To investigate this, the researchers followed 3,187 adults (aged 20 and older) living in Minami‑Izu, a rural town in Japan, from 2016 to 2023. At the start of the study, participants answered a simple question: “How happy do you think of yourself at present?” Participants originally answered on a four-point scale, but because very few people reported negative emotions, the researchers merged the bottom two categories. This placed participants into one of three final groups: happy (31.5%), somewhat happy (60.8%), or unhappy (7.7%). The team also collected information on education, marital status, economic situation, body mass index, and physical functioning. Over the next seven years, deaths were tracked using official city records.",
+      "id": "p1-b3",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "By the end of the study, 277 participants had died. The researchers found a clear pattern: people who reported being unhappy at the beginning of the study were significantly more likely to die during the follow‑up period. Even after adjusting for age, sex, socioeconomic status, and health measures, the unhappy group had an 85 percent higher risk of death compared with those who said they were happy. The findings remained consistent even when the researchers excluded participants who died within the first year, reducing the likelihood that pre‑existing, terminal illnesses explained the results.",
+      "id": "p1-b4",
+      "page": 1
+    },
+    {
+      "kind": "paragraph",
+      "text": "Yasunaga and his team concluded, “the consistency of our findings with the international literature suggests that, despite potential cultural nuances in how happiness is experienced or expressed, its protective association with mortality may reflect a more universal phenomenon.” Still, the authors caution that the study has limitations. Happiness was measured with a single question, which cannot capture the full complexity of emotional well‑being. Additionally, health status was assessed using self‑reported measures, which may be less accurate than clinical evaluations. Crucially, the study did not control for lifestyle habits—such as smoking, alcohol intake, diet, and physical activity—which could influence both a person’s happiness and their risk of mortality.",
+      "id": "p1-b5",
+      "page": 1
+    }
+  ]
+}

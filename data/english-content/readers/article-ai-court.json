@@ -1,0 +1,128 @@
+{
+  "id": "article-ai-court",
+  "title": "AI in the Courtroom: The Future of Legal Advocacy",
+  "description": "Examining the unprecedented trial where an AI system advised a human defendant, and the ethical crossroads of algorithmic justice.",
+  "sourceFormat": "pdf-text",
+  "qualityStatus": "approved",
+  "lineCount": 79,
+  "characterCount": 5508,
+  "wordCount": 990,
+  "pageCount": 2,
+  "pageCoverage": 2,
+  "blocks": [
+    {
+      "kind": "paragraph",
+      "text": "AN ARTIFICIAL intelligence is set to advise a defendant in court for the first time ever. The AI will run on a smartphone and listen to all speech in a courtroom in February before instructing the defendant on what to say via an earpiece.",
+      "id": "p2-b1",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "The location of the court and the name of the defendant are being kept under wraps by DoNotPay, the company behind the AI. But it is understood that the defendant is charged with speeding and will say only what DoNotPay’s tool tells them to via an earbud. The case is being considered as a test by the firm, which has agreed to pay if any fines are imposed, says its founder, Joshua Browder.",
+      "id": "p2-b2",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "DoNotPay is also offering $1 million to anyone with an upcoming case at the US Supreme Court if they will do the same thing, though the details of this are still to be confirmed.",
+      "id": "p2-b3",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "Using a smartphone or computer connected to an in-ear device in court is illegal in most countries, but DoNotPay has found a location where this set-up can be classed as a hearing aid and therefore allowed, says Browder.",
+      "id": "p2-b4",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“It’s technically within the rules, but I don’t think it’s in the spirit of the rules,” he says.",
+      "id": "p2-b5",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "Browder says he has used the AI to talk directly to customer service staff at a bank with a synthesised voice, and it successfully reversed several bank fees on its own.",
+      "id": "p2-b6",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“It’s the most mind-blowing thing that I’ve ever done,” says Browder. “It’s only $16 that we got reversed, but that’s the perfect job for AI – who has time to waste on hold for $16?” DoNotPay was launched in 2015 as a chatbot that provided legal advice on consumer issues, relying heavily on templated conversations. The firm started focusing more on AI in 2020, when OpenAI released a public programming interface for people to tap into the abilities of GPT-3, its language-processing AI.",
+      "id": "p2-b7",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "Browder says it took a long time to train the DoNotPay AI on the vast amounts of case law needed to make it useful. DoNotPay’s AI app now covers a wider range of topics, including immigration law, and the company claims it has intervened in about 3 million cases in the US and the UK.",
+      "id": "p2-b8",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "The AI had to be trained to stick to factual statements, rather than saying whatever it could to win a case regardless of truth.",
+      "id": "p2-b9",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“We’re trying to minimise our legal liability,” says Browder. “And it’s not good if it actually twists facts and is too manipulative.” The audio tool has also been tweaked to not automatically react to statements every time.",
+      "id": "p2-b10",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“Sometimes silence is the best answer,” says Browder. He says his goal is that the software will eventually replace some lawyers.",
+      "id": "p2-b11",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“It’s all about language, and that’s what lawyers charge hundreds or thousands of dollars an hour to do,” he says. “There’ll still be a lot of good lawyers out there who may be arguing in the European Court of Human Rights (ECHR), but a lot of lawyers are just charging way too much money to copy and paste documents and I think they will definitely be replaced, and they should be replaced.” Nikos Aletras at the University of Sheffield, UK, who has created an AI that can accurately predict the outcome of cases at the ECHR, says he has seen growing use of machine learning in the legal system. But he also warns that its adoption needs to be carefully considered.",
+      "id": "p2-b12",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "He says that providing real-time audio legal advice in a courtroom would still be a technological challenge, and ethical and legal issues remain, such as whether it would even be legal to use.",
+      "id": "p2-b13",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "Neil Brown at UK law firm decoded.legal says that using recording equipment in a UK court would breach the Contempt of Court Act 1981, and that courts may interpret this AI system as falling foul of that rule.",
+      "id": "p2-b14",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“Since it appears to involve transmitting the audio to a third party’s servers and processing that audio within the resulting computer system, I’d have thought that a judge might well conclude that it was being recorded, even if deleted soon afterwards,” says Brown. “So probably not something to try here unless you fancy contempt proceedings, at least not without checking it with the judge first.” But when New Scientist asked the UK Ministry of Justice, which oversees the justice system in England and Wales, if such a trial would be legal, a spokesperson pointed to an application process recently put in place to request a “McKenzie friend”, despite it not referring to AI. These people don’t have to be qualified lawyers, but defendants have the right to have them sit in court and offer advice.",
+      "id": "p2-b15",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“We wouldn’t be able to say whether it was 100 per cent legal or not until an application was made to implement the system and our lawyers made a decision,” says the spokesperson.",
+      "id": "p2-b16",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "Brown says that AI will probably play a useful role in the legal system in the future, but that it would be likely to assist lawyers rather than replace them.",
+      "id": "p2-b17",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "“When your lawyer tells you ‘OK, let’s do A’, we trust them that they have the expertise and the knowledge to advise us,” says Aletras. “But [with AI], it’s very hard to trust predictions.",
+      "id": "p2-b18",
+      "page": 2
+    },
+    {
+      "kind": "paragraph",
+      "text": "We’re quite far off being able to do these things reliably and get rid of lawyers. We have to be very careful of making such claims.” ❚ “A lot of lawyers are just charging way too much money to copy and paste documents” Artificial intelligence SAUL LOEB/AFP VIA GETTY IMAGES AI will advise a defendant in court An artificial intelligence is set to tell a defendant what to say during a court case over a speeding fine. It is likely to be the first case defended by an AI, reports Matthew Sparkes $1 million is on offer to use an AI lawyer at the US Supreme Court News",
+      "id": "p2-b19",
+      "page": 2
+    }
+  ]
+}

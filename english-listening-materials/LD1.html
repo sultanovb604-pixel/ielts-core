@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Listening Practice Test</title>
+<style>
+  :root{
+    --blue:#0071BC; --border:#d0d0d0; --bg:#ffffff; --panel:#fafafa;
+    --text:#1a1a1a; --muted:#6b6b6b; --danger:#c0392b; --answered:#0071BC; --font-size:16px;
+  }
+  [data-scheme="black-yellow"]{ --bg:#000000; --panel:#000000; --text:#FFEB3B; --border:#FFEB3B; --muted:#e0d76a; }
+  [data-scheme="white-blue"]{ --bg:#00264d; --panel:#00264d; --text:#ffffff; --border:#a9c6e8; --muted:#cfe0f2; }
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; margin:0; }
+  body{ font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); font-size:var(--font-size);
+    display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  button{ font-family:inherit; cursor:pointer; }
+
+  #startScreen{ flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:40px; }
+  #startScreen h1{ font-size:1.4em; margin-bottom:4px; }
+  #startScreen p{ max-width:560px; color:var(--muted); line-height:1.6; }
+  #startBtn{ margin-top:24px; background:var(--blue); color:#fff; border:none; padding:14px 36px; font-size:1em; border-radius:4px; }
+  #startBtn:hover{ background:#005a94; }
+  .warn-box{ border:1px solid var(--border); background:var(--panel); border-radius:4px; padding:16px 20px; margin-top:24px; max-width:560px; font-size:0.9em; color:var(--muted); text-align:left; }
+
+  #topBar{ display:none; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); padding:10px 18px; background:var(--panel); flex-shrink:0; }
+  #topBar .left b{ display:block; font-size:1em; }
+  #topBar .left span{ color:var(--muted); font-size:0.85em; }
+  #timer{ font-size:1.15em; font-weight:bold; padding:4px 14px; border-radius:4px; border:1px solid var(--border); }
+  #timer.warn{ color:#fff; background:var(--danger); border-color:var(--danger); animation:pulse 1s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.55;} }
+  #settingsBtn{ background:none; border:1px solid var(--border); border-radius:4px; width:34px; height:34px; font-size:1.1em; color:var(--text); }
+
+  #mainArea{ flex:1; overflow:hidden; display:none; }
+  #questionPanel{ height:100%; overflow-y:auto; padding:28px 40px; max-width:820px; margin:0 auto; }
+  .part-instructions{ border:1px solid var(--border); background:var(--panel); border-radius:4px; padding:14px 18px; margin-bottom:18px; font-size:0.92em; line-height:1.55; }
+  .part-instructions b{ display:block; margin-bottom:4px; }
+  .part-heading{ font-weight:bold; font-size:1.05em; margin:26px 0 14px; padding-top:14px; border-top:2px solid var(--border); }
+  .part-heading:first-of-type{ border-top:none; margin-top:0; padding-top:0; }
+  .form-title{ text-align:center; font-weight:bold; margin-bottom:14px; background:var(--panel); padding:8px; border:1px solid var(--border); letter-spacing:0.5px; }
+  .example-row{ display:flex; gap:20px; padding:8px 0; color:var(--muted); font-style:italic; font-size:0.9em; }
+
+  .note-line{ padding:8px 0; line-height:1.7; }
+  .note-bullet{ padding:6px 0 6px 18px; line-height:1.7; position:relative; }
+  .note-bullet::before{ content:"•"; position:absolute; left:0; }
+  .qnum{ display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border:1px solid var(--border); border-radius:3px; font-size:0.78em; font-weight:bold; flex-shrink:0; margin:0 4px; }
+  input[type=text]{ min-width:150px; padding:5px 8px; border:1px solid var(--border); border-radius:3px; font-size:1em; background:var(--bg); color:var(--text); }
+  input[type=text]:focus{ outline:2px solid var(--blue); }
+
+  .sc-row{ display:flex; align-items:baseline; gap:8px; padding:10px 0; border-bottom:1px dotted var(--border); flex-wrap:wrap; line-height:1.6; }
+
+  .mcq-block{ padding:14px 0; border-bottom:1px dotted var(--border); }
+  .mcq-q{ display:flex; gap:8px; margin-bottom:8px; font-weight:bold; }
+  .mcq-opt{ display:flex; align-items:center; gap:8px; padding:4px 0 4px 30px; }
+  .mcq-opt input{ transform:scale(1.1); }
+  .mcq-opt label{ cursor:pointer; }
+
+  mark.user-highlight{ background:#fff176; color:inherit; cursor:pointer; border-radius:2px; }
+  [data-scheme="black-yellow"] mark.user-highlight{ background:#3a5a99; color:#FFEB3B; }
+  [data-scheme="white-blue"] mark.user-highlight{ background:#ffd54f; color:#00264d; }
+  #highlightBtn{ position:absolute; display:none; background:var(--blue); color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.82em; z-index:60; box-shadow:0 2px 6px rgba(0,0,0,0.25); }
+
+  .select-box{ border:1px solid var(--border); border-radius:4px; padding:10px 16px; max-width:460px; margin:14px 0; }
+  .select-row{ display:flex; align-items:center; gap:10px; padding:6px 0; }
+  .select-row input{ transform:scale(1.15); }
+  .select-row label{ cursor:pointer; }
+  .select-row.disabled label{ color:var(--muted); }
+
+  #bottomNav{ display:none; align-items:center; gap:6px; padding:10px 18px; border-top:1px solid var(--border); background:var(--panel); flex-shrink:0; flex-wrap:wrap; }
+  .part-tab{ border:1px solid var(--border); background:var(--bg); color:var(--text); padding:5px 12px; border-radius:4px; font-size:0.8em; margin-right:10px; }
+  .part-tab.active{ background:var(--blue); color:#fff; border-color:var(--blue); }
+  .qbox{ width:28px; height:28px; border:1px solid var(--border); border-radius:3px; background:var(--bg); color:var(--text); font-size:0.8em; display:flex; align-items:center; justify-content:center; position:relative; }
+  .qbox.answered{ background:var(--answered); color:#fff; border-color:var(--answered); }
+  #submitBtn{ margin-left:auto; background:var(--blue); color:#fff; border:none; padding:9px 22px; border-radius:4px; font-size:0.95em; }
+  #submitBtn:hover{ background:#005a94; }
+
+  .modal-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); align-items:center; justify-content:center; z-index:50; }
+  .modal{ background:var(--bg); color:var(--text); border-radius:6px; padding:24px 28px; width:340px; border:1px solid var(--border); }
+  .modal h3{ margin-top:0; }
+  .modal-section{ margin-bottom:16px; }
+  .modal-section label{ display:block; font-size:0.85em; color:var(--muted); margin-bottom:6px; }
+  .btn-group{ display:flex; gap:8px; flex-wrap:wrap; }
+  .btn-group button{ border:1px solid var(--border); background:var(--panel); color:var(--text); padding:6px 12px; border-radius:4px; font-size:0.85em; }
+  .btn-group button.active{ background:var(--blue); color:#fff; border-color:var(--blue); }
+  .modal-close{ background:var(--blue); color:#fff; border:none; padding:8px 18px; border-radius:4px; width:100%; margin-top:6px; }
+
+  #resultsScreen{ display:none; flex:1; overflow-y:auto; padding:40px; max-width:760px; margin:0 auto; width:100%; }
+  .score-hero{ text-align:center; border:1px solid var(--border); border-radius:6px; padding:26px; margin-bottom:26px; background:var(--panel); }
+  .score-hero .big{ font-size:2.4em; font-weight:bold; color:var(--blue); }
+  .review-row{ display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+  .review-row .num{ font-weight:bold; width:30px; flex-shrink:0; }
+  .review-row .correct{ color:#2e9e44; }
+  .review-row .incorrect{ color:var(--danger); text-decoration:line-through; }
+  .review-row .given{ display:block; font-size:0.9em; color:var(--muted); }
+  #tryAgainBtn{ display:block; margin:26px auto 0; background:var(--blue); color:#fff; border:none; padding:10px 26px; border-radius:4px; }
+  .note{ font-size:0.82em; color:var(--muted); line-height:1.6; margin-top:20px; border-top:1px dashed var(--border); padding-top:16px; }
+</style>
+</head>
+<body>
+
+<div id="startScreen">
+  <h1>IELTS Listening Practice Test</h1>
+  <p>Section 1 (Q1–10): note completion — library information.<br>
+     Section 2 (Q11–20): multiple choice, short answer, and multiple selection — "Bicycles for the World".</p>
+  <div class="warn-box">
+    <b>Before you start:</b><br>
+    • Follow the word-limit instruction printed above each question group.<br>
+    • Q18–20: select exactly three letters — the box won't let you tick a fourth.<br>
+    • Select any text in the question panel to highlight it.<br>
+    • Timer starts the moment you press Start.
+  </div>
+  <button id="startBtn" onclick="startTest()">Start Test</button>
+</div>
+
+<div id="topBar">
+  <div class="left"><b>Cambridge Assessment English</b><span>IELTS Listening Practice Test</span></div>
+  <div id="timer">20:00</div>
+  <button id="settingsBtn" onclick="toggleModal(true)" title="Settings">⚙</button>
+</div>
+
+<button id="highlightBtn" onclick="applyHighlight()">Highlight</button>
+<div id="mainArea">
+  <div id="questionPanel">
+
+    <div class="part-heading" id="p1anchor">SECTION 1 — Questions 1–10</div>
+    <div class="part-instructions"><b>Questions 1–10</b>
+      Complete the notes below. Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.
+    </div>
+    <div class="form-title">LIBRARY INFORMATION</div>
+    <div class="example-row"><span>Example</span><span>Minimum joining age: <u>18 years</u></span></div>
+
+    <div class="note-line">For registration, must take</div>
+    <div class="note-bullet">two <span class="qnum">1</span><input type="text" data-q="1" oninput="onAnswerInput(1)"> and</div>
+    <div class="note-bullet">two forms of I.D. e.g. driving licence, <span class="qnum">2</span><input type="text" data-q="2" oninput="onAnswerInput(2)"></div>
+    <div class="note-line">Cost to join per year (without current student card): £<span class="qnum">3</span><input type="text" data-q="3" oninput="onAnswerInput(3)"></div>
+    <div class="note-line">Number of items allowed: (members of public) <span class="qnum">4</span><input type="text" data-q="4" oninput="onAnswerInput(4)"></div>
+    <div class="note-line">Loan times: four weeks</div>
+    <div class="note-line">Fines start at £<span class="qnum">5</span><input type="text" data-q="5" oninput="onAnswerInput(5)"></div>
+    <div class="note-line">Computers can be booked up to <span class="qnum">6</span><input type="text" data-q="6" oninput="onAnswerInput(6)"> hours in advance</div>
+    <div class="note-line">Library holds most national papers, all <span class="qnum">7</span><input type="text" data-q="7" oninput="onAnswerInput(7)">, and magazines</div>
+    <div class="note-line">Need <span class="qnum">8</span><input type="text" data-q="8" oninput="onAnswerInput(8)"> to use photocopier</div>
+    <div class="note-line" style="font-weight:bold; margin-top:10px;">Creative Writing class</div>
+    <div class="note-bullet">tutor is John <span class="qnum">9</span><input type="text" data-q="9" oninput="onAnswerInput(9)"></div>
+    <div class="note-bullet">held on <span class="qnum">10</span><input type="text" data-q="10" oninput="onAnswerInput(10)"> evenings</div>
+
+    <div class="part-heading" id="p2anchor">SECTION 2 — Questions 11–20</div>
+    <div class="part-instructions"><b>Questions 11–15</b>
+      Choose the correct letter, A, B or C. — "BICYCLES FOR THE WORLD"
+    </div>
+
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">11</span>In 1993 Dan Pearman went to Ecuador</div>
+      <div class="mcq-opt"><input type="radio" name="q11" value="A" onchange="onAnswerInput(11)" id="q11a"><label for="q11a">A as a tourist guide.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q11" value="B" onchange="onAnswerInput(11)" id="q11b"><label for="q11b">B as part of his studies.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q11" value="C" onchange="onAnswerInput(11)" id="q11c"><label for="q11c">C as a voluntary worker.</label></div>
+    </div>
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">12</span>Dan's neighbour was successful in business because he</div>
+      <div class="mcq-opt"><input type="radio" name="q12" value="A" onchange="onAnswerInput(12)" id="q12a"><label for="q12a">A employed carpenters from the area.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q12" value="B" onchange="onAnswerInput(12)" id="q12b"><label for="q12b">B was the most skilled craftsman in the town.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q12" value="C" onchange="onAnswerInput(12)" id="q12c"><label for="q12c">C found it easy to reach customers.</label></div>
+    </div>
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">13</span>Dan says the charity relies on</div>
+      <div class="mcq-opt"><input type="radio" name="q13" value="A" onchange="onAnswerInput(13)" id="q13a"><label for="q13a">A getting enough bicycles to send regularly.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q13" value="B" onchange="onAnswerInput(13)" id="q13b"><label for="q13b">B finding new areas which need the bicycles.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q13" value="C" onchange="onAnswerInput(13)" id="q13c"><label for="q13c">C charging for the bicycles it sends abroad.</label></div>
+    </div>
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">14</span>What does Dan say about the town of Rivas?</div>
+      <div class="mcq-opt"><input type="radio" name="q14" value="A" onchange="onAnswerInput(14)" id="q14a"><label for="q14a">A It has received the greatest number of bikes.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q14" value="B" onchange="onAnswerInput(14)" id="q14b"><label for="q14b">B It has almost as many bikes as Amsterdam.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q14" value="C" onchange="onAnswerInput(14)" id="q14c"><label for="q14c">C Its economy has been totally transformed.</label></div>
+    </div>
+    <div class="mcq-block">
+      <div class="mcq-q"><span class="qnum">15</span>What problem did the charity face in August 2000?</div>
+      <div class="mcq-opt"><input type="radio" name="q15" value="A" onchange="onAnswerInput(15)" id="q15a"><label for="q15a">A It couldn't meet its overheads.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q15" value="B" onchange="onAnswerInput(15)" id="q15b"><label for="q15b">B It had to delay sending the bikes.</label></div>
+      <div class="mcq-opt"><input type="radio" name="q15" value="C" onchange="onAnswerInput(15)" id="q15c"><label for="q15c">C It was criticised in the British media.</label></div>
+    </div>
+
+    <div class="part-instructions" style="margin-top:22px;"><b>Questions 16 and 17</b>
+      Answer the questions below. Write NO MORE THAN ONE WORD OR A NUMBER for each answer.
+    </div>
+    <div class="sc-row"><span class="qnum">16</span>How much money did the charity receive when it won an award?
+      <input type="text" data-q="16" oninput="onAnswerInput(16)"></div>
+    <div class="sc-row"><span class="qnum">17</span>What is the charity currently hoping to buy?
+      <input type="text" data-q="17" oninput="onAnswerInput(17)"></div>
+
+    <div class="part-instructions" style="margin-top:22px;"><b>Questions 18–20</b>
+      Choose THREE letters, A–G. Which THREE things can the general public do to help the charity Pedal Power?
+    </div>
+    <div class="select-box" id="selectBox">
+      <div class="select-row"><input type="checkbox" value="A" id="optA" onchange="onSelectChange()"><label for="optA">A organise a bicycle collection</label></div>
+      <div class="select-row"><input type="checkbox" value="B" id="optB" onchange="onSelectChange()"><label for="optB">B repair the donated bikes</label></div>
+      <div class="select-row"><input type="checkbox" value="C" id="optC" onchange="onSelectChange()"><label for="optC">C donate their unwanted tools</label></div>
+      <div class="select-row"><input type="checkbox" value="D" id="optD" onchange="onSelectChange()"><label for="optD">D do voluntary work in its office</label></div>
+      <div class="select-row"><input type="checkbox" value="E" id="optE" onchange="onSelectChange()"><label for="optE">E hold an event to raise money</label></div>
+      <div class="select-row"><input type="checkbox" value="F" id="optF" onchange="onSelectChange()"><label for="optF">F identify areas that need bikes</label></div>
+      <div class="select-row"><input type="checkbox" value="G" id="optG" onchange="onSelectChange()"><label for="optG">G write to the government</label></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="bottomNav">
+  <button class="part-tab active" onclick="jumpToPart(1)">Section 1</button>
+  <button class="part-tab" onclick="jumpToPart(2)">Section 2</button>
+  <div id="qboxes" style="display:flex; gap:4px; flex-wrap:wrap;"></div>
+  <button id="submitBtn" onclick="confirmSubmit()">Submit</button>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h3>Settings</h3>
+    <div class="modal-section"><label>Text size</label>
+      <div class="btn-group">
+        <button id="szStd" class="active" onclick="setTextSize('std')">Standard</button>
+        <button id="szLg" onclick="setTextSize('lg')">Large</button>
+      </div>
+    </div>
+    <div class="modal-section"><label>Colour scheme</label>
+      <div class="btn-group">
+        <button id="csStd" class="active" onclick="setScheme('standard')">Standard</button>
+        <button id="csBY" onclick="setScheme('black-yellow')">Black / Yellow</button>
+        <button id="csWB" onclick="setScheme('white-blue')">White / Blue</button>
+      </div>
+    </div>
+    <div class="modal-section"><label>Highlights</label>
+      <div class="btn-group"><button onclick="clearAllHighlights()">Clear all highlights</button></div>
+    </div>
+    <button class="modal-close" onclick="toggleModal(false)">Close</button>
+  </div>
+</div>
+
+<div id="resultsScreen">
+  <div class="score-hero"><div class="big" id="scoreBig">0 / 20</div><div>Raw score, Sections 1–2</div></div>
+  <div id="reviewList"></div>
+  <button id="tryAgainBtn" onclick="location.reload()">Try Again</button>
+  <div class="note">
+    This test covers Section 1 and Section 2 (Q1–20) of a full 40-question Listening test, so it isn't converted to a
+    band score on its own — official IELTS band conversion only applies across all 40 questions.
+  </div>
+</div>
+
+<script>
+const answerKey = {
+  1:  ["passport photos","photos","passport photographs","photographs"],
+  2:  ["bank statement","a bank statement"],
+  3:  ["125"],
+  4:  ["8"],
+  5:  ["1.50","1.5"],
+  6:  ["48"],
+  7:  ["local papers","local newspapers"],
+  8:  ["card","a card","cards"],
+  9:  ["grantingham"],
+  10: ["friday"],
+  11: ["c"], 12: ["c"], 13: ["a"], 14: ["c"], 15: ["a"],
+  16: ["75000"],
+  17: ["computers","computer"]
+};
+const MULTISELECT_CORRECT = ["C","E","F"];
+const SC_QUESTIONS = [1,2,3,4,5,6,7,8,9,10,16,17];
+const MCQ_QUESTIONS = [11,12,13,14,15];
+const ALL_QUESTIONS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+const TEST_SECONDS = 20 * 60;
+
+let secondsLeft = TEST_SECONDS;
+let timerHandle = null;
+
+/* ---------- NAV ---------- */
+function buildNav(){
+  const wrap = document.getElementById("qboxes");
+  wrap.innerHTML = "";
+  ALL_QUESTIONS.forEach(q=>{
+    const b = document.createElement("button");
+    b.className = "qbox"; b.id = "qbox-"+q; b.textContent = q;
+    b.onclick = () => jumpTo(q);
+    wrap.appendChild(b);
+  });
+}
+function jumpTo(q){
+  let el;
+  if(q>=18) el = document.getElementById("selectBox");
+  else el = document.querySelector(`[data-q="${q}"]`) || document.querySelector(`input[name="q${q}"]`);
+  if(el){ el.scrollIntoView({behavior:"smooth", block:"center"}); }
+}
+function jumpToPart(p){
+  document.getElementById(p===1 ? "p1anchor" : "p2anchor").scrollIntoView({behavior:"smooth", block:"start"});
+  document.querySelectorAll(".part-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".part-tab")[p-1].classList.add("active");
+}
+function onAnswerInput(q){
+  const box = document.getElementById("qbox-"+q);
+  let answered = false;
+  if(SC_QUESTIONS.includes(q)){
+    const el = document.querySelector(`[data-q="${q}"]`);
+    answered = el && el.value.trim() !== "";
+  } else {
+    answered = !!document.querySelector(`input[name="q${q}"]:checked`);
+  }
+  box.classList.toggle("answered", answered);
+}
+function onSelectChange(){
+  const boxes = Array.from(document.querySelectorAll('#selectBox input[type=checkbox]'));
+  const checked = boxes.filter(b=>b.checked);
+  boxes.forEach(b=>{
+    b.parentElement.classList.toggle("disabled", !b.checked && checked.length>=3);
+    b.disabled = !b.checked && checked.length>=3;
+  });
+  const done = checked.length === 3;
+  [18,19,20].forEach(q=>document.getElementById("qbox-"+q).classList.toggle("answered", done));
+}
+
+/* ---------- TIMER ---------- */
+function startTimer(){
+  timerHandle = setInterval(()=>{
+    secondsLeft--;
+    if(secondsLeft <= 0){ clearInterval(timerHandle); secondsLeft = 0; submitTest(); }
+    renderTimer();
+  },1000);
+  renderTimer();
+}
+function renderTimer(){
+  const m = Math.floor(secondsLeft/60).toString().padStart(2,"0");
+  const s = (secondsLeft%60).toString().padStart(2,"0");
+  const el = document.getElementById("timer");
+  el.textContent = `${m}:${s}`;
+  el.classList.toggle("warn", secondsLeft <= 120);
+}
+
+/* ---------- SETTINGS ---------- */
+function toggleModal(show){ document.getElementById("settingsModal").style.display = show ? "flex" : "none"; }
+function setTextSize(sz){
+  document.documentElement.style.setProperty("--font-size", sz==="lg" ? "19px" : "16px");
+  document.getElementById("szStd").classList.toggle("active", sz==="std");
+  document.getElementById("szLg").classList.toggle("active", sz==="lg");
+}
+function setScheme(scheme){
+  document.body.setAttribute("data-scheme", scheme==="standard" ? "" : scheme);
+  ["csStd","csBY","csWB"].forEach(id=>document.getElementById(id).classList.remove("active"));
+  ({"standard":"csStd","black-yellow":"csBY","white-blue":"csWB"}[scheme]) &&
+    document.getElementById({"standard":"csStd","black-yellow":"csBY","white-blue":"csWB"}[scheme]).classList.add("active");
+}
+
+/* ---------- START / SUBMIT ---------- */
+function startTest(){
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("topBar").style.display = "flex";
+  document.getElementById("mainArea").style.display = "block";
+  document.getElementById("bottomNav").style.display = "flex";
+  buildNav();
+  startTimer();
+}
+function confirmSubmit(){
+  const answeredCount = document.querySelectorAll(".qbox.answered").length;
+  const unanswered = ALL_QUESTIONS.length - answeredCount;
+  const msg = unanswered > 0 ? `You have ${unanswered} unanswered question(s). Submit anyway?` : "Submit your test?";
+  if(confirm(msg)) submitTest();
+}
+function normalize(str){ return (str||"").toLowerCase().trim().replace(/[£,.]/g,"").replace(/\s+/g," "); }
+
+function submitTest(){
+  clearInterval(timerHandle);
+
+  let score = 0;
+  const reviewList = document.getElementById("reviewList");
+  reviewList.innerHTML = "";
+
+  [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].forEach(q=>{
+    let given = "", norm = "";
+    if(SC_QUESTIONS.includes(q)){
+      const el = document.querySelector(`[data-q="${q}"]`);
+      given = el ? (el.value || "") : "";
+      norm = normalize(given);
+    } else {
+      const checked = document.querySelector(`input[name="q${q}"]:checked`);
+      given = checked ? checked.value : "";
+      norm = normalize(given);
+    }
+    const accepted = answerKey[q];
+    const isCorrect = accepted.includes(norm);
+    if(isCorrect) score++;
+
+    const row = document.createElement("div");
+    row.className = "review-row";
+    row.id = "review-"+q;
+    row.innerHTML = `
+      <span class="num">${q}.</span>
+      <div>
+        <span class="${isCorrect ? 'correct' : 'incorrect'}">${accepted[0].toUpperCase()}</span>
+        ${!isCorrect ? `<span class="given">Your answer: ${given.trim() ? given : "(blank)"}</span>` : ""}
+      </div>`;
+    reviewList.appendChild(row);
+  });
+
+  // Q18-20 multi-select scoring
+  const selected = Array.from(document.querySelectorAll('#selectBox input:checked')).map(b=>b.value);
+  const msMatches = selected.filter(v=>MULTISELECT_CORRECT.includes(v));
+  score += msMatches.length;
+  const msRow = document.createElement("div");
+  msRow.className = "review-row";
+  msRow.innerHTML = `
+    <span class="num">18–20.</span>
+    <div>
+      <span class="${msMatches.length===3 ? 'correct' : ''}">${MULTISELECT_CORRECT.join(", ")}</span>
+      <span class="given">You selected: ${selected.length ? selected.join(", ") : "(none)"} — ${msMatches.length}/3 correct</span>
+    </div>`;
+  const anchor21 = document.getElementById("review-21");
+  if(anchor21) reviewList.insertBefore(msRow, anchor21); else reviewList.appendChild(msRow);
+
+  document.getElementById("scoreBig").textContent = `${score} / ${ALL_QUESTIONS.length}`;
+  document.getElementById("topBar").style.display = "none";
+  document.getElementById("mainArea").style.display = "none";
+  document.getElementById("bottomNav").style.display = "none";
+  document.getElementById("resultsScreen").style.display = "block";
+}
+
+/* ---------- HIGHLIGHTING ---------- */
+let pendingRange = null;
+
+document.addEventListener("mouseup", (e)=>{
+  const panel = document.getElementById("questionPanel");
+  const btn = document.getElementById("highlightBtn");
+  if(e.target === btn) return;
+  const sel = window.getSelection();
+  if(!sel || sel.isCollapsed || sel.rangeCount === 0){ btn.style.display = "none"; return; }
+  const range = sel.getRangeAt(0);
+  if(!panel.contains(range.commonAncestorContainer)){ btn.style.display = "none"; return; }
+  if(range.toString().trim() === ""){ btn.style.display = "none"; return; }
+  pendingRange = range.cloneRange();
+  const rect = range.getBoundingClientRect();
+  btn.style.left = Math.max(8, rect.left + rect.width/2 - 40) + "px";
+  btn.style.top = (rect.top + window.scrollY - 38) + "px";
+  btn.style.display = "block";
+});
+document.addEventListener("mousedown", (e)=>{
+  if(e.target.id !== "highlightBtn") document.getElementById("highlightBtn").style.display = "none";
+});
+
+function getTextNodesInRange(range){
+  const result = [];
+  const rootNode = range.commonAncestorContainer.nodeType === 3
+    ? range.commonAncestorContainer.parentNode
+    : range.commonAncestorContainer;
+  const walker = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, {
+    acceptNode(n){ return range.intersectsNode(n) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }
+  });
+  let node;
+  while(node = walker.nextNode()){
+    const start = (node === range.startContainer) ? range.startOffset : 0;
+    const end = (node === range.endContainer) ? range.endOffset : node.textContent.length;
+    if(end > start) result.push({node, start, end});
+  }
+  return result;
+}
+function removeHighlight(mark){
+  const text = document.createTextNode(mark.textContent);
+  mark.replaceWith(text);
+  text.parentNode.normalize();
+}
+function applyHighlight(){
+  if(!pendingRange) return;
+  const nodes = getTextNodesInRange(pendingRange);
+  nodes.forEach(({node, start, end})=>{
+    if(!node.parentNode) return; // already replaced by an earlier split in this batch
+    const text = node.textContent;
+    const before = text.slice(0, start), mid = text.slice(start, end), after = text.slice(end);
+    if(!mid) return;
+    const mark = document.createElement("mark");
+    mark.className = "user-highlight";
+    mark.textContent = mid;
+    mark.onclick = ()=>removeHighlight(mark);
+    const frag = document.createDocumentFragment();
+    if(before) frag.appendChild(document.createTextNode(before));
+    frag.appendChild(mark);
+    if(after) frag.appendChild(document.createTextNode(after));
+    node.parentNode.replaceChild(frag, node);
+  });
+  window.getSelection().removeAllRanges();
+  document.getElementById("highlightBtn").style.display = "none";
+  pendingRange = null;
+}
+function clearAllHighlights(){
+  document.querySelectorAll("#questionPanel mark.user-highlight").forEach(removeHighlight);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Full Listening Practice</title>
+    <style>
+        :root {
+            --bg: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #f1f2ec;
+            --text: #1a1a1a; --text-muted: #555; --text-light: #888;
+            --border: #e0e0e0; --border-medium: #ccc;
+            --header-bg: #ffffff; --panel-bg: #ffffff; --nav-bg: #ffffff;
+            --input-bg: #ffffff; --example-bg: #f9f9f9; --modal-bg: #ffffff;
+            --timer-color: #333; --active-blue: #4a90e2;
+            --correct-bg: #e9f7ef; --incorrect-bg: #f8d7da;
+            --correct-border: #28a745; --incorrect-border: #dc3545;
+            --subq-bg: #ffffff; --subq-border: #ccc; --subq-text: #333;
+            --footer-btn-bg: #f0f0f0; --footer-btn-border: #ccc;
+            --passage-title: #2c3e50;
+            --toolbar-bg: #1a1a2e; --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+        body.night-mode {
+            --bg: #121212; --bg-secondary: #1e1e1e; --bg-tertiary: #252525;
+            --text: #e0e0e0; --text-muted: #aaa; --text-light: #777;
+            --border: #333; --border-medium: #444;
+            --header-bg: #1a1a1a; --panel-bg: #1a1a1a; --nav-bg: #1a1a1a;
+            --input-bg: #252525; --example-bg: #252525; --modal-bg: #1e1e1e;
+            --timer-color: #e0e0e0; --active-blue: #64b5f6;
+            --correct-bg: #1a3a2a; --incorrect-bg: #3a1a1a;
+            --correct-border: #4caf50; --incorrect-border: #f44336;
+            --subq-bg: #252525; --subq-border: #444; --subq-text: #ccc;
+            --footer-btn-bg: #2a2a2a; --footer-btn-border: #444;
+            --passage-title: #90caf9;
+            --toolbar-bg: #0d0d1a; --toolbar-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:Arial,sans-serif; background-color:var(--bg); color:var(--text); line-height:1.4; font-size:16px; transition:background-color .3s,color .3s; }
+
+        .header { background-color:var(--header-bg); padding:12px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; position:fixed; top:0; left:0; right:0; z-index:100; height:60px; transition:background-color .3s,border-color .3s; flex-wrap:wrap; gap:8px; }
+        .header-left { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+        .timer-container { display:flex; cursor:default; color:var(--timer-color); font-size:16px; font-weight:500; align-items:center; }
+        .timer-controls { display:flex; align-items:center; gap:8px; margin-left:15px; }
+        .timer-controls button { background:var(--footer-btn-bg); border:1px solid var(--border-medium); border-radius:50%; padding:0; cursor:pointer; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition:background-color .2s; }
+        .timer-controls button:hover { background:var(--border); }
+        .timer-controls button svg { width:20px; height:20px; fill:var(--timer-color); }
+        .zoom-controls { display:flex; align-items:center; gap:4px; }
+        .zoom-btn { background:var(--footer-btn-bg); border:1px solid var(--border-medium); border-radius:4px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; font-weight:700; color:var(--text); transition:background-color .2s; line-height:1; }
+        .zoom-btn:hover { background:var(--border); }
+        .zoom-label { font-size:12px; font-weight:600; color:var(--text-muted); min-width:36px; text-align:center; }
+        #night-mode-btn { background:var(--footer-btn-bg); border:1px solid var(--border-medium); border-radius:20px; padding:5px 12px; cursor:pointer; font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px; transition:all .2s; white-space:nowrap; }
+        #night-mode-btn:hover { background:var(--border); }
+        #night-mode-btn .moon-icon { font-size:15px; }
+        #notes-toggle-btn { background:var(--footer-btn-bg); border:1px solid var(--border-medium); border-radius:20px; padding:5px 12px; cursor:pointer; font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px; transition:all .2s; }
+        #notes-toggle-btn:hover { background:var(--border); }
+        .title-link { color:var(--passage-title); text-decoration:none; font-weight:700; font-size:16px; }
+
+        .main-container { margin-top:60px; background:var(--bg); height:calc(100vh - 60px); overflow-y:auto; padding:20px 20px 100px; transition:background-color .3s; }
+
+        .part-header { background-color:var(--bg-tertiary); padding:15px 20px; border:1px solid var(--border); margin:10px 0 20px; border-radius:5px; color:var(--text); transition:background-color .3s,border-color .3s,color .3s; }
+        .part-header p { margin:0; }
+        .part-header p:first-child { margin-bottom:5px; font-weight:700; }
+        .question { margin-bottom:40px; color:var(--text); }
+        .question p { margin-bottom:10px; color:var(--text); }
+        .question ul { list-style:none; padding-left:0; }
+        .question ul li { margin-bottom:5px; color:var(--text); }
+        .question-prompt { margin-bottom:20px; }
+        .questions-container { width:100%; }
+
+        .answer-input { border:1px solid var(--border-medium); border-radius:4px; background-color:var(--input-bg); color:var(--text); padding:2px 5px; font-size:16px; text-align:center; margin-right:4px; margin-left:4px; transition:border-color .3s,box-shadow .3s,background-color .3s; height:28px; width:150px; }
+        .answer-input.active-input { border-color:var(--active-blue); box-shadow:0 0 3px 1px rgba(74,144,226,.5); }
+        .answer-input::placeholder { color:#999; font-weight:bold; text-align:center; }
+        .answer-input.correct { border-color:var(--correct-border); background-color:var(--correct-bg); }
+        .answer-input.incorrect { border-color:var(--incorrect-border); background-color:var(--incorrect-bg); color:var(--incorrect-border); }
+        select.answer-input option { background:var(--input-bg); color:var(--text); }
+
+        .notes-completion-block { background:var(--bg-tertiary); border:1px solid var(--border); border-radius:5px; padding:16px 18px; margin-top:8px; }
+        .notes-section-label { font-weight:700; font-size:15px; color:var(--passage-title); border-bottom:2px solid var(--active-blue); padding-bottom:5px; margin-bottom:12px; }
+        .note-line { display:flex; align-items:flex-start; gap:6px; margin-bottom:10px; font-size:15px; line-height:1.8; flex-wrap:wrap; }
+        .note-bullet { color:var(--active-blue); font-weight:bold; flex-shrink:0; margin-top:3px; }
+        .note-group { margin-bottom:14px; }
+        .note-group-title { font-weight:700; color:var(--text); margin-bottom:6px; font-size:15px; }
+        .q-badge { display:inline-block; background:var(--active-blue); color:#fff; border-radius:3px; font-size:12px; font-weight:700; padding:1px 6px; margin:0 2px; vertical-align:middle; }
+        .example-box { border:1px solid var(--border); background-color:var(--example-bg); padding:15px; border-radius:5px; margin:20px 0; color:var(--text); transition:background-color .3s,border-color .3s; }
+
+        /* NOTES TABLE (Section 1 grid) */
+        .notes-table { width:100%; border-collapse:collapse; margin-top:10px; }
+        .notes-table th, .notes-table td { border:1px solid var(--border); padding:10px; text-align:left; color:var(--text); }
+        .notes-table th { background:var(--bg-secondary); font-weight:700; }
+        .centered-title { text-align:center; font-size:17px; font-weight:700; margin-bottom:8px; color:var(--passage-title); }
+
+        /* MCQ / CHECKBOX (choose two) */
+        .multi-choice-question { margin-bottom:20px; padding:10px; border-radius:4px; border:3px solid transparent; transition:border-color .3s,background-color .3s; color:var(--text); }
+        .multi-choice-option { margin-bottom:6px; padding:8px; border-radius:4px; transition:background-color .3s; color:var(--text); }
+        .multi-choice-option label { display:flex; align-items:flex-start; cursor:pointer; font-size:16px; color:var(--text); gap:10px; }
+        .multi-choice-option input[type="checkbox"], .multi-choice-option input[type="radio"] { margin-top:3px; transform:scale(1.2); accent-color:var(--active-blue); flex-shrink:0; }
+        .multi-choice-option.correct { background-color:var(--correct-bg); }
+        .multi-choice-option.incorrect { background-color:var(--incorrect-bg); }
+        .multi-choice-question.correct-q { border-color:var(--correct-border); background-color:var(--correct-bg); }
+        .multi-choice-question.incorrect-q { border-color:var(--incorrect-border); }
+        .correct-answer-highlight { background-color:var(--correct-bg) !important; border:1px solid var(--correct-border) !important; border-radius:4px; }
+        .correct-answer-display { font-weight:bold; color:#28a745; margin-left:8px; font-size:14px; display:inline-block; }
+
+        /* OPTION BOXES (matching lists) */
+        .options-grid { display:flex; flex-direction:column; gap:4px; margin:12px 0; border:1px solid var(--border); border-radius:6px; padding:12px 14px; background:var(--bg-secondary); }
+        .options-grid .opt-title { font-weight:700; text-align:center; margin-bottom:6px; color:var(--passage-title); }
+        .option-row { font-size:15px; color:var(--text); padding:2px 0; }
+        .option-row b { display:inline-block; width:22px; }
+
+        /* MAP IMAGE */
+        .map-wrap { text-align:center; margin:10px 0; }
+        .map-wrap img { max-width:30%; height:30%; border:1px solid var(--border); border-radius:6px; background:#fff; }
+        .map-caption { text-align:center; font-size:13px; color:var(--text-muted); margin-top:6px; }
+
+        /* NAV ARROWS */
+        .nav-arrows { position:fixed; bottom:100px; right:20px; display:flex; gap:5px; z-index:101; }
+        .nav-arrow { width:50px; height:50px; background:#333; color:white; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:bold; }
+        body.night-mode .nav-arrow { background:#444; }
+        .nav-arrow:hover { background:#555; }
+        .nav-arrow:disabled { background:#ccc; cursor:not-allowed; }
+
+        /* BOTTOM NAV */
+        .nav-row { position:fixed; bottom:0; left:0; right:0; background:var(--nav-bg); padding:0; display:flex; align-items:center; height:80px; z-index:100; border-top:1px solid var(--border); transition:background-color .3s,border-color .3s; overflow-x:auto; }
+        .footer__questionWrapper___1tZ46 { display:flex; align-items:center; margin-right:20px; flex-shrink:0; }
+        .footer__questionNo___3WNct { background:none; border:none; padding:10px 15px; font-size:16px; font-weight:600; color:var(--text); cursor:pointer; display:flex; align-items:center; gap:5px; transition:background-color .2s; }
+        .footer__questionNo___3WNct:hover { background-color:var(--bg-secondary); }
+        .section-prefix { font-size:16px; }
+        .sectionNr { font-size:16px; font-weight:bold; }
+        .attemptedCount { font-size:14px; color:var(--text-muted); margin-left:5px; font-weight:400; }
+        @media (max-width:768px) { .attemptedCount { display:none; } }
+        .footer__questionWrapper___1tZ46.selected .attemptedCount { display:none; }
+        .footer__subquestionWrapper___9GgoP { display:none; gap:2px; margin-left:10px; }
+        .footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP { display:flex; }
+        .subQuestion { width:32px; height:32px; border:1px solid var(--subq-border); background:var(--subq-bg); color:var(--subq-text); font-size:14px; font-weight:500; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; border-radius:2px; }
+        .subQuestion.answered { background-color:#6c8ebf; color:white; border-color:#5a7aad; }
+        .subQuestion.correct { background-color:#28a745; color:white; border-color:#28a745; }
+        .subQuestion.incorrect { background-color:#dc3545; color:white; border-color:#dc3545; }
+        .subQuestion:hover { background-color:var(--bg-secondary); border-color:var(--text-light); }
+        .subQuestion.active { background-color:var(--active-blue); color:white; border-color:var(--active-blue); }
+        .footer__deliverButton___3FM07 { margin-left:auto; margin-right:20px; flex-shrink:0; background-color:var(--footer-btn-bg); color:var(--text); border:1px solid var(--footer-btn-border); padding:12px 20px; border-radius:4px; font-size:16px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; transition:background-color .2s,border-color .2s; min-width:170px; justify-content:center; }
+        .footer__deliverButton___3FM07:hover { background-color:var(--border); border-color:var(--text-light); }
+        .footer__deliverButton___3FM07:disabled { background:var(--bg-secondary); color:var(--text-muted); cursor:not-allowed; border-color:var(--border); }
+        .hidden { display:none !important; }
+
+        /* RESULTS */
+        .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,.75); z-index:2000; display:flex; justify-content:center; align-items:center; }
+        .modal-overlay.hidden { display:none; }
+        .modal-content { background:var(--modal-bg); padding:25px; border-radius:12px; width:90%; max-width:600px; max-height:80vh; display:flex; flex-direction:column; position:relative; border:1px solid var(--border); transition:background-color .3s; }
+        .modal-close-btn { position:absolute; top:10px; right:15px; background:none; border:none; font-size:28px; cursor:pointer; color:var(--text-muted); }
+        .modal-content h2 { text-align:center; margin-bottom:15px; color:var(--text); }
+        .results-summary { display:flex; justify-content:space-around; margin-bottom:20px; font-size:18px; font-weight:bold; text-align:center; border-bottom:1px solid var(--border); padding-bottom:15px; color:var(--text); }
+        .results-details-container { overflow-y:auto; padding-right:10px; }
+        .result-row { display:grid; grid-template-columns:40px 1fr 1fr; gap:15px; padding:8px 5px; border-bottom:1px solid var(--border); font-size:15px; color:var(--text); }
+        .result-row.incorrect { background-color:var(--incorrect-bg); }
+        .result-row .q-num { font-weight:bold; }
+        .result-row .user-ans { color:var(--text-muted); }
+        .result-row .correct-ans { color:var(--correct-border); font-weight:500; }
+        .active-question { outline:2px solid var(--active-blue); border-radius:4px; }
+
+        .telegram-link { color:#0088cc; text-decoration:none; font-weight:600; font-size:16px; display:flex; align-items:center; gap:8px; }
+        .telegram-link:hover { text-decoration:underline; }
+
+        /* HIGHLIGHT TOOLBAR */
+        .highlight-toolbar { position:fixed; display:none; background:var(--toolbar-bg); border-radius:8px; box-shadow:var(--toolbar-shadow); z-index:2000; padding:6px 8px; gap:4px; align-items:center; border:1px solid rgba(255,255,255,.1); transition:opacity .15s ease; }
+        .highlight-toolbar.visible { display:flex; }
+        .toolbar-btn { display:inline-flex; align-items:center; justify-content:center; gap:4px; padding:5px 10px; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; transition:all .15s; white-space:nowrap; }
+        .toolbar-btn:hover { filter:brightness(1.2); transform:translateY(-1px); }
+        .toolbar-btn.btn-yellow { background:#f9a825; color:#1a1a1a; }
+        .toolbar-btn.btn-green { background:#43a047; color:#fff; }
+        .toolbar-btn.btn-pink { background:#e91e63; color:#fff; }
+        .toolbar-btn.btn-blue { background:#1976d2; color:#fff; }
+        .toolbar-btn.btn-clear { background:#757575; color:#fff; }
+        .toolbar-btn.btn-note { background:#ff6f00; color:#fff; }
+        .toolbar-sep { width:1px; height:22px; background:rgba(255,255,255,.2); margin:0 2px; }
+        .highlight { background-color:#ffeb3b; border-radius:2px; }
+        .highlight.hl-green { background-color:#a5d6a7; }
+        .highlight.hl-pink { background-color:#f48fb1; }
+        .highlight.hl-blue { background-color:#90caf9; }
+        body.night-mode .highlight { background-color:#f9a825; color:#000; }
+        body.night-mode .highlight.hl-green { background-color:#388e3c; color:#fff; }
+        body.night-mode .highlight.hl-pink { background-color:#c2185b; color:#fff; }
+        body.night-mode .highlight.hl-blue { background-color:#1565c0; color:#fff; }
+        .comment-highlight { background-color:#ffe082; position:relative; cursor:help; border-bottom:2px dotted #f57f17; border-radius:2px; }
+        body.night-mode .comment-highlight { background-color:#6d4c00; border-bottom-color:#ffa000; color:#ffe082; }
+        .comment-tooltip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#212121; color:#fff; padding:8px 12px; border-radius:6px; font-size:13px; max-width:280px; white-space:normal; z-index:3000; opacity:0; pointer-events:none; transition:opacity .2s; box-shadow:0 4px 12px rgba(0,0,0,.4); border:1px solid rgba(255,255,255,.1); }
+        .comment-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:#212121; }
+        .comment-highlight:hover .comment-tooltip { opacity:1; }
+        #toolbar-selection-btns, #toolbar-highlight-btns { display:inline-flex; align-items:center; gap:4px; }
+        .comment-highlight::after { content:'📝'; font-size:11px; vertical-align:super; margin-left:2px; }
+
+        /* NOTES PANEL */
+        .notes-panel { position:fixed; right:20px; top:70px; width:280px; max-height:calc(100vh - 170px); background:var(--modal-bg); border:1px solid var(--border); border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,.2); z-index:500; overflow-y:auto; display:none; flex-direction:column; transition:background-color .3s; }
+        .notes-panel.visible { display:flex; }
+        .notes-panel-header { padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:14px; color:var(--text); background:var(--bg-secondary); border-radius:10px 10px 0 0; }
+        .notes-panel-close { background:none; border:none; cursor:pointer; font-size:18px; color:var(--text-muted); line-height:1; }
+        .notes-list { padding:10px; flex:1; }
+        .note-item { background:var(--bg-secondary); border:1px solid var(--border); border-radius:6px; padding:10px; margin-bottom:8px; font-size:13px; color:var(--text); }
+        .note-item-text { font-weight:600; color:#f57f17; margin-bottom:4px; font-size:12px; }
+        .note-item-delete { background:none; border:none; color:var(--incorrect-border); cursor:pointer; font-size:12px; float:right; padding:0; }
+        .notes-empty { color:var(--text-muted); font-size:13px; padding:10px; text-align:center; }
+
+        /* NOTE INPUT */
+        .note-input-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:3000; display:none; align-items:center; justify-content:center; }
+        .note-input-overlay.visible { display:flex; }
+        .note-input-box { background:var(--modal-bg); border-radius:12px; padding:24px; width:380px; max-width:90vw; box-shadow:0 12px 40px rgba(0,0,0,.4); border:1px solid var(--border); }
+        .note-input-box h3 { margin-bottom:8px; font-size:16px; color:var(--text); }
+        .note-input-box .selected-text-preview { background:var(--bg-secondary); border-left:3px solid #f9a825; padding:8px 10px; margin-bottom:14px; font-size:13px; color:var(--text-muted); border-radius:0 4px 4px 0; max-height:60px; overflow:hidden; }
+        .note-input-box textarea { width:100%; min-height:80px; padding:10px; border:1px solid var(--border-medium); border-radius:6px; font-size:14px; background:var(--input-bg); color:var(--text); resize:vertical; outline:none; font-family:inherit; }
+        .note-input-box textarea:focus { border-color:var(--active-blue); }
+        .note-input-actions { display:flex; gap:8px; margin-top:12px; justify-content:flex-end; }
+        .note-input-actions button { padding:8px 18px; border-radius:6px; border:none; cursor:pointer; font-size:14px; font-weight:600; }
+        .btn-save-note { background:#f9a825; color:#1a1a1a; }
+        .btn-cancel-note { background:var(--bg-secondary); color:var(--text); border:1px solid var(--border) !important; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-left">
+        <div class="timer-container">
+            <span class="timer-display" id="timerDisplay">60:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                <button id="timer-reset-btn" title="Reset Timer">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="zoom-controls">
+            <button class="zoom-btn" id="zoom-out-btn" title="Zoom Out">−</button>
+            <span class="zoom-label" id="zoom-label">100%</span>
+            <button class="zoom-btn" id="zoom-in-btn" title="Zoom In">+</button>
+        </div>
+        <button id="night-mode-btn" title="Toggle Night Mode"><span class="moon-icon">🌙</span> Night Mode</button>
+        <button id="notes-toggle-btn" title="My Notes">
+            📝 Notes <span id="notes-count" style="background:#f9a825;color:#1a1a1a;border-radius:10px;padding:1px 6px;font-size:11px;display:none">0</span>
+        </button>
+    </div>
+    <a href="https://t.me/ieltsmaterials_full" target="_blank" class="telegram-link">IELTS CDI Materials</a>
+</div>
+
+<div class="main-container" id="main-container">
+
+    <!-- SECTION 1 -->
+    <div id="questions-1" class="question-set">
+        <div class="part-header"><p><strong>Section 1</strong></p><p>Listen and answer questions 1–10.</p></div>
+        <div class="questions-container">
+
+            <div class="question" data-q-start="1" data-q-end="10">
+                <div class="question-prompt">
+                    <p><strong>Questions 1–10</strong><br>Complete the notes below.</p>
+                    <p>Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer.</p>
+                </div>
+                <div class="notes-completion-block">
+                    <div class="centered-title">Lifeguard Application</div>
+
+                    <div class="note-group-title">Personal information</div>
+                    <div class="note-line"><strong>Name:</strong>&nbsp; Peter Smith</div>
+                    <div class="note-line" data-q-start="1" data-q-end="1"><strong>Address:</strong>&nbsp; 130 South Main Street, Lake <input type="text" class="answer-input" id="q1" placeholder="1" autocomplete="off" style="width:150px"><span class="q-badge">1</span></div>
+                    <div class="note-line" data-q-start="2" data-q-end="2"><strong>Contact number:</strong>&nbsp; <input type="text" class="answer-input" id="q2" placeholder="2" autocomplete="off" style="width:150px"><span class="q-badge">2</span>&nbsp; (cellphone)</div>
+
+                    <div class="note-group-title" style="margin-top:14px">Work experience:</div>
+                    <div class="note-line" data-q-start="3" data-q-end="3"><span class="note-bullet">•</span> has a part-time job as a <input type="text" class="answer-input" id="q3" placeholder="3" autocomplete="off" style="width:150px"><span class="q-badge">3</span></div>
+                    <div class="note-line"><span class="note-bullet">•</span> is studying PE now</div>
+                    <div class="note-line" data-q-start="4" data-q-end="4"><span class="note-bullet">•</span> hope to work in a high school as a <input type="text" class="answer-input" id="q4" placeholder="4" autocomplete="off" style="width:150px"><span class="q-badge">4</span>&nbsp; coach</div>
+                    <div class="note-line" data-q-start="5" data-q-end="5"><span class="note-bullet">•</span> Other relevant work experience: worked at the <input type="text" class="answer-input" id="q5" placeholder="5" autocomplete="off" style="width:150px"><span class="q-badge">5</span>, as a lifeguard</div>
+
+                    <div class="note-group-title" style="margin-top:14px">Qualification for water safety:</div>
+                    <div class="note-line"><span class="note-bullet">•</span> Good level of concentration</div>
+                    <div class="note-line"><span class="note-bullet">•</span> Good vision</div>
+                    <div class="note-line" data-q-start="6" data-q-end="6"><span class="note-bullet">•</span> Other relevant skills: <input type="text" class="answer-input" id="q6" placeholder="6" autocomplete="off" style="width:150px"><span class="q-badge">6</span></div>
+                    <div class="note-line" data-q-start="7" data-q-end="7"><span class="note-bullet">•</span> need a certificate: it expires in <input type="text" class="answer-input" id="q7" placeholder="7" autocomplete="off" style="width:150px"><span class="q-badge">7</span></div>
+
+                    <div class="note-group-title" style="margin-top:14px">Other information</div>
+                    <div class="note-line" data-q-start="8" data-q-end="8"><span class="note-bullet">•</span> Preferred working time: <input type="text" class="answer-input" id="q8" placeholder="8" autocomplete="off" style="width:150px"><span class="q-badge">8</span>, mornings</div>
+                    <div class="note-line" data-q-start="9" data-q-end="9"><span class="note-bullet">•</span> He can start to work at <input type="text" class="answer-input" id="q9" placeholder="9" autocomplete="off" style="width:100px"><span class="q-badge">9</span>&nbsp; o'clock</div>
+                    <div class="note-line" data-q-start="10" data-q-end="10" style="margin-bottom:0"><span class="note-bullet">•</span> Source of information: <input type="text" class="answer-input" id="q10" placeholder="10" autocomplete="off" style="width:150px"><span class="q-badge">10</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div id="questions-2" class="question-set hidden">
+        <div class="part-header"><p><strong>Section 2</strong></p><p>Listen and answer questions 11–20.</p></div>
+        <div class="questions-container">
+
+            <div class="question" data-q-start="11" data-q-end="14">
+                <div class="question-prompt">
+                    <p><strong>Questions 11–14</strong><br>Label the map below.</p>
+                    <p>Write the correct letter, <strong>A–I</strong>, next to Questions 11–14.</p>
+                </div>
+
+                <div class="map-wrap">
+                    <img src="https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_9000,w_1200,f_auto,q_auto/2747037/343819_103819.jpeg" alt="The Elmsden Way map">
+                    <p class="map-caption">The Elmsden Way</p>
+                </div>
+
+                <div class="notes-completion-block">
+                    <div class="note-line" data-q-start="11" data-q-end="11"><strong>11</strong>&nbsp; rocks &nbsp;<select class="answer-input" id="q11" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select></div>
+                    <div class="note-line" data-q-start="12" data-q-end="12"><strong>12</strong>&nbsp; Corley nature reserve &nbsp;<select class="answer-input" id="q12" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select></div>
+                    <div class="note-line" data-q-start="13" data-q-end="13"><strong>13</strong>&nbsp; Ashington china factory &nbsp;<select class="answer-input" id="q13" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select></div>
+                    <div class="note-line" data-q-start="14" data-q-end="14" style="margin-bottom:0"><strong>14</strong>&nbsp; Langton forest &nbsp;<select class="answer-input" id="q14" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option><option>I</option></select></div>
+                </div>
+            </div>
+
+            <div class="question" data-q-start="15" data-q-end="20">
+                <div class="question-prompt">
+                    <p><strong>Questions 15–20</strong><br>Choose the correct letter, <strong>A, B or C</strong>.</p>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="15" data-q-end="15">
+                    <p><strong>15.</strong> What warning does the speaker give about cycling on the Elmsden Way?</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q15" value="A"> A&nbsp; The roads usually have heavy traffic.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q15" value="B"> B&nbsp; Bad weather can cause problems.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q15" value="C"> C&nbsp; There may be animals on the cycle path.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="16" data-q-end="16">
+                    <p><strong>16.</strong> What does the speaker say about Elmsden Station?</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q16" value="A"> A&nbsp; It is a very busy station.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q16" value="B"> B&nbsp; It has been modernized.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q16" value="C"> C&nbsp; It reopened recently.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="17" data-q-end="17">
+                    <p><strong>17.</strong> In the Visitors' Centre, people can</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q17" value="A"> A&nbsp; hire a bicycle.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q17" value="B"> B&nbsp; buy refreshments.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q17" value="C"> C&nbsp; learn about local history.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="18" data-q-end="18">
+                    <p><strong>18.</strong> If cyclists want to travel between Elmsden and Langton by train,</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q18" value="A"> A&nbsp; they need to book in advance.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q18" value="B"> B&nbsp; they have to travel at the weekend.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q18" value="C"> C&nbsp; they must pay an additional charge for their bicycle.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="19" data-q-end="19">
+                    <p><strong>19.</strong> What warning does the speaker give about walking to the River Elm?</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q19" value="A"> A&nbsp; It can take a long time to get back.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q19" value="B"> B&nbsp; There is nowhere to leave bicycles.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q19" value="C"> C&nbsp; The waterfall is inaccessible on foot.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="20" data-q-end="20">
+                    <p><strong>20.</strong> To find out about other cycle paths in the region, you can</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q20" value="A"> A&nbsp; look in the local newspaper.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q20" value="B"> B&nbsp; check the radio station website.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q20" value="C"> C&nbsp; ring up the national cycle network.</label></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div id="questions-3" class="question-set hidden">
+        <div class="part-header"><p><strong>Section 3</strong></p><p>Listen and answer questions 21–30.</p></div>
+        <div class="questions-container">
+
+            <div class="question" data-q-start="21" data-q-end="25">
+                <div class="question-prompt">
+                    <p><strong>Questions 21–25</strong><br>What did the students say about each of the following volcanoes for their presentation?</p>
+                    <p>Choose <strong>FIVE</strong> answers from the box and write the correct letter, <strong>A–G</strong>, next to Questions 21–25.</p>
+                </div>
+                <div class="options-grid">
+                    <div class="opt-title">Comment</div>
+                    <div class="option-row"><b>A</b> need more photos to support</div>
+                    <div class="option-row"><b>B</b> repeat other people's studies</div>
+                    <div class="option-row"><b>C</b> inaccurate information</div>
+                    <div class="option-row"><b>D</b> need first-hand material</div>
+                    <div class="option-row"><b>E</b> need more details</div>
+                    <div class="option-row"><b>F</b> no need to talk about it</div>
+                    <div class="option-row"><b>G</b> check again</div>
+                </div>
+                <div class="notes-completion-block" style="margin-top:12px">
+                    <div class="centered-title" style="margin-bottom:12px">Type of volcanoes</div>
+                    <div class="note-line" data-q-start="21" data-q-end="21"><strong>21</strong>&nbsp; shield volcanoes &nbsp;<select class="answer-input" id="q21" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+                    <div class="note-line" data-q-start="22" data-q-end="22"><strong>22</strong>&nbsp; stratovolcanoes &nbsp;<select class="answer-input" id="q22" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+                    <div class="note-line" data-q-start="23" data-q-end="23"><strong>23</strong>&nbsp; rhyolite caldera complexes &nbsp;<select class="answer-input" id="q23" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+                    <div class="note-line" data-q-start="24" data-q-end="24"><strong>24</strong>&nbsp; monogenetic fields &nbsp;<select class="answer-input" id="q24" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+                    <div class="note-line" data-q-start="25" data-q-end="25" style="margin-bottom:0"><strong>25</strong>&nbsp; cinder cones &nbsp;<select class="answer-input" id="q25" style="width:80px"><option value=""></option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option></select></div>
+                </div>
+            </div>
+
+            <div class="question" data-q-start="26" data-q-end="30">
+                <div class="question-prompt">
+                    <p><strong>Questions 26–30</strong><br>Choose the correct letter, <strong>A, B or C</strong>.</p>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="26" data-q-end="26">
+                    <p><strong>26.</strong> In Erica's view, what is wrong with Ian's last presentation?</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q26" value="A"> A&nbsp; He did not read loud enough.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q26" value="B"> B&nbsp; He did not understand the main reason.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q26" value="C"> C&nbsp; He did not provide enough evidence.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="27" data-q-end="27">
+                    <p><strong>27.</strong> What materials do the students agree to add to their presentation?</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q27" value="A"> A&nbsp; a complete documentary</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q27" value="B"> B&nbsp; photographs included in the handouts</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q27" value="C"> C&nbsp; internet video clips</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="28" data-q-end="28">
+                    <p><strong>28.</strong> By using extinct and dormant volcanoes, the students try to</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q28" value="A"> A&nbsp; distinguish between scientific and popular terms.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q28" value="B"> B&nbsp; distinguish between two different types of volcanoes.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q28" value="C"> C&nbsp; distinguish whether an eruption is about to happen.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="29" data-q-end="29">
+                    <p><strong>29.</strong> What did the professor say about Erica's last presentation?</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q29" value="A"> A&nbsp; She carried out an in-depth discussion with other students.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q29" value="B"> B&nbsp; She did not provide sufficient data.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q29" value="C"> C&nbsp; She did not fully develop a personal point.</label></div>
+                </div>
+
+                <div class="multi-choice-question" data-q-start="30" data-q-end="30">
+                    <p><strong>30.</strong> The students both agree that volcanoes</p>
+                    <div class="multi-choice-option"><label><input type="radio" name="q30" value="A"> A&nbsp; haven't caused disastrous outcomes.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q30" value="B"> B&nbsp; cannot help to reshape the landscape.</label></div>
+                    <div class="multi-choice-option"><label><input type="radio" name="q30" value="C"> C&nbsp; are not fully recognised for their values.</label></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div id="questions-4" class="question-set hidden">
+        <div class="part-header"><p><strong>Section 4</strong></p><p>Listen and answer questions 31–40.</p></div>
+        <div class="questions-container">
+
+            <div class="question" data-q-start="31" data-q-end="40">
+                <div class="question-prompt">
+                    <p><strong>Questions 31–40</strong><br>Complete the notes below.</p>
+                    <p>Write <strong>ONE WORD ONLY</strong> for each answer.</p>
+                </div>
+                <div class="notes-completion-block">
+                    <div class="centered-title">Dolphin Intelligence</div>
+
+                    <div class="note-group-title">Point 1: Not highly intelligent</div>
+                    <div class="note-line">Research on the size of dolphin brains</div>
+                    <div class="note-line" data-q-start="31" data-q-end="31">Dolphins cannot find a way of escaping barriers such as fishing <input type="text" class="answer-input" id="q31" placeholder="31" autocomplete="off" style="width:130px"><span class="q-badge">31</span> for catching tuna.</div>
+                    <div class="note-line" data-q-start="32" data-q-end="32">People wrongly thought dolphins to be smart and happy as they often have a <input type="text" class="answer-input" id="q32" placeholder="32" autocomplete="off" style="width:130px"><span class="q-badge">32</span></div>
+                    <div class="note-line" data-q-start="33" data-q-end="33">Small-brained animals such as pigeons and <input type="text" class="answer-input" id="q33" placeholder="33" autocomplete="off" style="width:130px"><span class="q-badge">33</span> can perform various complex tasks.</div>
+                    <div class="note-line" data-q-start="34" data-q-end="34">Pigeons are <input type="text" class="answer-input" id="q34" placeholder="34" autocomplete="off" style="width:130px"><span class="q-badge">34</span> of themselves.</div>
+                    <div class="note-line" data-q-start="35" data-q-end="35">Pigeons are trained to conditional responses and <input type="text" class="answer-input" id="q35" placeholder="35" autocomplete="off" style="width:150px"><span class="q-badge">35</span> reactions.</div>
+
+                    <div class="note-group-title" style="margin-top:14px">Counter argument</div>
+                    <div class="note-line">Fatty cells in dolphin brains are linked to protective function and problem-solving skills.</div>
+
+                    <div class="note-group-title" style="margin-top:14px">Point 2: highly intelligent</div>
+                    <div class="note-line">Research on dolphin behaviour</div>
+                    <div class="note-line" data-q-start="36" data-q-end="36">Billy can imitate the keepers' <input type="text" class="answer-input" id="q36" placeholder="36" autocomplete="off" style="width:130px"><span class="q-badge">36</span> through other dolphins.</div>
+                    <div class="note-line" data-q-start="37" data-q-end="37">Karen hides a <input type="text" class="answer-input" id="q37" placeholder="37" autocomplete="off" style="width:150px"><span class="q-badge">37</span> for more food.</div>
+                    <div class="note-line" data-q-start="38" data-q-end="38">For the past century, dolphins have been seen as <input type="text" class="answer-input" id="q38" placeholder="38" autocomplete="off" style="width:130px"><span class="q-badge">38</span> animals.</div>
+                    <div class="note-line" data-q-start="39" data-q-end="39">Each dolphin produces a unique sound, like the <input type="text" class="answer-input" id="q39" placeholder="39" autocomplete="off" style="width:130px"><span class="q-badge">39</span></div>
+                    <div class="note-line" data-q-start="40" data-q-end="40" style="margin-bottom:0">They touch each other to make up after a <input type="text" class="answer-input" id="q40" placeholder="40" autocomplete="off" style="width:130px"><span class="q-badge">40</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Nav Arrows -->
+<div class="nav-arrows">
+    <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+    <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="nav-row" aria-label="Questions">
+    <div class="footer__questionWrapper___1tZ46 selected multiple" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)"><span><span class="section-prefix">Section </span><span class="sectionNr">1</span><span class="attemptedCount" id="cnt1">0 of 10</span></span></button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(1)">1</button><button class="subQuestion" onclick="goToQuestion(2)">2</button><button class="subQuestion" onclick="goToQuestion(3)">3</button><button class="subQuestion" onclick="goToQuestion(4)">4</button><button class="subQuestion" onclick="goToQuestion(5)">5</button><button class="subQuestion" onclick="goToQuestion(6)">6</button><button class="subQuestion" onclick="goToQuestion(7)">7</button><button class="subQuestion" onclick="goToQuestion(8)">8</button><button class="subQuestion" onclick="goToQuestion(9)">9</button><button class="subQuestion" onclick="goToQuestion(10)">10</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)"><span><span class="section-prefix">Section </span><span class="sectionNr">2</span><span class="attemptedCount" id="cnt2">0 of 10</span></span></button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(11)">11</button><button class="subQuestion" onclick="goToQuestion(12)">12</button><button class="subQuestion" onclick="goToQuestion(13)">13</button><button class="subQuestion" onclick="goToQuestion(14)">14</button><button class="subQuestion" onclick="goToQuestion(15)">15</button><button class="subQuestion" onclick="goToQuestion(16)">16</button><button class="subQuestion" onclick="goToQuestion(17)">17</button><button class="subQuestion" onclick="goToQuestion(18)">18</button><button class="subQuestion" onclick="goToQuestion(19)">19</button><button class="subQuestion" onclick="goToQuestion(20)">20</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)"><span><span class="section-prefix">Section </span><span class="sectionNr">3</span><span class="attemptedCount" id="cnt3">0 of 10</span></span></button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(21)">21</button><button class="subQuestion" onclick="goToQuestion(22)">22</button><button class="subQuestion" onclick="goToQuestion(23)">23</button><button class="subQuestion" onclick="goToQuestion(24)">24</button><button class="subQuestion" onclick="goToQuestion(25)">25</button><button class="subQuestion" onclick="goToQuestion(26)">26</button><button class="subQuestion" onclick="goToQuestion(27)">27</button><button class="subQuestion" onclick="goToQuestion(28)">28</button><button class="subQuestion" onclick="goToQuestion(29)">29</button><button class="subQuestion" onclick="goToQuestion(30)">30</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46 multiple" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(4)"><span><span class="section-prefix">Section </span><span class="sectionNr">4</span><span class="attemptedCount" id="cnt4">0 of 10</span></span></button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(31)">31</button><button class="subQuestion" onclick="goToQuestion(32)">32</button><button class="subQuestion" onclick="goToQuestion(33)">33</button><button class="subQuestion" onclick="goToQuestion(34)">34</button><button class="subQuestion" onclick="goToQuestion(35)">35</button><button class="subQuestion" onclick="goToQuestion(36)">36</button><button class="subQuestion" onclick="goToQuestion(37)">37</button><button class="subQuestion" onclick="goToQuestion(38)">38</button><button class="subQuestion" onclick="goToQuestion(39)">39</button><button class="subQuestion" onclick="goToQuestion(40)">40</button>
+        </div>
+    </div>
+    <button id="deliver-button" class="footer__deliverButton___3FM07">✓ Check Answers</button>
+</nav>
+
+<!-- Highlight Toolbar -->
+<div id="highlightToolbar" class="highlight-toolbar">
+    <span id="toolbar-selection-btns">
+        <button class="toolbar-btn btn-yellow" onclick="applyHighlight('hl-yellow')">🟡</button><button class="toolbar-btn btn-green" onclick="applyHighlight('hl-green')">🟢</button><button class="toolbar-btn btn-pink" onclick="applyHighlight('hl-pink')">🔴</button><button class="toolbar-btn btn-blue" onclick="applyHighlight('hl-blue')">🔵</button>
+        <div class="toolbar-sep"></div><button class="toolbar-btn btn-note" onclick="openNoteInput()">📝 Note</button>
+        <div class="toolbar-sep"></div><button class="toolbar-btn btn-clear" onclick="clearThisHighlight()">✕ Remove</button><button class="toolbar-btn btn-clear" onclick="clearAllHighlights()">⊘ Clear All</button>
+    </span>
+    <span id="toolbar-highlight-btns" style="display:none">
+        <button class="toolbar-btn btn-yellow" onclick="recolorHighlight('hl-yellow')">🟡</button><button class="toolbar-btn btn-green" onclick="recolorHighlight('hl-green')">🟢</button><button class="toolbar-btn btn-pink" onclick="recolorHighlight('hl-pink')">🔴</button><button class="toolbar-btn btn-blue" onclick="recolorHighlight('hl-blue')">🔵</button>
+        <div class="toolbar-sep"></div><button class="toolbar-btn btn-note" onclick="openNoteInput()">📝 Note</button>
+        <div class="toolbar-sep"></div><button class="toolbar-btn btn-clear" onclick="clearThisHighlight()">✕ Remove</button><button class="toolbar-btn btn-clear" onclick="clearAllHighlights()">⊘ Clear All</button>
+    </span>
+</div>
+
+<!-- Notes Panel -->
+<div id="notesPanel" class="notes-panel">
+    <div class="notes-panel-header"><span>📝 My Notes</span><button class="notes-panel-close" onclick="toggleNotesPanel()">✕</button></div>
+    <div class="notes-list" id="notesList"><p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p></div>
+</div>
+
+<!-- Note Input Modal -->
+<div id="noteInputOverlay" class="note-input-overlay">
+    <div class="note-input-box">
+        <h3>Add a Note</h3>
+        <div class="selected-text-preview" id="noteTextPreview"></div>
+        <textarea id="noteTextarea" placeholder="Type your note here..."></textarea>
+        <div class="note-input-actions">
+            <button class="btn-cancel-note" onclick="cancelNote()">Cancel</button>
+            <button class="btn-save-note" onclick="saveNote()">Save Note</button>
+        </div>
+    </div>
+</div>
+
+<!-- Results Modal -->
+<div id="results-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+        <h2>Results</h2>
+        <div class="results-summary">
+            <p>Score: <span id="results-score"></span> / 40</p>
+            <p>IELTS Band: <span id="results-band"></span></p>
+        </div>
+        <div id="results-details" class="results-details-container"></div>
+        <div style="text-align:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+            <button onclick="retakeTest()" style="background:#4a90e2;color:#fff;border:none;border-radius:6px;padding:10px 28px;font-size:15px;font-weight:700;cursor:pointer">🔄 Retake Test</button>
+            <button onclick="closeResultsModal()" style="background:var(--footer-btn-bg);color:var(--text);border:1px solid var(--border-medium);border-radius:6px;padding:10px 22px;font-size:15px;font-weight:600;cursor:pointer;margin-left:12px">Review Answers</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Answer key
+    const correctAnswers = {
+        '1':'elsinore','2':'077896245','3':'waiter','4':'baseball','5':'beach',
+        '6':'diving','7':'october','8':'saturday','9':'6','10':'radio',
+        '11':'B','12':'E','13':'F','14':'C',
+        '15':'C','16':'C','17':'A','18':'B','19':'A','20':'A',
+        '21':'B','22':'E','23':'C','24':'G','25':'F',
+        '26':'B','27':'C','28':'A','29':'C','30':'C',
+        '31':'nets','32':'smile','33':'rats','34':'aware','35':'instinctive',
+        '36':'walking','37':'newspaper','38':'social','39':'whistle','40':'fight'
+    };
+    const altAnswers = {
+        '9':['6',"6 o'clock",'six']
+    };
+    // Single-answer radio (MCQ) question numbers, rendered with the multi-choice-option styling
+    const radioMcqQuestions = [15,16,17,18,19,20,26,27,28,29,30];
+
+    const TOTAL = 40;
+    const partRanges = {1:[1,10],2:[11,20],3:[21,30],4:[31,40]};
+    let currentPart=1, currentQuestion=1, timeInSeconds=60*60;
+    let timerInterval, timerRunning=true, zoomLevel=1;
+    let checked=false;
+    let selRange=null, selText='', hlTarget=null, lastHL=null;
+    let notes=[], noteId=0;
+
+    const mc = document.getElementById('main-container');
+    const timerDisplay   = document.querySelector('.timer-display');
+    const timerToggleBtn = document.getElementById('timer-toggle-btn');
+    const timerResetBtn  = document.getElementById('timer-reset-btn');
+    const deliverButton  = document.getElementById('deliver-button');
+    const nightModeBtn   = document.getElementById('night-mode-btn');
+    const notesToggleBtn = document.getElementById('notes-toggle-btn');
+    const notesPanel     = document.getElementById('notesPanel');
+    const notesList      = document.getElementById('notesList');
+    const notesCount     = document.getElementById('notes-count');
+    const hlToolbar      = document.getElementById('highlightToolbar');
+    const noteInputOverlay = document.getElementById('noteInputOverlay');
+    const noteTextarea   = document.getElementById('noteTextarea');
+    const noteTextPreview= document.getElementById('noteTextPreview');
+    const zoomInBtn      = document.getElementById('zoom-in-btn');
+    const zoomOutBtn     = document.getElementById('zoom-out-btn');
+    const zoomLabel      = document.getElementById('zoom-label');
+
+    const playIcon  = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M8 5v14l11-7L8 5z"/></svg>';
+    const pauseIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+
+    function init() {
+        startTimer(); switchToPart(1);
+        document.body.addEventListener('input', updateAll);
+        document.body.addEventListener('change', updateAll);
+        deliverButton.addEventListener('click', checkAnswers);
+        timerToggleBtn.addEventListener('click', toggleTimer);
+        timerResetBtn.addEventListener('click', resetTimer);
+        nightModeBtn.addEventListener('click', toggleNightMode);
+        notesToggleBtn.addEventListener('click', toggleNotesPanel);
+        zoomInBtn.addEventListener('click', () => setZoom(zoomLevel+0.1));
+        zoomOutBtn.addEventListener('click', () => setZoom(zoomLevel-0.1));
+        initHighlightToolbar();
+    }
+
+    function setZoom(z) {
+        zoomLevel = Math.min(2,Math.max(0.6,Math.round(z*10)/10));
+        zoomLabel.textContent = Math.round(zoomLevel*100)+'%';
+        document.querySelectorAll('.question-set').forEach(s => s.style.zoom = zoomLevel);
+    }
+    function toggleNightMode() {
+        document.body.classList.toggle('night-mode');
+        const on = document.body.classList.contains('night-mode');
+        nightModeBtn.innerHTML = on ? '<span class="moon-icon">☀️</span> Day Mode' : '<span class="moon-icon">🌙</span> Night Mode';
+    }
+    function startTimer() {
+        clearInterval(timerInterval); timerRunning=true;
+        timerInterval = setInterval(() => { if(!timerRunning) return; timeInSeconds--; updateTimerDisplay(); if(timeInSeconds<=0) clearInterval(timerInterval); }, 1000);
+        timerToggleBtn.innerHTML = pauseIcon;
+    }
+    function toggleTimer() { timerRunning=!timerRunning; timerToggleBtn.innerHTML = timerRunning?pauseIcon:playIcon; }
+    function resetTimer() { timeInSeconds=60*60; timerRunning=true; timerToggleBtn.innerHTML=pauseIcon; updateTimerDisplay(); startTimer(); }
+    function updateTimerDisplay() {
+        const m=Math.floor(Math.abs(timeInSeconds)/60), s=Math.abs(timeInSeconds)%60;
+        timerDisplay.textContent=(timeInSeconds<0?'-':'')+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+        timerDisplay.style.color=(timeInSeconds<=300&&timeInSeconds>0)?'#dc3545':'';
+    }
+
+    function switchToPart(p) {
+        currentPart=p;
+        [1,2,3,4].forEach(n => document.getElementById('questions-'+n).classList.toggle('hidden', n!==p));
+        document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w,i) => w.classList.toggle('selected',(i+1)===p));
+        mc.scrollTop=0;
+        goToQuestion({1:1,2:11,3:21,4:31}[p], true);
+    }
+    window.switchToPart = switchToPart;
+
+    function findBlockForQuestion(n) {
+        let best=null, bestSpan=Infinity;
+        document.querySelectorAll('[data-q-start]').forEach(b => {
+            const s=parseInt(b.dataset.qStart), e=parseInt(b.dataset.qEnd||b.dataset.qStart);
+            if (n>=s && n<=e) { const span=e-s; if (span<bestSpan) { bestSpan=span; best=b; } }
+        });
+        return best;
+    }
+
+    function goToQuestion(n, skipPartSwitch) {
+        currentQuestion=n;
+        if (!skipPartSwitch) { const np=n<=10?1:n<=20?2:n<=30?3:4; if(np!==currentPart){switchToPart(np);return;} }
+        document.querySelectorAll('.active-question').forEach(e=>e.classList.remove('active-question'));
+        document.querySelectorAll('.answer-input.active-input').forEach(e=>e.classList.remove('active-input'));
+        const el = document.getElementById('q'+n);
+        if (el) { el.classList.add('active-input'); el.scrollIntoView({behavior:'smooth',block:'center'}); try{el.focus();}catch(e){} }
+        const block = findBlockForQuestion(n);
+        if (block) { block.classList.add('active-question'); if(!el) block.scrollIntoView({behavior:'smooth',block:'center'}); }
+        updateNavButtons();
+        document.getElementById('prevBtn').disabled=(n<=1);
+        document.getElementById('nextBtn').disabled=(n>=TOTAL);
+    }
+    window.goToQuestion = goToQuestion;
+    window.nextQuestion     = () => currentQuestion<TOTAL && goToQuestion(currentQuestion+1);
+    window.previousQuestion = () => currentQuestion>1    && goToQuestion(currentQuestion-1);
+
+    function isAnswered(n) {
+        const r=document.querySelector(`input[name="q${n}"]:checked`); if(r) return true;
+        const el=document.getElementById('q'+n); return el?el.value.trim()!=='':false;
+    }
+    function getUserAnswer(n) {
+        const r=document.querySelector(`input[name="q${n}"]:checked`); if(r) return r.value;
+        const el=document.getElementById('q'+n); return el?el.value.trim():'';
+    }
+    function checkCorrect(n) {
+        const correct=String(correctAnswers[n]).toLowerCase().trim();
+        const user=getUserAnswer(n).toLowerCase().trim();
+        if(!user) return false;
+        if(user===correct) return true;
+        return (altAnswers[n]||[]).some(a=>user===a.toLowerCase());
+    }
+    function updateNavButtons() {
+        document.querySelectorAll('.subQuestion').forEach(btn => {
+            const qn=parseInt(btn.textContent); btn.classList.remove('active');
+            if(!checked) btn.classList.toggle('answered',isAnswered(qn));
+            if(qn===currentQuestion) btn.classList.add('active');
+        });
+    }
+    function updateAll() {
+        [1,2,3,4].forEach(p => {
+            const [s,e]=partRanges[p]; let cnt=0;
+            for(let i=s;i<=e;i++) if(isAnswered(i)) cnt++;
+            document.getElementById('cnt'+p).textContent=`${cnt} of ${e-s+1}`;
+        });
+        updateNavButtons();
+    }
+
+    function checkAnswers() {
+        checked=true; clearInterval(timerInterval); timerRunning=false;
+        document.querySelectorAll('input,select').forEach(el=>el.disabled=true);
+        deliverButton.disabled=true;
+        document.querySelectorAll('.correct-answer-display').forEach(e=>e.remove());
+        document.querySelectorAll('.multi-choice-question').forEach(b=>b.classList.remove('correct-q','incorrect-q'));
+        document.querySelectorAll('.multi-choice-option').forEach(o=>o.classList.remove('correct','incorrect','correct-answer-highlight'));
+        document.querySelectorAll('.answer-input').forEach(e=>e.classList.remove('correct','incorrect'));
+
+        let score=0;
+        const dc=document.getElementById('results-details'); dc.innerHTML='';
+
+        for(let i=1;i<=TOTAL;i++) {
+            const ok=checkCorrect(i); if(ok) score++;
+            const el=document.getElementById('q'+i);
+            if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT')) {
+                el.classList.add(ok?'correct':'incorrect');
+                if(!ok){const sp=document.createElement('span');sp.className='correct-answer-display';sp.textContent=' → '+correctAnswers[i];el.parentNode.insertBefore(sp,el.nextSibling);}
+            }
+            dc.innerHTML+=`<div class="result-row ${ok?'':'incorrect'}"><span class="q-num">${i}</span><span class="user-ans">${getUserAnswer(i)||'—'}</span><span class="correct-ans">${correctAnswers[i]}</span></div>`;
+            const nb=document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+            if(nb){nb.classList.remove('answered','active');nb.classList.add(ok?'correct':'incorrect');}
+        }
+
+        // Highlight single-answer radio MCQ options
+        radioMcqQuestions.forEach(n => {
+            const correctVal = correctAnswers[n];
+            const radios = document.querySelectorAll(`input[name="q${n}"]`);
+            radios.forEach(r => {
+                const opt = r.closest('.multi-choice-option');
+                if (!opt) return;
+                const isCorrectVal = r.value === correctVal;
+                if (r.checked) { opt.classList.add(isCorrectVal ? 'correct' : 'incorrect'); }
+                else if (isCorrectVal) { opt.classList.add('correct-answer-highlight'); }
+            });
+            const anyRadio = document.querySelector(`input[name="q${n}"]`);
+            if (anyRadio) {
+                const block = anyRadio.closest('.multi-choice-question');
+                if (block) block.classList.add(checkCorrect(n) ? 'correct-q' : 'incorrect-q');
+            }
+        });
+
+        document.getElementById('results-score').textContent=score;
+        document.getElementById('results-band').textContent=calcBand(score);
+        document.getElementById('results-modal').classList.remove('hidden');
+    }
+    function calcBand(s){const m={40:9,39:9,38:8.5,37:8.5,36:8,35:8,34:7.5,33:7.5,32:7,31:7,30:7,29:6.5,28:6.5,27:6.5,26:6,25:6,24:6,23:5.5,22:5.5,21:5.5,20:5.5,19:5,18:5,17:5,16:5,15:5,14:4.5,13:4.5,12:4,11:4,10:4,9:3.5,8:3.5,7:3,6:3,5:2.5,4:2.5,3:2,2:2,1:1,0:0};return m[s]??0;}
+    window.closeResultsModal=()=>document.getElementById('results-modal').classList.add('hidden');
+    window.retakeTest=()=>{
+        checked=false;
+        document.querySelectorAll('input[type="text"]').forEach(e=>{e.value='';e.disabled=false;e.classList.remove('correct','incorrect');});
+        document.querySelectorAll('select').forEach(e=>{e.value='';e.disabled=false;e.classList.remove('correct','incorrect');});
+        document.querySelectorAll('input[type="radio"]:not([disabled])').forEach(e=>{e.checked=false;e.disabled=false;});
+        document.querySelectorAll('input[type="radio"]').forEach(e=>{e.disabled=false;e.checked=false;});
+        document.querySelectorAll('.correct-answer-display').forEach(e=>e.remove());
+        document.querySelectorAll('.multi-choice-question').forEach(b=>b.classList.remove('correct-q','incorrect-q'));
+        document.querySelectorAll('.multi-choice-option').forEach(o=>o.classList.remove('correct','incorrect','correct-answer-highlight'));
+        document.querySelectorAll('.subQuestion').forEach(b=>b.classList.remove('correct','incorrect','answered','active'));
+        deliverButton.disabled=false; resetTimer(); closeResultsModal(); switchToPart(1); updateAll();
+    };
+
+    function initHighlightToolbar(){
+        const selBtns=document.getElementById('toolbar-selection-btns');
+        const hlBtns=document.getElementById('toolbar-highlight-btns');
+        document.addEventListener('selectionchange',()=>{
+            const sel=window.getSelection();
+            if(sel&&!sel.isCollapsed&&sel.toString().trim()){const r=sel.getRangeAt(0);if(mc.contains(r.commonAncestorContainer)){selRange=r.cloneRange();selText=sel.toString();}}
+        });
+        document.addEventListener('mouseup',e=>{
+            if(hlToolbar.contains(e.target)||noteInputOverlay.contains(e.target)) return;
+            const sel=window.getSelection(); const overHL=e.target.closest('.highlight,.comment-highlight');
+            if(overHL&&(!sel||sel.isCollapsed)){hlTarget=overHL;lastHL=null;selRange=null;selBtns.style.display='none';hlBtns.style.display='inline-flex';positionToolbar(e);return;}
+            if(sel&&!sel.isCollapsed&&sel.toString().trim()){const r=sel.getRangeAt(0);if(mc.contains(r.commonAncestorContainer)){hlTarget=null;lastHL=null;const inside=(r.startContainer.nodeType===3?r.startContainer.parentElement:r.startContainer).closest('.highlight,.comment-highlight');if(inside)hlTarget=inside;selBtns.style.display='inline-flex';hlBtns.style.display='none';positionToolbar(e);return;}}
+            hideToolbar();
+        });
+        document.addEventListener('keydown',e=>{if(e.key==='Escape')hideToolbar();});
+        mc.addEventListener('scroll',hideToolbar);
+    }
+    function positionToolbar(e){
+        hlToolbar.classList.add('visible');
+        requestAnimationFrame(()=>{const tw=hlToolbar.offsetWidth||300,th=hlToolbar.offsetHeight||44;let l=e.pageX-tw/2,t=e.pageY-th-14;if(l<8)l=8;if(l+tw>window.innerWidth-8)l=window.innerWidth-tw-8;if(t<68)t=e.pageY+14;hlToolbar.style.left=l+'px';hlToolbar.style.top=t+'px';});
+    }
+    function hideToolbar(){hlToolbar.classList.remove('visible');}
+    window.applyHighlight=function(cc){if(!selRange||selRange.collapsed){hideToolbar();return;}try{const sp=document.createElement('span');sp.className='highlight '+cc;sp.appendChild(selRange.extractContents());selRange.insertNode(sp);lastHL=sp;}catch(e){}hideToolbar();window.getSelection().removeAllRanges();selRange=null;};
+    window.recolorHighlight=function(cc){if(!hlTarget){hideToolbar();return;}hlTarget.className='highlight '+cc;hlTarget=null;hideToolbar();};
+    window.clearThisHighlight=function(){const t=hlTarget||lastHL;if(!t||!t.parentNode){hideToolbar();return;}if(t.classList.contains('comment-highlight')){const i=notes.findIndex(n=>n.sp===t);if(i>-1)notes.splice(i,1);renderNotes();}unwrap(t);hlTarget=null;lastHL=null;hideToolbar();};
+    window.clearAllHighlights=function(){document.querySelectorAll('.highlight,.comment-highlight').forEach(unwrap);notes=[];renderNotes();hlTarget=null;lastHL=null;hideToolbar();};
+    function unwrap(el){if(!el.parentNode)return;while(el.firstChild)el.parentNode.insertBefore(el.firstChild,el);el.parentNode.removeChild(el);el.parentNode&&el.parentNode.normalize();}
+    function toggleNotesPanel(){notesPanel.classList.toggle('visible');}
+    window.toggleNotesPanel=toggleNotesPanel;
+    window.openNoteInput=function(){if(!selRange||selRange.collapsed)return;noteTextPreview.textContent=selText.length>120?selText.slice(0,120)+'…':selText;noteTextarea.value='';noteInputOverlay.classList.add('visible');setTimeout(()=>noteTextarea.focus(),50);};
+    window.cancelNote=function(){noteInputOverlay.classList.remove('visible');hideToolbar();window.getSelection().removeAllRanges();selRange=null;};
+    window.saveNote=function(){const text=noteTextarea.value.trim();if(!text||!selRange||selRange.collapsed){cancelNote();return;}const sp=document.createElement('span');sp.className='comment-highlight';const tt=document.createElement('span');tt.className='comment-tooltip';tt.textContent=text;try{sp.appendChild(selRange.extractContents());}catch(e){}sp.appendChild(tt);selRange.insertNode(sp);notes.push({id:++noteId,text:selText.slice(0,80),note:text,sp});renderNotes();cancelNote();};
+    function renderNotes(){const c=notes.length;notesCount.textContent=c;notesCount.style.display=c>0?'inline':'none';if(!c){notesList.innerHTML='<p class="notes-empty">No notes yet. Select text and click "Note" to add one.</p>';return;}notesList.innerHTML=notes.map(n=>`<div class="note-item"><div style="display:flex;justify-content:space-between"><div class="note-item-text">"${esc(n.text)}${n.text.length>=80?'…':''}"</div><button class="note-item-delete" onclick="deleteNote(${n.id})">✕</button></div><div class="note-item-content">${esc(n.note)}</div></div>`).join('');}
+    window.deleteNote=function(id){const i=notes.findIndex(n=>n.id===id);if(i<0)return;if(notes[i].sp&&notes[i].sp.parentNode)unwrap(notes[i].sp);notes.splice(i,1);renderNotes();};
+    function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+    init();
+});
+</script>
+</body>
+</html>

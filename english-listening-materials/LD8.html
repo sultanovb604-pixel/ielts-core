@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IELTS Listening Practice — Test 4</title>
+<style>
+  :root{
+    --bg:#ffffff; --panel:#f7f7f7; --text:#1a1a1a; --border:#c9c9c9;
+    --accent:#0071BC; --accent-dark:#00558f; --answered:#0071BC;
+    --current-border:#0071BC; --flag:#e07b00; --correct:#1e7d32; --incorrect:#c62828;
+    --font-size:15px;
+  }
+  body.large{ --font-size:18px; }
+  body.scheme-yellow{ --bg:#000000; --panel:#1a1a00; --text:#ffff00; --border:#ffff00; --accent:#ffff00; --accent-dark:#cccc00; }
+  body.scheme-blue{ --bg:#00263a; --panel:#013a57; --text:#ffffff; --border:#7fb3d5; --accent:#7fd1ff; --accent-dark:#5bb5e6; }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text);
+    font-size:var(--font-size); min-height:100vh; display:flex; flex-direction:column;
+  }
+  #topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--panel); border-bottom:1px solid var(--border); padding:10px 18px; flex-shrink:0;
+  }
+  #topbar .brand{font-size:14px; font-weight:bold;}
+  #topbar .brand small{display:block; font-weight:normal; font-size:12px; opacity:.75;}
+  #timer{font-size:20px; font-weight:bold; letter-spacing:1px; padding:4px 14px; border:1px solid var(--border); border-radius:4px;}
+  #timer.warn{color:#b8860b; border-color:#b8860b;}
+  #timer.danger{color:var(--incorrect); border-color:var(--incorrect); animation:pulse 1s infinite;}
+  @keyframes pulse{0%{opacity:1;}50%{opacity:.4;}100%{opacity:1;}}
+  #settingsBtn{cursor:pointer; border:1px solid var(--border); background:var(--bg); color:var(--text); border-radius:4px; padding:6px 10px; font-size:13px;}
+
+  #settingsPanel{
+    position:absolute; top:52px; right:18px; background:var(--panel); border:1px solid var(--border);
+    border-radius:6px; padding:14px; display:none; z-index:50; width:220px; box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  #settingsPanel.open{display:block;}
+  #settingsPanel h4{margin:0 0 8px; font-size:13px;}
+  #settingsPanel .row{margin-bottom:10px;}
+  #settingsPanel label{font-size:12px; display:block; margin-bottom:4px; opacity:.8;}
+  #settingsPanel select{width:100%; padding:4px; font-size:12px;}
+
+  #main{flex:1; overflow-y:auto; padding:24px 24px 100px; max-width:820px; margin:0 auto; width:100%;}
+  .part{display:none;}
+  .part.active{display:block;}
+  .instructions{
+    background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:12px 16px; margin-bottom:18px; font-size:14px;
+  }
+  .instructions b{display:block; margin-bottom:2px;}
+  h2.part-title{font-size:18px; margin-bottom:4px;}
+  h3.group-title{font-size:15px; margin:22px 0 8px; color:var(--accent-dark);}
+
+  .qcard{
+    border:1px solid var(--border); border-radius:6px; padding:14px 16px; margin-bottom:12px; background:var(--bg); scroll-margin-top:20px;
+  }
+  .qcard.highlight{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent) inset;}
+  .qcard .qnum{font-weight:bold; color:var(--accent-dark); margin-right:6px;}
+  .qcard input[type=text]{
+    border:none; border-bottom:2px solid var(--border); background:transparent; color:var(--text);
+    font-size:var(--font-size); padding:3px 4px; min-width:160px; font-family:inherit;
+  }
+  .qcard input[type=text]:focus{outline:none; border-bottom-color:var(--accent);}
+  .qcard ul{margin:6px 0 6px 0; padding-left:20px; list-style:none;}
+  .qcard ul li{margin-bottom:6px;}
+
+  .qtext{font-weight:bold; margin-bottom:8px;}
+  .options label{display:block; margin:6px 0; cursor:pointer;}
+  .options input{margin-right:8px;}
+
+  .optionbox{background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:12px 16px; margin-bottom:16px;}
+  .optionbox .row{display:flex; gap:10px; margin-bottom:5px; font-size:14px;}
+  .optionbox .row b{width:18px;}
+
+  select.letterSel{
+    font-size:var(--font-size); padding:5px 8px; border:1px solid var(--border); border-radius:4px;
+    background:var(--bg); color:var(--text); font-family:inherit; min-width:70px;
+  }
+
+  #bottomnav{
+    position:fixed; bottom:0; left:0; right:0; background:var(--panel); border-top:1px solid var(--border);
+    padding:8px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; z-index:40;
+  }
+  .parttabs{display:flex; gap:6px;}
+  .parttabs button{
+    border:1px solid var(--border); background:var(--bg); color:var(--text); padding:5px 10px; border-radius:4px; cursor:pointer; font-size:12px;
+  }
+  .parttabs button.activepart{background:var(--accent); color:#fff; border-color:var(--accent);}
+  #qnums{display:flex; gap:4px; flex-wrap:wrap; flex:1;}
+  .qbtn{
+    width:30px; height:30px; border:1px solid var(--border); background:var(--bg); color:var(--text);
+    font-size:11px; border-radius:3px; cursor:pointer; position:relative;
+  }
+  .qbtn.current{border:2px solid var(--current-border);}
+  .qbtn.answered{background:var(--answered); color:#fff;}
+  .qbtn.flagged::after{content:"⚑"; position:absolute; top:-8px; right:-4px; font-size:10px; color:var(--flag);}
+  .navarrow{border:1px solid var(--border); background:var(--bg); color:var(--text); padding:6px 10px; border-radius:4px; cursor:pointer;}
+  #flagWrap{font-size:12px; display:flex; align-items:center; gap:4px;}
+  #submitBtn{background:var(--accent); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:13px;}
+  #submitBtn:hover{background:var(--accent-dark);}
+
+  .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:100;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--bg); color:var(--text); border-radius:8px; padding:22px 26px; max-width:400px; width:90%; box-shadow:0 4px 20px rgba(0,0,0,.3);}
+  .modal h3{margin-top:0;}
+  .modal .actions{display:flex; justify-content:flex-end; gap:10px; margin-top:18px;}
+  .modal button{padding:7px 14px; border-radius:4px; border:1px solid var(--border); cursor:pointer; background:var(--panel); color:var(--text);}
+  .modal button.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+
+  #results{display:none; max-width:820px; margin:24px auto 60px; padding:0 24px;}
+  #results.open{display:block;}
+  .scorebox{background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:22px; text-align:center; margin-bottom:20px;}
+  .scorebox .big{font-size:42px; font-weight:bold; color:var(--accent-dark);}
+  .scorebox .note{font-size:12px; opacity:.75; margin-top:6px;}
+  .breakdown{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;}
+  .breakdown .card{flex:1; min-width:150px; border:1px solid var(--border); border-radius:6px; padding:10px 14px; background:var(--bg);}
+  .breakdown .card .n{font-size:20px; font-weight:bold;}
+  .reviewrow{display:flex; gap:10px; border-bottom:1px solid var(--border); padding:8px 4px; font-size:14px; align-items:baseline;}
+  .reviewrow .q{width:28px; font-weight:bold;}
+  .reviewrow .ans{flex:1;}
+  .reviewrow.correct .your{color:var(--correct); font-weight:bold;}
+  .reviewrow.incorrect .your{color:var(--incorrect); font-weight:bold; text-decoration:line-through;}
+  .reviewrow .correctans{color:var(--correct); font-weight:bold;}
+  #tryAgainBtn{margin-top:18px; background:var(--accent); color:#fff; border:none; padding:9px 18px; border-radius:4px; cursor:pointer; font-weight:bold;}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="brand">IELTS Listening — Practice<br><small>Test 4 · Sections 3–4 (Q21–40) · No audio · text-based practice mode</small></div>
+  <div id="timer">20:00</div>
+  <div><button id="settingsBtn">⚙ Settings</button>
+    <div id="settingsPanel">
+      <h4>Display settings</h4>
+      <div class="row"><label>Text size</label>
+        <select id="textSizeSel"><option value="standard">Standard</option><option value="large">Large</option></select>
+      </div>
+      <div class="row"><label>Colour scheme</label>
+        <select id="schemeSel">
+          <option value="standard">Standard (black on white)</option>
+          <option value="yellow">Black on yellow</option>
+          <option value="blue">White on blue</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+
+  <!-- PART 3 (Section 3) -->
+  <div class="part active" id="part-3">
+    <h2 class="part-title">Section 3 — Questions 21–30</h2>
+
+    <h3 class="group-title">Questions 21–24</h3>
+    <div class="instructions"><b>Complete the notes below.</b>Write NO MORE THAN THREE WORDS for each answer.</div>
+    <div class="qcard" id="qcard-21">
+      <p style="margin:0 0 8px; font-weight:bold;">Box Telecom</p>
+      <p style="margin:0 0 4px;">Problems: been affected by</p>
+      <ul>
+        <li>• drop in <span class="qnum">21</span><input type="text" id="q21"></li>
+        <li>• growing <span class="qnum">22</span><input type="text" id="q22"></li>
+        <li>• delays due to a strike</li>
+      </ul>
+      <p style="margin:0 0 4px;">Causes of problems:</p>
+      <ul>
+        <li>• high <span class="qnum">23</span><input type="text" id="q23"></li>
+        <li>• lack of good <span class="qnum">24</span><input type="text" id="q24"></li>
+      </ul>
+    </div>
+
+    <h3 class="group-title">Questions 25–27</h3>
+    <div class="instructions"><b>Choose the correct letter, A, B or C.</b></div>
+    <div class="qcard" id="qcard-25">
+      <p class="qtext"><span class="qnum">25</span>What does Karin think the company will do?</p>
+      <div class="options">
+        <label><input type="radio" name="q25" value="A"> A &nbsp;look for private investors</label>
+        <label><input type="radio" name="q25" value="B"> B &nbsp;accept a takeover offer</label>
+        <label><input type="radio" name="q25" value="C"> C &nbsp;issue some new shares</label>
+      </div>
+    </div>
+    <div class="qcard" id="qcard-26">
+      <p class="qtext"><span class="qnum">26</span>How does the tutor suggest the company can recover?</p>
+      <div class="options">
+        <label><input type="radio" name="q26" value="A"> A &nbsp;by appointing a new managing director</label>
+        <label><input type="radio" name="q26" value="B"> B &nbsp;by changing the way it is organised</label>
+        <label><input type="radio" name="q26" value="C"> C &nbsp;by closing some of its retail outlets</label>
+      </div>
+    </div>
+    <div class="qcard" id="qcard-27">
+      <p class="qtext"><span class="qnum">27</span>The tutor wants Jason and Karin to produce a report which</p>
+      <div class="options">
+        <label><input type="radio" name="q27" value="A"> A &nbsp;offers solutions to Box Telecom's problems.</label>
+        <label><input type="radio" name="q27" value="B"> B &nbsp;analyses the UK market.</label>
+        <label><input type="radio" name="q27" value="C"> C &nbsp;compares different companies.</label>
+      </div>
+    </div>
+
+    <h3 class="group-title">Questions 28–30</h3>
+    <div class="instructions"><b>Which opinion does each person express about Box Telecom?</b>Choose your answers from the box and write the letters A–F next to questions 28–30.</div>
+    <div class="optionbox">
+      <div class="row"><b>A</b><span>its workers are motivated</span></div>
+      <div class="row"><b>B</b><span>it has too little investment</span></div>
+      <div class="row"><b>C</b><span>it will overcome its problems</span></div>
+      <div class="row"><b>D</b><span>its marketing campaign needs improvement</span></div>
+      <div class="row"><b>E</b><span>it is old-fashioned</span></div>
+      <div class="row"><b>F</b><span>it has strong managers</span></div>
+    </div>
+    <div class="qcard" id="qcard-28"><p><span class="qnum">28</span>Karin &nbsp;
+      <select class="letterSel" id="q28"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></p></div>
+    <div class="qcard" id="qcard-29"><p><span class="qnum">29</span>Jason &nbsp;
+      <select class="letterSel" id="q29"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></p></div>
+    <div class="qcard" id="qcard-30"><p><span class="qnum">30</span>the tutor &nbsp;
+      <select class="letterSel" id="q30"><option value="">–</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option></select></p></div>
+  </div>
+
+  <!-- PART 4 (Section 4) -->
+  <div class="part" id="part-4">
+    <h2 class="part-title">Section 4 — Questions 31–40</h2>
+
+    <h3 class="group-title">Questions 31–36</h3>
+    <div class="instructions"><b>Choose the correct letter, A, B or C.</b></div>
+
+    <div class="qcard" id="qcard-31">
+      <p class="qtext"><span class="qnum">31</span>During the first week of term, students are invited to</p>
+      <div class="options">
+        <label><input type="radio" name="q31" value="A"> A &nbsp;be shown round the library by the librarian.</label>
+        <label><input type="radio" name="q31" value="B"> B &nbsp;listen to descriptions of library resources.</label>
+        <label><input type="radio" name="q31" value="C"> C &nbsp;do an intensive course in the computer centre.</label>
+      </div>
+    </div>
+    <div class="qcard" id="qcard-32">
+      <p class="qtext"><span class="qnum">32</span>The speaker warns the students that</p>
+      <div class="options">
+        <label><input type="radio" name="q32" value="A"> A &nbsp;internet materials can be unreliable.</label>
+        <label><input type="radio" name="q32" value="B"> B &nbsp;downloaded information must be acknowledged.</label>
+        <label><input type="radio" name="q32" value="C"> C &nbsp;computer access may be limited at times.</label>
+      </div>
+    </div>
+    <div class="qcard" id="qcard-33">
+      <p class="qtext"><span class="qnum">33</span>The library is acquiring more CDs as a resource because</p>
+      <div class="options">
+        <label><input type="radio" name="q33" value="A"> A &nbsp;they are a cheap source of information.</label>
+        <label><input type="radio" name="q33" value="B"> B &nbsp;they take up very little space.</label>
+        <label><input type="radio" name="q33" value="C"> C &nbsp;they are more up to date than the reference books.</label>
+      </div>
+    </div>
+    <div class="qcard" id="qcard-34">
+      <p class="qtext"><span class="qnum">34</span>Students are encouraged to use journals online because</p>
+      <div class="options">
+        <label><input type="radio" name="q34" value="A"> A &nbsp;the articles do not need to be returned to the shelves.</label>
+        <label><input type="radio" name="q34" value="B"> B &nbsp;reading online is cheaper than photocopying articles.</label>
+        <label><input type="radio" name="q34" value="C"> C &nbsp;the stock of printed articles is to be reduced.</label>
+      </div>
+    </div>
+    <div class="qcard" id="qcard-35">
+      <p class="qtext"><span class="qnum">35</span>Why might some students continue to use reference books?</p>
+      <div class="options">
+        <label><input type="radio" name="q35" value="A"> A &nbsp;they can be taken away from the library</label>
+        <label><input type="radio" name="q35" value="B"> B &nbsp;they provide information unavailable elsewhere</label>
+        <label><input type="radio" name="q35" value="C"> C &nbsp;they can be borrowed for an extended loan period</label>
+      </div>
+    </div>
+    <div class="qcard" id="qcard-36">
+      <p class="qtext"><span class="qnum">36</span>What is the responsibility of the Training Supervisor?</p>
+      <div class="options">
+        <label><input type="radio" name="q36" value="A"> A &nbsp;to supervise and support library staff</label>
+        <label><input type="radio" name="q36" value="B"> B &nbsp;to provide orientation to the library facilities</label>
+        <label><input type="radio" name="q36" value="C"> C &nbsp;to identify needs and inform section managers</label>
+      </div>
+    </div>
+
+    <h3 class="group-title">Questions 37–40</h3>
+    <div class="instructions"><b>Which section of the university will help postgraduate students with their dissertations in the following ways?</b>Write the correct letter, A, B or C, next to questions 37–40.</div>
+    <div class="optionbox">
+      <div class="row"><b>A</b><span>the postgraduate's own department or tutor</span></div>
+      <div class="row"><b>B</b><span>library staff</span></div>
+      <div class="row"><b>C</b><span>another section of the university</span></div>
+    </div>
+    <div class="qcard" id="qcard-37"><p><span class="qnum">37</span>training in specialised computer programs &nbsp;
+      <select class="letterSel" id="q37"><option value="">–</option><option>A</option><option>B</option><option>C</option></select></p></div>
+    <div class="qcard" id="qcard-38"><p><span class="qnum">38</span>advising on bibliography presentation &nbsp;
+      <select class="letterSel" id="q38"><option value="">–</option><option>A</option><option>B</option><option>C</option></select></p></div>
+    <div class="qcard" id="qcard-39"><p><span class="qnum">39</span>checking the draft of the dissertation &nbsp;
+      <select class="letterSel" id="q39"><option value="">–</option><option>A</option><option>B</option><option>C</option></select></p></div>
+    <div class="qcard" id="qcard-40"><p><span class="qnum">40</span>providing language support &nbsp;
+      <select class="letterSel" id="q40"><option value="">–</option><option>A</option><option>B</option><option>C</option></select></p></div>
+  </div>
+
+</div>
+
+<div id="bottomnav">
+  <div class="parttabs">
+    <button data-part="3" class="activepart">Part 3</button>
+    <button data-part="4">Part 4</button>
+  </div>
+  <button class="navarrow" id="prevBtn">◀</button>
+  <div id="qnums"></div>
+  <button class="navarrow" id="nextBtn">▶</button>
+  <div id="flagWrap"><input type="checkbox" id="flagChk"> Review</div>
+  <button id="submitBtn">Submit</button>
+</div>
+
+<div class="modal-overlay" id="submitModal">
+  <div class="modal">
+    <h3>Submit test?</h3>
+    <p id="submitSummary"></p>
+    <div class="actions">
+      <button id="cancelSubmit">Cancel</button>
+      <button class="primary" id="confirmSubmit">Submit</button>
+    </div>
+  </div>
+</div>
+
+<div id="results"></div>
+
+<script>
+// ---------- CONFIG ----------
+const TOTAL_SECONDS = 20*60;
+let secondsLeft = TOTAL_SECONDS;
+let timerHandle = null;
+let submitted = false;
+
+const ALL_Q = [];
+for(let i=21;i<=40;i++) ALL_Q.push(i);
+
+const QUESTION_META = {};
+[21,22,23,24].forEach(n=>QUESTION_META[n]={type:'Note completion'});
+[25,26,27,31,32,33,34,35,36].forEach(n=>QUESTION_META[n]={type:'Multiple choice'});
+[28,29,30,37,38,39,40].forEach(n=>QUESTION_META[n]={type:'Matching (letter box)'});
+
+// input kind per question: 'text' | 'radio' | 'select'
+const INPUT_KIND = {};
+[21,22,23,24].forEach(n=>INPUT_KIND[n]='text');
+[25,26,27,31,32,33,34,35,36].forEach(n=>INPUT_KIND[n]='radio');
+[28,29,30,37,38,39,40].forEach(n=>INPUT_KIND[n]='select');
+
+// answer key
+const ANSWER_KEY = {
+  21:"sales", 22:"competition", 23:"interest rates / rates of interest", 24:"training",
+  25:"A", 26:"B", 27:"A", 28:"C", 29:"B", 30:"D",
+  31:"B", 32:"A", 33:"A", 34:"C", 35:"A", 36:"B",
+  37:"B", 38:"A", 39:"B", 40:"C"
+};
+
+function normalize(s){
+  return (s||"").toLowerCase().replace(/[^\w%]/g,'');
+}
+function splitTopLevel(s){
+  let depth=0, result=[], current='';
+  for(const ch of s){
+    if(ch==='(') depth++;
+    if(ch===')') depth--;
+    if(ch==='/' && depth===0){ result.push(current.trim()); current=''; }
+    else current += ch;
+  }
+  result.push(current.trim());
+  return result;
+}
+function expandOneLevel(s){
+  const start = s.indexOf('(');
+  if(start===-1) return [s];
+  const end = s.indexOf(')', start);
+  if(end===-1) return [s];
+  const prefix = s.slice(0,start), bracket = s.slice(start+1,end), suffix = s.slice(end+1);
+  const options = bracket.split('/').map(o=>o.trim());
+  let variants = options.map(o => prefix+o+suffix);
+  variants.push(prefix+suffix);
+  return variants.flatMap(v => v.includes('(') ? expandOneLevel(v) : [v]);
+}
+function buildVariants(raw){
+  const alts = splitTopLevel(raw);
+  let variants = [];
+  alts.forEach(a => expandOneLevel(a).forEach(v=>variants.push(v)));
+  return [...new Set(variants.map(normalize))];
+}
+
+// ---------- NAV BUILD ----------
+const qnumsWrap = document.getElementById('qnums');
+ALL_Q.forEach(n=>{
+  const b = document.createElement('button');
+  b.className='qbtn'; b.textContent=n; b.dataset.q=n;
+  b.addEventListener('click', ()=>goToQuestion(n));
+  qnumsWrap.appendChild(b);
+});
+
+let currentQ = 21;
+const flagged = new Set();
+
+function partOf(n){ return n<=30 ? 3 : 4; }
+function setPart(p){
+  document.querySelectorAll('.part').forEach(el=>el.classList.remove('active'));
+  document.getElementById('part-'+p).classList.add('active');
+  document.querySelectorAll('.parttabs button').forEach(b=>b.classList.toggle('activepart', b.dataset.part==p));
+}
+
+function goToQuestion(n){
+  currentQ = n;
+  setPart(partOf(n));
+  document.querySelectorAll('.qbtn').forEach(b=>b.classList.toggle('current', +b.dataset.q===n));
+  document.querySelectorAll('.qcard').forEach(c=>c.classList.remove('highlight'));
+  const card = document.getElementById('qcard-'+n);
+  if(card){
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.add('highlight');
+    setTimeout(()=>card.classList.remove('highlight'), 1200);
+  }
+  if(INPUT_KIND[n]==='text'){ const el=document.getElementById('q'+n); if(el) el.focus(); }
+  flagChk.checked = flagged.has(n);
+}
+
+document.querySelectorAll('.parttabs button').forEach(b=>{
+  b.addEventListener('click', ()=>setPart(b.dataset.part));
+});
+document.getElementById('prevBtn').addEventListener('click', ()=>{ if(currentQ>21) goToQuestion(currentQ-1); });
+document.getElementById('nextBtn').addEventListener('click', ()=>{ if(currentQ<40) goToQuestion(currentQ+1); });
+
+const flagChk = document.getElementById('flagChk');
+flagChk.addEventListener('change', ()=>{
+  if(flagChk.checked) flagged.add(currentQ); else flagged.delete(currentQ);
+  refreshNav();
+});
+
+function getUserAnswer(n){
+  const kind = INPUT_KIND[n];
+  if(kind==='text'){ const el=document.getElementById('q'+n); return el?el.value.trim():''; }
+  if(kind==='radio'){ const el=document.querySelector(`input[name="q${n}"]:checked`); return el?el.value:''; }
+  if(kind==='select'){ const el=document.getElementById('q'+n); return el?el.value:''; }
+  return '';
+}
+function isAnswered(n){ return getUserAnswer(n).length>0; }
+function refreshNav(){
+  document.querySelectorAll('.qbtn').forEach(b=>{
+    const n = +b.dataset.q;
+    b.classList.toggle('answered', isAnswered(n));
+    b.classList.toggle('flagged', flagged.has(n));
+  });
+}
+document.querySelectorAll('.qcard input[type=text]').forEach(inp=>inp.addEventListener('input', refreshNav));
+document.querySelectorAll('.qcard input[type=radio]').forEach(inp=>inp.addEventListener('change', refreshNav));
+document.querySelectorAll('.qcard select.letterSel').forEach(sel=>sel.addEventListener('change', refreshNav));
+
+goToQuestion(21);
+refreshNav();
+
+// ---------- SETTINGS ----------
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsPanel = document.getElementById('settingsPanel');
+settingsBtn.addEventListener('click', ()=> settingsPanel.classList.toggle('open'));
+document.getElementById('textSizeSel').addEventListener('change', e=>{
+  document.body.classList.toggle('large', e.target.value==='large');
+});
+document.getElementById('schemeSel').addEventListener('change', e=>{
+  document.body.classList.remove('scheme-yellow','scheme-blue');
+  if(e.target.value==='yellow') document.body.classList.add('scheme-yellow');
+  if(e.target.value==='blue') document.body.classList.add('scheme-blue');
+});
+
+// ---------- TIMER ----------
+const timerEl = document.getElementById('timer');
+function fmt(s){ const m=Math.floor(s/60); const sec=s%60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
+function tick(){
+  secondsLeft--;
+  timerEl.textContent = fmt(Math.max(secondsLeft,0));
+  timerEl.classList.toggle('warn', secondsLeft<=600 && secondsLeft>300);
+  timerEl.classList.toggle('danger', secondsLeft<=300);
+  if(secondsLeft<=0){ clearInterval(timerHandle); doSubmit(); }
+}
+timerHandle = setInterval(tick,1000);
+
+// ---------- SUBMIT ----------
+const submitModal = document.getElementById('submitModal');
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const answeredCount = ALL_Q.filter(isAnswered).length;
+  document.getElementById('submitSummary').textContent = `You have answered ${answeredCount} of 20 questions. This cannot be undone.`;
+  submitModal.classList.add('open');
+});
+document.getElementById('cancelSubmit').addEventListener('click', ()=> submitModal.classList.remove('open'));
+document.getElementById('confirmSubmit').addEventListener('click', ()=>{
+  submitModal.classList.remove('open');
+  clearInterval(timerHandle);
+  doSubmit();
+});
+
+function isCorrect(n){
+  const raw = getUserAnswer(n);
+  if(!raw) return false;
+  const kind = INPUT_KIND[n];
+  if(kind==='radio' || kind==='select'){
+    return normalize(raw) === normalize(ANSWER_KEY[n]);
+  }
+  const variants = buildVariants(ANSWER_KEY[n]);
+  return variants.includes(normalize(raw));
+}
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function doSubmit(){
+  if(submitted) return;
+  submitted = true;
+  document.getElementById('main').style.display='none';
+  document.getElementById('bottomnav').style.display='none';
+
+  let correctCount = 0;
+  const byType = {};
+  let reviewRows = '';
+
+  ALL_Q.forEach(n=>{
+    const ok = isCorrect(n);
+    if(ok) correctCount++;
+    const t = QUESTION_META[n].type;
+    byType[t] = byType[t] || {correct:0,total:0};
+    byType[t].total++;
+    if(ok) byType[t].correct++;
+
+    const your = getUserAnswer(n) || '(no answer)';
+    reviewRows += `<div class="reviewrow ${ok?'correct':'incorrect'}">
+      <div class="q">${n}</div>
+      <div class="ans">Your answer: <span class="your">${escapeHtml(your)}</span><br>Correct answer: <span class="correctans">${escapeHtml(ANSWER_KEY[n])}</span></div>
+    </div>`;
+  });
+
+  const totalGradable = ALL_Q.length;
+  const pct = Math.round((correctCount/totalGradable)*100);
+
+  let breakdownHtml = '';
+  Object.keys(byType).forEach(t=>{
+    breakdownHtml += `<div class="card"><div class="n">${byType[t].correct}/${byType[t].total}</div>${t}</div>`;
+  });
+
+  const results = document.getElementById('results');
+  results.innerHTML = `
+    <div class="scorebox">
+      <div class="big">${correctCount} / ${totalGradable}</div>
+      <div>Raw score — ${pct}% correct</div>
+      <div class="note">This covers Sections 3–4 only (20 of the 40 questions in a full IELTS Listening test), so it is not converted to an official Band Score. A full 4-section test is needed for a valid band estimate.</div>
+    </div>
+    <div class="breakdown">${breakdownHtml}</div>
+    <h3 class="group-title">Answer review</h3>
+    ${reviewRows}
+    <button id="tryAgainBtn">Try again</button>
+  `;
+  results.classList.add('open');
+  document.getElementById('tryAgainBtn').addEventListener('click', ()=>location.reload());
+}
+</script>
+</body>
+</html>

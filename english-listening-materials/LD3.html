@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IELTS Listening Practice — Test 1</title>
+<style>
+  :root{
+    --bg:#ffffff; --panel:#f7f7f7; --text:#1a1a1a; --border:#c9c9c9;
+    --accent:#0071BC; --accent-dark:#00558f; --answered:#0071BC;
+    --current-border:#0071BC; --flag:#e07b00; --correct:#1e7d32; --incorrect:#c62828;
+    --font-size:15px;
+  }
+  body.large{ --font-size:18px; }
+  body.scheme-yellow{ --bg:#000000; --panel:#1a1a00; --text:#ffff00; --border:#ffff00; --accent:#ffff00; --accent-dark:#cccc00; }
+  body.scheme-blue{ --bg:#00263a; --panel:#013a57; --text:#ffffff; --border:#7fb3d5; --accent:#7fd1ff; --accent-dark:#5bb5e6; }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text);
+    font-size:var(--font-size); min-height:100vh; display:flex; flex-direction:column;
+  }
+  /* TOP BAR */
+  #topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--panel); border-bottom:1px solid var(--border); padding:10px 18px; flex-shrink:0;
+  }
+  #topbar .brand{font-size:14px; font-weight:bold;}
+  #topbar .brand small{display:block; font-weight:normal; font-size:12px; opacity:.75;}
+  #timer{font-size:20px; font-weight:bold; letter-spacing:1px; padding:4px 14px; border:1px solid var(--border); border-radius:4px;}
+  #timer.warn{color:#b8860b; border-color:#b8860b;}
+  #timer.danger{color:var(--incorrect); border-color:var(--incorrect); animation:pulse 1s infinite;}
+  @keyframes pulse{0%{opacity:1;}50%{opacity:.4;}100%{opacity:1;}}
+  #settingsBtn{cursor:pointer; border:1px solid var(--border); background:var(--bg); color:var(--text); border-radius:4px; padding:6px 10px; font-size:13px;}
+
+  #settingsPanel{
+    position:absolute; top:52px; right:18px; background:var(--panel); border:1px solid var(--border);
+    border-radius:6px; padding:14px; display:none; z-index:50; width:220px; box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  #settingsPanel.open{display:block;}
+  #settingsPanel h4{margin:0 0 8px; font-size:13px;}
+  #settingsPanel .row{margin-bottom:10px;}
+  #settingsPanel label{font-size:12px; display:block; margin-bottom:4px; opacity:.8;}
+  #settingsPanel select{width:100%; padding:4px; font-size:12px;}
+
+  /* MAIN */
+  #main{flex:1; overflow-y:auto; padding:24px 24px 100px; max-width:820px; margin:0 auto; width:100%;}
+  .part{display:none;}
+  .part.active{display:block;}
+  .instructions{
+    background:var(--panel); border:1px solid var(--border); border-radius:6px; padding:12px 16px; margin-bottom:18px; font-size:14px;
+  }
+  .instructions b{display:block; margin-bottom:2px;}
+  h2.part-title{font-size:18px; margin-bottom:4px;}
+  h3.group-title{font-size:15px; margin:22px 0 8px; color:var(--accent-dark);}
+
+  .qcard{
+    border:1px solid var(--border); border-radius:6px; padding:14px 16px; margin-bottom:12px; background:var(--bg); scroll-margin-top:20px;
+  }
+  .qcard.highlight{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent) inset;}
+  .qcard .qnum{font-weight:bold; color:var(--accent-dark); margin-right:6px;}
+  .qcard input[type=text]{
+    border:none; border-bottom:2px solid var(--border); background:transparent; color:var(--text);
+    font-size:var(--font-size); padding:3px 4px; min-width:180px; font-family:inherit;
+  }
+  .qcard input[type=text]:focus{outline:none; border-bottom-color:var(--accent);}
+
+  table.cdtable{width:100%; border-collapse:collapse; margin-bottom:6px;}
+  table.cdtable th{background:var(--panel); border:1px solid var(--border); padding:8px; font-size:13px; text-align:left;}
+  table.cdtable td{border:1px solid var(--border); padding:10px; vertical-align:top; font-size:14px;}
+  table.cdtable td input[type=text]{width:95%;}
+
+  .mcq-options label{display:block; margin:6px 0; cursor:pointer;}
+  .mcq-options input{margin-right:8px;}
+
+  /* BOTTOM NAV */
+  #bottomnav{
+    position:fixed; bottom:0; left:0; right:0; background:var(--panel); border-top:1px solid var(--border);
+    padding:8px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; z-index:40;
+  }
+  .parttabs{display:flex; gap:6px;}
+  .parttabs button{
+    border:1px solid var(--border); background:var(--bg); color:var(--text); padding:5px 10px; border-radius:4px; cursor:pointer; font-size:12px;
+  }
+  .parttabs button.activepart{background:var(--accent); color:#fff; border-color:var(--accent);}
+  #qnums{display:flex; gap:4px; flex-wrap:wrap; flex:1;}
+  .qbtn{
+    width:30px; height:30px; border:1px solid var(--border); background:var(--bg); color:var(--text);
+    font-size:12px; border-radius:3px; cursor:pointer; position:relative;
+  }
+  .qbtn.current{border:2px solid var(--current-border);}
+  .qbtn.answered{background:var(--answered); color:#fff;}
+  .qbtn.flagged::after{content:"⚑"; position:absolute; top:-8px; right:-4px; font-size:10px; color:var(--flag);}
+  .navarrow{border:1px solid var(--border); background:var(--bg); color:var(--text); padding:6px 10px; border-radius:4px; cursor:pointer;}
+  #flagWrap{font-size:12px; display:flex; align-items:center; gap:4px;}
+  #submitBtn{background:var(--accent); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:bold; font-size:13px;}
+  #submitBtn:hover{background:var(--accent-dark);}
+
+  /* MODAL */
+  .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:100;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--bg); color:var(--text); border-radius:8px; padding:22px 26px; max-width:400px; width:90%; box-shadow:0 4px 20px rgba(0,0,0,.3);}
+  .modal h3{margin-top:0;}
+  .modal .actions{display:flex; justify-content:flex-end; gap:10px; margin-top:18px;}
+  .modal button{padding:7px 14px; border-radius:4px; border:1px solid var(--border); cursor:pointer; background:var(--panel); color:var(--text);}
+  .modal button.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+
+  /* RESULTS */
+  #results{display:none; max-width:820px; margin:24px auto 60px; padding:0 24px;}
+  #results.open{display:block;}
+  .scorebox{background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:22px; text-align:center; margin-bottom:20px;}
+  .scorebox .big{font-size:42px; font-weight:bold; color:var(--accent-dark);}
+  .scorebox .note{font-size:12px; opacity:.75; margin-top:6px;}
+  .breakdown{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;}
+  .breakdown .card{flex:1; min-width:150px; border:1px solid var(--border); border-radius:6px; padding:10px 14px; background:var(--bg);}
+  .breakdown .card .n{font-size:20px; font-weight:bold;}
+  .reviewrow{display:flex; gap:10px; border-bottom:1px solid var(--border); padding:8px 4px; font-size:14px; align-items:baseline;}
+  .reviewrow .q{width:28px; font-weight:bold;}
+  .reviewrow .ans{flex:1;}
+  .reviewrow.correct .your{color:var(--correct); font-weight:bold;}
+  .reviewrow.incorrect .your{color:var(--incorrect); font-weight:bold; text-decoration:line-through;}
+  .reviewrow .correctans{color:var(--correct); font-weight:bold;}
+  #tryAgainBtn{margin-top:18px; background:var(--accent); color:#fff; border:none; padding:9px 18px; border-radius:4px; cursor:pointer; font-weight:bold;}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="brand">IELTS Listening — Practice<br><small>Test 1 · Sections 1–2 (Q1–20) · No audio · text-based practice mode</small></div>
+  <div id="timer">20:00</div>
+  <div><button id="settingsBtn">⚙ Settings</button>
+    <div id="settingsPanel">
+      <h4>Display settings</h4>
+      <div class="row"><label>Text size</label>
+        <select id="textSizeSel"><option value="standard">Standard</option><option value="large">Large</option></select>
+      </div>
+      <div class="row"><label>Colour scheme</label>
+        <select id="schemeSel">
+          <option value="standard">Standard (black on white)</option>
+          <option value="yellow">Black on yellow</option>
+          <option value="blue">White on blue</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+
+  <!-- PART 1 -->
+  <div class="part active" id="part-1">
+    <h2 class="part-title">Section 1 — Questions 1–10</h2>
+
+    <h3 class="group-title">Questions 1–4</h3>
+    <div class="instructions"><b>Complete the notes below.</b>Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.</div>
+    <div class="qcard" id="qcard-1">
+      <p style="margin:0 0 6px;"><i>Dreamtime travel agency — Tour information</i></p>
+      <p style="margin:0 0 4px; opacity:.7;">Example: Holiday name — <u>Whale Watch Experience</u></p>
+      <p style="margin:0 0 4px;">Holiday length — 2 days</p>
+      <p><span class="qnum">1</span>Type of transportation — <input type="text" id="q1"></p>
+    </div>
+    <div class="qcard" id="qcard-2"><p><span class="qnum">2</span>Maximum group size — <input type="text" id="q2"></p></div>
+    <div class="qcard" id="qcard-3"><p><span class="qnum">3</span>Next tour date — <input type="text" id="q3"></p></div>
+    <div class="qcard" id="qcard-4"><p><span class="qnum">4</span>Hotel name — The <input type="text" id="q4"></p></div>
+
+    <h3 class="group-title">Questions 5 and 6</h3>
+    <div class="instructions"><b>Choose TWO letters, A–E.</b>Which TWO things are included in the price of the tour?</div>
+    <div class="qcard" id="qcard-5">
+      <div class="mcq-options">
+        <label><input type="checkbox" class="mcq56" value="A"> A &nbsp;fishing trip</label>
+        <label><input type="checkbox" class="mcq56" value="B"> B &nbsp;guided bushwalk</label>
+        <label><input type="checkbox" class="mcq56" value="C"> C &nbsp;reptile park entry</label>
+        <label><input type="checkbox" class="mcq56" value="D"> D &nbsp;table tennis</label>
+        <label><input type="checkbox" class="mcq56" value="E"> E &nbsp;tennis</label>
+      </div>
+      <p style="font-size:12px; opacity:.65; margin-top:6px;">Select exactly two options (in either order).</p>
+    </div>
+    <div id="qcard-6" style="display:none;"></div>
+
+    <h3 class="group-title">Questions 7–10</h3>
+    <div class="instructions"><b>Complete the sentences below.</b>Write NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.</div>
+    <div class="qcard" id="qcard-7"><p><span class="qnum">7</span>The tour costs $ <input type="text" id="q7"></p></div>
+    <div class="qcard" id="qcard-8"><p><span class="qnum">8</span>Bookings must be made no later than <input type="text" id="q8"> days in advance.</p></div>
+    <div class="qcard" id="qcard-9"><p><span class="qnum">9</span>A <input type="text" id="q9"> deposit is required.</p></div>
+    <div class="qcard" id="qcard-10"><p><span class="qnum">10</span>The customer's reference number is <input type="text" id="q10"></p></div>
+  </div>
+
+  <!-- PART 2 -->
+  <div class="part" id="part-2">
+    <h2 class="part-title">Section 2 — Questions 11–20</h2>
+
+    <h3 class="group-title">Questions 11–19</h3>
+    <div class="instructions"><b>Complete the table below.</b>Write NO MORE THAN THREE WORDS for each answer.</div>
+    <div class="qcard" id="qcard-11" style="padding:0; overflow-x:auto;">
+      <table class="cdtable">
+        <tr><th>Brand of Cot</th><th>Good Points</th><th>Problems</th><th>Verdict</th></tr>
+        <tr>
+          <td><i>Baby Safe</i></td>
+          <td>Easy to <span class="qnum">11</span><input type="text" id="q11"></td>
+          <td>• Did not have any <span class="qnum">12</span><input type="text" id="q12"><br>• Babies could trap their <span class="qnum">13</span><input type="text" id="q13"> in the side bar</td>
+          <td><span class="qnum">14</span><input type="text" id="q14"></td>
+        </tr>
+        <tr>
+          <td><i>Choice Cots</i></td>
+          <td>Easy to <span class="qnum">15</span><input type="text" id="q15"></td>
+          <td>• Side did not drop down<br>• Spaces between the bars were <span class="qnum">16</span><input type="text" id="q16"></td>
+          <td><span class="qnum">17</span><input type="text" id="q17"></td>
+        </tr>
+        <tr>
+          <td><i>Mother's Choice</i></td>
+          <td>Base of cot could be moved</td>
+          <td>• Did not have any <span class="qnum">18</span><input type="text" id="q18"><br>• Pictures could be removed easily</td>
+          <td><span class="qnum">19</span><input type="text" id="q19"></td>
+        </tr>
+      </table>
+    </div>
+    <div id="qcard-12" style="display:none;"></div><div id="qcard-13" style="display:none;"></div>
+    <div id="qcard-15" style="display:none;"></div><div id="qcard-16" style="display:none;"></div>
+    <div id="qcard-17" style="display:none;"></div><div id="qcard-18" style="display:none;"></div>
+    <div id="qcard-19" style="display:none;"></div>
+
+    <h3 class="group-title">Question 20</h3>
+    <div class="instructions"><b>Complete the notes below.</b>Write ONE WORD ONLY for the answer.</div>
+    <div class="qcard" id="qcard-20">
+      <p style="margin:0 0 4px;">• Metal should not be rusted or bent</p>
+      <p>• Edges of cot should not be <span class="qnum">20</span><input type="text" id="q20"></p>
+    </div>
+  </div>
+
+</div>
+
+<div id="bottomnav">
+  <div class="parttabs">
+    <button data-part="1" class="activepart">Part 1</button>
+    <button data-part="2">Part 2</button>
+  </div>
+  <button class="navarrow" id="prevBtn">◀</button>
+  <div id="qnums"></div>
+  <button class="navarrow" id="nextBtn">▶</button>
+  <div id="flagWrap"><input type="checkbox" id="flagChk"> Review</div>
+  <button id="submitBtn">Submit</button>
+</div>
+
+<div class="modal-overlay" id="submitModal">
+  <div class="modal">
+    <h3>Submit test?</h3>
+    <p id="submitSummary"></p>
+    <div class="actions">
+      <button id="cancelSubmit">Cancel</button>
+      <button class="primary" id="confirmSubmit">Submit</button>
+    </div>
+  </div>
+</div>
+
+<div id="results"></div>
+
+<script>
+// ---------- CONFIG ----------
+const TOTAL_SECONDS = 20*60;
+let secondsLeft = TOTAL_SECONDS;
+let timerHandle = null;
+let submitted = false;
+
+// question -> {type, group}
+const QUESTION_META = {
+  1:{type:'Note completion'},2:{type:'Note completion'},3:{type:'Note completion'},4:{type:'Note completion'},
+  5:{type:'Multiple choice (2 letters)'},6:{type:'Multiple choice (2 letters)'},
+  7:{type:'Sentence completion'},8:{type:'Sentence completion'},9:{type:'Sentence completion'},10:{type:'Sentence completion'},
+  11:{type:'Table completion'},12:{type:'Table completion'},13:{type:'Table completion'},14:{type:'Table completion'},
+  15:{type:'Table completion'},16:{type:'Table completion'},17:{type:'Table completion'},18:{type:'Table completion'},19:{type:'Table completion'},
+  20:{type:'Note completion'}
+};
+
+// answer key (raw strings; "/" = alternatives, "(...)" = optional word)
+const ANSWER_KEY = {
+  1:"by minibus / a minibus", 2:"15 / 15 people", 3:"April (the) 18th", 4:"Pallisades",
+  5:["B","D"], // set, either order
+  7:"280", 8:"14", 9:"20%", 10:"39745T",
+  11:"move around / move about", 12:"brakes", 13:"fingers", 14:"satisfactory",
+  15:"put (it) together", 16:"too wide", 17:"dangerous", 18:"wheels",
+  19:"(the) best / (the) best buy / safe", 20:"sharp"
+};
+
+function normalize(s){
+  return (s||"").toLowerCase().replace(/[^\w\s%]/g,'').replace(/\s+/g,' ').trim().replace(/\s+%/g,'%');
+}
+function expandParens(s){
+  const m = s.match(/\(([^)]+)\)/);
+  if(!m) return [s];
+  const withIt = s.replace(/\(([^)]+)\)/,'$1').replace(/\s+/g,' ').trim();
+  const without = s.replace(/\(([^)]+)\)/,'').replace(/\s+/g,' ').trim();
+  return [withIt, without];
+}
+function buildVariants(raw){
+  const alts = raw.split('/').map(s=>s.trim());
+  let variants = [];
+  alts.forEach(a=>{ expandParens(a).forEach(v=>variants.push(v)); });
+  return [...new Set(variants.map(normalize))];
+}
+
+// ---------- NAV BUILD ----------
+const qnumsWrap = document.getElementById('qnums');
+const ALL_Q = [];
+for(let i=1;i<=20;i++) ALL_Q.push(i);
+ALL_Q.forEach(n=>{
+  const b = document.createElement('button');
+  b.className='qbtn'; b.textContent=n; b.dataset.q=n;
+  b.addEventListener('click', ()=>goToQuestion(n));
+  qnumsWrap.appendChild(b);
+});
+
+let currentQ = 1;
+const flagged = new Set();
+
+function partOf(n){ return n<=10 ? 1 : 2; }
+
+function setPart(p){
+  document.querySelectorAll('.part').forEach(el=>el.classList.remove('active'));
+  document.getElementById('part-'+p).classList.add('active');
+  document.querySelectorAll('.parttabs button').forEach(b=>b.classList.toggle('activepart', b.dataset.part==p));
+}
+
+function goToQuestion(n){
+  currentQ = n;
+  setPart(partOf(n));
+  document.querySelectorAll('.qbtn').forEach(b=>b.classList.toggle('current', +b.dataset.q===n));
+  document.querySelectorAll('.qcard').forEach(c=>c.classList.remove('highlight'));
+  const card = document.getElementById('qcard-'+n);
+  if(card && card.style.display!=='none'){
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    card.classList.add('highlight');
+    setTimeout(()=>card.classList.remove('highlight'), 1200);
+  }
+  const input = document.getElementById('q'+n);
+  if(input) input.focus();
+  flagChk.checked = flagged.has(n);
+}
+
+document.querySelectorAll('.parttabs button').forEach(b=>{
+  b.addEventListener('click', ()=>setPart(b.dataset.part));
+});
+document.getElementById('prevBtn').addEventListener('click', ()=>{ if(currentQ>1) goToQuestion(currentQ-1); });
+document.getElementById('nextBtn').addEventListener('click', ()=>{ if(currentQ<20) goToQuestion(currentQ+1); });
+
+const flagChk = document.getElementById('flagChk');
+flagChk.addEventListener('change', ()=>{
+  if(flagChk.checked) flagged.add(currentQ); else flagged.delete(currentQ);
+  refreshNav();
+});
+
+function isAnswered(n){
+  if(n===5||n===6){
+    return document.querySelectorAll('.mcq56:checked').length>0;
+  }
+  const el = document.getElementById('q'+n);
+  return el && el.value.trim().length>0;
+}
+function refreshNav(){
+  document.querySelectorAll('.qbtn').forEach(b=>{
+    const n = +b.dataset.q;
+    b.classList.toggle('answered', isAnswered(n));
+    b.classList.toggle('flagged', flagged.has(n));
+  });
+}
+document.querySelectorAll('.qcard input[type=text]').forEach(inp=>inp.addEventListener('input', refreshNav));
+
+// limit checkbox selection to 2
+document.querySelectorAll('.mcq56').forEach(chk=>{
+  chk.addEventListener('change', ()=>{
+    const checked = document.querySelectorAll('.mcq56:checked');
+    if(checked.length>2){ chk.checked=false; }
+    refreshNav();
+  });
+});
+
+goToQuestion(1);
+refreshNav();
+
+// ---------- SETTINGS ----------
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsPanel = document.getElementById('settingsPanel');
+settingsBtn.addEventListener('click', ()=> settingsPanel.classList.toggle('open'));
+document.getElementById('textSizeSel').addEventListener('change', e=>{
+  document.body.classList.toggle('large', e.target.value==='large');
+});
+document.getElementById('schemeSel').addEventListener('change', e=>{
+  document.body.classList.remove('scheme-yellow','scheme-blue');
+  if(e.target.value==='yellow') document.body.classList.add('scheme-yellow');
+  if(e.target.value==='blue') document.body.classList.add('scheme-blue');
+});
+
+// ---------- TIMER ----------
+const timerEl = document.getElementById('timer');
+function fmt(s){ const m=Math.floor(s/60); const sec=s%60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
+function tick(){
+  secondsLeft--;
+  timerEl.textContent = fmt(Math.max(secondsLeft,0));
+  timerEl.classList.toggle('warn', secondsLeft<=600 && secondsLeft>300);
+  timerEl.classList.toggle('danger', secondsLeft<=300);
+  if(secondsLeft<=0){ clearInterval(timerHandle); doSubmit(); }
+}
+timerHandle = setInterval(tick,1000);
+
+// ---------- SUBMIT ----------
+const submitModal = document.getElementById('submitModal');
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const answeredCount = ALL_Q.filter(isAnswered).length;
+  document.getElementById('submitSummary').textContent = `You have answered ${answeredCount} of 20 questions. This cannot be undone.`;
+  submitModal.classList.add('open');
+});
+document.getElementById('cancelSubmit').addEventListener('click', ()=> submitModal.classList.remove('open'));
+document.getElementById('confirmSubmit').addEventListener('click', ()=>{
+  submitModal.classList.remove('open');
+  clearInterval(timerHandle);
+  doSubmit();
+});
+
+function getUserAnswer(n){
+  if(n===5||n===6){
+    const sel = [...document.querySelectorAll('.mcq56:checked')].map(c=>c.value).sort();
+    return sel.join(', ');
+  }
+  const el = document.getElementById('q'+n);
+  return el ? el.value.trim() : '';
+}
+function isCorrect(n){
+  if(n===6) return null; // graded together with 5
+  if(n===5){
+    const sel = [...document.querySelectorAll('.mcq56:checked')].map(c=>c.value).sort();
+    const key = [...ANSWER_KEY[5]].sort();
+    return sel.length===2 && sel[0]===key[0] && sel[1]===key[1];
+  }
+  const raw = getUserAnswer(n);
+  if(!raw) return false;
+  const variants = buildVariants(ANSWER_KEY[n]);
+  return variants.includes(normalize(raw));
+}
+
+function doSubmit(){
+  if(submitted) return;
+  submitted = true;
+  document.getElementById('main').style.display='none';
+  document.getElementById('bottomnav').style.display='none';
+
+  let correctCount = 0;
+  const gradable = ALL_Q.filter(n=>n!==6);
+  const byType = {};
+  let reviewRows = '';
+
+  gradable.forEach(n=>{
+    const ok = isCorrect(n);
+    if(ok) correctCount++;
+    const t = QUESTION_META[n].type;
+    byType[t] = byType[t] || {correct:0,total:0};
+    byType[t].total++;
+    if(ok) byType[t].correct++;
+
+    const your = getUserAnswer(n) || '(no answer)';
+    const keyDisplay = n===5 ? ANSWER_KEY[5].join(' / ') : ANSWER_KEY[n];
+    const label = (n===5) ? '5–6' : n;
+    if(n!==5 || true){
+      reviewRows += `<div class="reviewrow ${ok?'correct':'incorrect'}">
+        <div class="q">${label}</div>
+        <div class="ans">Your answer: <span class="your">${escapeHtml(your)}</span><br>Correct answer: <span class="correctans">${escapeHtml(keyDisplay)}</span></div>
+      </div>`;
+    }
+  });
+
+  const totalGradable = gradable.length; // 19 (Q6 merged into Q5)
+  const pct = Math.round((correctCount/totalGradable)*100);
+
+  let breakdownHtml = '';
+  Object.keys(byType).forEach(t=>{
+    breakdownHtml += `<div class="card"><div class="n">${byType[t].correct}/${byType[t].total}</div>${t}</div>`;
+  });
+
+  const results = document.getElementById('results');
+  results.innerHTML = `
+    <div class="scorebox">
+      <div class="big">${correctCount} / ${totalGradable}</div>
+      <div>Raw score — ${pct}% correct</div>
+      <div class="note">This covers Sections 1–2 only (20 of the 40 questions in a full IELTS Listening test), so it is not converted to an official Band Score. A full 4-section test is needed for a valid band estimate.</div>
+    </div>
+    <div class="breakdown">${breakdownHtml}</div>
+    <h3 class="group-title">Answer review</h3>
+    ${reviewRows}
+    <button id="tryAgainBtn">Try again</button>
+  `;
+  results.classList.add('open');
+  document.getElementById('tryAgainBtn').addEventListener('click', ()=>location.reload());
+}
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
