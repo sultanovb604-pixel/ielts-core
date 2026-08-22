@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing & Plans | IELTS Core</title>
+  <meta name="description" content="Simple, transparent pricing for IELTS Core. Unlock 40+ authentic computer-delivered reading and listening tests, verified band scoring, and study tools.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,400&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="/english-product-v4.css">
+  <link rel="stylesheet" href="/english-pages.css">
+  <link rel="stylesheet" href="/english-pricing.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+</head>
+<body class="premium-product-page pricing-page">
+  <header class="app-header" aria-label="Main application header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core Home">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
+      <span>IELTS CORE</span>
+      <span class="app-brand-badge">BETA</span>
+    </a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
+    <nav class="app-nav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/practice">Practice</a>
+      <a href="/english/materials">Materials</a>
+      <a href="/english/materials?level=ielts&collection=full-test">Full Mock Tests</a>
+      <a href="/english/pricing" aria-current="page" class="nav-pricing-link">Pricing</a>
+    </nav>
+    <div class="app-actions" data-guest>
+      <a class="plain-link" href="/english/login">Sign in</a>
+      <a class="button primary" href="/english/signup">Start free practice <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px">arrow_forward</span></a>
+    </div>
+    <div class="app-actions" data-member hidden>
+      <a class="plain-link" href="/english/account" id="memberName">Account</a>
+      <a class="button primary" href="/english/account">Dashboard <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px">arrow_forward</span></a>
+    </div>
+  </header>
+
+  <main class="v4-shell pricing-container">
+    <!-- Header / Hero -->
+    <section class="pricing-hero">
+      <div class="pricing-pill-badge">
+        <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+        <span>Forecast & Authentic Material Bank · 2026 Edition</span>
+      </div>
+      <h1 class="pricing-title">Simple, Transparent Pricing</h1>
+      <p class="pricing-subtitle">
+        Full Authentic Cambridge Computer-Delivered Tests, official CDI split-pane interface, real exam countdown, automatic Band 0–9.0 calculation, and verified answer keys.
+      </p>
+      <div class="pricing-guarantees">
+        <span class="guarantee-item"><span class="material-symbols-outlined" aria-hidden="true">verified_user</span> No hidden fees</span>
+        <span class="guarantee-item"><span class="material-symbols-outlined" aria-hidden="true">bolt</span> Instant automatic activation</span>
+        <span class="guarantee-item"><span class="material-symbols-outlined" aria-hidden="true">lock_reset</span> UZS is a one-time payment — no auto-renewal</span>
+      </div>
+    </section>
+
+    <!-- Cycle Switcher (Monthly / 3 Months / 6 Months) -->
+    <div class="billing-switcher-wrapper">
+      <span class="switcher-label">INDIVIDUAL PLANS</span>
+      <div class="billing-switcher" role="tablist" aria-label="Billing cycle selection">
+        <button type="button" class="billing-tab active" data-cycle="1" role="tab" aria-selected="true">
+          <span>1 Month</span>
+        </button>
+        <button type="button" class="billing-tab" data-cycle="3" role="tab" aria-selected="false">
+          <span>3 Months</span>
+          <span class="billing-tab-tag rec">RECOMMENDED</span>
+        </button>
+        <button type="button" class="billing-tab" data-cycle="6" role="tab" aria-selected="false">
+          <span>6 Months</span>
+          <span class="billing-tab-tag best">BEST VALUE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Individual Pricing Cards Grid -->
+    <section class="pricing-grid individual-grid" id="pricingCardsGrid">
+      <!-- 1 Month Card -->
+      <article class="pricing-card" data-plan-card="1">
+        <div class="pricing-card-top-tag">STARTER ACCESS</div>
+        <div class="pricing-card-header">
+          <div class="plan-name-row">
+            <h2>Starter (1 Month)</h2>
+            <span class="plan-tag-sub">30 kun</span>
+          </div>
+          <div class="plan-price-row">
+            <strong class="price-value">30,000</strong>
+            <span class="price-currency">uzs <small>/ month</small></span>
+          </div>
+          <div class="plan-billed-note">Billed once: <strong>30,000 UZS</strong></div>
+        </div>
+        <div class="pricing-card-action">
+          <button type="button" class="button secondary large pricing-select-btn" onclick="window.selectPricingTier(1, 30000)">
+            <span>Tanlash (30 000 UZS)</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="pricing-card-features">
+          <span class="features-title">Everything included:</span>
+          <ul class="features-list">
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Authentic Cambridge Reading Tests</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> 1:1 Real Exam Computer-Delivered Interface</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Authentic Listening Tests & Audio Tracks</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Instant Band Score Calculation (Band 0–9.0)</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Verified Answer Explanations & Locations</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Interactive Article Reader & Highlighter</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Personal My Vocabulary Notebook</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 3 Months Card (Featured) -->
+      <article class="pricing-card featured" data-plan-card="3">
+        <div class="pricing-card-top-tag popular">MOST POPULAR · SAVE 17%</div>
+        <div class="pricing-card-header">
+          <div class="plan-name-row">
+            <h2>Intensive (3 Months)</h2>
+            <span class="plan-tag-sub popular">90 kun · 25k/oy</span>
+          </div>
+          <div class="plan-price-row">
+            <strong class="price-value">75,000</strong>
+            <span class="price-currency">uzs <small>/ 3 months</small></span>
+            <del class="price-old">90,000 uzs</del>
+          </div>
+          <div class="plan-billed-note">Billed once: <strong>75,000 UZS</strong> (at 25 000 uzs/mo)</div>
+        </div>
+        <div class="pricing-card-action">
+          <button type="button" class="button primary large pricing-select-btn" onclick="window.selectPricingTier(3, 75000)">
+            <span>Tanlash (75 000 UZS)</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="pricing-card-features">
+          <span class="features-title">Everything in Starter, plus:</span>
+          <ul class="features-list">
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> <strong>90 Days of Uninterrupted Practice</strong></li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Priority Access to Newly Added Tests</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Real Exam Mode + Flexible Practice Mode</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Weak-Area & Mistake Pattern Diagnostics</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Priority Fast-Track Support via Telegram</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 6 Months Card -->
+      <article class="pricing-card" data-plan-card="6">
+        <div class="pricing-card-top-tag value">BEST VALUE · SAVE 25%</div>
+        <div class="pricing-card-header">
+          <div class="plan-name-row">
+            <h2>Mastery (6 Months)</h2>
+            <span class="plan-tag-sub value">180 kun · 22.5k/oy</span>
+          </div>
+          <div class="plan-price-row">
+            <strong class="price-value">135,000</strong>
+            <span class="price-currency">uzs <small>/ 6 months</small></span>
+            <del class="price-old">180,000 uzs</del>
+          </div>
+          <div class="plan-billed-note">Billed once: <strong>135,000 UZS</strong> (at 22 500 uzs/mo)</div>
+        </div>
+        <div class="pricing-card-action">
+          <button type="button" class="button secondary large pricing-select-btn" onclick="window.selectPricingTier(6, 135000)">
+            <span>Tanlash (135 000 UZS)</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="pricing-card-features">
+          <span class="features-title">Everything in Intensive, plus:</span>
+          <ul class="features-list">
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> <strong>180 Days of Complete IELTS Preparation</strong></li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Highest Long-Term Savings (22 500 uzs/mo)</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Complete Historical Performance Analytics</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Lifetime Retention of Saved Words</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <!-- Teacher Cohort Group Discount Banner -->
+    <section class="card" style="max-width:1100px;margin:28px auto;padding:28px 32px;border-radius:18px;background:linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #2e1065 100%);color:#fff;border:1.5px solid rgba(245,158,11,0.4);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;box-shadow:0 14px 34px rgba(0,0,0,0.18);">
+      <div style="max-width:650px;">
+        <span style="display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(245,158,11,0.2);color:#fbbf24;font-size:11.5px;font-weight:800;letter-spacing:0.05em;margin-bottom:8px;">★ O'QITUVCHILAR UCHUN MAXSUS GURUH CHEGIRMASI</span>
+        <h2 style="font-size:22px;font-weight:800;color:#fff;margin:0 0 6px 0;">10+ O'quvchi uchun Premium — atigi 20,000 UZS / oy</h2>
+        <p style="margin:0;font-size:14px;color:#cbd5e1;line-height:1.55;">O'quv markazlari va IELTS instruktorlari uchun: 10 tadan ortiq o'quvchini birlashtiring va har bir o'quvchiga <strong>20,000 UZS / oy</strong> maxsus narxda to'liq Premium imkoniyatlarini taqdim eting. O'qituvchi o'z Teacher Dashboardidan litsenziyalarni 1-tugma bilan taqsimlaydi va o'quvchilarining progressini to'liq kuzatib boradi.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
+        <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener" class="button primary" style="background:#e11d48;border-color:#e11d48;color:#fff;font-weight:800;padding:12px 22px;border-radius:12px;font-size:14px;">
+          <span class="material-symbols-outlined" style="font-size:17px;">bolt</span>
+          <span>Guruh paketini olish (@ieltscoreadmin)</span>
+        </a>
+        <a href="/english/teacher" style="color:#93c5fd;font-size:12.5px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+          <span>Teacher Dashboardni ko'rish</span>
+          <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Promo Code Redemption Bar -->
+    <section class="pricing-promo-section">
+      <div class="promo-box">
+        <div class="promo-box-copy">
+          <span class="material-symbols-outlined promo-icon" aria-hidden="true">confirmation_number</span>
+          <div>
+            <h3>Promo-kod yoki Aksiya Kodingiz bormi?</h3>
+            <p>Admin yoki oʻqituvchingiz bergan promo-kodni kiritib, Premium obunani bepul yoki darhol faollashtiring.</p>
+          </div>
+        </div>
+        <form class="promo-box-form" id="pricingPromoForm">
+          <input type="text" id="pricingPromoInput" placeholder="Masalan: VORTEX30" required aria-label="Promo code">
+          <button type="submit" class="button primary" id="pricingPromoBtn">
+            <span>Faollashtirish</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+      </div>
+      <div class="promo-feedback" id="pricingPromoFeedback" hidden></div>
+    </section>
+
+    <!-- Business & Institutional Plans -->
+    <section class="pricing-business-section">
+      <div class="section-badge-center">
+        <span>INSTITUTIONAL & PARTNERS</span>
+      </div>
+      <h2 class="section-title-center">Oʻqituvchilar va Oʻquv Markazlari uchun</h2>
+      <p class="section-desc-center">Guruhli oʻquvchilar va Mock Exam oʻtkazuvchi markazlar uchun maxsus qulay shartlar.</p>
+
+      <div class="business-grid">
+        <!-- Teacher Card -->
+        <article class="business-card">
+          <span class="business-badge teacher">FOR TEACHERS</span>
+          <div class="business-title-row">
+            <span class="material-symbols-outlined business-icon" aria-hidden="true">school</span>
+            <h3>Teacher Plan</h3>
+          </div>
+          <div class="business-price">Maxsus tarif <small>/ guruh hajmiga qarab</small></div>
+          <a class="button secondary business-btn" href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined" aria-hidden="true">send</span>
+            <span>Admin bilan bogʻlanish</span>
+          </a>
+          <ul class="business-features">
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Oʻquvchilar uchun arzonlashtirilgan guruh narxlari</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Oʻquvchilarning test topshirish natijalarini kuzatish</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Haftalik uyga vazifa uchun testlarni biriktirish</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Platformani sozlash uchun 0 soʻm toʻlov</li>
+          </ul>
+        </article>
+
+        <!-- Mock Center Card -->
+        <article class="business-card">
+          <span class="business-badge center">FOR MOCK CENTERS</span>
+          <div class="business-title-row">
+            <span class="material-symbols-outlined business-icon" aria-hidden="true">domain</span>
+            <h3>Mock System</h3>
+          </div>
+          <div class="business-price">Maxsus tarif <small>/ kompyuter xonasi uchun</small></div>
+          <a class="button secondary business-btn" href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined" aria-hidden="true">send</span>
+            <span>Admin bilan bogʻlanish</span>
+          </a>
+          <ul class="business-features">
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Toʻliq CDI Computer-Based testlar bazasi</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Test tugashi bilan avtomatik ball va Band hisoblash</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Talabalarga natija va xatolar tahlilini taqdim etish</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Oflayn yoki onlayn xonalar uchun qulay integratsiya</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Visual Materials Showcase Section -->
+    <section class="pricing-materials-section">
+      <div class="section-badge-center">
+        <span>EXAM MATERIALS</span>
+      </div>
+      <h2 class="section-title-center">The materials you practise with</h2>
+      <p class="section-desc-center">Materials for all four skills, authentic Cambridge full tests, and forecast topics for the current exam window.</p>
+
+      <div class="materials-pack-grid">
+        <!-- Reading Pack -->
+        <div class="material-pack-card">
+          <div class="pack-cover reading">
+            <div class="pack-badge">READING</div>
+            <h3>CAMBRIDGE READING</h3>
+            <p>Authentic Cambridge Tests</p>
+          </div>
+          <div class="pack-meta">
+            <strong>Full Mock Tests</strong>
+            <span>Authentic Passages & Drills</span>
+          </div>
+        </div>
+
+        <!-- Listening Pack -->
+        <div class="material-pack-card">
+          <div class="pack-cover listening">
+            <div class="pack-badge">LISTENING</div>
+            <h3>LISTENING PACK 1–40</h3>
+            <p>Computer-Delivered Audio</p>
+          </div>
+          <div class="pack-meta">
+            <strong>4 Parts per Test</strong>
+            <span>Full Audio & Transcripts</span>
+          </div>
+        </div>
+
+        <!-- Writing Pack -->
+        <div class="material-pack-card">
+          <div class="pack-cover writing">
+            <div class="pack-badge">WRITING</div>
+            <h3>WRITING RECENT TOPICS</h3>
+            <p>Band 9 Model Essays</p>
+          </div>
+          <div class="pack-meta">
+            <strong>Task 1 & Task 2</strong>
+            <span>Examiner Standard Answers</span>
+          </div>
+        </div>
+
+        <!-- Speaking Pack -->
+        <div class="material-pack-card">
+          <div class="pack-cover speaking">
+            <div class="pack-badge">SPEAKING</div>
+            <h3>SPEAKING RECENT TOPICS</h3>
+            <p>2026 Forecast Prompts</p>
+          </div>
+          <div class="pack-meta">
+            <strong>Parts 1, 2 & 3</strong>
+            <span>High-Scoring Vocabulary</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="materials-cta-row">
+        <a class="button primary" href="/english/materials">
+          <span>Kutubxonadagi materiallarni koʻrish</span>
+          <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Detailed Feature Comparison Table -->
+    <section class="pricing-comparison-section">
+      <div class="section-badge-center">
+        <span>FEATURE COMPARISON</span>
+      </div>
+      <h2 class="section-title-center">Free va Premium Taqqoslashi</h2>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="feature-col">Imkoniyatlar</th>
+              <th class="plan-col">Free Candidate</th>
+              <th class="plan-col premium-col">★ Premium Student</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bepul boshlangʻich testlar</td>
+              <td><span class="table-check">5 ta test</span></td>
+              <td><span class="table-check">5 ta test</span></td>
+            </tr>
+            <tr>
+              <td>Toʻliq 40+ ta Cambridge Reading Testlari</td>
+              <td><span class="table-cross">Qulflangan</span></td>
+              <td><span class="table-check">Barchasi ochiq (40+)</span></td>
+            </tr>
+            <tr>
+              <td>1:1 Computer-Delivered CDI Rejimi (Taymer, Split-pane)</td>
+              <td><span class="table-check">Cheklangan</span></td>
+              <td><span class="table-check">Cheklovsiz</span></td>
+            </tr>
+            <tr>
+              <td>Authentic Listening Testlari va Audio</td>
+              <td><span class="table-check">Asosiy</span></td>
+              <td><span class="table-check">Toʻliq audio + Transkript</span></td>
+            </tr>
+            <tr>
+              <td>Toʻgʻri javoblar joylashuvi va Tahlili (Answer Location)</td>
+              <td><span class="table-cross">—</span></td>
+              <td><span class="table-check">Har bir savol uchun tahlil</span></td>
+            </tr>
+            <tr>
+              <td>Avtomatik Band 0–9.0 Ball Hisoblash</td>
+              <td><span class="table-check">Ha</span></td>
+              <td><span class="table-check">Ha + Xatolar statistikasi</span></td>
+            </tr>
+            <tr>
+              <td>Interaktiv Maqola Oʻquvchisi & Highlighter</td>
+              <td><span class="table-cross">Faqat PDF</span></td>
+              <td><span class="table-check">Interaktiv matn + 4 xil rang</span></td>
+            </tr>
+            <tr>
+              <td>Shaxsiy "My Vocabulary" Lugʻat Daftari</td>
+              <td><span class="table-cross">—</span></td>
+              <td><span class="table-check">Cheklovsiz soʻz saqlash</span></td>
+            </tr>
+            <tr>
+              <td>Testlarni qayta topshirish va natijalarni solishtirish</td>
+              <td><span class="table-cross">Cheklangan</span></td>
+              <td><span class="table-check">Cheklovsiz qayta topshirish</span></td>
+            </tr>
+            <tr>
+              <td>Telegram Tezkor Qoʻllab-quvvatlash</td>
+              <td><span class="table-cross">Standart</span></td>
+              <td><span class="table-check">Priority (@ieltscoreadmin)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="pricing-faq-section">
+      <div class="section-badge-center">
+        <span>FAQ</span>
+      </div>
+      <h2 class="section-title-center">Koʻp beriladigan savollar</h2>
+      
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary>Toʻlov qanday amalga oshiriladi va qancha vaqtda faollashadi?</summary>
+          <p>Toʻlovni Click, Payme yoki karta orqali toʻgʻridan-toʻgʻri adminimizga (<a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener">@ieltscoreadmin</a>) yuborishingiz mumkin. Kvitansiya yuborilishi bilan hisobingiz 1-2 daqiqa ichida avtomatik tarzda Premiumga oʻtkaziladi.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Muddati tugagach avtomatik pul yechib olinadimi?</summary>
+          <p>Yoʻq! IELTS Core da hech qanday yashirin avtomatik toʻlovlar yoki karta bogʻlash talab qilinmaydi. Tanlagan muddatingiz (1 oy, 3 oy yoki 6 oy) tugagach, hisobingiz oddiy Free rejimiga oʻtadi.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Promo-kodni qanday ishlataman?</summary>
+          <p>Agar sizda aksiya yoki konkurs orqali berilgan promo-kod boʻlsa, ushbu sahifadagi "Promo-kod kiritish" oynasiga kodni yozib "Faollashtirish" tugmasini bosing — berilgan kunlar darhol hisobingizga qoʻshiladi.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Haqiqiy IELTS imtihonidagidek Computer-Delivered format bormi?</summary>
+          <p>Ha! IELTS Core toʻliq 100% rasmiy IDP / British Council kompyuter imtihoni (CDI) interfeysi nusxasida ishlaydi: chapda matn, oʻngda savollar, 60 daqiqalik taymer va rasmiy navigatsiya paneli bilan taʼminlangan.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer v4-footer" aria-label="Footer">
+    <div class="v4-shell v4-footer-grid">
+      <div class="v4-footer-brand">
+        <a class="app-brand" href="/english">
+          <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
+          <span>IELTS CORE</span>
+          <span class="app-brand-badge">BETA</span>
+        </a>
+        <p>Authentic Cambridge-Standard Computer-Delivered IELTS Preparation Platform.</p>
+      </div>
+      <div class="v4-footer-nav">
+        <strong>PRACTICE</strong>
+        <a href="/english/materials?level=ielts&collection=full-test">Full Mock Tests</a>
+        <a href="/english/practice">Reading & Listening</a>
+        <a href="/english/materials?collection=article">Article Reader</a>
+      </div>
+      <div class="v4-footer-nav">
+        <strong>LEARN</strong>
+        <a href="/english/courses">Curriculum Courses</a>
+        <a href="/english/vocabulary">My Vocabulary</a>
+        <a href="/english/pricing">Pricing & Plans</a>
+      </div>
+      <div class="v4-footer-nav">
+        <strong>SUPPORT</strong>
+        <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener">Telegram Admin</a>
+        <a href="/admin">Admin Access</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/english-site.js?v=20260822_500"></script>
+  <script src="/english-pricing.js"></script>
+</body>
+</html>

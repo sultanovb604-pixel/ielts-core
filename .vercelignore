@@ -1,0 +1,17 @@
+.env
+.env.local
+.env*.local
+tmp
+reference-magic
+audit
+english-audit-2026-08-03
+english-audit-2026-08-04
+english-aura-audit-2026-08-04
+english-design-qa
+english-design-qa-language
+english-design-qa-option3
+english-pro-audit-2026-08-04
+ielts-exam-ui-reference
+data/vortex-data.json
+*.png
+!assets/**/*.png

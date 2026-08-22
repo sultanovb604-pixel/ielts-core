@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Your personal IELTS Core performance and progress dashboard">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dashboard | IELTS Core</title>
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
+  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+</head>
+<body class="app-body account-page premium-product-page">
+  <header class="app-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
+      <span>IELTS CORE</span>
+      <span class="app-brand-badge">BETA</span>
+    </a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
+    <nav class="app-nav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/practice">Practice</a>
+      <a href="/english/materials">Materials</a>
+      <a href="/english/pricing">Pricing</a>
+      <a href="/english/account" aria-current="page">Dashboard</a>
+    </nav>
+    <div class="app-actions">
+      <a class="plain-link" href="/english">Public site</a>
+    </div>
+  </header>
+
+  <main class="page product-dashboard">
+    <!-- Student Header Bar -->
+    <div class="dashboard-user-bar" id="dashboardUserBar">
+      <div class="dashboard-welcome">
+        <span class="app-mark" aria-hidden="true">V</span>
+        <div class="user-meta">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <p id="accountName" class="account-name" aria-live="polite">Loading student…</p>
+            <button type="button" id="openStatusBadgeModalBtn" class="user-status-emoji-btn" style="background:transparent!important;border:none!important;outline:none!important;box-shadow:none!important;padding:0!important;margin:0!important;cursor:pointer;display:inline-flex;align-items:center;line-height:1;appearance:none;-webkit-appearance:none;" title="Telegram status nishonini tanlash (Premium)" aria-label="Customize Status Badge">
+              <span id="accountStatusEmojiBadge" class="tg-status-badge"></span>
+            </button>
+          </div>
+          <p id="accountUsername" class="account-username">Student account</p>
+        </div>
+        <span class="account-status" id="accountPlanStatus">
+          <i></i><span>Free account</span>
+        </span>
+      </div>
+      <div class="dashboard-user-actions">
+        <button type="button" class="button secondary vx-user-btn-glass" id="openTelegramCustomizerBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>Profil dizayni</span>
+        </button>
+        <a class="button secondary vx-user-btn-glass" id="accountTeacherBtn" href="/english/teacher" style="display:none;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          <span>Teacher Workspace</span>
+        </a>
+        <a class="button primary vx-user-btn-primary" href="/english/materials?level=ielts&collection=full-test">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Start Full Test</span>
+        </a>
+        <button class="button secondary vx-user-btn-ghost dashboard-signout" id="logout" type="button" title="Sign out">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sign out</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Teacher Invitation Alert Banner -->
+    <div id="studentTeacherInviteBanner" style="display:none;background:#eff6ff;border:1.5px solid #93c5fd;border-radius:14px;padding:16px 20px;margin-bottom:20px;box-shadow:0 4px 14px rgba(37,99,235,0.08);">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">
+            <span class="material-symbols-outlined">person_add</span>
+          </div>
+          <div>
+            <strong id="inviteTeacherName" style="font-size:15px;color:#1e3a8a;">Teacher wants to connect</strong>
+            <p id="inviteTeacherMeta" style="margin:2px 0 0;font-size:13px;color:#3b82f6;">Accept to join their study cohort and receive personalized homework & essay feedback.</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button type="button" class="button secondary" id="declineInviteBtn" style="padding:7px 14px;font-size:13px;">Decline</button>
+          <button type="button" class="button primary" id="acceptInviteBtn" style="padding:7px 18px;font-size:13px;background:#2563eb;">Accept Invitation</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Navigation Tabs -->
+    <div class="account-nav" role="tablist" aria-label="Account sections">
+      <button id="tab-overview" type="button" role="tab" data-account-tab="overview" aria-controls="overview" aria-selected="true">
+        <span class="material-symbols-outlined" aria-hidden="true">analytics</span>
+        <span>Performance Overview</span>
+      </button>
+      <button id="tab-homework" type="button" role="tab" data-account-tab="homework" aria-controls="homework" aria-selected="false">
+        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+        <span>Homework & Tasks (Vazifalar)</span>
+        <span id="tabHomeworkCountBadge" style="background:#2563eb;color:#fff;font-size:11px;font-weight:800;padding:2px 7px;border-radius:10px;margin-left:4px;display:none;">0</span>
+      </button>
+      <button id="tab-profile" type="button" role="tab" data-account-tab="profile" aria-controls="profile" aria-selected="false">
+        <span class="material-symbols-outlined" aria-hidden="true">flag</span>
+        <span>Learning Focus</span>
+      </button>
+      <button id="tab-security" type="button" role="tab" data-account-tab="security" aria-controls="security" aria-selected="false">
+        <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+        <span>Security</span>
+      </button>
+      <a id="accountNavTeacherLink" href="/english/teacher" class="account-nav-btn teacher-link" style="display:none;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;text-decoration:none;font-weight:800;font-size:13px;color:#1468f3;background:#eff6ff;margin-left:auto;">
+        <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px;">school</span>
+        <span>Teacher Portal</span>
+      </a>
+    </div>
+
+    <!-- Tab 1: Overview Panel -->
+    <section id="overview" class="dashboard-panel active" role="tabpanel" aria-labelledby="tab-overview">
+      <!-- 4 Core Metric Cards -->
+      <div class="stat-grid dashboard-stat-grid account-stat-grid-5">
+        <article class="stat stat-tests">
+          <div class="stat-icon-wrap">
+            <span class="material-symbols-outlined" aria-hidden="true">assignment_turned_in</span>
+          </div>
+          <div class="stat-content">
+            <span>Completed Tests</span>
+            <strong id="statLessons">0</strong>
+            <small id="statAttempts">0 total attempts</small>
+          </div>
+        </article>
+        <article class="stat stat-reading-avg">
+          <div class="stat-icon-wrap">
+            <span class="material-symbols-outlined" aria-hidden="true">auto_graph</span>
+          </div>
+          <div class="stat-content">
+            <span>Average Reading Band</span>
+            <strong id="statAverage">—</strong>
+            <small>Across scored IELTS tests</small>
+          </div>
+        </article>
+        <article class="stat stat-reading-best">
+          <div class="stat-icon-wrap">
+            <span class="material-symbols-outlined" aria-hidden="true">emoji_events</span>
+          </div>
+          <div class="stat-content">
+            <span>Best Reading Band</span>
+            <strong id="statBestBand">—</strong>
+            <small>40-question full exam</small>
+          </div>
+        </article>
+        <article class="stat stat-listening">
+          <div class="stat-icon-wrap">
+            <span class="material-symbols-outlined" aria-hidden="true">headphones</span>
+          </div>
+          <div class="stat-content">
+            <span>Best Listening Band</span>
+            <strong id="statLatest">—</strong>
+            <small id="statLatestMeta">40-question audio test</small>
+          </div>
+        </article>
+        <article class="stat stat-overall-pred">
+          <div class="stat-icon-wrap premium-icon-wrap">
+            <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
+          </div>
+          <div class="stat-content">
+            <span>Predicted Overall Band</span>
+            <strong id="statPredictedBand" style="color:var(--v4-blue);">—</strong>
+            <small id="statReadinessMeta">Official Exam Readiness</small>
+          </div>
+        </article>
+      </div>
+
+      <!-- Student Assignments / Homework Queue -->
+      <section class="card" id="studentAssignmentsCard" style="margin-bottom:24px;padding:24px;border-radius:16px;">
+        <div class="chart-card-head" style="margin-bottom:16px;">
+          <div>
+            <p class="page-kicker" style="margin:0;">COHORT ASSIGNMENTS & HOMEWORK</p>
+            <h2 style="font-size:20px;font-weight:800;color:var(--v4-ink);margin:0;">Assigned Tasks from Your Teacher</h2>
+          </div>
+          <span class="pro-tag-badge" id="studentAssignmentsBadge">0 Tasks</span>
+        </div>
+        <div id="studentAssignmentsList" style="display:flex;flex-direction:column;gap:10px;">
+          <p style="padding:16px;text-align:center;color:#64748b;font-size:13.5px;">No pending homework assignments.</p>
+        </div>
+      </section>
+
+      <!-- 4-Skill Switcher Toolbar -->
+      <div class="skill-progress-nav" style="display:flex;align-items:center;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;">
+        <button type="button" class="skill-tab-btn active" data-skill-view="overall">
+          <span class="material-symbols-outlined" style="font-size:16px;">military_tech</span>
+          <span>Overall Profile</span>
+        </button>
+        <button type="button" class="skill-tab-btn" data-skill-view="reading">
+          <span class="material-symbols-outlined" style="font-size:16px;">menu_book</span>
+          <span>Reading</span>
+        </button>
+        <button type="button" class="skill-tab-btn" data-skill-view="listening">
+          <span class="material-symbols-outlined" style="font-size:16px;">headphones</span>
+          <span>Listening</span>
+        </button>
+        <button type="button" class="skill-tab-btn" data-skill-view="writing">
+          <span class="material-symbols-outlined" style="font-size:16px;">draw</span>
+          <span>Writing Feedback</span>
+        </button>
+        <button type="button" class="skill-tab-btn" data-skill-view="speaking">
+          <span class="material-symbols-outlined" style="font-size:16px;">record_voice_over</span>
+          <span>Speaking</span>
+        </button>
+      </div>
+
+      <!-- Interactive Charts & Benchmark -->
+      <section class="dashboard-chart-grid" aria-label="Progress charts">
+        <article class="card dashboard-chart-card trend-card">
+          <div class="chart-card-head">
+            <div>
+              <p class="page-kicker" id="trendKicker">BAND TRAJECTORY</p>
+              <h2 id="trendTitle">Score Over Time</h2>
+            </div>
+            <span id="trendDelta" class="chart-insight">No trend yet</span>
+          </div>
+          <div class="chart-frame">
+            <canvas id="scoreTrendChart" role="img" aria-label="IELTS band trend from band 0 to band 9"></canvas>
+            <p id="scoreTrendEmpty" class="chart-empty">Complete a full test to view your band trajectory.</p>
+          </div>
+        </article>
+
+        <article class="card dashboard-chart-card outcome-card">
+          <div class="chart-card-head">
+            <div>
+              <p class="page-kicker" id="outcomeKicker">LEVEL PROFILE</p>
+              <h2 id="outcomeTitle">IELTS Benchmark Profile</h2>
+            </div>
+          </div>
+          <div class="outcome-visual">
+            <div class="donut-frame">
+              <canvas id="answerOutcomeChart" role="img" aria-label="Average IELTS band from 0 to 9"></canvas>
+              <div class="donut-value">
+                <strong id="outcomeAccuracy">—</strong>
+                <span id="outcomeMetricLabel">average band</span>
+              </div>
+            </div>
+            <div class="outcome-legend">
+              <span><i class="correct"></i>Latest <strong id="outcomeCorrect">—</strong></span>
+              <span><i class="incorrect"></i>Best <strong id="outcomeIncorrect">—</strong></span>
+              <small id="outcomeTotal">No scored tests yet</small>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Advanced Question-Type & Skill Weakness Diagnostics (Premium Feature Suite) -->
+      <section class="card question-diagnostics-card" id="questionDiagnosticsCard" style="margin-bottom:14px;padding:24px;border-radius:16px;">
+        <div class="chart-card-head" style="margin-bottom:18px;">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+              <p class="page-kicker" style="margin:0;">QUESTION-TYPE ACCURACY & WEAKNESS DIAGNOSTICS</p>
+              <span class="pro-tag-badge" id="diagnosticsBadge">★ PREMIUM DIAGNOSTICS</span>
+            </div>
+            <h2 style="font-size:20px;font-weight:800;color:var(--v4-ink);margin:0;">Cambridge Exam Question Formats Analysis</h2>
+          </div>
+          <button type="button" class="button secondary compact-btn" id="printReportBtn" title="Print student performance diagnostic summary">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px;">print</span>
+            <span>Diagnostic Report (PDF)</span>
+          </button>
+        </div>
+
+        <div class="diagnostics-content-wrapper" id="diagnosticsContentWrap">
+          <div class="diagnostic-grid">
+            <!-- 1. TFNG -->
+            <div class="diagnostic-item">
+              <div class="diag-head">
+                <span class="diag-label">True / False / Not Given</span>
+                <strong class="diag-pct" id="diagPctTfng">85%</strong>
+              </div>
+              <div class="diag-track"><i class="diag-fill" id="diagFillTfng" style="width:85%;"></i></div>
+              <div class="diag-footer-row">
+                <span class="diag-mistake-badge" id="diagMistakeTfng"><i class="material-symbols-outlined" style="font-size:13px;">error_outline</i> <strong>1.4 ta xato</strong> / test</span>
+                <span class="diag-status-tag tag-good" id="diagStatusTfng">🟢 Kuchli</span>
+              </div>
+            </div>
+
+            <!-- 2. Matching Headings -->
+            <div class="diagnostic-item">
+              <div class="diag-head">
+                <span class="diag-label">Matching Headings & Info</span>
+                <strong class="diag-pct" id="diagPctHeadings">68%</strong>
+              </div>
+              <div class="diag-track"><i class="diag-fill fill-warn" id="diagFillHeadings" style="width:68%;"></i></div>
+              <div class="diag-footer-row">
+                <span class="diag-mistake-badge" id="diagMistakeHeadings"><i class="material-symbols-outlined" style="font-size:13px;">error_outline</i> <strong>2.8 ta xato</strong> / test</span>
+                <span class="diag-status-tag tag-focus" id="diagStatusHeadings">🔴 Takrorlash kerak</span>
+              </div>
+            </div>
+
+            <!-- 3. MCQ -->
+            <div class="diagnostic-item">
+              <div class="diag-head">
+                <span class="diag-label">Multiple Choice (MCQ)</span>
+                <strong class="diag-pct" id="diagPctMcq">80%</strong>
+              </div>
+              <div class="diag-track"><i class="diag-fill" id="diagFillMcq" style="width:80%;"></i></div>
+              <div class="diag-footer-row">
+                <span class="diag-mistake-badge" id="diagMistakeMcq"><i class="material-symbols-outlined" style="font-size:13px;">error_outline</i> <strong>1.8 ta xato</strong> / test</span>
+                <span class="diag-status-tag tag-mid" id="diagStatusMcq">🟡 Oʻrtacha</span>
+              </div>
+            </div>
+
+            <!-- 4. Summary Completion -->
+            <div class="diagnostic-item">
+              <div class="diag-head">
+                <span class="diag-label">Sentence & Summary Completion</span>
+                <strong class="diag-pct" id="diagPctCompletion">92%</strong>
+              </div>
+              <div class="diag-track"><i class="diag-fill fill-good" id="diagFillCompletion" style="width:92%;"></i></div>
+              <div class="diag-footer-row">
+                <span class="diag-mistake-badge" id="diagMistakeCompletion"><i class="material-symbols-outlined" style="font-size:13px;">error_outline</i> <strong>0.8 ta xato</strong> / test</span>
+                <span class="diag-status-tag tag-mastered" id="diagStatusCompletion">✨ Aʼlo</span>
+              </div>
+            </div>
+
+            <!-- 5. Listening Parts 1-4 -->
+            <div class="diagnostic-item">
+              <div class="diag-head">
+                <span class="diag-label">Listening Audio Sections 1–4</span>
+                <strong class="diag-pct" id="diagPctListening">78%</strong>
+              </div>
+              <div class="diag-track"><i class="diag-fill" id="diagFillListening" style="width:78%;"></i></div>
+              <div class="diag-footer-row">
+                <span class="diag-mistake-badge" id="diagMistakeListening"><i class="material-symbols-outlined" style="font-size:13px;">error_outline</i> <strong>2.2 ta xato</strong> / test</span>
+                <span class="diag-status-tag tag-mid" id="diagStatusListening">🟡 Oʻrtacha</span>
+              </div>
+            </div>
+
+            <!-- 6. Pacing & Time -->
+            <div class="diagnostic-item">
+              <div class="diag-head">
+                <span class="diag-label">Exam Pacing & Time Control</span>
+                <strong class="diag-pct" id="diagPctSpeed" style="color:#059669;">54 min</strong>
+              </div>
+              <div class="diag-track"><i class="diag-fill fill-good" id="diagFillSpeed" style="width:90%;"></i></div>
+              <div class="diag-footer-row">
+                <span class="diag-mistake-badge" id="diagMistakeSpeed"><i class="material-symbols-outlined" style="font-size:13px;">timer</i> <strong>18 min</strong> / passage</span>
+                <span class="diag-status-tag tag-good" id="diagStatusSpeed">⚡ Optimal tezlik</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lock overlay for Free candidates -->
+        <div class="diagnostics-locked-overlay" id="diagnosticsLockedOverlay" style="display:none;">
+          <div class="locked-card-box">
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:32px;color:#facc15;">lock</span>
+            <h3>Detailed Question-Type Diagnostics</h3>
+            <p>Upgrade to Premium to unlock granular accuracy tracking across True/False/Not Given, Matching Headings, MCQ, and exam pacing diagnostics.</p>
+            <button type="button" class="button primary" onclick="window.showUpgradeModal()">
+              <span>★ Unlock with Premium (30k/oy)</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Premium Upgrade Banner (shown when plan is Free) -->
+      <div id="premiumBanner" class="card" style="display:none;background:linear-gradient(135deg, #0f172a 0%, #1e293b 100%);color:#fff;border:1px solid #334155;margin-bottom:24px;padding:24px;border-radius:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;">
+        <div style="max-width:560px;">
+          <span style="display:inline-block;padding:4px 10px;border-radius:20px;background:rgba(234,179,8,0.2);color:#facc15;font-weight:800;font-size:11.5px;letter-spacing:0.04em;margin-bottom:8px;">★ PREMIUM UPGRADE</span>
+          <h2 style="font-size:20px;font-weight:800;margin:0 0 6px 0;color:#fff;">Unlock Authentic Full IELTS Tests</h2>
+          <p style="margin:0;font-size:13.5px;color:#94a3b8;line-height:1.5;">Get unlimited computer-delivered Reading & Listening exam practice, detailed Band 9 answer breakdowns, and progress analytics.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <button id="accountUpgradeBtn" class="button primary" style="background:#e11d48;border-color:#e11d48;color:#fff;font-weight:700;" type="button">
+            <span>Upgrade to Premium</span>
+            <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px">bolt</span>
+          </button>
+          <button id="accountRedeemBtn" class="button secondary" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2);" type="button">
+            <span>Redeem Code</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Next Recommended Step -->
+      <div class="dashboard-priority-grid dashboard-priority-clean">
+        <article class="next-step-card compact-next">
+          <div>
+            <p class="page-kicker">RECOMMENDED NEXT STEP</p>
+            <h2 id="nextStepTitle">Start your first full IELTS Reading test.</h2>
+            <p id="nextStepCopy">Your answers, verified Cambridge score, and estimated band will be preserved in this workspace.</p>
+          </div>
+          <div class="next-step-actions">
+            <a class="button primary" id="nextStepPrimary" href="/english/materials?level=ielts&collection=full-test">
+              <span>Start 40-Question Exam</span>
+              <span aria-hidden="true">→</span>
+            </a>
+            <a class="text-link" id="nextStepReview" href="/english/materials?collection=practice">Focused single passage →</a>
+          </div>
+        </article>
+
+        <article class="card focus-summary">
+          <p class="page-kicker">YOUR LEARNING GOAL</p>
+          <h2 id="focusTitle">Target: Band 7.5+ Target</h2>
+          <p id="focusCopy">Track your Reading and Listening accuracy towards your target IELTS Band.</p>
+          <button class="text-link" type="button" id="editFocus">Change target focus →</button>
+        </article>
+      </div>
+
+      <!-- Test History & Review -->
+      <section class="card results-card">
+        <div class="card-title-row">
+          <div>
+            <p class="page-kicker">ATTEMPT HISTORY</p>
+            <h2>Recent IELTS Test Results</h2>
+          </div>
+          <a class="text-link" href="/english/materials?collection=full-test">Browse Full Mock Tests →</a>
+        </div>
+        <div id="history" class="history results-history">
+          <p class="resource-meta">Loading your verified results…</p>
+        </div>
+      </section>
+
+      <!-- Quick Repository Shortcuts -->
+      <section class="dashboard-library" aria-labelledby="librarySnapshotTitle">
+        <div class="card-title-row">
+          <div>
+            <p class="page-kicker">RESOURCES & REPOSITORY</p>
+            <h2 id="librarySnapshotTitle">Quick practice library.</h2>
+          </div>
+        </div>
+        <div class="dashboard-library-grid">
+          <a href="/english/materials?level=ielts&collection=full-test">
+            <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+            <strong>Full IELTS Exam Simulations</strong>
+            <small>Authentic timed computer-delivered practice</small>
+          </a>
+          <a href="/english/materials?collection=practice">
+            <span class="material-symbols-outlined" aria-hidden="true">view_timeline</span>
+            <strong>Focused Passage Drills</strong>
+            <small>Single passage practice by question type</small>
+          </a>
+          <a href="/english/materials?collection=article">
+            <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+            <strong>Graded Articles & Vocab</strong>
+            <small>Interactive reading with saved word bank</small>
+          </a>
+        </div>
+      </section>
+    </section>
+
+    <!-- Tab: Homework & Tasks Panel -->
+    <section id="homework" class="dashboard-panel" role="tabpanel" aria-labelledby="tab-homework" hidden>
+      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #f1f5f9;">
+          <div>
+            <h2 style="margin:0 0 4px;font-size:18px;font-weight:800;color:#0f172a;">Assigned Homework & Practice Tasks (Ustoz topshiriqlari)</h2>
+            <p style="margin:0;font-size:13px;color:#64748b;">Complete tasks dispatched by your instructors. Writing essays, Reading tests, Listening practice and custom worksheets.</p>
+          </div>
+          <span class="account-badge" id="studentHomeworkSectionBadge" style="background:#eff6ff;color:#1d4ed8;font-weight:800;padding:6px 14px;border-radius:20px;">0 Tasks</span>
+        </div>
+
+        <!-- Student Homework Filter Bar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;padding:10px 14px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            <button type="button" class="student-hw-filter-btn is-active" data-filter="all" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #1468f3;background:#eff6ff;color:#1468f3;cursor:pointer;">
+              Barchasi <span id="stHwCountAll">(0)</span>
+            </button>
+            <button type="button" class="student-hw-filter-btn" data-filter="graded" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #cbd5e1;background:#ffffff;color:#166534;cursor:pointer;">
+              🟢 Baholanganlar <span id="stHwCountGraded">(0)</span>
+            </button>
+            <button type="button" class="student-hw-filter-btn" data-filter="submitted" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #cbd5e1;background:#ffffff;color:#b45309;cursor:pointer;">
+              🟡 Tekshirilmoqda <span id="stHwCountSubmitted">(0)</span>
+            </button>
+            <button type="button" class="student-hw-filter-btn" data-filter="pending" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #cbd5e1;background:#ffffff;color:#dc2626;cursor:pointer;">
+              🔴 Topshirish kerak <span id="stHwCountPending">(0)</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="studentDedicatedHomeworkList" style="display:flex;flex-direction:column;gap:12px;">
+          <p style="padding:24px;text-align:center;color:#64748b;">Loading homework assignments…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Learning Focus Panel -->
+    <section id="profile" class="dashboard-panel" role="tabpanel" aria-labelledby="tab-profile">
+      <div class="dashboard-head">
+        <div>
+          <p class="page-kicker">PERSONALIZED DIRECTION</p>
+          <h1 class="page-title">Set your IELTS target.</h1>
+          <p class="page-intro">Customize your learning priority to curate the most relevant practice tests and vocabulary modules.</p>
+        </div>
+      </div>
+      <form class="form card settings-card" id="profileForm">
+        <label class="field">
+          <span>Full name</span>
+          <input id="profileName" name="name" autocomplete="name" minlength="2" maxlength="60" required>
+        </label>
+        <label class="field">
+          <span>What do you want to master?</span>
+          <select id="profileLearning" name="learning">
+            <option value="">Not selected</option>
+            <option value="foundation">English foundations (A1 Beginner)</option>
+            <option value="speaking">Elementary fluency (A2 Elementary)</option>
+            <option value="ielts">IELTS Exam Preparation (Band 6.5 - 9.0)</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Primary target goal</span>
+          <select id="profileGoal" name="goal">
+            <option value="">Not selected</option>
+            <option value="confidence">Speak and read with fluent confidence</option>
+            <option value="school">Academic studies and university exams</option>
+            <option value="future">Reach an IELTS Band 7.5+ for study abroad / immigration</option>
+          </select>
+        </label>
+        <p id="profileMessage" class="form-message" role="status" aria-live="polite"></p>
+        <button class="button primary" type="submit">
+          <span>Save learning focus</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- Tab 3: Security Panel -->
+    <section id="security" class="dashboard-panel" role="tabpanel" aria-labelledby="tab-security">
+      <div class="dashboard-head">
+        <div>
+          <p class="page-kicker">ACCOUNT SECURITY</p>
+          <h1 class="page-title">Manage your credentials.</h1>
+          <p class="page-intro">Keep your account secure with a strong password.</p>
+        </div>
+      </div>
+      <div class="card settings-card google-security-notice" id="googleSecurityNotice" hidden>
+        <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+        <div>
+          <h2>Signed in with Google</h2>
+          <p>This account is protected by Google Authentication and does not require a separate password.</p>
+          <a class="text-link" href="https://myaccount.google.com/security" target="_blank" rel="noreferrer">Manage Google Account security →</a>
+        </div>
+      </div>
+      <form class="form card settings-card" id="passwordForm">
+        <label class="field">
+          <span>Current password</span>
+          <span class="password-wrap">
+            <input id="currentPassword" name="currentPassword" type="password" autocomplete="current-password" required>
+            <button class="password-toggle" type="button" data-password-toggle="currentPassword" aria-label="Show current password" aria-pressed="false">Show</button>
+          </span>
+        </label>
+        <label class="field">
+          <span>New password</span>
+          <small>Use at least 8 characters</small>
+          <span class="password-wrap">
+            <input id="newPassword" name="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="100" required>
+            <button class="password-toggle" type="button" data-password-toggle="newPassword" aria-label="Show new password" aria-pressed="false">Show</button>
+          </span>
+        </label>
+        <label class="field">
+          <span>Confirm new password</span>
+          <span class="password-wrap">
+            <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="100" required>
+            <button class="password-toggle" type="button" data-password-toggle="confirmPassword" aria-label="Show confirmation password" aria-pressed="false">Show</button>
+          </span>
+        </label>
+        <p id="passwordMessage" class="form-message" role="status" aria-live="polite"></p>
+        <button class="button primary" type="submit">
+          <span>Update password</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Student Essay Feedback & Evaluation Modal -->
+  <div class="teacher-modal-overlay" id="studentFeedbackModal" role="dialog" aria-modal="true" aria-labelledby="feedbackModalTitle" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div class="teacher-modal wide" style="background:#fff;border-radius:16px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 20px 40px rgba(0,0,0,0.2);">
+      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e2e8f0;padding-bottom:14px;margin-bottom:16px;">
+        <div>
+          <h2 id="feedbackModalTitle" style="margin:0;font-size:18px;color:#0f172a;">IELTS Writing Assessment Result</h2>
+          <p id="feedbackModalSub" style="margin:4px 0 0;font-size:12.5px;color:#64748b;">Evaluated by instructor</p>
+        </div>
+        <button id="closeFeedbackModalBtn" type="button" style="background:transparent;border:0;font-size:24px;color:#64748b;cursor:pointer;">&times;</button>
+      </div>
+
+      <!-- Overall Band Banner -->
+      <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <small style="color:#166534;font-weight:800;text-transform:uppercase;">Overall Result</small>
+          <div id="feedbackOverallBand" style="font-size:26px;color:#15803d;font-weight:900;">Band 7.5</div>
+        </div>
+        <span class="status-pill status-graded" style="font-size:13px;padding:6px 14px;">✔ Verified Evaluation</span>
+      </div>
+
+      <!-- 4 Rubric Criteria Breakdown -->
+      <h4 style="margin:0 0 10px;font-size:13px;text-transform:uppercase;color:#475569;font-weight:800;">4-Criteria Rubric Breakdown</h4>
+      <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:10px;margin-bottom:16px;">
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;">
+          <small style="color:#64748b;display:block;font-size:11.5px;font-weight:700;">Task Response (TR)</small>
+          <strong id="feedbackTR" style="font-size:17px;color:#0f172a;">Band 7.5</strong>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;">
+          <small style="color:#64748b;display:block;font-size:11.5px;font-weight:700;">Coherence & Cohesion (CC)</small>
+          <strong id="feedbackCC" style="font-size:17px;color:#0f172a;">Band 7.5</strong>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;">
+          <small style="color:#64748b;display:block;font-size:11.5px;font-weight:700;">Lexical Resource (LR)</small>
+          <strong id="feedbackLR" style="font-size:17px;color:#0f172a;">Band 7.0</strong>
+        </div>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;">
+          <small style="color:#64748b;display:block;font-size:11.5px;font-weight:700;">Grammar & Accuracy (GRA)</small>
+          <strong id="feedbackGRA" style="font-size:17px;color:#0f172a;">Band 7.5</strong>
+        </div>
+      </div>
+
+      <!-- Instructor Feedback Notes -->
+      <div style="margin-bottom:16px;">
+        <h4 style="margin:0 0 6px;font-size:13px;text-transform:uppercase;color:#475569;font-weight:800;">Instructor Feedback & Recommendations</h4>
+        <div id="feedbackText" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:13.5px;line-height:1.6;color:#1e293b;"></div>
+      </div>
+
+      <!-- Student's Original Essay -->
+      <div>
+        <h4 style="margin:0 0 6px;font-size:13px;text-transform:uppercase;color:#475569;font-weight:800;">Your Submitted Essay</h4>
+        <div id="feedbackOriginalEssay" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:14px;line-height:1.7;color:#334155;max-height:220px;overflow-y:auto;white-space:pre-wrap;font-family:'DM Sans',serif;"></div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+        <button type="button" class="button primary" id="doneFeedbackModalBtn">Close Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Student Submit Homework Modal -->
+  <div class="teacher-modal-overlay" id="studentSubmitHomeworkModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#ffffff;border-radius:16px;max-width:680px;width:100%;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 40px rgba(0,0,0,0.2);overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;background:#f8fafc;">
+        <div>
+          <h3 id="submitModalTaskTitle" style="margin:0;font-size:16px;font-weight:800;color:#0f172a;">Topshiriqni topshirish</h3>
+          <p id="submitModalTaskMeta" style="margin:2px 0 0;font-size:12px;color:#64748b;">Ustoz yuborgan vazifa yechimini yuklash</p>
+        </div>
+        <button type="button" id="closeSubmitHomeworkModalBtn" style="background:transparent;border:0;font-size:22px;color:#64748b;cursor:pointer;line-height:1;">&times;</button>
+      </div>
+
+      <form id="studentHomeworkSubmitForm" style="display:flex;flex-direction:column;flex:1;overflow:hidden;margin:0;">
+        <div style="padding:18px 22px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px;">
+          <!-- Task Prompt / Teacher Files preview if available -->
+          <div id="submitModalPromptWrap" style="padding:12px 14px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;font-size:13px;color:#1e40af;">
+            <strong>Topshiriq yo'riqnomasi:</strong>
+            <p id="submitModalPromptText" style="margin:4px 0 0;color:#1e3a8a;white-space:pre-wrap;"></p>
+            <div id="submitModalTeacherFiles" style="margin-top:8px;display:none;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+
+          <!-- Answer / Essay Text Input -->
+          <div>
+            <label style="display:block;font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">
+              Javob matni, insho yoki tushuntirish:
+            </label>
+            <textarea id="studentAnswerTextInput" class="field input" style="width:100%;min-height:120px;font-size:13.5px;line-height:1.6;border-radius:10px;padding:12px;" placeholder="Bu yerga insho, matnli javob yoki mashq yechimlarini yozing..."></textarea>
+          </div>
+
+          <!-- File Upload Drag and Drop Area -->
+          <div>
+            <label style="display:block;font-size:13px;font-weight:700;color:#0f172a;margin-bottom:6px;">
+              📎 Yechim fayli yoki daftar rasmini yuklash (ixtiyoriy):
+            </label>
+            <div id="studentUploadDropZone" style="border:2px dashed #cbd5e1;border-radius:12px;padding:16px;text-align:center;background:#f8fafc;cursor:pointer;transition:all 0.2s;">
+              <span class="material-symbols-outlined" style="font-size:32px;color:#1468f3;">cloud_upload</span>
+              <div style="font-size:13px;font-weight:700;color:#0f172a;margin-top:4px;">Faylni tanlash uchun bosing yoki shu yerga tashlang</div>
+              <div style="font-size:11.5px;color:#64748b;margin-top:2px;">PDF, DOCX, JPG, PNG yoki MP3 (maksimal 15MB)</div>
+              <input type="file" id="studentSubmissionFileInput" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp3,.wav,.txt" style="display:none;">
+            </div>
+            <div id="studentAttachedFilesList" style="display:none;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>
+            <span id="studentFileUploadStatus" style="font-size:12px;display:none;margin-top:6px;font-weight:700;"></span>
+          </div>
+        </div>
+
+        <div style="padding:12px 22px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;background:#f8fafc;">
+          <button type="button" class="button secondary" id="cancelSubmitHomeworkBtn" style="padding:8px 18px;font-size:13px;font-weight:700;">Bekor qilish</button>
+          <button type="submit" class="button primary" id="btnConfirmSubmitHomework" style="padding:8px 22px;font-size:13px;font-weight:700;background:#1468f3;">🚀 Ustozga topshirish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Telegram Premium Customization Studio (Badges & Wallpapers) -->
+  <div class="teacher-modal-overlay" id="telegramCustomizerModal" role="dialog" aria-modal="true" aria-labelledby="tgModalTitle" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.7);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div class="teacher-modal wide" style="background:#ffffff;border-radius:20px;max-width:680px;width:100%;max-height:92vh;overflow-y:auto;padding:24px;box-shadow:0 24px 48px rgba(0,0,0,0.25);">
+      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e2e8f0;padding-bottom:14px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg, #2563eb, #7c3aed);color:#ffffff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(37,99,235,0.3);">
+            <span class="material-symbols-outlined" style="font-size:22px;">palette</span>
+          </div>
+          <div>
+            <h2 id="tgModalTitle" style="margin:0;font-size:18px;font-weight:800;color:#0f172a;">Telegram-style Profile Customizer</h2>
+            <p style="margin:2px 0 0;font-size:12.5px;color:#64748b;">Shaxsiy status nishonlari (galochka) va orqa fon dizaynlari</p>
+          </div>
+        </div>
+        <button id="closeTelegramModalBtn" type="button" style="background:transparent;border:0;font-size:26px;color:#64748b;cursor:pointer;line-height:1;">&times;</button>
+      </div>
+
+      <!-- Live Profile Header Preview -->
+      <div style="margin-bottom:20px;">
+        <small style="display:block;font-size:11.5px;font-weight:800;text-transform:uppercase;color:#64748b;margin-bottom:8px;letter-spacing:0.04em;">Jonli Ko'rinish (Live Preview):</small>
+        <div id="tgPreviewHeaderBar" class="dashboard-user-bar" style="padding:16px 20px;border-radius:14px;margin:0;box-shadow:0 4px 16px rgba(0,0,0,0.06);border:1.5px solid #e2e8f0;">
+          <div class="dashboard-welcome" style="gap:12px;">
+            <span class="app-mark" id="tgPreviewAppMark" aria-hidden="true" style="width:40px;height:40px;flex:0 0 40px;font-size:15px;background:linear-gradient(135deg, #1e40af, #3b82f6);color:#fff;border:1.5px solid #fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;">J</span>
+            <div class="user-meta">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span id="tgPreviewName" style="font-size:16px;font-weight:800;color:#0f172a;">Jasur Aliyev</span>
+                <span id="tgPreviewBadge" class="tg-status-badge" style="font-size:18px;"></span>
+              </div>
+              <span id="tgPreviewUsername" style="font-size:12px;color:#64748b;font-weight:600;">@demo_student · IELTS Student</span>
+            </div>
+            <span class="account-status is-premium active" style="margin-left:auto;font-size:10.5px;padding:4px 10px;">
+              <span class="material-symbols-outlined" style="font-size:13px;color:#f59e0b;">workspace_premium</span>
+              <span>Premium</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customization Tabs -->
+      <div style="display:flex;gap:8px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:18px;">
+        <button type="button" class="tg-tab-btn is-active" data-tg-tab="badges" style="padding:8px 16px;font-size:13px;font-weight:700;border-radius:10px;border:1px solid #1468f3;background:#eff6ff;color:#1468f3;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+          <span class="material-symbols-outlined" style="font-size:16px;">verified</span>
+          <span>Status Nishonlari (Galochkalar)</span>
+        </button>
+        <button type="button" class="tg-tab-btn" data-tg-tab="wallpapers" style="padding:8px 16px;font-size:13px;font-weight:700;border-radius:10px;border:1px solid #cbd5e1;background:#ffffff;color:#475569;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+          <span class="material-symbols-outlined" style="font-size:16px;">wallpaper</span>
+          <span>Orqa Fon Mavzulari</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: Status Badges Grid -->
+      <div id="tgTabBadges">
+        <p style="font-size:13px;color:#64748b;margin:0 0 14px;">Telegram Premium uslubidagi nishonlardan birini tanlang. U ismingiz yonida ko'rinadi:</p>
+        <div id="tgBadgesList" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(135px, 1fr));gap:10px;margin-bottom:20px;">
+          <!-- Dynamically filled by JS -->
+        </div>
+      </div>
+
+      <!-- TAB 2: Wallpapers Grid -->
+      <div id="tgTabWallpapers" style="display:none;">
+        <p style="font-size:13px;color:#64748b;margin:0 0 14px;">Profil kartangiz uchun Telegram-uslubidagi lyuks orqa fon mavzusini tanlang:</p>
+        <div id="tgWallpapersList" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));gap:12px;margin-bottom:20px;">
+          <!-- Dynamically filled by JS -->
+        </div>
+      </div>
+
+      <!-- Free Account Notice (Inline subtle bar if free) -->
+      <div id="tgPremiumLockedNotice" style="display:none;background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:10px 14px;margin-bottom:16px;align-items:center;gap:10px;">
+        <span class="material-symbols-outlined" style="font-size:20px;color:#d97706;flex-shrink:0;">lock</span>
+        <div style="font-size:12px;color:#92400e;font-weight:600;line-height:1.35;">
+          Siz <strong>Free (Bepul)</strong> hisobdasiz. Nishon va fonlarni tanlab, yuqoridagi <em>Jonli Ko'rinish</em>da sinab ko'rishingiz mumkin. Profilingizda saqlash va faollashtirish uchun Premium talab etiladi.
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #e2e8f0;padding-top:16px;gap:12px;">
+        <button type="button" class="button secondary" id="cancelTgModalBtn" style="padding:8px 18px;font-size:13px;">Bekor qilish</button>
+        <button type="button" class="button primary" id="saveTgCustomizationBtn" style="padding:8px 22px;font-size:13px;font-weight:800;background:#1468f3;display:inline-flex;align-items:center;gap:6px;">
+          <span class="material-symbols-outlined" style="font-size:16px;">check</span>
+          <span>Saqlash va qo'llash</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">IELTS Core &middot; Your personal learning workspace.</footer>
+  <script src="/english-site.js?v=20260822_500"></script>
+  <script src="/english-account.js?v=20260822_500"></script>
+</body>
+</html>

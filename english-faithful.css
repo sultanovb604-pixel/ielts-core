@@ -1,0 +1,18 @@
+/* Faithful composition pass for the selected Modern Academy concept. */
+@media (min-width:1001px) {
+  .topbar { padding-left:clamp(48px,5vw,76px); padding-right:clamp(48px,5vw,76px); }
+  .hero,.path-section,.skills-section,.progress-section,footer { max-width:none; margin-left:clamp(48px,5vw,76px); margin-right:clamp(48px,5vw,76px); }
+  .hero { min-height:510px; padding-top:54px; padding-bottom:22px; grid-template-columns:1.02fr .98fr; }
+  .hero-art { min-height:430px; overflow:visible; }
+  .hero-art img { width:760px; transform:translateX(-100px); mix-blend-mode:normal; }
+  .path-section { padding-top:56px; padding-bottom:68px; }
+  .section-heading h2 { font-size:42px; }
+}
+
+@media (min-width:1001px) {
+  .hero .proof { display:none; }
+  .path-section { position:relative; z-index:2; margin-top:0; padding-top:28px; border-top:0; }
+  .path-section .section-heading h2 { font-size:34px; }
+  .path-section .section-heading > p:last-child { margin:8px 0 0; font-size:14px; }
+  .paths { margin-top:20px; }
+}

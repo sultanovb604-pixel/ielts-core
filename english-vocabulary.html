@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Your saved English vocabulary and context sentences from IELTS Core articles">
+  <title>My Vocabulary | IELTS Core</title>
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
+  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+</head>
+<body class="app-body vocabulary-page premium-product-page">
+  <header class="app-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
+      <span>IELTS CORE</span>
+      <span class="app-brand-badge">BETA</span>
+    </a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
+    <nav class="app-nav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/practice">Practice</a>
+      <a href="/english/materials">Materials</a>
+      <a href="/english/pricing">Pricing</a>
+      <a href="/english/account">Dashboard</a>
+    </nav>
+    <div class="app-actions">
+      <a class="plain-link" href="/english/materials?collection=article">
+        <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+        <span>Browse Articles</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="vocabulary-page-head">
+      <div>
+        <p class="page-kicker">PERSONAL WORD BANK</p>
+        <h1 class="page-title">My Vocabulary</h1>
+        <p class="page-intro">Words and phrases you save while reading authentic articles, preserved with their original sentence context.</p>
+      </div>
+      <div class="vocabulary-summary" aria-label="Vocabulary summary">
+        <span><strong id="vocabularyTotal">—</strong><small>saved</small></span>
+        <span><strong id="vocabularyMastered">—</strong><small>mastered</small></span>
+      </div>
+    </section>
+
+    <section class="vocabulary-toolbar" aria-label="Vocabulary controls">
+      <label class="vocabulary-search">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <input id="vocabularySearch" type="search" placeholder="Search your saved words..." autocomplete="off" aria-label="Search vocabulary">
+      </label>
+      <div class="vocabulary-filter" role="group" aria-label="Filter by learning status">
+        <button type="button" aria-pressed="true" data-vocabulary-filter="all">All Words</button>
+        <button type="button" aria-pressed="false" data-vocabulary-filter="learning">Learning</button>
+        <button type="button" aria-pressed="false" data-vocabulary-filter="mastered">Mastered</button>
+      </div>
+    </section>
+
+    <div id="vocabularyList" class="vocabulary-list" aria-live="polite">
+      <div class="vocabulary-empty">
+        <div>
+          <span class="material-symbols-outlined" aria-hidden="true">progress_activity</span>
+          <h2>Loading your vocabulary…</h2>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">IELTS Core &middot; Vocabulary acquired in real context.</footer>
+  <script src="/english-site.js?v=20260822_500"></script>
+  <script src="/english-vocabulary.js?v=20260822_500"></script>
+</body>
+</html>

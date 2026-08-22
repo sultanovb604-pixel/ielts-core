@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="IELTS Core practice and learning library">
+  <title>Library | IELTS Core</title>
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
+  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+</head>
+<body class="app-body materials-page premium-product-page">
+  <header class="app-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
+      <span>IELTS CORE</span>
+      <span class="app-brand-badge">BETA</span>
+    </a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
+    <nav class="app-nav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/practice">Practice</a>
+      <a href="/english/materials" aria-current="page">Materials</a>
+      <a href="/english/pricing">Pricing</a>
+      <a href="/english/account">Dashboard</a>
+    </nav>
+    <div class="app-actions">
+      <a class="plain-link" href="/english/login">Sign in</a>
+      <a class="button primary" href="/english/signup">Start free</a>
+    </div>
+  </header>
+
+  <!-- Top Notification Ribbon -->
+  <div class="vx-top-notification-banner" role="region" aria-label="Announcement">
+    <div class="vx-top-notification-content">
+      <span class="material-symbols-outlined icon-gift">redeem</span>
+      <span><strong>IELTS Core Premium:</strong> Unlock all authentic Cambridge CDI tests, audio simulations & Band 9 diagnostic analytics.</span>
+      <a href="/english/pricing" class="vx-top-notification-btn" onclick="if(typeof window.showUpgradeModal==='function'){window.showUpgradeModal();return false;}">Upgrade Now →</a>
+    </div>
+  </div>
+
+  <main class="page materials-shell">
+    <!-- Breadcrumb Bar -->
+    <nav class="vx-breadcrumb-bar" id="vxBreadcrumbBar" aria-label="Breadcrumb">
+      <a href="/english/account"><span class="material-symbols-outlined">home</span> Home</a>
+      <span class="sep">/</span>
+      <span class="current" id="vxBreadcrumbCurrent">Materials Library</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="library-header-compact">
+      <h1 class="library-title" id="vxMaterialsTitle">IELTS Practice Materials</h1>
+      <p class="library-subtitle" id="vxMaterialsSubtitle">Official Cambridge computer-delivered practice tests, passage drills, model essays, and study resources.</p>
+    </header>
+
+    <nav class="library-tabs" role="tablist" aria-label="Material category">
+      <button class="library-tab" role="tab" data-collection="all" aria-pressed="true" aria-selected="true">
+        <span class="material-symbols-outlined tab-icon">dashboard</span>
+        <span>All materials</span>
+      </button>
+      <button class="library-tab" role="tab" data-collection="full-test" aria-pressed="false" aria-selected="false">
+        <span class="material-symbols-outlined tab-icon">bolt</span>
+        <span>Full Mock Tests</span>
+      </button>
+      <button class="library-tab" role="tab" data-collection="practice" aria-pressed="false" aria-selected="false">
+        <span class="material-symbols-outlined tab-icon">menu_book</span>
+        <span>Passage drills</span>
+      </button>
+      <button class="library-tab" role="tab" data-collection="article" aria-pressed="false" aria-selected="false">
+        <span class="material-symbols-outlined tab-icon">auto_stories</span>
+        <span>Articles</span>
+      </button>
+      <button class="library-tab" role="tab" data-collection="writing-sample" aria-pressed="false" aria-selected="false">
+        <span class="material-symbols-outlined tab-icon">history_edu</span>
+        <span>Writing models</span>
+      </button>
+      <button class="library-tab" role="tab" data-collection="speaking" aria-pressed="false" aria-selected="false">
+        <span class="material-symbols-outlined tab-icon">record_voice_over</span>
+        <span>Speaking</span>
+      </button>
+      <button class="library-tab" role="tab" data-collection="book" aria-pressed="false" aria-selected="false">
+        <span class="material-symbols-outlined tab-icon">library_books</span>
+        <span>Books</span>
+      </button>
+    </nav>
+
+    <div class="materials-toolbar" role="region" aria-label="Search and filter materials">
+      <div class="search-field">
+        <div class="search-input-wrap">
+          <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+          <input id="materialSearch" type="search" placeholder="Search by test number, topic, or question type…" autocomplete="off" aria-label="Search materials by title or topic">
+          <button id="clearSearchInput" type="button" class="search-clear-btn" aria-label="Clear search text" hidden>×</button>
+        </div>
+      </div>
+
+      <div class="toolbar-controls-wrap">
+        <div class="toolbar-group">
+          <div class="filter-row skill-chips" role="group" aria-label="Skill filters">
+            <button class="filter skill-filter-btn" data-material-skill="all" aria-pressed="true">All Skills</button>
+            <button class="filter skill-filter-btn" data-material-skill="reading" aria-pressed="false">Reading</button>
+            <button class="filter skill-filter-btn" data-material-skill="listening" aria-pressed="false">Listening</button>
+            <button class="filter skill-filter-btn" data-material-skill="writing" aria-pressed="false">Writing</button>
+            <button class="filter skill-filter-btn" data-material-skill="speaking" aria-pressed="false">Speaking</button>
+          </div>
+        </div>
+
+        <div class="toolbar-group level-group">
+          <div class="filter-row level-chips" role="group" aria-label="Level filters">
+            <button class="filter level-filter-btn" data-level="all" aria-pressed="true">All Levels</button>
+            <button class="filter level-filter-btn" data-level="ielts" aria-pressed="false">IELTS</button>
+            <button class="filter level-filter-btn" data-level="elementary" aria-pressed="false">Elementary</button>
+            <button class="filter level-filter-btn" data-level="beginner" aria-pressed="false">Beginner</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-summary">
+      <div class="result-count-wrap">
+        <span id="resourceCount" aria-live="polite">Loading materials…</span>
+        <span id="activeFilterTags" class="active-filter-tags"></span>
+      </div>
+      <button class="plain-link reset-filters-btn" id="clearMaterialFilters" type="button" hidden>Reset all filters</button>
+    </div>
+
+    <section class="resource-list" id="resourceList" aria-live="polite" aria-busy="true">
+      <div class="loading-state" role="status" aria-label="Loading materials">
+        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
+        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
+        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
+        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">IELTS Core · Practice organised by level and skill.</footer>
+  <script src="/english-site.js?v=20260822_500"></script>
+  <script src="/english-materials.js?v=20260822_500"></script>
+</body>
+</html>

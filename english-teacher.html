@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="IELTS Core Teacher Dashboard and Student Cohort Management">
+  <title>Teacher Workspace | IELTS Core</title>
+  <script>
+    if (!localStorage.getItem('vortex-english-token')) {
+      location.replace('/english/login?next=' + encodeURIComponent(location.pathname + location.search));
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+  <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-teacher.css?v=20260822_500">
+  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+</head>
+<body class="teacher-app-body">
+
+  <div class="teacher-layout">
+    <!-- 1. LEFT SIDEBAR -->
+    <aside class="teacher-sidebar">
+      <div class="teacher-sidebar-top">
+        <a class="teacher-brand" href="/english" aria-label="IELTS Core Home">
+          <span class="teacher-brand-mark">IC</span>
+          <div class="teacher-brand-text">
+            <span class="teacher-brand-name">IELTS CORE</span>
+            <span class="teacher-brand-tag">TEACHER HUB</span>
+          </div>
+        </a>
+
+        <div class="teacher-cohort-pill">
+          <span class="material-symbols-outlined" style="font-size:16px;color:#1468f3;">school</span>
+          <div>
+            <strong>Active Instructor</strong>
+            <small id="teacherCohortStatusText">4-Skill Operations</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Nav -->
+      <nav class="teacher-sidebar-nav" aria-label="Teacher Workspace Navigation">
+        <!-- COHORT MANAGEMENT -->
+        <div class="teacher-nav-group-title">COHORT OPERATIONS</div>
+        <button type="button" class="teacher-nav-item active" data-teacher-tab="students">
+          <span class="material-symbols-outlined">groups</span>
+          <span>Students Roster</span>
+          <span class="teacher-nav-badge" id="tabBadgeStudents">0</span>
+        </button>
+        <button type="button" class="teacher-nav-item" data-teacher-tab="assignments">
+          <span class="material-symbols-outlined">assignment</span>
+          <span>Dispatched Homework</span>
+          <span class="teacher-nav-badge" id="tabBadgeAssignments">0</span>
+        </button>
+        <button type="button" class="teacher-nav-item" data-teacher-tab="grading">
+          <span class="material-symbols-outlined">rate_review</span>
+          <span>Grading Studio</span>
+          <span class="teacher-nav-badge teacher-nav-badge-amber" id="tabBadgeGrading">0</span>
+        </button>
+        <button type="button" class="teacher-nav-item" data-teacher-tab="licenses">
+          <span class="material-symbols-outlined">workspace_premium</span>
+          <span>Bulk Licenses & Seats</span>
+        </button>
+
+        <!-- ASSIGN 4-SKILL HOMEWORK SHORTCUTS -->
+        <div class="teacher-nav-group-title" style="margin-top:14px;">ASSIGN 4-SKILL HOMEWORK</div>
+        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="listening">
+          <span class="material-symbols-outlined" style="color:#0284c7;">headphones</span>
+          <span>Assign Listening (40Q)</span>
+        </button>
+        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="reading">
+          <span class="material-symbols-outlined" style="color:#10b981;">menu_book</span>
+          <span>Assign Reading (40Q)</span>
+        </button>
+        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="writing">
+          <span class="material-symbols-outlined" style="color:#8b5cf6;">edit_note</span>
+          <span>Assign Writing Essay</span>
+        </button>
+        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="speaking">
+          <span class="material-symbols-outlined" style="color:#f59e0b;">record_voice_over</span>
+          <span>Assign Speaking Mock</span>
+        </button>
+        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="custom">
+          <span class="material-symbols-outlined" style="color:#64748b;">attach_file</span>
+          <span>Upload Custom Worksheet</span>
+        </button>
+
+        <!-- TEACHER PERSONAL DESK -->
+        <div class="teacher-nav-group-title" style="margin-top:14px;">TEACHER PERSONAL USE</div>
+        <a href="/english/materials" target="_blank" class="teacher-nav-item">
+          <span class="material-symbols-outlined">local_library</span>
+          <span>Full Materials Library</span>
+        </a>
+        <a href="/english/account" target="_blank" class="teacher-nav-item">
+          <span class="material-symbols-outlined">person</span>
+          <span>Student Practice View</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Footer -->
+      <div class="teacher-sidebar-user">
+        <div class="teacher-user-avatar" id="teacherAvatarInitial">T</div>
+        <div class="teacher-user-meta">
+          <strong class="teacher-user-name" id="teacherSidebarName">Instructor</strong>
+          <small class="teacher-user-handle" id="teacherSidebarHandle">@teacher</small>
+        </div>
+        <a href="/english/account" title="Account settings" style="color:#64748b;display:flex;align-items:center;">
+          <span class="material-symbols-outlined" style="font-size:18px;">settings</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN WORKSPACE CONTENT -->
+    <div class="teacher-main">
+      <!-- Top Command Bar -->
+      <header class="teacher-topbar">
+        <div class="teacher-topbar-left">
+          <h1 class="teacher-topbar-title" id="teacherPageTitle">Cohort Management & Operations</h1>
+          <span class="teacher-topbar-breadcrumb">IELTS Academic 4-Skill Operations</span>
+        </div>
+
+        <div class="teacher-topbar-search">
+          <span class="material-symbols-outlined" style="font-size:17px;color:#94a3b8;">search</span>
+          <input type="text" id="teacherQuickSearch" placeholder="Filter students, homework, essays…" autocomplete="off" aria-label="Search students, assignments, and submissions">
+        </div>
+
+        <div class="teacher-topbar-actions">
+          <button id="openInviteModalBtn" class="button secondary" type="button" style="padding:7px 14px;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+            <span class="material-symbols-outlined" style="font-size:16px;">person_add</span>
+            <span>Invite Student</span>
+          </button>
+          <button id="openCreateAssignmentBtn" class="button primary" type="button" style="padding:7px 16px;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+            <span class="material-symbols-outlined" style="font-size:16px;">add_task</span>
+            <span>+ New Assignment</span>
+          </button>
+          <button id="themeToggle" type="button" class="theme-toggle" aria-label="Toggle theme" style="margin-left:4px;">
+            <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Workspace Body -->
+      <div class="teacher-body-scroll">
+        <!-- 4 Metric Cards -->
+        <section class="teacher-metric-grid" aria-label="Cohort Statistics">
+          <article class="teacher-stat-card">
+            <div class="teacher-stat-icon-wrap icon-blue">
+              <span class="material-symbols-outlined">groups</span>
+            </div>
+            <div class="teacher-stat-body">
+              <span class="teacher-stat-label">Connected Students</span>
+              <strong class="teacher-stat-val" id="metricTotalStudents">0</strong>
+              <span class="teacher-stat-meta" id="metricPendingInvites">0 pending invitations</span>
+            </div>
+          </article>
+
+          <article class="teacher-stat-card">
+            <div class="teacher-stat-icon-wrap icon-emerald">
+              <span class="material-symbols-outlined">trending_up</span>
+            </div>
+            <div class="teacher-stat-body">
+              <span class="teacher-stat-label">Cohort Average Band</span>
+              <strong class="teacher-stat-val" id="metricAvgBand">—</strong>
+              <span class="teacher-stat-meta">Official 4-skill benchmark</span>
+            </div>
+          </article>
+
+          <article class="teacher-stat-card">
+            <div class="teacher-stat-icon-wrap icon-purple">
+              <span class="material-symbols-outlined">assignment</span>
+            </div>
+            <div class="teacher-stat-body">
+              <span class="teacher-stat-label">Active Assignments</span>
+              <strong class="teacher-stat-val" id="metricActiveAssignments">0</strong>
+              <span class="teacher-stat-meta">4-Skill Homework & Tests</span>
+            </div>
+          </article>
+
+          <article class="teacher-stat-card">
+            <div class="teacher-stat-icon-wrap icon-amber">
+              <span class="material-symbols-outlined">rate_review</span>
+            </div>
+            <div class="teacher-stat-body">
+              <span class="teacher-stat-label">Needs Grading</span>
+              <strong class="teacher-stat-val" id="metricNeedsGrading">0</strong>
+              <span class="teacher-stat-meta" id="metricNeedsGradingMeta">Essays awaiting feedback</span>
+            </div>
+          </article>
+        </section>
+
+        <!-- Segmented Tab Navigation -->
+        <div class="teacher-tabs-container">
+          <nav class="teacher-tabs" role="tablist">
+            <button class="teacher-tab-btn active" data-teacher-tab="students" type="button" role="tab">
+              <span class="material-symbols-outlined">groups</span>
+              <span>Students Roster</span>
+            </button>
+            <button class="teacher-tab-btn" data-teacher-tab="assignments" type="button" role="tab">
+              <span class="material-symbols-outlined">assignment</span>
+              <span>Assignments & Mocks</span>
+            </button>
+            <button class="teacher-tab-btn" data-teacher-tab="grading" type="button" role="tab">
+              <span class="material-symbols-outlined">draw</span>
+              <span>Grading Studio</span>
+            </button>
+            <button class="teacher-tab-btn" data-teacher-tab="licenses" type="button" role="tab">
+              <span class="material-symbols-outlined">workspace_premium</span>
+              <span>Premium Licenses & Bulk Group</span>
+            </button>
+          </nav>
+        </div>
+
+        <!-- TAB 1: STUDENTS ROSTER -->
+        <section id="panelStudents" class="teacher-panel active">
+          <!-- Pending Invites Alert Strip -->
+          <div id="pendingInvitesBox" style="display:none;margin-bottom:16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px 18px;color:#1e40af;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="material-symbols-outlined" style="color:#2563eb;">mail</span>
+                <strong id="pendingInvitesText">1 pending invitation sent</strong>
+              </div>
+              <div id="pendingInvitesList" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+            </div>
+          </div>
+
+          <div class="teacher-table-card">
+            <table class="teacher-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Plan Tier</th>
+                  <th>Overall Band</th>
+                  <th>Reading</th>
+                  <th>Listening</th>
+                  <th>Writing</th>
+                  <th>Tests Done</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center;padding:40px;color:#64748b;">Loading student roster…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TAB 2: ASSIGNMENTS PANEL -->
+        <section id="panelAssignments" class="teacher-panel" hidden>
+          <!-- Quick 4-Skill Assign Action Grid -->
+          <div class="teacher-quick-assign-grid" style="display:grid;grid-template-columns:repeat(5, 1fr);gap:12px;margin-bottom:20px;">
+            <button type="button" class="teacher-skill-action-card teacher-quick-assign-btn" data-assign-skill="listening" style="background:#ffffff;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s;text-align:center;">
+              <div style="width:38px;height:38px;border-radius:10px;background:#eff6ff;color:#0284c7;display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:20px;">headphones</span>
+              </div>
+              <div>
+                <strong style="font-size:13px;color:#0f172a;display:block;">Listening Mock</strong>
+                <span style="font-size:11px;color:#64748b;">40 Questions & Audio</span>
+              </div>
+            </button>
+
+            <button type="button" class="teacher-skill-action-card teacher-quick-assign-btn" data-assign-skill="reading" style="background:#ffffff;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s;text-align:center;">
+              <div style="width:38px;height:38px;border-radius:10px;background:#ecfdf5;color:#10b981;display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:20px;">menu_book</span>
+              </div>
+              <div>
+                <strong style="font-size:13px;color:#0f172a;display:block;">Reading Mock</strong>
+                <span style="font-size:11px;color:#64748b;">Cambridge 40Q Tests</span>
+              </div>
+            </button>
+
+            <button type="button" class="teacher-skill-action-card teacher-quick-assign-btn" data-assign-skill="writing" style="background:#ffffff;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s;text-align:center;">
+              <div style="width:38px;height:38px;border-radius:10px;background:#f5f3ff;color:#8b5cf6;display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:20px;">edit_note</span>
+              </div>
+              <div>
+                <strong style="font-size:13px;color:#0f172a;display:block;">Writing Essay</strong>
+                <span style="font-size:11px;color:#64748b;">Task 1 & Task 2</span>
+              </div>
+            </button>
+
+            <button type="button" class="teacher-skill-action-card teacher-quick-assign-btn" data-assign-skill="speaking" style="background:#ffffff;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s;text-align:center;">
+              <div style="width:38px;height:38px;border-radius:10px;background:#fffbeb;color:#d97706;display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:20px;">record_voice_over</span>
+              </div>
+              <div>
+                <strong style="font-size:13px;color:#0f172a;display:block;">Speaking Mock</strong>
+                <span style="font-size:11px;color:#64748b;">Part 1, 2 & 3 Prompts</span>
+              </div>
+            </button>
+
+            <button type="button" class="teacher-skill-action-card teacher-quick-assign-btn" data-assign-skill="custom" style="background:#ffffff;border:1.5px solid #e2e8f0;border-radius:12px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.15s;text-align:center;">
+              <div style="width:38px;height:38px;border-radius:10px;background:#f1f5f9;color:#475569;display:flex;align-items:center;justify-content:center;">
+                <span class="material-symbols-outlined" style="font-size:20px;">attach_file</span>
+              </div>
+              <div>
+                <strong style="font-size:13px;color:#0f172a;display:block;">Upload File</strong>
+                <span style="font-size:11px;color:#64748b;">PDF / Audio / DOCX</span>
+              </div>
+            </button>
+          </div>
+
+          <div class="teacher-table-card">
+            <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+              <div>
+                <strong style="font-size:15px;color:#0f172a;">Dispatched Homework & Mock Tests</strong>
+                <p style="margin:2px 0 0;font-size:12.5px;color:#64748b;">Track candidate submissions and preview assigned materials.</p>
+              </div>
+              <button class="button primary" id="createAssignmentInnerBtn" type="button" style="padding:6px 14px;font-size:12.5px;">
+                <span class="material-symbols-outlined" style="font-size:15px;">add</span>
+                <span>+ Create Assignment</span>
+              </button>
+            </div>
+
+            <!-- Filter Toolbar -->
+            <div class="teacher-table-filter-bar" style="padding:10px 20px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+              <!-- Left: Status Filter Pills -->
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                <button type="button" class="assign-filter-status-btn is-active" data-status="all" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #1468f3;background:#eff6ff;color:#1468f3;cursor:pointer;transition:all 0.15s;">
+                  Barchasi <span id="filterCountAll">(0)</span>
+                </button>
+                <button type="button" class="assign-filter-status-btn" data-status="active" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #cbd5e1;background:#ffffff;color:#334155;cursor:pointer;transition:all 0.15s;">
+                  🟢 Faol <span id="filterCountActive">(0)</span>
+                </button>
+                <button type="button" class="assign-filter-status-btn" data-status="expired" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #cbd5e1;background:#ffffff;color:#334155;cursor:pointer;transition:all 0.15s;">
+                  ⏳ Muddati tugagan <span id="filterCountExpired">(0)</span>
+                </button>
+                <button type="button" class="assign-filter-status-btn" data-status="pending" style="padding:5px 12px;font-size:12px;font-weight:700;border-radius:20px;border:1px solid #cbd5e1;background:#ffffff;color:#334155;cursor:pointer;transition:all 0.15s;">
+                  📥 Topshirilganlar <span id="filterCountPending">(0)</span>
+                </button>
+              </div>
+
+              <!-- Right: Skill & Search Filters -->
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <select id="assignFilterSkillSelect" class="rubric-score-select" style="width:auto;height:34px;font-size:12.5px;padding:0 10px;border-radius:8px;">
+                  <option value="all">Barcha ko'nikmalar (All Skills)</option>
+                  <option value="reading">📖 Reading</option>
+                  <option value="listening">🎧 Listening</option>
+                  <option value="writing">✍️ Writing</option>
+                  <option value="speaking">🗣️ Speaking</option>
+                  <option value="custom">📎 Maxsus Fayllar</option>
+                </select>
+                <div style="position:relative;">
+                  <span class="material-symbols-outlined" style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:15px;color:#94a3b8;">search</span>
+                  <input type="text" id="assignFilterSearchInput" class="field input" style="padding-left:28px;height:34px;font-size:12.5px;border-radius:8px;width:170px;" placeholder="Qidirish...">
+                </div>
+              </div>
+            </div>
+
+            <table class="teacher-table">
+              <thead>
+                <tr>
+                  <th>Task Title</th>
+                  <th>Skill & Type</th>
+                  <th>Mode</th>
+                  <th>Deadline Window</th>
+                  <th>Submissions</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="assignmentsTableBody">
+                <tr>
+                  <td colspan="6" style="text-align:center;padding:40px;color:#64748b;">No active assignments created yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TAB 3: GRADING STUDIO -->
+        <section id="panelGrading" class="teacher-panel" hidden>
+          <div class="teacher-table-card">
+            <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;">
+              <strong style="font-size:15px;color:#0f172a;">Submitted Writing Review Queue</strong>
+              <p style="margin:2px 0 0;font-size:12.5px;color:#64748b;">Evaluate responses using the official 4-criteria IELTS rubric and dispatch detailed feedback.</p>
+            </div>
+            <table class="teacher-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Task / Topic</th>
+                  <th>Words / Time</th>
+                  <th>Submitted</th>
+                  <th>Status</th>
+                  <th>Band</th>
+                  <th style="text-align:right;">Grade & Feedback</th>
+                </tr>
+              </thead>
+              <tbody id="gradingTableBody">
+                <tr>
+                  <td colspan="7" style="text-align:center;padding:40px;color:#64748b;">No student writing submissions awaiting grading.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- TAB 4: LICENSES & BULK GROUP POOL -->
+        <section id="panelLicenses" class="teacher-panel" hidden>
+          <div class="teacher-hero-card" style="margin-bottom:20px;padding:24px;">
+            <div class="teacher-hero-content">
+              <span class="teacher-hero-pill" style="background:#fef3c7;color:#b45309;border-color:#fde68a;">
+                <span class="material-symbols-outlined" style="font-size:14px;">workspace_premium</span>
+                <span>TEACHER GROUP PLAN · 20,000 UZS / STUDENT</span>
+              </span>
+              <h2 class="teacher-hero-title" style="font-size:22px;margin:8px 0 6px;">Bulk Premium Seat Allocation</h2>
+              <p class="teacher-hero-desc" style="font-size:13.5px;">Purchase licenses at our teacher bulk group discount and assign full Premium access to connected students in your cohort.</p>
+            </div>
+            <div>
+              <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener" class="button primary" style="padding:9px 18px;font-size:13px;display:inline-flex;align-items:center;gap:6px;">
+                <span class="material-symbols-outlined" style="font-size:16px;">shopping_bag</span>
+                <span>Add More Seats (@ieltscoreadmin)</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- License Pool Stats -->
+          <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:16px;margin-bottom:20px;">
+            <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;">
+              <small style="color:#64748b;font-weight:700;text-transform:uppercase;font-size:11px;">Total Purchased Seats</small>
+              <div id="licenseTotalSeats" style="font-size:26px;font-weight:800;color:#0f172a;margin-top:2px;">5 Seats</div>
+            </div>
+            <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;">
+              <small style="color:#64748b;font-weight:700;text-transform:uppercase;font-size:11px;">Assigned Seats</small>
+              <div id="licenseUsedSeats" style="font-size:26px;font-weight:800;color:#1468f3;margin-top:2px;">0 Active</div>
+            </div>
+            <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;">
+              <small style="color:#64748b;font-weight:700;text-transform:uppercase;font-size:11px;">Available Seats</small>
+              <div id="licenseAvailableSeats" style="font-size:26px;font-weight:800;color:#10b981;margin-top:2px;">5 Free</div>
+            </div>
+          </div>
+
+          <!-- Usage Bar -->
+          <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+            <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:#475569;margin-bottom:8px;">
+              <span>License Pool Capacity</span>
+              <span id="licenseUsageText">0 / 5 seats assigned</span>
+            </div>
+            <div style="height:10px;background:#f1f5f9;border-radius:999px;overflow:hidden;">
+              <div id="licenseUsageBar" style="height:100%;background:#1468f3;width:0%;transition:width 0.3s;"></div>
+            </div>
+          </div>
+
+          <!-- Quick Assign Tool -->
+          <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 20px;margin-bottom:20px;">
+            <strong style="font-size:14px;color:#0f172a;display:block;margin-bottom:10px;">Assign Premium Seat to Student</strong>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <select id="licenseStudentSelect" class="rubric-select" style="flex:1;min-width:240px;padding:9px;">
+                <option value="">-- Choose student from cohort --</option>
+              </select>
+              <button id="licenseAssignBtn" class="button primary" type="button" style="padding:9px 20px;font-size:13px;">Assign Premium Access</button>
+            </div>
+          </div>
+
+          <!-- Allocated Students Table -->
+          <div class="teacher-table-card">
+            <div style="padding:14px 20px;border-bottom:1px solid #e2e8f0;">
+              <strong style="font-size:14px;color:#0f172a;">Active Premium License Holders</strong>
+            </div>
+            <table class="teacher-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Plan Tier</th>
+                  <th>Assigned Date</th>
+                  <th style="text-align:right;">License Actions</th>
+                </tr>
+              </thead>
+              <tbody id="licenseTableBody">
+                <tr>
+                  <td colspan="4" style="text-align:center;padding:32px;color:#64748b;">No students assigned to group license seats yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 1: Invite Student Modal -->
+  <div class="teacher-modal-overlay" id="inviteStudentModal" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle">
+    <div class="teacher-modal" style="max-width:460px;border-radius:14px;">
+      <div class="teacher-modal-head">
+        <div>
+          <h2 id="inviteModalTitle" style="font-size:17px;font-weight:800;color:#0f172a;">O'quvchini guruhga qo'shish</h2>
+          <p style="margin:2px 0 0;font-size:13px;color:#64748b;">O'quvchining username (@) orqali taklif yuboring.</p>
+        </div>
+        <button class="teacher-modal-close" type="button" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="inviteStudentForm" style="display:flex;flex-direction:column;flex:1;margin:0;">
+        <div class="teacher-modal-body" style="padding:18px 22px;">
+          <label style="display:block;">
+            <span style="font-size:12px;font-weight:700;color:#334155;display:block;margin-bottom:6px;">O'quvchi username (@)</span>
+            <div style="position:relative;">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;font-weight:700;font-size:14px;">@</span>
+              <input type="text" id="inviteUsernameInput" class="field input" style="padding-left:28px;width:100%;height:38px;font-size:13.5px;border-radius:8px;" placeholder="masalan: sardor_ielts" minlength="3" maxlength="50" pattern="^[a-zA-Z0-9_.-]+$" autocomplete="off" required>
+            </div>
+          </label>
+          <p id="inviteErrorMsg" style="display:none;color:#dc2626;font-size:12.5px;margin:8px 0 0;font-weight:600;"></p>
+        </div>
+
+        <div class="teacher-modal-foot">
+          <button class="button secondary" type="button" data-close-modal style="height:38px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:700;">Bekor qilish</button>
+          <button class="button primary" type="submit" style="height:38px;padding:0 20px;border-radius:8px;font-size:13px;font-weight:700;">Taklif yuborish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Enhanced Multi-Task Assignment Modal -->
+  <div class="teacher-modal-overlay" id="createAssignmentModal" role="dialog" aria-modal="true" aria-labelledby="createAssignModalTitle">
+    <div class="teacher-modal wide" style="max-width:760px;border-radius:16px;">
+      <div class="teacher-modal-head" style="padding:16px 22px 14px;border-bottom:1px solid #e2e8f0;">
+        <div>
+          <h2 id="createAssignModalTitle" style="font-size:17.5px;font-weight:800;color:#0f172a;margin:0;">Vazifa biriktirish (Homework & Mocks)</h2>
+          <p style="margin:3px 0 0;font-size:13px;color:#64748b;">O'quvchilarga platformadagi Cambridge materiallarini yoki o'zingizning fayllaringizni biriktiring.</p>
+        </div>
+        <button class="teacher-modal-close" type="button" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="createAssignmentForm" style="display:flex;flex-direction:column;flex:1;overflow:hidden;margin:0;">
+        <div class="teacher-modal-body" style="padding:16px 22px;max-height:75vh;overflow-y:auto;">
+
+          <!-- Source Tabs: Cambridge vs Custom Upload -->
+          <div style="display:flex;gap:8px;margin-bottom:14px;background:#f1f5f9;padding:4px;border-radius:10px;">
+            <button type="button" class="teacher-assign-source-tab is-active" data-source="cambridge" style="flex:1;padding:8px 12px;font-size:13px;font-weight:700;border:0;border-radius:8px;cursor:pointer;background:#ffffff;color:#1468f3;box-shadow:0 1px 3px rgba(0,0,0,0.08);transition:all 0.15s;">
+              📚 Cambridge & Platform Testlari
+            </button>
+            <button type="button" class="teacher-assign-source-tab" data-source="custom" style="flex:1;padding:8px 12px;font-size:13px;font-weight:700;border:0;border-radius:8px;cursor:pointer;background:transparent;color:#64748b;transition:all 0.15s;">
+              📎 Maxsus Fayl & Worksheet Yuklash
+            </button>
+          </div>
+
+          <!-- VIEW 1: Cambridge Materials Multi-Skill Selector -->
+          <div id="assignSourceCambridgeView">
+            <div class="modal-section-label" style="margin-bottom:8px;">
+              <span>1. Biriktiriladigan Test yoki Mashqlar</span>
+              <small>Kerakli bo'limlarni yoqing</small>
+            </div>
+
+            <div class="multi-task-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+              <!-- Reading Row -->
+              <div class="task-select-row" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;background:#ffffff;transition:all 0.15s;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;min-width:150px;font-weight:700;font-size:13px;color:#0f172a;user-select:none;">
+                  <input type="checkbox" class="task-enable-checkbox" data-skill="reading" style="width:17px;height:17px;cursor:pointer;accent-color:#1468f3;">
+                  <span>📖 Reading (40Q)</span>
+                </label>
+                <select class="task-preset-select rubric-score-select" data-skill="reading" disabled style="flex:1;height:38px;font-size:13px;">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <!-- Listening Row -->
+              <div class="task-select-row" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;background:#ffffff;transition:all 0.15s;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;min-width:150px;font-weight:700;font-size:13px;color:#0f172a;user-select:none;">
+                  <input type="checkbox" class="task-enable-checkbox" data-skill="listening" style="width:17px;height:17px;cursor:pointer;accent-color:#1468f3;">
+                  <span>🎧 Listening (40Q)</span>
+                </label>
+                <select class="task-preset-select rubric-score-select" data-skill="listening" disabled style="flex:1;height:38px;font-size:13px;">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <!-- Writing Row -->
+              <div class="task-select-row is-active" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #1468f3;border-radius:10px;background:#eff6ff;transition:all 0.15s;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;min-width:150px;font-weight:700;font-size:13px;color:#0f172a;user-select:none;">
+                  <input type="checkbox" class="task-enable-checkbox" data-skill="writing" checked style="width:17px;height:17px;cursor:pointer;accent-color:#1468f3;">
+                  <span>✍️ Writing Task</span>
+                </label>
+                <select class="task-preset-select rubric-score-select" data-skill="writing" style="flex:1;height:38px;font-size:13px;">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <!-- Speaking Row -->
+              <div class="task-select-row" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;background:#ffffff;transition:all 0.15s;">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;min-width:150px;font-weight:700;font-size:13px;color:#0f172a;user-select:none;">
+                  <input type="checkbox" class="task-enable-checkbox" data-skill="speaking" style="width:17px;height:17px;cursor:pointer;accent-color:#1468f3;">
+                  <span>🗣️ Speaking Mock</span>
+                </label>
+                <select class="task-preset-select rubric-score-select" data-skill="speaking" disabled style="flex:1;height:38px;font-size:13px;">
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIEW 2: Custom File Upload View -->
+          <div id="assignSourceCustomView" style="display:none;margin-bottom:14px;">
+            <div class="modal-section-label" style="margin-bottom:8px;">
+              <span>1. Maxsus Vazifa va Fayllar</span>
+              <small>PDF, DOCX, Audio, Rasm</small>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <label style="display:block;">
+                <span style="font-size:12px;font-weight:700;color:#334155;display:block;margin-bottom:4px;">Vazifa Nomi (Sarlavha)</span>
+                <input type="text" id="customAssignTitleInput" class="field input" style="width:100%;height:38px;font-size:13.5px;border-radius:8px;" placeholder="Masalan: Unit 5 Grammar & Vocabulary Worksheet">
+              </label>
+
+              <!-- Upload Drag & Drop Area -->
+              <div id="assignDropZone" style="border:2px dashed #cbd5e1;border-radius:10px;padding:18px;text-align:center;background:#f8fafc;cursor:pointer;transition:all 0.15s;">
+                <span class="material-symbols-outlined" style="font-size:32px;color:#1468f3;margin-bottom:4px;">cloud_upload</span>
+                <strong style="font-size:13.5px;color:#0f172a;display:block;">Fayllarni yuklash uchun bosing yoki shu yerga tashlang</strong>
+                <span style="font-size:12px;color:#64748b;">PDF, Word (DOC/DOCX), Audio (MP3), Rasmlar (15MB gacha)</span>
+                <input type="file" id="assignFileInput" multiple accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp3,.wav,.mp4" style="display:none;">
+              </div>
+
+              <!-- Attached files chips container -->
+              <div id="assignAttachedFilesList" style="display:none;gap:8px;flex-wrap:wrap;padding:8px;background:#ffffff;border:1px solid #e2e8f0;border-radius:8px;"></div>
+              <div id="assignFileStatus" style="font-size:12px;font-weight:700;display:none;"></div>
+
+              <label style="display:block;">
+                <span style="font-size:12px;font-weight:700;color:#334155;display:block;margin-bottom:4px;">Vazifa Matni / Savollar (Prompt)</span>
+                <textarea id="customAssignPromptInput" class="field input" style="width:100%;min-height:70px;font-size:13px;padding:8px 12px;border-radius:8px;" placeholder="O'quvchi uchun batafsil savollar, topshiriq talablari yoki ko'rsatmalar..."></textarea>
+              </label>
+            </div>
+          </div>
+
+          <!-- 2. Audience Targeting (Barcha o'quvchilar yoki tanlanganlar) -->
+          <div style="margin-bottom:14px;">
+            <div class="modal-section-label" style="margin-bottom:6px;">
+              <span>2. Kimlarga yuboriladi (Target Audience)</span>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:8px;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#0f172a;cursor:pointer;">
+                <input type="radio" name="assignTargetScope" value="all" checked style="accent-color:#1468f3;">
+                <span>👥 Barcha guruh o'quvchilariga</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#0f172a;cursor:pointer;">
+                <input type="radio" name="assignTargetScope" value="specific" style="accent-color:#1468f3;">
+                <span>👤 Faqat tanlangan o'quvchilarga</span>
+              </label>
+            </div>
+            <!-- Specific Students Checklist (hidden by default) -->
+            <div id="assignSpecificStudentsContainer" style="display:none;max-height:130px;overflow-y:auto;border:1px solid #cbd5e1;border-radius:8px;padding:8px 12px;background:#f8fafc;">
+              <div id="assignStudentsList" style="display:flex;flex-direction:column;gap:6px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Deadline & Mode -->
+          <div style="margin-bottom:14px;">
+            <div class="modal-section-label" style="margin-bottom:6px;">
+              <span>3. Topshirish muddati va rejim</span>
+            </div>
+            
+            <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+              <button type="button" class="deadline-preset-btn teacher-btn-secondary" data-hours="12" style="padding:4px 10px;font-size:12px;border-radius:7px;">⚡ Bugun (23:59)</button>
+              <button type="button" class="deadline-preset-btn teacher-btn-secondary" data-hours="36" style="padding:4px 10px;font-size:12px;border-radius:7px;background:#eff6ff;border-color:#1468f3;color:#1468f3;">📅 Ertaga (23:59)</button>
+              <button type="button" class="deadline-preset-btn teacher-btn-secondary" data-hours="72" style="padding:4px 10px;font-size:12px;border-radius:7px;">⏳ 3 kunda</button>
+              <button type="button" class="deadline-preset-btn teacher-btn-secondary" data-hours="168" style="padding:4px 10px;font-size:12px;border-radius:7px;">📆 1 haftada</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <input type="datetime-local" id="assignDeadlineInput" class="field input" style="width:100%;height:38px;font-size:13px;border-radius:8px;">
+              <select id="assignModeSelect" class="rubric-score-select" style="height:38px;font-size:13px;">
+                <option value="practice">🟢 Practice Rejimi (Erkin mashq)</option>
+                <option value="real-exam">🔴 Real Exam Rejimi (Qat'iy 60m taymer)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 4. Teacher Instructions -->
+          <div>
+            <div class="modal-section-label" style="margin-bottom:6px;">
+              <span>4. O'qituvchi eslatmasi <small style="font-weight:400;">(ixtiyoriy)</small></span>
+            </div>
+            <input type="text" id="assignInstructionsInput" class="field input" style="width:100%;height:38px;font-size:13px;border-radius:8px;" placeholder="Masalan: Darsgacha to'liq ishlab keling yoki lug'atlarini yozing">
+          </div>
+        </div>
+
+        <!-- Sticky Modal Footer with Actions -->
+        <div class="teacher-modal-foot" style="padding:12px 22px;border-top:1px solid #e2e8f0;">
+          <button class="button secondary" type="button" data-close-modal style="height:40px;padding:0 20px;border-radius:8px;font-size:13.5px;font-weight:700;">Bekor qilish</button>
+          <button class="button primary" id="btnPublishAssignments" type="submit" style="height:40px;padding:0 24px;border-radius:8px;font-size:13.5px;font-weight:700;background:#1468f3;">🚀 Vazifani o'quvchilarga yuborish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Grading Studio Modal -->
+  <div class="teacher-modal-overlay" id="gradingModal" role="dialog" aria-modal="true" aria-labelledby="gradingModalTitle">
+    <div class="teacher-modal wide" style="max-width:960px;border-radius:14px;">
+      <div class="teacher-modal-head">
+        <div>
+          <h2 id="gradingModalTitle" style="font-size:17px;font-weight:800;color:#0f172a;">IELTS 4-Mezonli Baholash Studiyasi</h2>
+          <p id="gradingModalStudentMeta" style="margin:2px 0 0;font-size:13px;color:#64748b;">O'quvchi javobini tekshirish</p>
+        </div>
+        <button class="teacher-modal-close" type="button" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="gradingForm" style="display:flex;flex-direction:column;flex:1;overflow:hidden;margin:0;">
+        <div class="teacher-modal-body" style="padding:16px 22px;">
+          <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:18px;">
+            <!-- Left: Student Essay Text -->
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;max-height:420px;overflow-y:auto;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <strong style="font-size:11.5px;text-transform:uppercase;color:#64748b;letter-spacing:0.04em;">O'quvchi Inshosi</strong>
+                <span class="status-pill status-graded" id="gradingWordBadge">Essay Content</span>
+              </div>
+              <div id="gradingEssayText" style="font-family:'DM Sans',serif;font-size:13.5px;line-height:1.7;color:#1e293b;white-space:pre-wrap;"></div>
+            </div>
+
+            <!-- Right: 4-Criteria Rubric Form -->
+            <div>
+              <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                  <small style="font-weight:800;color:#166534;text-transform:uppercase;font-size:10.5px;">Hisoblangan Overall Band</small>
+                  <div id="gradingCalculatedBand" style="font-size:24px;font-weight:900;color:#15803d;line-height:1.1;">Band 7.0</div>
+                </div>
+                <span style="font-size:11px;color:#166534;font-weight:700;">Cambridge IELTS Scale</span>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+                <label style="display:flex;flex-direction:column;gap:4px;">
+                  <span style="font-size:11.5px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.03em;">Task Response (TR)</span>
+                  <select id="rubricTR" class="rubric-score-select">
+                    <option value="9.0">Band 9.0 (Expert)</option>
+                    <option value="8.5">Band 8.5</option>
+                    <option value="8.0">Band 8.0 (Very Good)</option>
+                    <option value="7.5">Band 7.5</option>
+                    <option value="7.0" selected>Band 7.0 (Good)</option>
+                    <option value="6.5">Band 6.5</option>
+                    <option value="6.0">Band 6.0 (Competent)</option>
+                    <option value="5.5">Band 5.5</option>
+                    <option value="5.0">Band 5.0 (Modest)</option>
+                    <option value="4.5">Band 4.5</option>
+                    <option value="4.0">Band 4.0 (Limited)</option>
+                  </select>
+                </label>
+
+                <label style="display:flex;flex-direction:column;gap:4px;">
+                  <span style="font-size:11.5px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.03em;">Coherence & Cohesion (CC)</span>
+                  <select id="rubricCC" class="rubric-score-select">
+                    <option value="9.0">Band 9.0 (Expert)</option>
+                    <option value="8.5">Band 8.5</option>
+                    <option value="8.0">Band 8.0 (Very Good)</option>
+                    <option value="7.5">Band 7.5</option>
+                    <option value="7.0" selected>Band 7.0 (Good)</option>
+                    <option value="6.5">Band 6.5</option>
+                    <option value="6.0">Band 6.0 (Competent)</option>
+                    <option value="5.5">Band 5.5</option>
+                    <option value="5.0">Band 5.0 (Modest)</option>
+                    <option value="4.5">Band 4.5</option>
+                    <option value="4.0">Band 4.0 (Limited)</option>
+                  </select>
+                </label>
+
+                <label style="display:flex;flex-direction:column;gap:4px;">
+                  <span style="font-size:11.5px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.03em;">Lexical Resource (LR)</span>
+                  <select id="rubricLR" class="rubric-score-select">
+                    <option value="9.0">Band 9.0 (Expert)</option>
+                    <option value="8.5">Band 8.5</option>
+                    <option value="8.0">Band 8.0 (Very Good)</option>
+                    <option value="7.5">Band 7.5</option>
+                    <option value="7.0" selected>Band 7.0 (Good)</option>
+                    <option value="6.5">Band 6.5</option>
+                    <option value="6.0">Band 6.0 (Competent)</option>
+                    <option value="5.5">Band 5.5</option>
+                    <option value="5.0">Band 5.0 (Modest)</option>
+                    <option value="4.5">Band 4.5</option>
+                    <option value="4.0">Band 4.0 (Limited)</option>
+                  </select>
+                </label>
+
+                <label style="display:flex;flex-direction:column;gap:4px;">
+                  <span style="font-size:11.5px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:0.03em;">Grammar & Accuracy (GRA)</span>
+                  <select id="rubricGRA" class="rubric-score-select">
+                    <option value="9.0">Band 9.0 (Expert)</option>
+                    <option value="8.5">Band 8.5</option>
+                    <option value="8.0">Band 8.0 (Very Good)</option>
+                    <option value="7.5">Band 7.5</option>
+                    <option value="7.0" selected>Band 7.0 (Good)</option>
+                    <option value="6.5">Band 6.5</option>
+                    <option value="6.0">Band 6.0 (Competent)</option>
+                    <option value="5.5">Band 5.5</option>
+                    <option value="5.0">Band 5.0 (Modest)</option>
+                    <option value="4.5">Band 4.5</option>
+                    <option value="4.0">Band 4.0 (Limited)</option>
+                  </select>
+                </label>
+              </div>
+
+              <label style="display:block;">
+                <span style="font-size:11.5px;font-weight:800;color:#334155;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.03em;">O'qituvchi Xulosasi va Fikri (Feedback)</span>
+                <textarea id="gradingFeedbackInput" class="field input" style="width:100%;min-height:90px;font-size:13px;padding:10px 12px;border-radius:8px;line-height:1.5;box-sizing:border-box;" placeholder="Insho bo'yicha kamchiliklar, kuchli tomonlar va tavsiyalarni yozing..."></textarea>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="teacher-modal-foot">
+          <button class="button secondary" type="button" data-close-modal style="height:40px;padding:0 20px;border-radius:8px;font-size:13.5px;font-weight:700;">Bekor qilish</button>
+          <button class="button primary" id="saveGradingBtn" type="submit" style="height:40px;padding:0 24px;border-radius:8px;font-size:13.5px;font-weight:700;background:#1468f3;">🚀 Bahoni e'lon qilish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Student Detailed Drilldown Modal -->
+  <div class="teacher-modal-overlay" id="studentDrilldownModal" role="dialog" aria-modal="true" aria-labelledby="drilldownStudentName">
+    <div class="teacher-modal wide" style="max-width:920px;border-radius:14px;">
+      <div class="teacher-modal-head">
+        <div>
+          <h2 id="drilldownStudentName" style="font-size:17px;font-weight:800;color:#0f172a;">O'quvchi Tahlili va Natijalari (Analytics)</h2>
+          <p id="drilldownStudentHandle" style="margin:2px 0 0;font-size:13px;color:#64748b;">@student_nickname</p>
+        </div>
+        <button class="teacher-modal-close" type="button" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+      <div class="teacher-modal-body" id="drilldownContent" style="padding:18px 22px;">
+        <p style="padding:20px;text-align:center;color:#64748b;">O'quvchi natijalari yuklanmoqda…</p>
+      </div>
+      <div class="teacher-modal-foot">
+        <button class="button secondary" type="button" data-close-modal style="height:38px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:700;">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Assignment Details & Submissions Modal -->
+  <div class="teacher-modal-overlay" id="assignmentDetailsModal" role="dialog" aria-modal="true" aria-labelledby="assignDetailsTitle">
+    <div class="teacher-modal wide" style="max-width:840px;border-radius:14px;">
+      <div class="teacher-modal-head">
+        <div>
+          <h2 id="assignDetailsTitle" style="font-size:17px;font-weight:800;color:#0f172a;">Vazifa Tafsilotlari va Topshiriqlar</h2>
+          <p id="assignDetailsMeta" style="margin:2px 0 0;font-size:13px;color:#64748b;">Yuborilgan vazifa</p>
+        </div>
+        <button class="teacher-modal-close" type="button" data-close-modal aria-label="Close modal">&times;</button>
+      </div>
+      <div class="teacher-modal-body" id="assignmentDetailsContent" style="padding:18px 22px;">
+        <p style="padding:20px;text-align:center;color:#64748b;">Guruh topshiriqlari yuklanmoqda…</p>
+      </div>
+      <div class="teacher-modal-foot">
+        <button class="button secondary" type="button" data-close-modal style="height:38px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:700;">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/english-teacher.js?v=20260822_500"></script>
+</body>
+</html>

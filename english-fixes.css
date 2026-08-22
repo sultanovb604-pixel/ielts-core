@@ -1,0 +1,12 @@
+/* Post-comparison layout corrections. */
+body { overflow-x:hidden; }
+@media (min-width:1001px) {
+  .hero h1 { max-width:630px; font-size:clamp(50px,4.6vw,66px); line-height:1.07; }
+  .hero-art { overflow:hidden; }
+  .hero-art img { width:760px; transform:translateX(55px); }
+}
+
+.onboarding { width:min(760px,calc(100vw - 32px)); padding:28px; border:0; border-radius:20px; color:var(--ink); background:var(--paper); box-shadow:0 30px 100px rgba(11,31,66,.28); }
+.onboarding::backdrop { background:rgba(15,33,67,.47); backdrop-filter:blur(4px); }
+.onboarding-top { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700; }.onboarding-skip { margin-left:auto; border:0; color:var(--muted); background:transparent; font-size:13px; }.onboarding-step { display:none; padding:42px 4px 26px; }.onboarding-step.active { display:block; }.onboarding h2 { max-width:500px; margin:0; font-size:38px; letter-spacing:-.05em; }.onboarding-step>p:not(.eyebrow) { max-width:520px; color:var(--muted); line-height:1.6; }.onboarding-choices { margin-top:25px; display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }.onboarding-choices button { min-height:148px; padding:19px; display:grid; align-content:start; gap:9px; text-align:left; border:1px solid var(--line); border-radius:13px; color:var(--ink); background:#fff; }.onboarding-choices button:hover,.onboarding-choices button.selected { border-color:var(--blue); background:#f4f8ff; box-shadow:0 8px 20px rgba(23,105,238,.1); }.onboarding-choices b { font-size:16px; }.onboarding-choices span { color:var(--muted); font-size:13px; line-height:1.45; }.onboarding-footer { display:flex; justify-content:space-between; align-items:center; padding-top:18px; border-top:1px solid var(--line); }.onboarding-progress { display:flex; gap:7px; }.onboarding-progress i { width:22px; height:5px; border-radius:99px; background:#dbe3ef; }.onboarding-progress i.active { background:var(--blue); }.onboarding-next:disabled { cursor:not-allowed; opacity:.45; }
+@media(max-width:760px) { .onboarding { max-height:calc(100vh - 24px); padding:20px; overflow:auto; }.onboarding-step { padding:28px 0 20px; }.onboarding h2 { font-size:31px; }.onboarding-choices { grid-template-columns:1fr; gap:9px; margin-top:18px; }.onboarding-choices button { min-height:auto; padding:15px 16px; }.onboarding-footer { align-items:flex-end; gap:14px; flex-direction:column; }.onboarding-next { width:100%; } }

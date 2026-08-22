@@ -1,0 +1,54 @@
+# Cleanup & Staging Report
+
+- **Original HTML/HTM files processed**: 40
+- **Staged clean copies created**: 40
+- **Files skipped (PDF/DOCX)**: 5
+- **Files with broken/missing answer keys**: 36
+  - Dunedin Study (Passage 3) (2).html
+  - full_reading1_with_explanation (2).html
+  - How Good is an Online Course (Passage 3) (2).html
+  - How Sleep Helps Us Learn (Passage 2) (2).html
+  - IELTS Full Reading Practice.htm
+  - Music Soothes & Awes (Passage 3) (2).html
+  - Passage 3 (20) (5).html
+  - Paternity Leave (Passage 2) (2).html
+  - R (3) (2).html
+  - R (31).html
+  - R (32).html
+  - R (33).html
+  - R (35).html
+  - R (36).html
+  - R (37).html
+  - R (38).html
+  - R (40).html
+  - R (41).html
+  - R (43).html
+  - R (44).html
+  - R (45).html
+  - R (46).html
+  - R (47).html
+  - R (48).html
+  - R (49).html
+  - RD Passage CDI (2).html
+  - RD Passage CDI (3).html
+  - Reading (7).html
+  - Reading Full Test CD (3).html
+  - Redwoods (Passage 2) (2).html
+  - Relish the Flavour (Passage 3) (2).html
+  - Sleep and Modern Hunter Gatherers (passage 1) (2).html
+  - The Strange World of Sight (Passage 3) (2).html
+  - Thomas Cole (Passage 1) (2).html
+  - Tunnelling Under the Thames (2).html
+  - William Gilbert and Magnetism (2).html
+- **Files where question counts changed unexpectedly**: 0
+- **All third-party domains found**: cdn.tailwindcss.com, cdnjs.cloudflare.com, d2snzxottmona5.cloudfront.net, websitecmscdn.s3.ap-south-1.amazonaws.com, fonts.googleapis.com, mini-ielts.com, t.me
+- **Remaining manual-review issues (PDF/DOCX)**: 5
+  - Reading Day54.pdf
+  - Reading Day56 (2).pdf
+  - Reading Day58 (2).pdf
+  - Reading test passage 2 and 3 (2).docx
+  - Related Passage 3.pdf
+- **Exact verification commands used**: Node.js script using Cheerio DOM parsing to count questions and passages before and after DOM manipulation.
+
+### Verdict
+**Safe to review**

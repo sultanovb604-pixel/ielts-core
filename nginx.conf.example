@@ -1,0 +1,60 @@
+# Production Nginx Configuration for IELTS Core (ieltscore.uz)
+# Place in /etc/nginx/sites-available/ieltscore.uz and symlink to /etc/nginx/sites-enabled/
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ieltscore.uz www.ieltscore.uz;
+
+    # Redirect all HTTP to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name ieltscore.uz www.ieltscore.uz;
+
+    # SSL Certificate Configuration (Certbot / Let's Encrypt)
+    # ssl_certificate /etc/letsencrypt/live/ieltscore.uz/fullchain.pem;
+    # ssl_certificate_key /etc/letsencrypt/live/ieltscore.uz/privkey.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    # Gzip Compression
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_types text/plain text/css text/xml text/javascript application/json application/javascript application/xml+rss application/x-font-ttf font/opentype image/svg+xml;
+
+    # Max Upload Size (for student submissions / media)
+    client_max_body_size 25M;
+
+    # Static Assets Long-Term Caching
+    location ~* \.(css|js|jpg|jpeg|png|gif|ico|svg|webp|woff2|woff|ttf|mp3|mp4)$ {
+        proxy_pass http://127.0.0.1:4173;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        expires 7d;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    # Proxy to Node.js App
+    location / {
+        proxy_pass http://127.0.0.1:4173;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
