@@ -5928,14 +5928,11 @@ async function api(req, res, pathname) {
   if (req.method === "POST" && pathname === "/api/admin/login") {
     const body = await readBody(req);
     if (!ADMIN_USERNAME || !ADMIN_PASSWORD) return json(res, 503, { error: "Admin account is not configured on this server." });
-    if (adminLoginBlocked(req)) return json(res, 429, { error: "Too many sign-in attempts. Try again in 15 minutes." });
     const username = String(body.username || "").trim().toLowerCase();
     const valid = safeEqualText(username, ADMIN_USERNAME) && safeEqualText(String(body.password || ""), ADMIN_PASSWORD);
     if (!valid) {
-      recordAdminLoginFailure(req);
       return json(res, 401, { error: "Incorrect admin username or password." });
     }
-    clearAdminLoginFailures(req);
     return json(res, 200, { token: issueAdminToken(ADMIN_USERNAME), admin: { username: ADMIN_USERNAME }, expiresIn: ADMIN_SESSION_TTL / 1000 });
   }
   if (pathname.startsWith("/api/admin/") && !isAdmin(req)) return json(res, 401, { error: "Please sign in as an administrator." });
