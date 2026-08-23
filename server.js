@@ -6864,6 +6864,67 @@ Return ONLY valid JSON in this schema:
     await writeData(data);
     return json(res, 200, { user: safeUser(student) });
   }
+  if (req.method === "DELETE" && /^\/api\/admin\/students\/[^/]+$/.test(pathname)) {
+    const studentId = decodeURIComponent(pathname.split("/")[4] || "");
+    const student = data.users.find(user => user.id === studentId);
+    if (!student) return json(res, 404, { error: "Student account not found." });
+
+    data.users = data.users.filter(u => u.id !== studentId);
+    data.results = (data.results || []).filter(r => r.studentId !== studentId);
+    data.readingAttempts = (data.readingAttempts || []).filter(a => a.studentId !== studentId);
+    data.listeningAttempts = (data.listeningAttempts || []).filter(a => a.studentId !== studentId);
+    data.writingSubmissions = (data.writingSubmissions || []).filter(w => w.studentId !== studentId);
+    data.cohortMembers = (data.cohortMembers || []).filter(cm => cm.studentId !== studentId);
+
+    for (const [token, session] of studentSessions.entries()) {
+      if (session.id === studentId) studentSessions.delete(token);
+    }
+
+    await writeData(data);
+    return json(res, 200, { ok: true, message: `Account "${student.username}" successfully deleted.` });
+  }
+  if (req.method === "POST" && pathname === "/api/admin/clean-test-users") {
+    const body = await readBody(req).catch(() => ({}));
+    const targetUsernames = Array.isArray(body.usernames) ? body.usernames.map(u => String(u).toLowerCase().trim()) : null;
+
+    let testUserIds = new Set();
+    const isTestAccount = (user) => {
+      const uname = (user.username || "").toLowerCase();
+      const name = (user.name || "").toLowerCase();
+      if (targetUsernames && targetUsernames.length > 0) {
+        return targetUsernames.includes(uname);
+      }
+      return /^(test|demo|temp|sample|asdf|qwerty|dummy|fake|user[0-9]+|test[0-9]+|student[0-9]+)$/i.test(uname) ||
+             /test|demo|asdf|qwerty|dummy|fake/i.test(uname) ||
+             /test|demo|dummy/i.test(name);
+    };
+
+    const toDelete = data.users.filter(isTestAccount);
+    toDelete.forEach(u => testUserIds.add(u.id));
+
+    if (testUserIds.size === 0) {
+      return json(res, 200, { ok: true, deletedCount: 0, message: "No test accounts found to clean." });
+    }
+
+    data.users = data.users.filter(u => !testUserIds.has(u.id));
+    data.results = (data.results || []).filter(r => !testUserIds.has(r.studentId));
+    data.readingAttempts = (data.readingAttempts || []).filter(a => !testUserIds.has(a.studentId));
+    data.listeningAttempts = (data.listeningAttempts || []).filter(a => !testUserIds.has(a.studentId));
+    data.writingSubmissions = (data.writingSubmissions || []).filter(w => !testUserIds.has(w.studentId));
+    data.cohortMembers = (data.cohortMembers || []).filter(cm => !testUserIds.has(cm.studentId));
+
+    for (const [token, session] of studentSessions.entries()) {
+      if (testUserIds.has(session.id)) studentSessions.delete(token);
+    }
+
+    await writeData(data);
+    return json(res, 200, {
+      ok: true,
+      deletedCount: testUserIds.size,
+      deletedAccounts: toDelete.map(u => ({ username: u.username, name: u.name })),
+      message: `${testUserIds.size} ta test akkaunti muvaffaqiyatli o'chirildi.`
+    });
+  }
   if (req.method === "GET" && pathname === "/api/admin/backup") {
     res.writeHead(200, { "Content-Type": "application/json; charset=utf-8", "Content-Disposition": `attachment; filename="ielts-core-backup-${new Date().toISOString().slice(0, 10)}.json"` });
     return res.end(JSON.stringify(data, null, 2));
