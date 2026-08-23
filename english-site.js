@@ -121,6 +121,7 @@
     const activeCollection = params.get('collection');
     const activeSkill = params.get('skill');
     const activePath = location.pathname;
+    const isTeacher = Boolean(user && user.role === 'teacher');
 
     const candidateLinks = isTeacher ? [
       { label: 'Home (Materials)', icon: 'home', href: '/english/materials', active: activePath === '/english/materials' && !activeCollection && !activeSkill },
