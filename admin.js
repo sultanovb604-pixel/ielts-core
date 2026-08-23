@@ -57,8 +57,7 @@
           </div>
         </div>
         <div class="student-result"><strong>${student.tests || 0}</strong><small>tests</small></div>
-        <div class="student-result wide"><strong>${escapeHtml(band)}</strong><small>${escapeHtml(formatDate(student.lastResultAt))}</small></div>
-        <div style="display:flex;align-items:center;gap:6px;">
+        <div>
           <select class="admin-plan-select" data-student-id="${escapeHtml(student.id)}">
             <option value="" disabled selected>Tarif berish ▾</option>
             <optgroup label="💎 Sotuv Tariflari">
@@ -78,7 +77,6 @@
               <option value="free">❌ Free qilish</option>
             </optgroup>
           </select>
-          <button class="delete-student-btn" data-student-id="${escapeHtml(student.id)}" data-student-username="${escapeHtml(student.username)}" type="button" title="Akkauntni o'chirish (Delete)" style="padding:6px 10px;border-radius:6px;border:1px solid #fca5a5;background:#fef2f2;color:#dc2626;cursor:pointer;font-size:12px;font-weight:700;">🗑️</button>
         </div>
       </article>`;
     }).join("");
@@ -279,42 +277,6 @@
       setMessage("#studentMessage", error.message, "error");
     }
   });
-
-  $("#adminStudents").addEventListener("click", async event => {
-    const btn = event.target.closest(".delete-student-btn");
-    if (!btn) return;
-    const username = btn.dataset.studentUsername;
-    const id = btn.dataset.studentId;
-    if (!window.confirm(`Haqiqatdan ham "${username}" akkauntini va uning barcha natijalarini butunlay o'chirmoqchimisiz?`)) return;
-    btn.disabled = true;
-    try {
-      await request(`/api/admin/students/${encodeURIComponent(id)}`, { method: "DELETE" });
-      setMessage("#studentMessage", `✔ "${username}" akkaunti muvaffaqiyatli o'chirildi!`, "success");
-      await loadWorkspace();
-    } catch (err) {
-      btn.disabled = false;
-      setMessage("#studentMessage", err.message, "error");
-    }
-  });
-
-  const cleanBtn = $("#cleanTestUsersBtn");
-  if (cleanBtn) {
-    cleanBtn.addEventListener("click", async () => {
-      if (!window.confirm("Barcha test / demo / soxta akkauntlarni tozalab tashlamoqchimisiz?\n(Faqat real foydalanuvchilar qoladi)")) return;
-      cleanBtn.disabled = true;
-      cleanBtn.textContent = "Tozalanmoqda...";
-      try {
-        const res = await request("/api/admin/clean-test-users", { method: "POST", body: JSON.stringify({}) });
-        setMessage("#studentMessage", `✔ ${res.message || "Test akkauntlar tozalandi!"}`, "success");
-        await loadWorkspace();
-      } catch (err) {
-        setMessage("#studentMessage", err.message, "error");
-      } finally {
-        cleanBtn.disabled = false;
-        cleanBtn.textContent = "🧹 Test akkountlarni tozalash";
-      }
-    });
-  }
 
   $("#promoForm").addEventListener("submit", async event => {
     event.preventDefault();
