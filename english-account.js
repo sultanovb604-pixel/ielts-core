@@ -1040,18 +1040,18 @@
                     ${gradeBand}
                   </div>
                   <div>
-                    <strong style="font-size:13px;color:#14532d;display:block;">Ustoz tomonidan tekshirildi va baholandi</strong>
+                    <strong style="font-size:13px;color:#14532d;display:block;">Ustoz tomonidan baholandi</strong>
                     <span style="font-size:12px;color:#166534;font-weight:700;">TR: ${evalData.taskResponse || '-'} · CC: ${evalData.coherenceCohesion || '-'} · LR: ${evalData.lexicalResource || '-'} · GRA: ${evalData.grammarAccuracy || '-'}</span>
                   </div>
                 </div>
                 <button type="button" class="button secondary view-feedback-btn" data-assign-id="${a.id}" style="padding:7px 16px;font-size:12.5px;color:#15803d;border-color:#86efac;background:#ffffff;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 1px 2px rgba(0,0,0,0.05);">
                   <span class="material-symbols-outlined" style="font-size:16px;color:#15803d;">visibility</span>
-                  <span>Ustoz bahosi va izohini ko'rish</span>
+                  <span>Ustoz izohini koʻrish</span>
                 </button>
               </div>`;
-            actionBtn = `<span class="student-band-pill" style="background:#f0fdf4;color:#15803d;border:1px solid #86efac;padding:6px 14px;font-weight:800;display:inline-flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:15px;">verified</span><span>${gradeBand} Baholandi</span></span>`;
+            actionBtn = `<span class="student-band-pill" style="background:#f0fdf4;color:#15803d;border:1px solid #86efac;padding:6px 14px;font-weight:800;display:inline-flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:15px;">verified</span><span>Baholandi · ${gradeBand}</span></span>`;
           } else if (isSub) {
-            actionBtn = `<span class="student-band-pill" style="background:#fef3c7;color:#b45309;padding:6px 14px;font-weight:700;display:inline-flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:14px;">hourglass_top</span><span>Topshirildi · Tekshirilmoqda</span></span>`;
+            actionBtn = `<span class="student-band-pill" style="background:#fef3c7;color:#b45309;padding:6px 14px;font-weight:700;display:inline-flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:14px;">hourglass_top</span><span>Topshirilgan · Tekshiruvda</span></span>`;
           } else if (isAttempted) {
             scoreBlockHtml = `
               <div style="margin-top:10px;padding:10px 14px;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
@@ -1064,16 +1064,16 @@
               </div>`;
             actionBtn = `<span class="student-band-pill" style="background:#f0fdf4;color:#166534;border:1px solid #86efac;padding:6px 14px;font-weight:700;display:inline-flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:14px;">check_circle</span><span>Bajarildi</span></span>`;
           } else if (a.skill === 'writing') {
-            actionBtn = `<a href="/english/writing-editor?assignment=${a.id}&mode=${a.mode}" class="button primary" style="padding:7px 16px;font-size:12.5px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#1468f3;"><span class="material-symbols-outlined" style="font-size:15px;">edit_note</span><span>Insho yozish →</span></a>`;
+            actionBtn = `<a href="/english/writing-editor?assignment=${a.id}&mode=${a.mode}" class="button primary" style="padding:7px 16px;font-size:12.5px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#1468f3;"><span class="material-symbols-outlined" style="font-size:15px;">edit_note</span><span>Insho yozish</span></a>`;
           } else if (a.materialHref) {
             const delim = a.materialHref.includes('?') ? '&' : '?';
             const targetUrl = `${a.materialHref}${delim}assignment=${a.id}&mode=${a.mode}`;
-            actionBtn = `<a href="${escape(targetUrl)}" class="button primary" style="padding:7px 16px;font-size:12.5px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#1468f3;"><span class="material-symbols-outlined" style="font-size:15px;">play_arrow</span><span>Testni boshlash →</span></a>`;
+            actionBtn = `<a href="${escape(targetUrl)}" class="button primary" style="padding:7px 16px;font-size:12.5px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#1468f3;"><span class="material-symbols-outlined" style="font-size:15px;">play_arrow</span><span>Testni boshlash</span></a>`;
           } else {
             const teacherFiles = (a.attachments && a.attachments.length) ? a.attachments : (a.attachmentUrl ? [{ url: a.attachmentUrl, name: a.attachmentName }] : []);
             actionBtn = `<div style="display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              ${teacherFiles.length ? `<a href="${escape(teacherFiles[0].url)}" target="_blank" rel="noopener" class="button secondary" style="padding:6px 12px;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:14px;color:#1468f3;">download</span><span>Materialni yuklab olish</span></a>` : ''}
-              <button type="button" class="button primary student-open-submit-modal-btn" data-assign-id="${a.id}" style="padding:7px 16px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;background:#1468f3;"><span class="material-symbols-outlined" style="font-size:15px;">upload_file</span><span>Javobni topshirish</span></button>
+              ${teacherFiles.length ? `<a href="${escape(teacherFiles[0].url)}" target="_blank" rel="noopener" class="button secondary" style="padding:6px 12px;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:14px;color:#1468f3;">download</span><span>Topshiriq fayli</span></a>` : ''}
+              <button type="button" class="button primary student-open-submit-modal-btn" data-assign-id="${a.id}" style="padding:7px 16px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;background:#1468f3;"><span class="material-symbols-outlined" style="font-size:15px;">upload_file</span><span>Javob topshirish</span></button>
             </div>`;
           }
 

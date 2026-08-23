@@ -213,7 +213,7 @@
 
     if (studentsData.pendingInvites.length) {
       if (pendingBox) pendingBox.style.display = 'block';
-      if (pendingText) pendingText.textContent = `${studentsData.pendingInvites.length} pending invitation sent`;
+      if (pendingText) pendingText.textContent = `${studentsData.pendingInvites.length} pending ${studentsData.pendingInvites.length === 1 ? 'invitation' : 'invitations'} sent`;
       if (pendingList) {
         pendingList.innerHTML = studentsData.pendingInvites.map(inv => `
           <span style="display:inline-flex;align-items:center;gap:6px;background:#ffffff;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid #bfdbfe;color:#1e40af;">
@@ -395,7 +395,7 @@
           <td>
             <div class="teacher-deadline-cell ${isPast ? 'is-expired' : ''}">
               <span>${deadlineFormatted}</span>
-              ${isPast ? '<small style="font-size:11px;color:#dc2626;font-weight:800;">(Muddati tugagan)</small>' : ''}
+              ${isPast ? '<small style="font-size:11px;color:#dc2626;font-weight:800;">(Overdue)</small>' : ''}
             </div>
           </td>
           <td>
