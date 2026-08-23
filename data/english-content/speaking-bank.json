@@ -1,0 +1,136 @@
+{
+  "part1": [
+    {
+      "topic": "Hometown & Neighborhood",
+      "questions": [
+        "Where is your hometown located, and what is it like living there?",
+        "What do you like most about your hometown?",
+        "Has your hometown changed much since you were a child?",
+        "Would you prefer to live in your hometown in the future or move elsewhere?"
+      ]
+    },
+    {
+      "topic": "Work & Studies",
+      "questions": [
+        "Do you work or are you currently a student?",
+        "What made you choose this subject or career path?",
+        "What is the most interesting aspect of your work or study?",
+        "What do you plan to do in the next few years regarding your career?"
+      ]
+    },
+    {
+      "topic": "Daily Routine & Time Management",
+      "questions": [
+        "What is your typical morning routine?",
+        "Do you prefer having a strict daily schedule or being spontaneous?",
+        "Which part of the day do you find yourself most productive?",
+        "Do you usually have enough free time during the week?"
+      ]
+    },
+    {
+      "topic": "Technology & Social Media",
+      "questions": [
+        "How often do you use social media applications in your daily life?",
+        "Do you think smartphones make people more or less connected?",
+        "What kind of technological device could you not live without?",
+        "Have your technology habits changed over the past few years?"
+      ]
+    },
+    {
+      "topic": "Leisure & Free Time",
+      "questions": [
+        "What do you usually enjoy doing during your weekends?",
+        "Do you prefer spending your free time alone or with other people?",
+        "Did you have the same hobbies when you were younger?",
+        "Is there a new hobby or skill you would like to take up soon?"
+      ]
+    }
+  ],
+  "part2": [
+    {
+      "id": "cue-01",
+      "topic": "A Memorable Journey",
+      "title": "Describe a memorable journey you have taken",
+      "bullets": [
+        "Where you went and how you travelled there",
+        "Who you went with",
+        "What you did and experienced during the trip",
+        "And explain why this journey was especially memorable to you"
+      ],
+      "part3": [
+        "Why do some people prefer travelling alone while others prefer travelling in groups?",
+        "How has modern transportation influenced international tourism?",
+        "What are the economic and environmental impacts of tourism on local communities?",
+        "Do you think virtual travel experiences could ever replace real travel in the future?"
+      ]
+    },
+    {
+      "id": "cue-02",
+      "topic": "An Important Decision",
+      "title": "Describe an important decision you made in your life",
+      "bullets": [
+        "What the decision was and when you made it",
+        "What factors you had to consider",
+        "Whether you asked anyone for advice",
+        "And explain why this decision was significant to your life"
+      ],
+      "part3": [
+        "Why do young people sometimes find it difficult to make career decisions?",
+        "Do you think people should rely on logic or intuition when making major life choices?",
+        "How has the internet changed the way people make consumer decisions?",
+        "Should parents make important decisions for their teenage children?"
+      ]
+    },
+    {
+      "id": "cue-03",
+      "topic": "A Useful Skill",
+      "title": "Describe a useful skill you learned recently",
+      "bullets": [
+        "What the skill is and why you wanted to learn it",
+        "How and where you learned it",
+        "How long it took you to learn",
+        "And explain how this skill has helped you in your daily life"
+      ],
+      "part3": [
+        "What practical skills should schools teach that are currently neglected?",
+        "Is it easier for children to learn new skills compared to adults? Why?",
+        "How has artificial intelligence changed the skills required in the modern workplace?",
+        "Do you think teamwork is a skill that can be taught effectively?"
+      ]
+    },
+    {
+      "id": "cue-04",
+      "topic": "An Inspiring Person",
+      "title": "Describe a person who has inspired you",
+      "bullets": [
+        "Who this person is and how you know them",
+        "What they have achieved or what qualities they possess",
+        "What you learned from their example",
+        "And explain why you find them particularly inspiring"
+      ],
+      "part3": [
+        "What qualities make someone a good role model for teenagers?",
+        "Do you think public figures and celebrities have a moral responsibility to set a good example?",
+        "How do cultural differences affect people's definitions of success?",
+        "Are leaders born with leadership qualities, or can leadership be developed?"
+      ]
+    },
+    {
+      "id": "cue-05",
+      "topic": "An Environmental Issue",
+      "title": "Describe an environmental problem in your country",
+      "bullets": [
+        "What the problem is and where it occurs",
+        "What the main causes of this problem are",
+        "How it affects people and wildlife",
+        "And explain what steps should be taken to address it"
+      ],
+      "part3": [
+        "Whose responsibility is it to combat climate change: individual citizens or governments?",
+        "How can educational institutions encourage sustainable habits among students?",
+        "Do you think economic growth and environmental protection can coexist?",
+        "What role does international cooperation play in solving global ecological challenges?"
+      ]
+    }
+  ]
+}

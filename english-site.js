@@ -139,12 +139,13 @@
         links: candidateLinks
       },
       {
-        title: 'FULL TESTS',
+        title: 'FULL TESTS & MOCKS',
         links: [
+          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: activePath === '/english/mock-tests' || activePath === '/english/mock-exam' },
+          { label: 'AI Speaking Studio', icon: 'record_voice_over', href: '/english/speaking', active: activePath === '/english/speaking' || activePath === '/english/speaking-studio' },
           { label: 'Listening Tests', icon: 'headphones', href: '/english/materials?level=ielts&skill=listening&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'listening' && activeCollection === 'full-test' },
           { label: 'Reading Tests', icon: 'menu_book', href: '/english/materials?level=ielts&skill=reading&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'reading' && activeCollection === 'full-test' },
-          { label: 'Random Writing Mock', icon: 'shuffle', href: '/english/writing-editor?mode=random', active: activePath === '/english/writing-editor' },
-          { label: 'Speaking Tests', icon: 'record_voice_over', href: '/english/materials?level=ielts&skill=speaking', active: activePath === '/english/materials' && activeSkill === 'speaking' && !activeCollection }
+          { label: 'Random Writing Mock', icon: 'shuffle', href: '/english/writing-editor?mode=random', active: activePath === '/english/writing-editor' }
         ]
       },
       {

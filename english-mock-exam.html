@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IELTS Computer-Delivered Full Mock Exam | IELTS Core</title>
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-mock-exam.css?v=20260823_100">
+  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+</head>
+<body class="mock-exam-body">
+  <!-- Top Exam Simulation Header -->
+  <header class="cdi-mock-header">
+    <div class="cdi-header-left">
+      <a href="/english/mock-tests" class="cdi-exit-btn" id="cdiExitBtn" title="Exit Mock Exam">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span>Exit Mock</span>
+      </a>
+      <div class="cdi-exam-meta">
+        <strong id="mockExamHeaderTitle">IELTS Academic Full Mock 01</strong>
+        <span class="cdi-mode-pill">CDI Real Exam Simulation</span>
+      </div>
+    </div>
+
+    <!-- Center Stage Progress Bar -->
+    <div class="cdi-stages-bar">
+      <div class="cdi-stage-step active" id="stageStepListening">
+        <span class="step-num">1</span>
+        <span class="step-label">Listening</span>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="cdi-stage-step" id="stageStepReading">
+        <span class="step-num">2</span>
+        <span class="step-label">Reading</span>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="cdi-stage-step" id="stageStepWriting">
+        <span class="step-num">3</span>
+        <span class="step-label">Writing</span>
+      </div>
+    </div>
+
+    <!-- Right Controls: Timer & Stage Action -->
+    <div class="cdi-header-right">
+      <div class="cdi-timer-box" id="cdiTimerBox">
+        <span class="material-symbols-outlined">timer</span>
+        <span class="cdi-timer-digits" id="cdiTimerDisplay">35:00</span>
+      </div>
+      <button type="button" class="cdi-finish-stage-btn" id="cdiFinishStageBtn">
+        <span>Complete Stage</span>
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewport for Exam Content -->
+  <main class="cdi-viewport" id="cdiViewport">
+    <!-- Dynamic Stage Panes rendered by JS -->
+    <div class="cdi-loading-screen" id="cdiLoadingScreen">
+      <div class="cdi-spinner"></div>
+      <h2>Preparing Cambridge Mock Environment...</h2>
+      <p>Loading audio simulations, authentic reading passages, and writing prompts.</p>
+    </div>
+  </main>
+
+  <!-- Intermission / Section Transition Modal -->
+  <div class="cdi-intermission-modal" id="cdiIntermissionModal" role="dialog" aria-modal="true" style="display:none;">
+    <div class="cdi-intermission-card">
+      <div class="intermission-icon-wrap" id="intermissionIconWrap">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+      <span class="intermission-eyebrow" id="intermissionEyebrow">STAGE COMPLETED</span>
+      <h2 id="intermissionTitle">Listening Section Finished</h2>
+      <p id="intermissionDesc">Your Listening responses have been saved. Take a short pause before starting the 60-minute Reading section.</p>
+      
+      <div class="intermission-stats-box" id="intermissionStatsBox" style="display:none;">
+        <div class="intermission-stat-item">
+          <small>SECTION SCORE</small>
+          <strong id="intermissionScoreVal">35 / 40</strong>
+        </div>
+        <div class="intermission-stat-item">
+          <small>ESTIMATED BAND</small>
+          <strong id="intermissionBandVal">8.0</strong>
+        </div>
+      </div>
+
+      <div class="intermission-actions">
+        <button type="button" class="button primary" id="intermissionProceedBtn">
+          <span>Start Next Stage</span>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/english-mock-exam.js?v=20260823_100"></script>
+</body>
+</html>

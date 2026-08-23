@@ -1,0 +1,217 @@
+[
+  {
+    "id": "mock-test-01",
+    "title": "IELTS Academic Full Mock 01",
+    "subtitle": "Official Computer-Delivered Simulation (Listening + Reading + Writing)",
+    "code": "MOCK-AC-01",
+    "level": "ielts",
+    "totalDurationMinutes": 155,
+    "totalQuestions": 82,
+    "free": true,
+    "listening": {
+      "id": "listening-full-test-01",
+      "title": "IELTS Listening Full Test 01",
+      "format": "4 Parts · 40 Questions",
+      "durationMinutes": 35,
+      "audioCount": 4
+    },
+    "reading": {
+      "id": "reading-full-test-01",
+      "title": "IELTS Academic Reading Test 01",
+      "fileName": "Reading Full Test CD (3).html",
+      "format": "3 Passages · 40 Questions",
+      "durationMinutes": 60
+    },
+    "writing": {
+      "id": "writing-mock-01",
+      "title": "IELTS Academic Writing Test 01",
+      "durationMinutes": 60,
+      "task1": {
+        "title": "Task 1 — Data & Chart Report",
+        "type": "Bar Chart",
+        "prompt": "The chart below shows the percentage of households in different income brackets that owned consumer electronics in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+        "minWords": 150,
+        "suggestedMinutes": 20
+      },
+      "task2": {
+        "title": "Task 2 — Essay Argument",
+        "type": "Discussion & Opinion",
+        "prompt": "Some people believe that university education should be entirely free for all eligible students. Others argue that students should pay for their higher education because it benefits them personally.\n\nDiscuss both views and give your own opinion.\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.",
+        "minWords": 250,
+        "suggestedMinutes": 40
+      }
+    }
+  },
+  {
+    "id": "mock-test-02",
+    "title": "IELTS Academic Full Mock 02",
+    "subtitle": "Official Computer-Delivered Simulation (Listening + Reading + Writing)",
+    "code": "MOCK-AC-02",
+    "level": "ielts",
+    "totalDurationMinutes": 155,
+    "totalQuestions": 82,
+    "free": false,
+    "listening": {
+      "id": "listening-full-test-02",
+      "title": "IELTS Listening Full Test 02",
+      "format": "4 Parts · 40 Questions",
+      "durationMinutes": 35,
+      "audioCount": 4
+    },
+    "reading": {
+      "id": "reading-full-test-02",
+      "title": "IELTS Academic Reading Test 02",
+      "fileName": "Reading Full  Test.html",
+      "format": "3 Passages · 40 Questions",
+      "durationMinutes": 60
+    },
+    "writing": {
+      "id": "writing-mock-02",
+      "title": "IELTS Academic Writing Test 02",
+      "durationMinutes": 60,
+      "task1": {
+        "title": "Task 1 — Process Diagram",
+        "type": "Process & Flowchart",
+        "prompt": "The diagram illustrates the process of recycling plastic bottles to produce high-grade polyester fabric for apparel.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+        "minWords": 150,
+        "suggestedMinutes": 20
+      },
+      "task2": {
+        "title": "Task 2 — Essay Argument",
+        "type": "Causes & Effects",
+        "prompt": "In many modern cities, an increasing number of young adults are choosing to live alone rather than with family or partners.\n\nWhat are the primary causes of this trend, and does it bring more advantages or disadvantages to society?\n\nWrite at least 250 words.",
+        "minWords": 250,
+        "suggestedMinutes": 40
+      }
+    }
+  },
+  {
+    "id": "mock-test-03",
+    "title": "IELTS Academic Full Mock 03",
+    "subtitle": "Official Computer-Delivered Simulation (Listening + Reading + Writing)",
+    "code": "MOCK-AC-03",
+    "level": "ielts",
+    "totalDurationMinutes": 155,
+    "totalQuestions": 82,
+    "free": false,
+    "listening": {
+      "id": "listening-full-test-03",
+      "title": "IELTS Listening Full Test 03",
+      "format": "4 Parts · 40 Questions",
+      "durationMinutes": 35,
+      "audioCount": 4
+    },
+    "reading": {
+      "id": "reading-full-test-03",
+      "title": "IELTS Academic Reading Test 03",
+      "fileName": "full_reading1_with_explanation (2).html",
+      "format": "3 Passages · 40 Questions",
+      "durationMinutes": 60
+    },
+    "writing": {
+      "id": "writing-mock-03",
+      "title": "IELTS Academic Writing Test 03",
+      "durationMinutes": 60,
+      "task1": {
+        "title": "Task 1 — Map Comparison",
+        "type": "Urban Development Map",
+        "prompt": "The two maps show the layout of the coastal town of Harwich in 1995 and after recent developments today.\n\nSummarise the information by selecting and reporting the main changes.\n\nWrite at least 150 words.",
+        "minWords": 150,
+        "suggestedMinutes": 20
+      },
+      "task2": {
+        "title": "Task 2 — Essay Argument",
+        "type": "Opinion / Agreement",
+        "prompt": "With the rise of artificial intelligence and automation, some argue that human creativity and critical thinking are diminishing.\n\nTo what extent do you agree or disagree with this view?\n\nWrite at least 250 words.",
+        "minWords": 250,
+        "suggestedMinutes": 40
+      }
+    }
+  },
+  {
+    "id": "mock-test-04",
+    "title": "IELTS Academic Full Mock 04",
+    "subtitle": "Official Computer-Delivered Simulation (Listening + Reading + Writing)",
+    "code": "MOCK-AC-04",
+    "level": "ielts",
+    "totalDurationMinutes": 155,
+    "totalQuestions": 82,
+    "free": false,
+    "listening": {
+      "id": "listening-full-test-04",
+      "title": "IELTS Listening Full Test 04",
+      "format": "4 Parts · 40 Questions",
+      "durationMinutes": 35,
+      "audioCount": 4
+    },
+    "reading": {
+      "id": "reading-full-test-04",
+      "title": "IELTS Academic Reading Test 04",
+      "fileName": "IELTS Full Reading Practice.htm",
+      "format": "3 Passages · 40 Questions",
+      "durationMinutes": 60
+    },
+    "writing": {
+      "id": "writing-mock-04",
+      "title": "IELTS Academic Writing Test 04",
+      "durationMinutes": 60,
+      "task1": {
+        "title": "Task 1 — Line Graph",
+        "type": "Trends Over Time",
+        "prompt": "The graph below shows renewable energy consumption in four European countries from 2000 to 2025.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
+        "minWords": 150,
+        "suggestedMinutes": 20
+      },
+      "task2": {
+        "title": "Task 2 — Essay Argument",
+        "type": "Problem & Solution",
+        "prompt": "In many countries, cities are becoming increasingly overcrowded and expensive to live in.\n\nWhat problems does this cause, and what measures can governments take to encourage people to move to smaller towns?\n\nWrite at least 250 words.",
+        "minWords": 250,
+        "suggestedMinutes": 40
+      }
+    }
+  },
+  {
+    "id": "mock-test-05",
+    "title": "IELTS Academic Full Mock 05",
+    "subtitle": "Official Computer-Delivered Simulation (Listening + Reading + Writing)",
+    "code": "MOCK-AC-05",
+    "level": "ielts",
+    "totalDurationMinutes": 155,
+    "totalQuestions": 82,
+    "free": false,
+    "listening": {
+      "id": "listening-full-test-05",
+      "title": "IELTS Listening Full Test 05",
+      "format": "4 Parts · 40 Questions",
+      "durationMinutes": 35,
+      "audioCount": 4
+    },
+    "reading": {
+      "id": "reading-full-test-05",
+      "title": "IELTS Academic Reading Test 05",
+      "fileName": "IELTS_Reading_Practice (2).html",
+      "format": "3 Passages · 40 Questions",
+      "durationMinutes": 60
+    },
+    "writing": {
+      "id": "writing-mock-05",
+      "title": "IELTS Academic Writing Test 05",
+      "durationMinutes": 60,
+      "task1": {
+        "title": "Task 1 — Table Data",
+        "type": "Statistical Table",
+        "prompt": "The table below gives information about international student enrollment in universities across five countries in 2010 and 2022.\n\nSummarise the information by selecting and reporting the main features.\n\nWrite at least 150 words.",
+        "minWords": 150,
+        "suggestedMinutes": 20
+      },
+      "task2": {
+        "title": "Task 2 — Essay Argument",
+        "type": "Positive or Negative Trend",
+        "prompt": "More and more consumer purchases are now conducted online through e-commerce platforms rather than in physical retail stores.\n\nIs this a positive or negative development?\n\nWrite at least 250 words.",
+        "minWords": 250,
+        "suggestedMinutes": 40
+      }
+    }
+  }
+]

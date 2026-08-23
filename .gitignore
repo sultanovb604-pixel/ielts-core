@@ -7,6 +7,10 @@ scratch/
 .system_generated/
 *.log
 data/backups/
+data/uploads/
+upload-listening-*/
+staging/
+scratch_cleaner/
 audit/
 english-audit-*/
 english-design-qa*/

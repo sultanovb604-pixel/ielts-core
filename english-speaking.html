@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="IELTS Core AI Speaking Examiner & Voice Studio with animated human examiner, audio recording, and criteria evaluation.">
+  <title>AI Speaking Studio | IELTS Core</title>
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-speaking.css?v=20260823_200">
+  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+</head>
+<body class="app-body materials-page premium-product-page speaking-studio-body">
+  <!-- Public / Member Navigation Shell -->
+  <header class="app-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
+      <span>IELTS CORE</span>
+      <span class="app-brand-badge">BETA</span>
+    </a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
+    <nav class="app-nav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/practice">Practice</a>
+      <a href="/english/materials">Materials</a>
+      <a href="/english/speaking" aria-current="page">Speaking Studio</a>
+      <a href="/english/pricing">Pricing</a>
+      <a href="/english/account">Dashboard</a>
+    </nav>
+    <div class="app-actions">
+      <a class="plain-link" href="/english/login">Sign in</a>
+      <a class="button primary" href="/english/signup">Start free</a>
+    </div>
+  </header>
+
+  <main class="page speaking-shell">
+    <!-- Top Breadcrumb & Mode Selection -->
+    <div class="speaking-header-row">
+      <nav class="vx-breadcrumb-bar" aria-label="Breadcrumb">
+        <a href="/english/materials"><span class="material-symbols-outlined">home</span> Materials</a>
+        <span class="sep">/</span>
+        <span class="current">AI Speaking Video Call Examination</span>
+      </nav>
+
+      <!-- Mode Switcher Bar -->
+      <div class="speaking-mode-bar">
+        <button type="button" class="speaking-mode-btn active" id="modeBtnExam" data-mode="exam">
+          <span class="material-symbols-outlined">videocam</span>
+          <span>Zoom Real Exam</span>
+        </button>
+        <button type="button" class="speaking-mode-btn" id="modeBtnPractice" data-mode="practice">
+          <span class="material-symbols-outlined">forum</span>
+          <span>Casual AI Partner (Free Chat)</span>
+        </button>
+        <button type="button" class="speaking-mode-btn" id="modeBtnSolo" data-mode="solo">
+          <span class="material-symbols-outlined">mic</span>
+          <span>Solo Self-Recording</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stage / Part Indicator -->
+    <div class="speaking-stage-indicator" id="speakingStageIndicator">
+      <div class="stage-pill active" id="stagePill1">Part 1: Introduction &amp; Interview</div>
+      <span class="stage-sep">›</span>
+      <div class="stage-pill" id="stagePill2">Part 2: Cue Card Long Turn</div>
+      <span class="stage-sep">›</span>
+      <div class="stage-pill" id="stagePill3">Part 3: Two-Way Discussion</div>
+    </div>
+
+    <!-- Zoom Conference Stage (Full-Width Cinematic Video Call) -->
+    <div class="zoom-main-container" id="zoomMainContainer">
+      <div id="examinerAvatarMount"></div>
+    </div>
+
+    <!-- Practice Mode Feedback & Tips (Hidden in Real Exam) -->
+    <div class="practice-feedback-box" id="practiceFeedbackBox" style="display:none;margin-top:20px;">
+      <div class="practice-tip-item" id="practiceTipText"></div>
+      <div class="practice-vocab-tags" id="practiceVocabTags"></div>
+    </div>
+
+    <!-- Audio Manager (Only for Solo / Practice Modes) -->
+    <div class="speaking-audio-manager" id="speakingAudioManager" style="display:none;margin-top:20px;">
+      <div class="audio-manager-top">
+        <span class="material-symbols-outlined" style="color:#059669;">audiotrack</span>
+        <strong>Your Recorded Audio</strong>
+        <span class="duration-tag" id="recordedDurationTag">0:00</span>
+      </div>
+      <audio class="custom-audio-player" id="recordedAudioPlayer" controls></audio>
+      <div class="audio-actions-row">
+        <button type="button" class="button secondary btn-compact" id="downloadAudioBtn">
+          <span class="material-symbols-outlined">download</span>
+          <span>Download Audio (.webm)</span>
+        </button>
+        <button type="button" class="button secondary btn-compact" id="submitTeacherBtn">
+          <span class="material-symbols-outlined">send</span>
+          <span>Send to Teacher Workspace</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="app-footer-brand">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core"></span>
+      <strong>IELTS CORE</strong>
+    </div>
+    <p>Authentic Cambridge English Computer-Delivered Examination Simulation System.</p>
+  </footer>
+
+  <script src="/english-site.js?v=20260823_100"></script>
+  <script src="/speaking-avatar.js?v=20260823_200"></script>
+  <script src="/speaking-recorder.js?v=20260823_200"></script>
+  <script src="/english-speaking.js?v=20260823_200"></script>
+</body>
+</html>

@@ -4026,6 +4026,26 @@ function readingPersistenceMarkup(material, user) {
 </script>`;
 }
 
+const MOCK_CATALOG_PATH = path.join(ENGLISH_CONTENT_DIR, "mock-catalog.json");
+
+function readMockCatalog() {
+  if (!fs.existsSync(MOCK_CATALOG_PATH)) return [];
+  try {
+    return JSON.parse(fs.readFileSync(MOCK_CATALOG_PATH, "utf8"));
+  } catch(e) {
+    return [];
+  }
+}
+
+function roundToIeltsBand(num) {
+  const n = Number(num) || 0;
+  const intPart = Math.floor(n);
+  const frac = n - intPart;
+  if (frac < 0.25) return intPart;
+  if (frac < 0.75) return intPart + 0.5;
+  return intPart + 1.0;
+}
+
 function sanitizeReadingHtml(source, material, user) {
   const clean = source
     .replace(/body::(?:before|after)\s*\{[\s\S]*?\}/gi, "")
@@ -5221,6 +5241,726 @@ async function api(req, res, pathname) {
     return json(res, 200, detailedStudentAnalytics(user, data));
   }
 
+  // --- MOCK EXAM SYSTEM ENDPOINTS ---
+  if (req.method === "GET" && pathname === "/api/mock-catalog") {
+    const user = studentFromRequest(req, data);
+    const isPremium = user?.plan === "premium";
+    const catalog = readMockCatalog().map(m => {
+      const userAttempts = (data.mockAttempts || []).filter(att => user && att.studentId === user.id && att.mockId === m.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      const latestAttempt = userAttempts[0] || null;
+      return {
+        ...m,
+        locked: !m.free && !isPremium,
+        completed: Boolean(latestAttempt),
+        latestBand: latestAttempt ? latestAttempt.overallBand : null,
+        attemptCount: userAttempts.length
+      };
+    });
+    return json(res, 200, catalog);
+  }
+
+  if (req.method === "GET" && pathname === "/api/mock-attempts") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Please sign in." });
+    const attempts = (data.mockAttempts || []).filter(a => a.studentId === user.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return json(res, 200, attempts);
+  }
+
+  if (req.method === "GET" && pathname === "/api/mock-test-data") {
+    const user = studentFromRequest(req, data);
+    const requestUrl = new URL(req.url, `http://${req.headers.host}`);
+    const mockId = String(requestUrl.searchParams.get("id") || "mock-test-01");
+    const mockItem = readMockCatalog().find(m => m.id === mockId);
+    if (!mockItem) return json(res, 404, { error: "Mock test not found." });
+
+    if (!mockItem.free && (!user || user.plan !== "premium")) {
+      return json(res, 403, { error: "This Mock Exam requires IELTS Core Premium." });
+    }
+
+    const lMaterial = readListeningCatalog().find(item => item.id === mockItem.listening.id);
+    let lSource = "";
+    if (lMaterial && lMaterial.fileName) {
+      const lFile = path.join(LISTENING_MATERIALS_DIR, lMaterial.fileName);
+      if (fs.existsSync(lFile)) lSource = fs.readFileSync(lFile, "utf8");
+    }
+
+    const rMaterial = readReadingCatalog().find(item => item.id === mockItem.reading.id || item.fileName === mockItem.reading.fileName);
+    let rSource = "";
+    if (rMaterial && rMaterial.fileName) {
+      const rFile = path.join(READING_MATERIALS_DIR, rMaterial.fileName);
+      if (fs.existsSync(rFile)) rSource = fs.readFileSync(rFile, "utf8");
+    }
+
+    return json(res, 200, {
+      mock: mockItem,
+      listening: {
+        material: lMaterial,
+        source: lSource
+      },
+      reading: {
+        material: rMaterial,
+        source: rSource
+      },
+      writing: mockItem.writing
+    });
+  }
+
+  if (req.method === "POST" && pathname === "/api/mock-attempts") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Please sign in to submit your Mock exam." });
+    const body = await readBody(req);
+    const mockId = String(body.mockId || "");
+    const mockItem = readMockCatalog().find(m => m.id === mockId);
+    if (!mockItem) return json(res, 404, { error: "Mock test not found." });
+
+    if (!mockItem.free && user.plan !== "premium") {
+      return json(res, 403, { error: "This Mock Test requires a Premium account." });
+    }
+
+    // 1. Grade Listening
+    let listeningScore = 0;
+    let listeningBand = 0;
+    let listeningEval = null;
+    const lMaterial = readListeningCatalog().find(item => item.id === mockItem.listening.id);
+    if (lMaterial && Array.isArray(body.listeningAnswers)) {
+      listeningEval = scoreListeningAnswers(lMaterial, body.listeningAnswers, true);
+      listeningScore = Number(listeningEval.correct) || 0;
+      listeningBand = Number(listeningEval.band) || 0;
+    }
+
+    // 2. Grade Reading
+    let readingScore = 0;
+    let readingBand = 0;
+    let readingEval = null;
+    const rMaterial = readReadingCatalog().find(item => item.id === mockItem.reading.id || item.fileName === mockItem.reading.fileName);
+    if (rMaterial && Array.isArray(body.readingAnswers)) {
+      readingEval = scoreReadingAnswers(rMaterial, body.readingAnswers, true);
+      readingScore = Number(readingEval.correct) || 0;
+      readingBand = Number(readingEval.band) || 0;
+    }
+
+    // 3. Evaluate Writing
+    const task1Text = String(body.writingTask1 || "").trim();
+    const task2Text = String(body.writingTask2 || "").trim();
+    const t1Words = task1Text ? task1Text.split(/\s+/).filter(Boolean).length : 0;
+    const t2Words = task2Text ? task2Text.split(/\s+/).filter(Boolean).length : 0;
+
+    let writingBand = 5.0;
+    if (t1Words >= 150 && t2Words >= 250) {
+      writingBand = 7.0;
+      if (t2Words >= 280) writingBand = 7.5;
+    } else if (t1Words >= 120 && t2Words >= 200) {
+      writingBand = 6.0;
+    } else if (t1Words >= 80 && t2Words >= 140) {
+      writingBand = 5.5;
+    }
+
+    const rawOverall = (listeningBand + readingBand + writingBand) / 3;
+    const overallBand = roundToIeltsBand(rawOverall);
+
+    const attempt = {
+      id: crypto.randomUUID(),
+      studentId: user.id,
+      mockId: mockItem.id,
+      mockTitle: mockItem.title,
+      overallBand,
+      listeningBand,
+      readingBand,
+      writingBand,
+      listening: {
+        score: listeningScore,
+        total: 40,
+        band: listeningBand,
+        answers: body.listeningAnswers || [],
+        breakdown: listeningEval?.partBreakdown || {}
+      },
+      reading: {
+        score: readingScore,
+        total: 40,
+        band: readingBand,
+        answers: body.readingAnswers || [],
+        breakdown: readingEval?.partBreakdown || {}
+      },
+      writing: {
+        task1Words: t1Words,
+        task2Words: t2Words,
+        band: writingBand,
+        task1Content: task1Text,
+        task2Content: task2Text
+      },
+      durationSeconds: Number(body.durationSeconds) || 0,
+      createdAt: new Date().toISOString()
+    };
+
+    if (!data.mockAttempts) data.mockAttempts = [];
+    data.mockAttempts.unshift(attempt);
+    await writeData(data);
+
+    return json(res, 201, {
+      success: true,
+      attempt
+    });
+  }
+
+  // --- SPEAKING STUDIO & AI EXAMINER ENDPOINTS ---
+  const SPEAKING_BANK_PATH = path.join(ENGLISH_CONTENT_DIR, "speaking-bank.json");
+  function readSpeakingBank() {
+    if (!fs.existsSync(SPEAKING_BANK_PATH)) return { part1: [], part2: [] };
+    try {
+      return JSON.parse(fs.readFileSync(SPEAKING_BANK_PATH, "utf8"));
+    } catch(e) {
+      return { part1: [], part2: [] };
+    }
+  }
+
+  if (req.method === "GET" && pathname === "/api/speaking-bank") {
+    return json(res, 200, readSpeakingBank());
+  }
+
+  function getActiveGeminiKey() {
+    if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+    try {
+      const p = path.join(ROOT, "vortex-data.json");
+      if (fs.existsSync(p)) {
+        const parsed = JSON.parse(fs.readFileSync(p, "utf8"));
+        if (parsed.geminiApiKey) return parsed.geminiApiKey;
+      }
+    } catch(e) {}
+    return null;
+  }
+
+  // --- GOOGLE GEMINI REAL AI MULTI-MODEL POOL ENGINE ---
+  const GEMINI_MODELS_POOL = [
+    'gemini-flash-latest',
+    'gemini-3.5-flash',
+    'gemini-flash-lite-latest',
+    'gemini-3.1-flash-lite',
+    'gemini-3.6-flash'
+  ];
+
+  async function queryGeminiApi(payload, geminiKey) {
+    const key = geminiKey || getActiveGeminiKey();
+    if (!key) return null;
+
+    for (const model of GEMINI_MODELS_POOL) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 4000);
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          signal: controller.signal,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        clearTimeout(timer);
+        if (response.ok) {
+          const apiRes = await response.json();
+          const rawText = apiRes?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (rawText) {
+            try {
+              return JSON.parse(rawText);
+            } catch(e) {
+              return { replyText: rawText.trim() };
+            }
+          }
+        }
+      } catch (err) {
+        clearTimeout(timer);
+      }
+    }
+    return null;
+  }
+
+  async function callGeminiSpeakingExaminer(userTranscript, stage, currentQuestion, topicContext, geminiKey) {
+    const systemPrompt = `You are Dr. Alan Sterling, a Senior Cambridge IELTS Examiner conducting an official IELTS Speaking exam.
+NOTE ON CANDIDATE SPEECH: The user's input comes from raw live Speech-To-Text (ASR) which might have minor phonetic slips or transcription artifacts. Intelligently understand their real meaning.
+Your task:
+1. Provide a cleaned/polished version of what the student said ("cleanedTranscript").
+2. Provide a brief authentic British examiner conversational bridge (e.g. "Right", "I see", "That's quite interesting", "Fair enough").
+3. Ask an organic, natural follow-up question following Cambridge IELTS standards.
+Return ONLY valid JSON matching this schema:
+{
+  "cleanedTranscript": "Polished, grammatically clean version of candidate's answer",
+  "naturalMarker": "A short conversational phrase (1-4 words)",
+  "generatedFollowUp": "The next IELTS question (1-2 sentences)",
+  "fluency": 6.5,
+  "lexical": 7.0,
+  "grammar": 6.5,
+  "pronunciation": 7.0,
+  "feedback": "Short feedback tip",
+  "vocabTips": ["advanced_word1", "advanced_word2"]
+}`;
+
+    const userPrompt = `IELTS Stage: ${stage}
+Current Question: "${currentQuestion}"
+Topic: "${topicContext || 'General'}"
+Candidate's spoken answer: "${userTranscript}"
+
+Respond with natural examiner dialogue in JSON format.`;
+
+    return await queryGeminiApi({
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+      generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
+    }, geminiKey);
+  }
+
+  // Pure Friendly Casual Chat Engine (Emma - 100% Informal, Chill Speaking Buddy like a friend on FaceTime)
+  async function callGeminiCasualChat(userTranscript, history, geminiKey) {
+    const systemInstruction = `You are Emma, a fun, super chill, and friendly 24-year-old speaking buddy hanging out on a real-time voice call.
+STYLE GUIDELINES (CRITICAL):
+- Speak COMPLETELY CASUALLY and INFORMALLY, exactly like a close friend talking on FaceTime or at a coffee shop!
+- Use natural spoken contractions ("I'm", "it's", "gonna", "kinda", "super cool") and lively conversational reactions ("Oh wow!", "Haha totally,", "No way!", "That's awesome,", "Oh I love that!").
+- NEVER sound robotic, formal, academic, or textbook-like. Be warm, enthusiastic, and authentic.
+- Keep it punchy, engaging, and brief (2 to 3 natural spoken sentences, 25-45 words).
+- If they ask for facts, share cool, mind-blowing facts in a super fun and accessible way!
+
+NOTE ON USER SPEECH: Input comes from live Speech-To-Text (ASR). Intelligently understand what they mean and fix any minor transcription typos in "cleanedTranscript".
+
+Return ONLY valid JSON matching this schema:
+{
+  "cleanedTranscript": "Polished, grammatically clean version of user's speech",
+  "replyText": "Your chill, informal, lively conversational spoken response"
+}`;
+
+    return await queryGeminiApi({
+      systemInstruction: { parts: [{ text: systemInstruction }] },
+      contents: [{ role: "user", parts: [{ text: userTranscript }] }],
+      generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
+    }, geminiKey);
+  }
+
+  function generateSmartContextualCasualReply(text) {
+    const clean = String(text || "").trim();
+    if (!clean || clean.length < 3) {
+      return "Hey! I'm listening. What's on your mind today?";
+    }
+
+    const lower = clean.toLowerCase();
+
+    if (/^(hi|hello|hey|good morning|good afternoon|good evening)/i.test(lower) && clean.split(/\s+/).length <= 4) {
+      return "Hey there! Great to chat with you today. How's everything going?";
+    }
+    if (/formula\s*1|f1|racing|verstappen|hamilton|ferrari|red bull|grand prix/i.test(lower)) {
+      return "F1 is so wild right now! Max Verstappen and all the race drama make every weekend super exciting. Do you watch the races often?";
+    }
+    if (/chess|blitz|grandmaster|magnus|opening|checkmate/i.test(lower)) {
+      return "Chess is so addictive! Are you more into quick blitz games on your phone, or sitting down over a real board with friends?";
+    }
+    if (/guitar|piano|drum|violin|acoustic|instrument|song/i.test(lower)) {
+      return "No way, playing music is so cool! How long have you been playing, and what's your favorite song to jam to?";
+    }
+    if (/python|javascript|react|node|coding|programming|developer|software|app/i.test(lower)) {
+      return "Coding is awesome! What kind of fun projects or apps are you building lately?";
+    }
+    if (/gym|workout|fitness|running|muscle|exercise|training/i.test(lower)) {
+      return "Working out feels so good for clearing your head! What's your go-to workout lately — lifting weights or running?";
+    }
+    if (/food|cook|eat|recipe|restaurant|dish|pizza|sushi/i.test(lower)) {
+      return "Mmm, that sounds delicious! Are you a master chef at home, or do you love finding cool new food spots?";
+    }
+    if (/movie|film|cinema|watch|series|actor|netflix/i.test(lower)) {
+      return "Oh, I love good movies! Seen anything recently that totally blew you away?";
+    }
+    if (/travel|country|trip|visit|city|holiday|vacation/i.test(lower)) {
+      return "Traveling is the absolute best! If you could hop on a plane right now, where would you go?";
+    }
+    if (/tired|stress|busy|relax|sleep|rest|exhausted/i.test(lower)) {
+      return "It's so important to recharge when days get hectic. What helps you unwind and relax the most after a demanding day?";
+    }
+
+    const stopWords = new Set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'you', 'your', 'he', 'she', 'it', 'they', 'what', 'which', 'who', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'can', 'will', 'just', 'should', 'now', 'want', 'talk', 'like', 'really', 'think', 'feel', 'tell']);
+    const words = clean.replace(/[^a-zA-Z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w.toLowerCase()));
+    const topicWords = words.slice(-3).join(' ');
+
+    if (topicWords) {
+      return `Talking about ${topicWords} sounds really interesting! What got you thinking about that today, and what's your take on it?`;
+    }
+
+    return "That's a thoughtful point! How does that usually impact your daily routine or perspective?";
+  }
+
+  // Dynamic Gemini Question / Cue Card Generator
+  async function generateGeminiExamStart(stage, geminiKey) {
+    const key = geminiKey || getActiveGeminiKey();
+    if (!key) return null;
+
+    let prompt = "";
+    if (stage === "part1") {
+      prompt = `Generate a fresh, authentic Cambridge IELTS Speaking Part 1 opening question about a random engaging topic (e.g. daily habits, photography, weather, public transport, cooking, hobbies, hometown, reading).
+Return JSON: { "topic": "Topic Name", "question": "Warm opening IELTS question" }`;
+    } else if (stage === "part2") {
+      prompt = `Generate a fresh, authentic Cambridge IELTS Speaking Part 2 Cue Card task on a random interesting topic.
+Return JSON: {
+  "title": "Describe a ...",
+  "bullets": ["Point 1", "Point 2", "Point 3", "And explain why ..."],
+  "part3": ["Part 3 question 1", "Part 3 question 2"]
+}`;
+    }
+
+    return await queryGeminiApi({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: "application/json", temperature: 0.8 }
+    }, geminiKey);
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking/generate-question") {
+    const body = await readBody(req);
+    const stage = String(body.stage || "part1");
+    const geminiKey = process.env.GEMINI_API_KEY || data.geminiApiKey;
+    const dynamicQ = await generateGeminiExamStart(stage, geminiKey);
+    return json(res, 200, { success: true, data: dynamicQ });
+  }
+
+  if (req.method === "GET" && pathname === "/api/speaking/gemini-status") {
+    const key = process.env.GEMINI_API_KEY || data.geminiApiKey;
+    return json(res, 200, {
+      configured: Boolean(key),
+      maskedKey: key ? `${key.slice(0, 6)}...${key.slice(-4)}` : null
+    });
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking/set-gemini-key") {
+    const body = await readBody(req);
+    const key = String(body.apiKey || "").trim();
+    if (!key) return json(res, 400, { error: "Please provide a valid Gemini API key." });
+
+    data.geminiApiKey = key;
+    process.env.GEMINI_API_KEY = key;
+    await writeData(data);
+
+    try {
+      if (fs.existsSync(".env")) {
+        let envContent = fs.readFileSync(".env", "utf8");
+        if (envContent.includes("GEMINI_API_KEY=")) {
+          envContent = envContent.replace(/GEMINI_API_KEY=.*/, `GEMINI_API_KEY=${key}`);
+        } else {
+          envContent += `\nGEMINI_API_KEY=${key}\n`;
+        }
+        fs.writeFileSync(".env", envContent, "utf8");
+      }
+    } catch(e) {}
+
+    return json(res, 200, { success: true, message: "Gemini AI Key saved successfully!" });
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking/ai-turn") {
+    const body = await readBody(req);
+    const mode = String(body.mode || "exam");
+    const stage = String(body.stage || "part1");
+    const userTranscript = String(body.userTranscript || "").trim();
+    const currentQuestion = String(body.currentQuestion || "");
+
+    const wordCount = userTranscript ? userTranscript.split(/\s+/).length : 0;
+    const geminiKey = body.geminiApiKey || getActiveGeminiKey();
+
+    // --- CASUAL PRACTICE MODE (Friendly Conversation Partner) ---
+    if (mode === "practice") {
+      const casualRes = await callGeminiCasualChat(userTranscript, body.history, geminiKey);
+      if (casualRes) {
+        return json(res, 200, {
+          ok: true,
+          isGeminiPowered: true,
+          mode: "practice",
+          cleanedTranscript: casualRes.cleanedTranscript || userTranscript,
+          replyText: casualRes.replyText || "That sounds really interesting! Tell me more about what you think.",
+          feedback: "Great natural conversational phrasing!",
+          vocabTips: ["in my view", "to be honest", "speaking of which"]
+        });
+      }
+
+      const friendlyReply = generateSmartContextualCasualReply(userTranscript);
+
+      return json(res, 200, {
+        ok: true,
+        isGeminiPowered: false,
+        mode: "practice",
+        replyText: friendlyReply,
+        feedback: "Nice, relaxed conversational tone! Keep chatting naturally.",
+        vocabTips: ["in my opinion", "to be frank", "come to think of it"]
+      });
+    }
+
+    // --- REAL EXAM MODE (Dr. Alan Sterling - Cambridge Examiner) ---
+    if (geminiKey) {
+      const geminiResult = await callGeminiSpeakingExaminer(userTranscript, stage, currentQuestion, body.topic, geminiKey);
+      if (geminiResult) {
+        const rawBand = ((geminiResult.fluency || 6.5) + (geminiResult.lexical || 6.5) + (geminiResult.grammar || 6.5) + (geminiResult.pronunciation || 6.5)) / 4;
+        const band = roundToIeltsBand(rawBand);
+        return json(res, 200, {
+          ok: true,
+          isGeminiPowered: true,
+          mode: "exam",
+          wordCount,
+          naturalMarker: geminiResult.naturalMarker || "Right.",
+          generatedFollowUp: geminiResult.generatedFollowUp || "How do you feel about that in your daily routine?",
+          evaluation: {
+            fluency: geminiResult.fluency || 6.5,
+            lexical: geminiResult.lexical || 6.5,
+            grammar: geminiResult.grammar || 6.5,
+            pronunciation: geminiResult.pronunciation || 6.5,
+            band
+          },
+          feedback: geminiResult.feedback || "",
+          vocabTips: geminiResult.vocabTips || ["furthermore", "specifically", "substantially"]
+        });
+      }
+    }
+
+    // 2. Intelligent Built-in NLP Fallback Engine (when no Gemini key is active)
+    let estFluency = 6.0;
+    let estLexical = 6.0;
+    let estGrammar = 6.0;
+    let estPron = 6.5;
+
+    const advancedVocab = ["furthermore", "moreover", "specifically", "substantially", "predominantly", "consequently", "nevertheless", "fascinating", "indispensable", "crucial", "paramount", "detrimental", "sustainable", "beneficial", "perspective", "significantly"];
+    const foundAdvanced = advancedVocab.filter(w => userTranscript.toLowerCase().includes(w));
+
+    if (wordCount >= 60) {
+      estFluency = 7.5;
+      estLexical = foundAdvanced.length >= 2 ? 8.0 : 7.5;
+      estGrammar = 7.5;
+    } else if (wordCount >= 30) {
+      estFluency = 6.5;
+      estLexical = foundAdvanced.length >= 1 ? 7.0 : 6.5;
+      estGrammar = 6.5;
+    } else if (wordCount <= 12 && wordCount > 0) {
+      estFluency = 5.0;
+      estLexical = 5.5;
+    }
+
+    const rawBand = (estFluency + estLexical + estGrammar + estPron) / 4;
+    const band = roundToIeltsBand(rawBand);
+
+    let naturalMarker = "";
+    let generatedFollowUp = "";
+
+    if (stage === "part1") {
+      const markers = ["Right.", "I see.", "Okay.", "Fair enough.", "That's quite interesting.", "Right, I understand."];
+      naturalMarker = markers[Math.floor(Math.random() * markers.length)];
+
+      if (/social media|instagram|telegram|tiktok|facebook|phone|internet|online/i.test(userTranscript)) {
+        if (/friend|chat|message|contact/i.test(userTranscript)) {
+          generatedFollowUp = "And do you prefer staying in touch with friends online, or meeting them in person?";
+        } else if (/time|hour|waste|busy/i.test(userTranscript)) {
+          generatedFollowUp = "Do you ever feel the need to take a break from your smartphone?";
+        } else {
+          generatedFollowUp = "How important is having internet access to your daily productivity?";
+        }
+      } else if (/hometown|city|tashkent|village|countryside|live|living|house/i.test(userTranscript)) {
+        if (/quiet|peaceful|park|nature/i.test(userTranscript)) {
+          generatedFollowUp = "What kind of public facilities or green spaces are available in your neighborhood?";
+        } else {
+          generatedFollowUp = "Is it easy to get around using public transport where you live?";
+        }
+      } else if (/travel|journey|trip|visit|country|culture|plane|vacation/i.test(userTranscript)) {
+        generatedFollowUp = "What kind of destinations do you generally prefer when you take a holiday?";
+      } else if (/study|work|career|subject|university|school|major|job/i.test(userTranscript)) {
+        generatedFollowUp = "What is the most challenging aspect of your current studies or work?";
+      } else if (/weekend|routine|morning|evening|free time|relax/i.test(userTranscript)) {
+        generatedFollowUp = "Do you find that your routine changes much between weekdays and weekends?";
+      } else if (wordCount < 18) {
+        generatedFollowUp = "Could you tell me a little bit more about why that is?";
+      }
+    } else if (stage === "part3") {
+      const p3Markers = [
+        "That's a thoughtful point.",
+        "Interesting perspective.",
+        "Indeed.",
+        "Right, looking at the wider picture,",
+        "That's certainly one way to look at it."
+      ];
+      naturalMarker = p3Markers[Math.floor(Math.random() * p3Markers.length)];
+
+      if (/technology|ai|future|smart|machine/i.test(userTranscript)) {
+        generatedFollowUp = "How do you think emerging technologies will affect job opportunities in the next ten to twenty years?";
+      } else if (/tradition|culture|generation|old|young/i.test(userTranscript)) {
+        generatedFollowUp = "Why do you think some traditional customs are gradually being lost in modern societies?";
+      } else if (/environment|nature|climate|pollution|green/i.test(userTranscript)) {
+        generatedFollowUp = "Should governments or individual citizens take more responsibility for environmental protection?";
+      } else {
+        generatedFollowUp = "Do you think most people in your country would share that view?";
+      }
+    }
+
+    let feedback = "";
+    let vocabTips = ["furthermore", "in particular", "substantially", "paramount", "consequently"];
+    if (mode === "practice") {
+      if (wordCount < 25) {
+        feedback = "Good point! Try extending your idea using the 'Point + Explanation + Example' framework to boost your Fluency & Coherence.";
+      } else {
+        feedback = `Excellent communicative flow! You delivered ${wordCount} words with natural cadence.`;
+      }
+    }
+
+    return json(res, 200, {
+      ok: true,
+      isGeminiPowered: false,
+      wordCount,
+      naturalMarker,
+      segue: naturalMarker,
+      generatedFollowUp,
+      evaluation: {
+        fluency: estFluency,
+        lexical: estLexical,
+        grammar: estGrammar,
+        pronunciation: estPron,
+        band
+      },
+      feedback,
+      vocabTips
+    });
+  }
+
+  // Dedicated Full Speaking Exam Grading with Gemini
+  async function callGeminiGradeFullExam(transcripts, geminiKey) {
+    const transcriptSummary = transcripts.map(t => `${t.role === 'model' ? 'Examiner' : 'Candidate'}: "${t.text}"`).join('\n');
+    const systemPrompt = `You are a certified Cambridge IELTS Senior Examiner. Grade the candidate's complete Speaking test performance across all 4 official IELTS criteria:
+1. Fluency and Coherence (FC)
+2. Lexical Resource (LR)
+3. Grammatical Range and Accuracy (GRA)
+4. Pronunciation & Phonological Delivery (PR)
+
+Return ONLY valid JSON:
+{
+  "overallBand": 7.5,
+  "fluency": 7.5,
+  "fluencyFeedback": "Detailed constructive evaluation on flow and coherence",
+  "lexical": 8.0,
+  "lexicalFeedback": "Detailed evaluation on vocabulary variety and collocations",
+  "grammar": 7.5,
+  "grammarFeedback": "Detailed evaluation on complex structures and accuracy",
+  "pronunciation": 7.5,
+  "pronunciationFeedback": "Detailed evaluation on clarity and delivery",
+  "examinerSummary": "A 2-sentence formal concluding feedback summary from Dr. Alan Sterling to the candidate.",
+  "strengths": ["Clear topic development", "Good use of connectors"],
+  "improvements": ["Expand answers with more specific examples", "Use more advanced idiomatic phrases"]
+}`;
+
+    return await queryGeminiApi({
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents: [{ role: "user", parts: [{ text: `Full speaking test transcript:\n\n${transcriptSummary}` }] }],
+      generationConfig: { responseMimeType: "application/json", temperature: 0.4 }
+    }, geminiKey);
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking/grade-full-exam") {
+    const body = await readBody(req);
+    const transcripts = Array.isArray(body.transcripts) ? body.transcripts : [];
+    const geminiKey = body.geminiApiKey || getActiveGeminiKey();
+
+    // 1. Try Gemini Grading
+    if (geminiKey && transcripts.length > 0) {
+      const geminiGrade = await callGeminiGradeFullExam(transcripts, geminiKey);
+      if (geminiGrade && typeof geminiGrade.overallBand === "number") {
+        return json(res, 200, {
+          ok: true,
+          isGeminiPowered: true,
+          evaluation: {
+            overallBand: roundToIeltsBand(geminiGrade.overallBand),
+            fluency: roundToIeltsBand(geminiGrade.fluency || 6.5),
+            fluencyFeedback: geminiGrade.fluencyFeedback || "Good pacing with natural conversational transitions.",
+            lexical: roundToIeltsBand(geminiGrade.lexical || 6.5),
+            lexicalFeedback: geminiGrade.lexicalFeedback || "Demonstrates adequate range of topic-related vocabulary.",
+            grammar: roundToIeltsBand(geminiGrade.grammar || 6.5),
+            grammarFeedback: geminiGrade.grammarFeedback || "Uses a mix of simple and complex sentence patterns.",
+            pronunciation: roundToIeltsBand(geminiGrade.pronunciation || 6.5),
+            pronunciationFeedback: geminiGrade.pronunciationFeedback || "Clear articulation with generally natural intonation.",
+            examinerSummary: geminiGrade.examinerSummary || "A competent performance demonstrating solid communicative capability.",
+            strengths: geminiGrade.strengths || ["Maintained communication throughout all stages", "Clear relevant ideas"],
+            improvements: geminiGrade.improvements || ["Expand Part 3 discussion points with more in-depth rationale", "Incorporate more varied idiomatic phrases"]
+          }
+        });
+      }
+    }
+
+    // 2. Intelligent NLP Fallback Grading
+    const userUtterances = transcripts.filter(t => t.role === "user").map(t => t.text);
+    const totalWords = userUtterances.reduce((acc, u) => acc + (u ? u.split(/\s+/).length : 0), 0);
+    const avgWordsPerTurn = userUtterances.length > 0 ? totalWords / userUtterances.length : 0;
+
+    let fluency = 6.0;
+    let lexical = 6.0;
+    let grammar = 6.0;
+    let pronunciation = 6.5;
+
+    if (totalWords >= 200 || avgWordsPerTurn >= 35) {
+      fluency = 7.5;
+      lexical = 7.5;
+      grammar = 7.0;
+      pronunciation = 7.5;
+    } else if (totalWords >= 100 || avgWordsPerTurn >= 20) {
+      fluency = 6.5;
+      lexical = 6.5;
+      grammar = 6.5;
+      pronunciation = 6.5;
+    } else if (totalWords < 40) {
+      fluency = 5.0;
+      lexical = 5.5;
+      grammar = 5.0;
+      pronunciation = 6.0;
+    }
+
+    const overallBand = roundToIeltsBand((fluency + lexical + grammar + pronunciation) / 4);
+
+    return json(res, 200, {
+      ok: true,
+      isGeminiPowered: false,
+      evaluation: {
+        overallBand,
+        fluency,
+        fluencyFeedback: avgWordsPerTurn >= 25 ? "Good flow with sustained discourse across multiple questions." : "Tends to give brief answers; aim to expand using the PEEL technique.",
+        lexical,
+        lexicalFeedback: totalWords >= 150 ? "Satisfactory range of topic vocabulary with some less common items." : "Basic vocabulary used; try incorporating more precise academic collocations.",
+        grammar,
+        grammarFeedback: "A combination of simple and compound sentences with occasional minor inaccuracies.",
+        pronunciation,
+        pronunciationFeedback: "Generally clear pronunciation with understandable stress and rhythm.",
+        examinerSummary: `Overall, the candidate achieved Band ${overallBand}. The performance demonstrates good communicative intent and willingness to speak.`,
+        strengths: ["Willingness to respond to all examiner prompts", "Understandable delivery"],
+        improvements: ["Develop longer, more elaborated responses in Part 2 and Part 3", "Enrich lexical resource with higher-band synonyms"]
+      }
+    });
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking/submit-attempt") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Please sign in to save your Speaking test." });
+    const body = await readBody(req);
+
+    const attempt = {
+      id: crypto.randomUUID(),
+      studentId: user.id,
+      studentName: user.name,
+      mode: body.mode || "exam",
+      topicTitle: body.topicTitle || "IELTS Speaking Full Test",
+      durationSeconds: Number(body.durationSeconds) || 0,
+      overallBand: Number(body.overallBand) || 6.5,
+      fluencyScore: Number(body.fluencyScore) || 6.5,
+      lexicalScore: Number(body.lexicalScore) || 6.5,
+      grammarScore: Number(body.grammarScore) || 6.5,
+      pronunciationScore: Number(body.pronunciationScore) || 6.5,
+      audioUrl: body.audioUrl || null,
+      transcripts: body.transcripts || [],
+      createdAt: new Date().toISOString()
+    };
+
+    if (!data.speakingAttempts) data.speakingAttempts = [];
+    data.speakingAttempts.unshift(attempt);
+    await writeData(data);
+
+    return json(res, 201, { ok: true, attempt });
+  }
+
+  if (req.method === "GET" && pathname === "/api/speaking/attempts") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Please sign in." });
+    const attempts = (data.speakingAttempts || []).filter(a => a.studentId === user.id);
+    return json(res, 200, attempts);
+  }
+
   // --- TEACHER & INVITATION ENDPOINTS ---
 
   // 1. Student views incoming invitations from teachers
@@ -6308,6 +7048,10 @@ const server = http.createServer(async (req, res) => {
       "/english/login": "english-login.html",
       "/english/teacher": "english-teacher.html",
       "/english/writing-editor": "english-writing-editor.html",
+      "/english/mock-tests": "english-mock-tests.html",
+      "/english/mock-exam": "english-mock-exam.html",
+      "/english/speaking": "english-speaking.html",
+      "/english/speaking-studio": "english-speaking.html",
       "/admin": "admin.html",
       "/english/admin": "admin.html"
     };
@@ -6316,6 +7060,8 @@ const server = http.createServer(async (req, res) => {
       "english-pricing.js", "english-pricing.css", "english-lesson.js", "english-vocabulary.js",
       "english-account.js", "english-auth.js", "english-teacher.js", "english-teacher.css",
       "english-writing-editor.js", "english-writing-editor.css", "english-product-v4.css",
+      "english-mock-tests.js", "english-mock-tests.css", "english-mock-exam.js", "english-mock-exam.css",
+      "english-speaking.js", "english-speaking.css", "speaking-avatar.js", "speaking-recorder.js",
       "admin.js"
     ]);
     if (pathname.startsWith("/data/uploads/") || pathname.startsWith("/uploads/")) {
