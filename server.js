@@ -5474,23 +5474,27 @@ async function api(req, res, pathname) {
   }
 
   async function callGeminiSpeakingExaminer(userTranscript, stage, currentQuestion, topicContext, geminiKey) {
-    const systemPrompt = `You are Dr. Alan Sterling, a Senior Cambridge IELTS Examiner conducting an official IELTS Speaking exam.
-NOTE ON CANDIDATE SPEECH: The user's input comes from raw live Speech-To-Text (ASR) which might have minor phonetic slips or transcription artifacts. Intelligently understand their real meaning.
-Your task:
-1. Provide a cleaned/polished version of what the student said ("cleanedTranscript").
-2. Provide a brief authentic British examiner conversational bridge (e.g. "Right", "I see", "That's quite interesting", "Fair enough").
-3. Ask an organic, natural follow-up question following Cambridge IELTS standards.
+    const systemPrompt = `You are Dr. Alan Sterling, a certified Senior Cambridge IELTS Examiner conducting an official IELTS Speaking exam.
+ASSESSMENT CRITERIA (STRICT CAMBRIDGE STANDARDS):
+- Grade objectively and strictly against official IELTS Band Descriptors. DO NOT inflate scores.
+- Band 4.0-5.0: Very short, fragmented answers, frequent pauses, basic vocabulary, repetitive errors.
+- Band 5.5-6.0: Basic communication achieved, mix of simple/complex sentences with noticeable errors or basic vocabulary.
+- Band 6.5-7.0: Speaks at length with good fluency, uses some less common vocabulary and complex structures with occasional slips.
+- Band 7.5+: Highly fluent, sophisticated lexical range, flexible complex grammar with only rare non-systematic slips.
+
+NOTE ON CANDIDATE SPEECH: The user's input comes from raw live Speech-To-Text (ASR). Intelligently understand their real meaning in "cleanedTranscript".
+
 Return ONLY valid JSON matching this schema:
 {
-  "cleanedTranscript": "Polished, grammatically clean version of candidate's answer",
-  "naturalMarker": "A short conversational phrase (1-4 words)",
+  "cleanedTranscript": "Polished, clean version of candidate's answer",
+  "naturalMarker": "A short conversational bridge (1-3 words, e.g. 'Right.', 'I see.')",
   "generatedFollowUp": "The next IELTS question (1-2 sentences)",
-  "fluency": 6.5,
-  "lexical": 7.0,
-  "grammar": 6.5,
-  "pronunciation": 7.0,
-  "feedback": "Short feedback tip",
-  "vocabTips": ["advanced_word1", "advanced_word2"]
+  "fluency": 5.5,
+  "lexical": 5.5,
+  "grammar": 5.5,
+  "pronunciation": 6.0,
+  "feedback": "Concise feedback point",
+  "vocabTips": ["appropriate_word1", "appropriate_word2"]
 }`;
 
     const userPrompt = `IELTS Stage: ${stage}
@@ -5498,12 +5502,12 @@ Current Question: "${currentQuestion}"
 Topic: "${topicContext || 'General'}"
 Candidate's spoken answer: "${userTranscript}"
 
-Respond with natural examiner dialogue in JSON format.`;
+Respond with authentic examiner dialogue and strict objective grading in JSON format.`;
 
     return await queryGeminiApi({
       systemInstruction: { parts: [{ text: systemPrompt }] },
       contents: [{ role: "user", parts: [{ text: userPrompt }] }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
+      generationConfig: { responseMimeType: "application/json", temperature: 0.2 }
     }, geminiKey);
   }
 
@@ -5709,26 +5713,35 @@ Return JSON: {
       }
     }
 
-    // 2. Intelligent Built-in NLP Fallback Engine (when no Gemini key is active)
-    let estFluency = 6.0;
-    let estLexical = 6.0;
-    let estGrammar = 6.0;
-    let estPron = 6.5;
+    // 2. Calibrated Strict NLP Fallback Engine (when no Gemini key is active)
+    let estFluency = 5.5;
+    let estLexical = 5.0;
+    let estGrammar = 5.0;
+    let estPron = 5.5;
 
     const advancedVocab = ["furthermore", "moreover", "specifically", "substantially", "predominantly", "consequently", "nevertheless", "fascinating", "indispensable", "crucial", "paramount", "detrimental", "sustainable", "beneficial", "perspective", "significantly"];
     const foundAdvanced = advancedVocab.filter(w => userTranscript.toLowerCase().includes(w));
 
-    if (wordCount >= 60) {
-      estFluency = 7.5;
-      estLexical = foundAdvanced.length >= 2 ? 8.0 : 7.5;
-      estGrammar = 7.5;
-    } else if (wordCount >= 30) {
-      estFluency = 6.5;
-      estLexical = foundAdvanced.length >= 1 ? 7.0 : 6.5;
+    if (wordCount >= 70 && foundAdvanced.length >= 2) {
+      estFluency = 7.0;
+      estLexical = 7.0;
       estGrammar = 6.5;
-    } else if (wordCount <= 12 && wordCount > 0) {
-      estFluency = 5.0;
+      estPron = 6.5;
+    } else if (wordCount >= 40) {
+      estFluency = 6.0;
+      estLexical = foundAdvanced.length >= 1 ? 6.5 : 5.5;
+      estGrammar = 5.5;
+      estPron = 6.0;
+    } else if (wordCount >= 20) {
+      estFluency = 5.5;
       estLexical = 5.5;
+      estGrammar = 5.0;
+      estPron = 5.5;
+    } else if (wordCount > 0) {
+      estFluency = 4.5;
+      estLexical = 4.5;
+      estGrammar = 4.5;
+      estPron = 5.0;
     }
 
     const rawBand = (estFluency + estLexical + estGrammar + estPron) / 4;
@@ -5817,32 +5830,36 @@ Return JSON: {
   // Dedicated Full Speaking Exam Grading with Gemini
   async function callGeminiGradeFullExam(transcripts, geminiKey) {
     const transcriptSummary = transcripts.map(t => `${t.role === 'model' ? 'Examiner' : 'Candidate'}: "${t.text}"`).join('\n');
-    const systemPrompt = `You are a certified Cambridge IELTS Senior Examiner. Grade the candidate's complete Speaking test performance across all 4 official IELTS criteria:
-1. Fluency and Coherence (FC)
-2. Lexical Resource (LR)
-3. Grammatical Range and Accuracy (GRA)
-4. Pronunciation & Phonological Delivery (PR)
+    const systemPrompt = `You are a certified Cambridge Senior IELTS Examiner. You MUST evaluate the candidate's complete Speaking performance STRICTLY and RIGOROUSLY against the official Cambridge IELTS Speaking Band Descriptors (Public Version).
+DO NOT INFLATE SCORES. Grade objectively based solely on the actual evidence in the transcript:
 
-Return ONLY valid JSON:
+CAMBRIDGE BAND BENCHMARKS:
+- Band 4.0-4.5: Frequent pauses, limited to basic sentence structures, repetitive simple words, frequent errors.
+- Band 5.0-5.5: Simple sentences fluent but complex sentences break down, basic vocabulary with limited flexibility, grammatical errors persist, answers lack elaboration.
+- Band 6.0-6.5: Communicates meaning adequately, mixes simple and complex structures but with noticeable grammatical inaccuracies or basic vocabulary limitations, occasional self-correction.
+- Band 7.0-7.5: Sustained fluent discourse, flexible use of less common/idiomatic vocabulary, frequent error-free complex structures with only minor occasional slips.
+- Band 8.0-9.0: Exceptional precision, wide lexical and structural range, natural fluency with near-zero hesitation or systematic errors.
+
+Return ONLY valid JSON in this schema:
 {
-  "overallBand": 7.5,
-  "fluency": 7.5,
-  "fluencyFeedback": "Detailed constructive evaluation on flow and coherence",
-  "lexical": 8.0,
-  "lexicalFeedback": "Detailed evaluation on vocabulary variety and collocations",
-  "grammar": 7.5,
-  "grammarFeedback": "Detailed evaluation on complex structures and accuracy",
-  "pronunciation": 7.5,
-  "pronunciationFeedback": "Detailed evaluation on clarity and delivery",
-  "examinerSummary": "A 2-sentence formal concluding feedback summary from Dr. Alan Sterling to the candidate.",
-  "strengths": ["Clear topic development", "Good use of connectors"],
-  "improvements": ["Expand answers with more specific examples", "Use more advanced idiomatic phrases"]
+  "overallBand": 5.5,
+  "fluency": 5.5,
+  "fluencyFeedback": "Concise summary on flow, coherence, and answer length",
+  "lexical": 5.5,
+  "lexicalFeedback": "Concise summary on vocabulary range, idioms, and precision",
+  "grammar": 5.5,
+  "grammarFeedback": "Concise summary on grammatical complexity and error frequency",
+  "pronunciation": 6.0,
+  "pronunciationFeedback": "Concise summary on clarity, stress, and natural rhythm",
+  "examinerSummary": "A formal concluding assessment summary from Dr. Alan Sterling to the candidate.",
+  "strengths": ["Clear strength 1", "Clear strength 2"],
+  "improvements": ["Specific improvement 1", "Specific improvement 2"]
 }`;
 
     return await queryGeminiApi({
       systemInstruction: { parts: [{ text: systemPrompt }] },
       contents: [{ role: "user", parts: [{ text: `Full speaking test transcript:\n\n${transcriptSummary}` }] }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0.4 }
+      generationConfig: { responseMimeType: "application/json", temperature: 0.2 }
     }, geminiKey);
   }
 
@@ -5860,47 +5877,52 @@ Return ONLY valid JSON:
           isGeminiPowered: true,
           evaluation: {
             overallBand: roundToIeltsBand(geminiGrade.overallBand),
-            fluency: roundToIeltsBand(geminiGrade.fluency || 6.5),
-            fluencyFeedback: geminiGrade.fluencyFeedback || "Good pacing with natural conversational transitions.",
-            lexical: roundToIeltsBand(geminiGrade.lexical || 6.5),
-            lexicalFeedback: geminiGrade.lexicalFeedback || "Demonstrates adequate range of topic-related vocabulary.",
-            grammar: roundToIeltsBand(geminiGrade.grammar || 6.5),
-            grammarFeedback: geminiGrade.grammarFeedback || "Uses a mix of simple and complex sentence patterns.",
-            pronunciation: roundToIeltsBand(geminiGrade.pronunciation || 6.5),
-            pronunciationFeedback: geminiGrade.pronunciationFeedback || "Clear articulation with generally natural intonation.",
-            examinerSummary: geminiGrade.examinerSummary || "A competent performance demonstrating solid communicative capability.",
-            strengths: geminiGrade.strengths || ["Maintained communication throughout all stages", "Clear relevant ideas"],
-            improvements: geminiGrade.improvements || ["Expand Part 3 discussion points with more in-depth rationale", "Incorporate more varied idiomatic phrases"]
+            fluency: roundToIeltsBand(geminiGrade.fluency || 5.5),
+            fluencyFeedback: geminiGrade.fluencyFeedback || "Fluency maintained with occasional hesitation.",
+            lexical: roundToIeltsBand(geminiGrade.lexical || 5.5),
+            lexicalFeedback: geminiGrade.lexicalFeedback || "Demonstrates adequate range of topic vocabulary.",
+            grammar: roundToIeltsBand(geminiGrade.grammar || 5.5),
+            grammarFeedback: geminiGrade.grammarFeedback || "Uses mixed sentence patterns with some inaccuracies.",
+            pronunciation: roundToIeltsBand(geminiGrade.pronunciation || 6.0),
+            pronunciationFeedback: geminiGrade.pronunciationFeedback || "Clear articulation with generally intelligible delivery.",
+            examinerSummary: geminiGrade.examinerSummary || "A performance demonstrating basic to intermediate communicative capability.",
+            strengths: geminiGrade.strengths || ["Maintained communication across exam parts", "Understands examiner prompts"],
+            improvements: geminiGrade.improvements || ["Elaborate answers with deeper justifications", "Incorporate more complex grammatical structures"]
           }
         });
       }
     }
 
-    // 2. Intelligent NLP Fallback Grading
+    // 2. Calibrated Strict NLP Fallback Grading
     const userUtterances = transcripts.filter(t => t.role === "user").map(t => t.text);
     const totalWords = userUtterances.reduce((acc, u) => acc + (u ? u.split(/\s+/).length : 0), 0);
     const avgWordsPerTurn = userUtterances.length > 0 ? totalWords / userUtterances.length : 0;
 
-    let fluency = 6.0;
-    let lexical = 6.0;
-    let grammar = 6.0;
-    let pronunciation = 6.5;
+    let fluency = 5.0;
+    let lexical = 5.0;
+    let grammar = 5.0;
+    let pronunciation = 5.5;
 
-    if (totalWords >= 200 || avgWordsPerTurn >= 35) {
-      fluency = 7.5;
-      lexical = 7.5;
+    if (totalWords >= 280 && avgWordsPerTurn >= 45) {
+      fluency = 7.0;
+      lexical = 7.0;
       grammar = 7.0;
-      pronunciation = 7.5;
-    } else if (totalWords >= 100 || avgWordsPerTurn >= 20) {
+      pronunciation = 7.0;
+    } else if (totalWords >= 180 && avgWordsPerTurn >= 30) {
       fluency = 6.5;
       lexical = 6.5;
-      grammar = 6.5;
+      grammar = 6.0;
       pronunciation = 6.5;
-    } else if (totalWords < 40) {
-      fluency = 5.0;
+    } else if (totalWords >= 90 && avgWordsPerTurn >= 18) {
+      fluency = 6.0;
       lexical = 5.5;
-      grammar = 5.0;
+      grammar = 5.5;
       pronunciation = 6.0;
+    } else if (totalWords >= 40) {
+      fluency = 5.5;
+      lexical = 5.0;
+      grammar = 5.0;
+      pronunciation = 5.5;
     }
 
     const overallBand = roundToIeltsBand((fluency + lexical + grammar + pronunciation) / 4);
@@ -5911,16 +5933,16 @@ Return ONLY valid JSON:
       evaluation: {
         overallBand,
         fluency,
-        fluencyFeedback: avgWordsPerTurn >= 25 ? "Good flow with sustained discourse across multiple questions." : "Tends to give brief answers; aim to expand using the PEEL technique.",
+        fluencyFeedback: avgWordsPerTurn >= 30 ? "Good flow with sustained discourse across questions." : "Brief answers; expand your responses using the PEEL (Point, Explanation, Example) technique.",
         lexical,
-        lexicalFeedback: totalWords >= 150 ? "Satisfactory range of topic vocabulary with some less common items." : "Basic vocabulary used; try incorporating more precise academic collocations.",
+        lexicalFeedback: totalWords >= 180 ? "Satisfactory range of topic vocabulary with some varied terms." : "Basic vocabulary used; try incorporating more precise academic collocations.",
         grammar,
-        grammarFeedback: "A combination of simple and compound sentences with occasional minor inaccuracies.",
+        grammarFeedback: "A mix of simple and basic compound sentences with noticeable grammatical limitations.",
         pronunciation,
-        pronunciationFeedback: "Generally clear pronunciation with understandable stress and rhythm.",
-        examinerSummary: `Overall, the candidate achieved Band ${overallBand}. The performance demonstrates good communicative intent and willingness to speak.`,
-        strengths: ["Willingness to respond to all examiner prompts", "Understandable delivery"],
-        improvements: ["Develop longer, more elaborated responses in Part 2 and Part 3", "Enrich lexical resource with higher-band synonyms"]
+        pronunciationFeedback: "Intelligible delivery with understandable stress and rhythm.",
+        examinerSummary: `Overall, the candidate achieved Band ${overallBand}. The performance demonstrates basic to intermediate communicative ability under official assessment conditions.`,
+        strengths: ["Communicates essential meaning", "Direct responses to examiner prompts"],
+        improvements: ["Provide more extended justifications in Part 2 and Part 3", "Improve grammatical accuracy and sentence complexity"]
       }
     });
   }
