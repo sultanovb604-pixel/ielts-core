@@ -122,17 +122,14 @@
     const activeSkill = params.get('skill');
     const activePath = location.pathname;
 
-    const isTeacher = user && user.role === 'teacher';
     const candidateLinks = isTeacher ? [
-      { label: 'Home Page', icon: 'home', href: '/english', active: activePath === '/english' },
+      { label: 'Home (Materials)', icon: 'home', href: '/english/materials', active: activePath === '/english/materials' && !activeCollection && !activeSkill },
       { label: 'Teacher Workspace', icon: 'school', href: '/english/teacher', active: activePath === '/english/teacher' },
-      { label: 'Materials Library', icon: 'folder_open', href: '/english/materials', active: activePath === '/english/materials' && !activeCollection && !activeSkill },
       { label: 'Student View', icon: 'dashboard', href: '/english/account', active: activePath === '/english/account' && !params.get('tab') }
     ] : [
-      { label: 'Home Page', icon: 'home', href: '/english', active: activePath === '/english' },
+      { label: 'Home (Materials)', icon: 'home', href: '/english/materials', active: activePath === '/english/materials' && !activeCollection && !activeSkill },
       { label: 'Dashboard & Progress', icon: 'dashboard', href: '/english/account', active: activePath === '/english/account' && !params.get('tab') },
-      { label: 'Homework & Tasks', icon: 'assignment', href: '/english/account?tab=homework', active: activePath === '/english/account' && params.get('tab') === 'homework' },
-      { label: 'Materials Library', icon: 'folder_open', href: '/english/materials', active: activePath === '/english/materials' && !activeCollection && !activeSkill }
+      { label: 'Homework & Tasks', icon: 'assignment', href: '/english/account?tab=homework', active: activePath === '/english/account' && params.get('tab') === 'homework' }
     ];
 
     const sections = [
