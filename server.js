@@ -6894,9 +6894,33 @@ Return ONLY valid JSON in this schema:
       if (targetUsernames && targetUsernames.length > 0) {
         return targetUsernames.includes(uname);
       }
-      return /^(test|demo|temp|sample|asdf|qwerty|dummy|fake|user[0-9]+|test[0-9]+|student[0-9]+)$/i.test(uname) ||
-             /test|demo|asdf|qwerty|dummy|fake/i.test(uname) ||
-             /test|demo|dummy/i.test(name);
+      return name.includes("candidate") ||
+             (name.includes("instructor") && !uname.includes("bilol")) ||
+             name.includes("test") ||
+             name.includes("tester") ||
+             name.includes("demo") ||
+             name.includes("qa") ||
+             name.includes("audit") ||
+             name.includes("verification") ||
+             name.includes("review user") ||
+             name.includes("highlight") ||
+             uname.startsWith("qa_") ||
+             uname.startsWith("stud_") ||
+             uname.startsWith("teach_") ||
+             uname.startsWith("user_") ||
+             uname.startsWith("verify_") ||
+             uname.startsWith("rev_") ||
+             uname.startsWith("fqa_") ||
+             uname.startsWith("test") ||
+             uname.startsWith("demo") ||
+             uname.startsWith("tester_") ||
+             uname.startsWith("ctf_") ||
+             uname.startsWith("mocktester_") ||
+             uname.startsWith("speaktester_") ||
+             uname.startsWith("speed_") ||
+             uname.startsWith("lqa_") ||
+             uname.startsWith("band_") ||
+             uname.startsWith("debug_");
     };
 
     const toDelete = data.users.filter(isTestAccount);
