@@ -1155,13 +1155,182 @@ html[data-theme="dark"] .speaking-audio-manager {
   border-bottom-right-radius: 20px;
 }
 
-@media (max-width: 680px) {
+@media (max-width: 820px) {
+  .app-container {
+    padding: 8px !important;
+  }
+  .speaking-studio-container {
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .speaking-studio-header {
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .speaking-mode-selector {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .mode-pill-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .zoom-speaking-layout {
+    min-height: 480px;
+    max-height: calc(100vh - 160px);
+  }
+  .examiner-main-stage {
+    min-height: 280px;
+  }
+  .candidate-pip-tile {
+    width: 96px;
+    height: 72px;
+    bottom: 12px;
+    right: 12px;
+    border-radius: 8px;
+    border-width: 1.5px;
+    z-index: 15;
+  }
+  .candidate-pip-tile video {
+    border-radius: 6px;
+  }
+  .zoom-subtitles-hud {
+    position: absolute;
+    bottom: 64px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    transform: none;
+    padding: 8px 12px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+  .cc-text {
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+  .zoom-chat-input-bar {
+    bottom: 64px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    transform: none;
+    padding: 4px 6px 4px 10px;
+  }
+  .zoom-chat-text-input {
+    font-size: 14px;
+  }
+  .zoom-bottom-toolbar {
+    padding: 8px 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+  .toolbar-group {
+    gap: 6px;
+  }
+  .zoom-tool-btn {
+    padding: 7px 10px;
+    font-size: 11.5px;
+    border-radius: 8px;
+  }
+  .zoom-tool-btn.mic-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+  .zoom-tool-btn.next-q-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  /* Score Modal Mobile Responsiveness */
+  .zoom-score-modal {
+    padding: 10px;
+  }
+  .score-card-container {
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 16px;
+  }
+  .score-card-header {
+    padding: 14px 16px;
+  }
+  .score-card-header h2 {
+    font-size: 16px;
+  }
+  .score-card-body {
+    padding: 14px 16px;
+    gap: 14px;
+  }
   .overall-band-banner {
     flex-direction: column;
+    padding: 12px;
+    gap: 10px;
+    text-align: center;
+  }
+  .band-number-wrap {
+    min-width: 100%;
+    padding: 10px;
+  }
+  .band-huge {
+    font-size: 36px;
   }
   .criteria-score-grid,
   .feedback-columns-row {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .score-card-footer {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+  }
+  .score-card-footer .score-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Start Call Overlay on Mobile */
+  .zoom-start-card {
+    padding: 24px 18px;
+    max-width: calc(100vw - 32px);
+    border-radius: 18px;
+  }
+  .start-call-play-btn {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 14px;
+  }
+  .start-call-play-btn .start-icon {
+    font-size: 28px;
+  }
+  .start-title {
+    font-size: 18px;
+  }
+  .start-desc {
+    font-size: 12.5px;
+    margin-bottom: 16px;
+  }
+  .start-action-btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .zoom-speaking-layout {
+    min-height: 420px;
+  }
+  .candidate-pip-tile {
+    width: 80px;
+    height: 60px;
+    bottom: 8px;
+    right: 8px;
   }
 }
 
