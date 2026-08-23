@@ -274,14 +274,20 @@
               </a>
             </div>`;
         } else {
-          actionButtons = `<a class="vx-card-btn vx-btn-primary full-width" href="${escape(href)}"${/^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ''}><span>Open Material</span><span aria-hidden="true">→</span></a>`;
+          actionButtons = `
+            <div class="card-action-group">
+              <a class="vx-card-btn vx-btn-primary full-width" href="${escape(href)}"${/^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ''}>
+                <span>Open Material</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>`;
         }
       } else if (item.locked) {
         actionButtons = `
           <div class="card-action-group">
             <button class="vx-card-btn vx-btn-unlock full-width" type="button" data-locked-btn onclick="window.showUpgradeModal()" aria-label="Unlock ${escape(item.title)} with Premium">
               <span class="material-symbols-outlined">lock</span>
-              <span>Unlock Full Test (30 000 UZS / oy)</span>
+              <span>Unlock with Premium (30 000 UZS / oy)</span>
               <span aria-hidden="true">→</span>
             </button>
           </div>`;
@@ -310,10 +316,12 @@
               : itemCollection === 'speaking-question' ? 'Open questions' : 'Start practice';
 
         actionButtons = `
-          <a class="vx-card-btn vx-btn-primary full-width" href="${escape(href)}"${/^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ''}>
-            <span>${actionLabel}</span>
-            <span aria-hidden="true">→</span>
-          </a>`;
+          <div class="card-action-group">
+            <a class="vx-card-btn vx-btn-primary full-width" href="${escape(href)}"${/^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ''}>
+              <span>${actionLabel}</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>`;
       }
 
       const description = item.description ? `<p class="resource-desc">${escape(item.description)}</p>` : '';
