@@ -14,6 +14,12 @@
       this.subtitlesEnabled = true;
       this.isFullscreen = false;
       this.viewMode = 'animated'; // 'animated' | 'photo'
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          try { window._cachedVoices = window.speechSynthesis.getVoices(); } catch(e) {}
+        };
+        try { window._cachedVoices = window.speechSynthesis.getVoices(); } catch(e) {}
+      }
       this.init();
     }
 
@@ -1139,13 +1145,15 @@
         utterance.rate = isPractice ? 1.02 : 0.95;
         utterance.pitch = isPractice ? 1.15 : 1.0;
 
-        const voices = window.speechSynthesis.getVoices();
+        const voices = (window._cachedVoices && window._cachedVoices.length > 0)
+          ? window._cachedVoices
+          : (window.speechSynthesis ? window.speechSynthesis.getVoices() : []);
         if (voices && voices.length > 0) {
           let chosenVoice = null;
           if (isPractice) {
-            chosenVoice = voices.find(v => (v.name.includes('Emma') || v.name.includes('Zira') || v.name.includes('Jenny') || v.name.includes('Samantha') || (v.lang.startsWith('en') && v.name.toLowerCase().includes('female')))) || voices.find(v => v.lang.startsWith('en'));
+            chosenVoice = voices.find(v => (v.name.includes('Emma') || v.name.includes('Zira') || v.name.includes('Jenny') || v.name.includes('Samantha') || (v.lang && v.lang.startsWith('en') && v.name.toLowerCase().includes('female')))) || voices.find(v => v.lang && v.lang.startsWith('en'));
           } else {
-            chosenVoice = voices.find(v => (v.lang.includes('en-GB') || v.lang.includes('en_GB')) || v.name.includes('UK') || v.name.includes('British') || v.name.includes('George') || v.name.includes('Oliver') || v.name.includes('Daniel')) || voices.find(v => v.lang.startsWith('en'));
+            chosenVoice = voices.find(v => (v.lang && (v.lang.includes('en-GB') || v.lang.includes('en_GB'))) || v.name.includes('UK') || v.name.includes('British') || v.name.includes('George') || v.name.includes('Oliver') || v.name.includes('Daniel')) || voices.find(v => v.lang && v.lang.startsWith('en'));
           }
           if (chosenVoice) utterance.voice = chosenVoice;
         }
