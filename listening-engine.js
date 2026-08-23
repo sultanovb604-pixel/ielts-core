@@ -2056,15 +2056,28 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     var answers = [];
     for (var i = material.startQ; i <= material.endQ; i++) {
       var val = '';
-      var input = document.getElementById('q' + i);
-      if (input) {
+      var input = document.getElementById('q' + i) ||
+                  document.querySelector('[data-q="' + i + '"]') ||
+                  document.querySelector('[data-question="' + i + '"]') ||
+                  document.querySelector('input[name="q' + i + '"][type="text"]') ||
+                  document.querySelector('input[name="question-' + i + '"][type="text"]') ||
+                  document.querySelector('select[name="q' + i + '"]') ||
+                  document.querySelector('select[name="question-' + i + '"]') ||
+                  document.querySelector('select[data-q="' + i + '"]');
+
+      if (input && input.tagName === 'SELECT') {
+        val = input.value;
+      } else if (input && (input.type === 'text' || input.type === 'search')) {
         val = input.value;
       } else {
-        var checked = document.querySelector('input[name="q' + i + '"]:checked');
+        var checked = document.querySelector('input[name="q' + i + '"]:checked') ||
+                      document.querySelector('input[name="question-' + i + '"]:checked') ||
+                      document.querySelector('[data-q="' + i + '"]:checked') ||
+                      document.querySelector('[data-question="' + i + '"]:checked');
         if (checked) {
           val = checked.value;
         } else {
-          var checkboxes = document.querySelectorAll('input[name="q' + i + '"]:checked');
+          var checkboxes = document.querySelectorAll('input[name="q' + i + '"]:checked, input[name="question-' + i + '"]:checked');
           if (checkboxes.length) {
             val = Array.from(checkboxes).map(function(c){ return c.value; }).join(', ');
           }
@@ -2290,6 +2303,22 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     showVerifiedResult(localAttempt);
   }
 
+  // Start Test Button Handlers (for Drills and Practice files with Start Screens)
+  document.addEventListener('click', function(e) {
+    var startBtn = e.target.closest('#startBtn, .start-btn, #start-btn, button[onclick*="startTest"], #start-test-btn');
+    if (startBtn) {
+      var startScreen = document.getElementById('startScreen') || document.querySelector('.start-screen, #start-screen, .start-modal, #login-screen');
+      if (startScreen) startScreen.style.display = 'none';
+      var mainArea = document.getElementById('mainArea') || document.querySelector('#main-area, .main-area, .mainArea, .panels-container, .test-container');
+      if (mainArea) mainArea.style.display = 'block';
+      var topBar = document.getElementById('topBar');
+      if (topBar) topBar.style.display = 'flex';
+      var bottomNav = document.getElementById('bottomNav');
+      if (bottomNav) bottomNav.style.display = 'flex';
+      startTimer();
+    }
+  }, true);
+
   // Header Submit & Deliver Button Handlers
   document.getElementById('vxHeaderSubmitBtn')?.addEventListener('click', function(e) {
     e.preventDefault();
@@ -2297,7 +2326,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   });
 
   document.addEventListener('click', function(e) {
-    var btn = e.target.closest('#deliver-button, #deliver-btn, .footer__deliverButton___3FM07, .deliverButton, button[onclick*="checkAnswers"]');
+    var btn = e.target.closest('#deliver-button, #deliver-btn, .footer__deliverButton___3FM07, .deliverButton, button[onclick*="checkAnswers"], #submitBtn, .submit-btn, button[onclick*="submitTest"], button[onclick*="confirmSubmit"], #submit-btn');
     if (btn) {
       e.preventDefault();
       e.stopPropagation();
@@ -2432,7 +2461,6 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
 
 function sanitizeListeningHtml(source, material, user, requestedMode) {
   const clean = source
-    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
     .replace(/body::(?:before|after)\s*\{[\s\S]*?\}/gi, "")
     .replace(/\.(?:telegram-link|brand-link)(?::[a-z-]+)?\s*\{[^}]*\}/gi, "")
     .replace(/<a\b[^>]*href=["']https?:\/\/t\.me\/[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, "")

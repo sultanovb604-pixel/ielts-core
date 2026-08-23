@@ -3371,11 +3371,23 @@ function readingPersistenceMarkup(material, user) {
     if (submitModal) submitModal.classList.add('show');
   }
 
+  // Start Test Button Handlers (for Drills and Practice files with Start Screens)
+  document.addEventListener('click', function(e) {
+    var startBtn = e.target.closest('#startBtn, .start-btn, #start-btn, button[onclick*="startTest"], #start-test-btn');
+    if (startBtn) {
+      var startScreen = document.getElementById('startScreen') || document.querySelector('.start-screen, #start-screen, .start-modal, #login-screen');
+      if (startScreen) startScreen.style.display = 'none';
+      var mainArea = document.getElementById('mainArea') || document.querySelector('#main-area, .main-area, .mainArea, .panels-container, .test-container');
+      if (mainArea) mainArea.style.display = 'flex';
+      startTimer();
+    }
+  }, true);
+
   document.getElementById('vxSubmitPromptBtn')?.addEventListener('click', openSubmitModal);
   document.getElementById('vxHeaderSubmitBtn')?.addEventListener('click', openSubmitModal);
 
   document.addEventListener('click', function(e) {
-    var btn = e.target.closest('#deliver-button, #deliver-btn, .footer__deliverButton___3FM07, .deliverButton, .footer__deliverButton, button[onclick*="showSubmissionModal"]');
+    var btn = e.target.closest('#deliver-button, #deliver-btn, .footer__deliverButton___3FM07, .deliverButton, .footer__deliverButton, button[onclick*="showSubmissionModal"], #submitBtn, .submit-btn, button[onclick*="submitTest"], button[onclick*="submitExam"], button[onclick*="submitAnswers"], #submit-btn');
     if (btn) {
       e.preventDefault();
       e.stopPropagation();
@@ -4016,7 +4028,6 @@ function readingPersistenceMarkup(material, user) {
 
 function sanitizeReadingHtml(source, material, user) {
   const clean = source
-    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
     .replace(/body::(?:before|after)\s*\{[\s\S]*?\}/gi, "")
     .replace(/\.(?:telegram-link|brand-link)(?::[a-z-]+)?\s*\{[^}]*\}/gi, "")
     .replace(/<a\b[^>]*href=["']https?:\/\/t\.me\/[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, "")
