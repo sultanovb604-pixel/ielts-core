@@ -112,6 +112,7 @@
 
   document.querySelector('#openInviteModalBtn')?.addEventListener('click', () => openModal(modals.invite));
   document.querySelector('#openCreateAssignmentBtn')?.addEventListener('click', () => openModal(modals.createAssign));
+  document.querySelector('#sidebarCreateAssignBtn')?.addEventListener('click', () => openModal(modals.createAssign));
   document.querySelector('#createAssignmentInnerBtn')?.addEventListener('click', () => openModal(modals.createAssign));
 
   // Quick Search Filter

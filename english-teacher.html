@@ -34,19 +34,17 @@
           </div>
         </a>
 
-        <div class="teacher-cohort-pill">
-          <span class="material-symbols-outlined" style="font-size:16px;color:#1468f3;">school</span>
-          <div>
-            <strong>Active Instructor</strong>
-            <small id="teacherCohortStatusText">4-Skill Operations</small>
-          </div>
-        </div>
+        <!-- Primary Action CTA -->
+        <button type="button" class="teacher-sidebar-cta" id="sidebarCreateAssignBtn">
+          <span class="material-symbols-outlined">add_task</span>
+          <span>New Assignment</span>
+        </button>
       </div>
 
       <!-- Sidebar Nav -->
       <nav class="teacher-sidebar-nav" aria-label="Teacher Workspace Navigation">
-        <!-- COHORT MANAGEMENT -->
-        <div class="teacher-nav-group-title">COHORT OPERATIONS</div>
+        <!-- COHORT OPERATIONS -->
+        <div class="teacher-nav-group-title">WORKSPACE</div>
         <button type="button" class="teacher-nav-item active" data-teacher-tab="students">
           <span class="material-symbols-outlined">groups</span>
           <span>Students Roster</span>
@@ -54,7 +52,7 @@
         </button>
         <button type="button" class="teacher-nav-item" data-teacher-tab="assignments">
           <span class="material-symbols-outlined">assignment</span>
-          <span>Dispatched Homework</span>
+          <span>Assignments</span>
           <span class="teacher-nav-badge" id="tabBadgeAssignments">0</span>
         </button>
         <button type="button" class="teacher-nav-item" data-teacher-tab="grading">
@@ -64,41 +62,18 @@
         </button>
         <button type="button" class="teacher-nav-item" data-teacher-tab="licenses">
           <span class="material-symbols-outlined">workspace_premium</span>
-          <span>Bulk Licenses & Seats</span>
+          <span>Student Licenses</span>
         </button>
 
-        <!-- ASSIGN 4-SKILL HOMEWORK SHORTCUTS -->
-        <div class="teacher-nav-group-title" style="margin-top:14px;">ASSIGN 4-SKILL HOMEWORK</div>
-        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="listening">
-          <span class="material-symbols-outlined" style="color:#0284c7;">headphones</span>
-          <span>Assign Listening (40Q)</span>
-        </button>
-        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="reading">
-          <span class="material-symbols-outlined" style="color:#10b981;">menu_book</span>
-          <span>Assign Reading (40Q)</span>
-        </button>
-        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="writing">
-          <span class="material-symbols-outlined" style="color:#8b5cf6;">edit_note</span>
-          <span>Assign Writing Essay</span>
-        </button>
-        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="speaking">
-          <span class="material-symbols-outlined" style="color:#f59e0b;">record_voice_over</span>
-          <span>Assign Speaking Mock</span>
-        </button>
-        <button type="button" class="teacher-nav-item teacher-quick-assign-btn" data-assign-skill="custom">
-          <span class="material-symbols-outlined" style="color:#64748b;">attach_file</span>
-          <span>Upload Custom Worksheet</span>
-        </button>
-
-        <!-- TEACHER PERSONAL DESK -->
-        <div class="teacher-nav-group-title" style="margin-top:14px;">TEACHER PERSONAL USE</div>
+        <!-- EXPLORE & PREVIEW -->
+        <div class="teacher-nav-group-title" style="margin-top:16px;">EXPLORE & PREVIEW</div>
         <a href="/english/materials" target="_blank" class="teacher-nav-item">
-          <span class="material-symbols-outlined">local_library</span>
-          <span>Full Materials Library</span>
+          <span class="material-symbols-outlined">menu_book</span>
+          <span>Materials Bank</span>
         </a>
         <a href="/english/account" target="_blank" class="teacher-nav-item">
-          <span class="material-symbols-outlined">person</span>
-          <span>Student Practice View</span>
+          <span class="material-symbols-outlined">visibility</span>
+          <span>Student View</span>
         </a>
       </nav>
 
@@ -109,8 +84,8 @@
           <strong class="teacher-user-name" id="teacherSidebarName">Instructor</strong>
           <small class="teacher-user-handle" id="teacherSidebarHandle">@teacher</small>
         </div>
-        <a href="/english/account" title="Account settings" style="color:#64748b;display:flex;align-items:center;">
-          <span class="material-symbols-outlined" style="font-size:18px;">settings</span>
+        <a href="/english/account" title="Account settings" class="teacher-settings-link" style="color:#64748b;display:flex;align-items:center;padding:4px;border-radius:6px;text-decoration:none;">
+          <span class="material-symbols-outlined" style="font-size:19px;">settings</span>
         </a>
       </div>
     </aside>
