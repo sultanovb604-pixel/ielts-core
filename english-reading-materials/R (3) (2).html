@@ -345,83 +345,118 @@
         }
 
         .drag-options-container {
-            margin-top: 10px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            margin: 14px 0;
+            padding: 14px 16px;
+            border: 2px solid #93c5fd;
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 20px -2px rgba(15, 23, 42, 0.1);
+            max-height: 220px;
+            overflow-y: auto;
         }
 
         .drag-item {
-            background: white;
-            border: 1px solid #9c9c9c;
-            font-weight: 600;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: move;
-            font-size: 14px;
-            transition: all 0.2s;
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            font-weight: 700;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: grab;
+            font-size: 13.5px;
+            line-height: 1.4;
+            color: #1e293b;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             user-select: none;
             margin-bottom: 8px;
             display: block;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
         .drag-item:hover {
-            background: #e9ecef;
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #1d4ed8;
             transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.12);
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
         }
 
         .drag-item.dragging {
-            opacity: 0.5;
+            opacity: 0.4;
+            transform: scale(0.98);
         }
 
         .matching-form-container {
-            margin-top: 20px;
+            margin-top: 18px;
         }
 
         .matching-form-row {
             display: flex;
             align-items: center;
             margin-bottom: 12px;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .matching-form-row:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
         }
 
         .matching-form-label {
             flex-shrink: 0;
-            font-weight: bold;
-            min-width: 100px;
+            font-weight: 800;
+            font-size: 14px;
+            color: #0f172a;
+            min-width: 120px;
         }
 
         .drop-zone {
-            border: 2px dashed #aaa;
-            border-radius: 4px;
-            min-width: 300px;
-            min-height: 40px;
-            margin-left: 20px;
-            transition: background-color 0.2s, border-color 0.2s;
-            padding: 8px;
+            border: 2px dashed #93c5fd;
+            border-radius: 8px;
+            min-width: 320px;
+            flex: 1;
+            min-height: 44px;
+            margin-left: 16px;
+            transition: all 0.2s ease;
+            padding: 6px 12px;
             display: flex;
             align-items: center;
             position: relative;
-            color: #afafaf;
-            font-weight: 600;
+            background: #f8fafc;
+            cursor: pointer;
+        }
+
+        .drop-zone:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
         }
 
         .drop-zone.drag-over {
-            background-color: #e6f4ff;
-            border-color: #4a90e2;
+            background-color: #dbeafe;
+            border-color: #1d4ed8;
+            border-style: solid;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         .drop-zone.correct {
-            background-color: #e9f7ef;
-            border-color: #28a745;
+            background-color: #ecfdf5;
+            border-color: #10b981;
             border-style: solid;
         }
 
         .drop-zone.incorrect {
-            background-color: #f8d7da;
-            border-color: #dc3545;
+            background-color: #fef2f2;
+            border-color: #ef4444;
             border-style: solid;
         }
 
@@ -432,15 +467,19 @@
         .drop-zone.filled {
             background-color: transparent;
             border: none !important;
+            padding: 0;
         }
 
         .drop-zone.filled .drag-item {
-            border: 2px solid #4a90e2;
-            border-radius: 10px;
-            padding: 4px 10px;
-            font-weight: 700;
-            background: #fff;
-            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.15);
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-weight: 800;
+            background: #eff6ff;
+            color: #1d4ed8;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+            margin: 0;
+            width: 100%;
         }
 
         .summary-text {
@@ -1029,43 +1068,43 @@
                                 <div class="matching-form-row">
                                     <span class="matching-form-label"><strong>1. Paragraph A</strong></span>
                                     <div class="drop-zone" data-q-start="1" data-dnd-group="p1-headings">
-                                        1
+                                        <span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>
                                     </div>
                                 </div>
                                 <div class="matching-form-row">
                                     <span class="matching-form-label"><strong>2. Paragraph B</strong></span>
                                     <div class="drop-zone" data-q-start="2" data-dnd-group="p1-headings">
-                                        2
+                                        <span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>
                                     </div>
                                 </div>
                                 <div class="matching-form-row">
                                     <span class="matching-form-label"><strong>3. Paragraph C</strong></span>
                                     <div class="drop-zone" data-q-start="3" data-dnd-group="p1-headings">
-                                        3
+                                        <span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>
                                     </div>
                                 </div>
                                 <div class="matching-form-row">
                                     <span class="matching-form-label"><strong>4. Paragraph D</strong></span>
                                     <div class="drop-zone" data-q-start="4" data-dnd-group="p1-headings">
-                                        4
+                                        <span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>
                                     </div>
                                 </div>
                                 <div class="matching-form-row">
                                     <span class="matching-form-label"><strong>5. Paragraph E</strong></span>
                                     <div class="drop-zone" data-q-start="5" data-dnd-group="p1-headings">
-                                        5
+                                        <span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>
                                     </div>
                                 </div>
                                 <div class="matching-form-row">
                                     <span class="matching-form-label"><strong>6. Paragraph F</strong></span>
                                     <div class="drop-zone" data-q-start="6" data-dnd-group="p1-headings">
-                                        6
+                                        <span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>
                                     </div>
                                 </div>
                                 <div class="matching-form-row">
                                     <span class="matching-form-label"><strong>7. Paragraph G</strong></span>
                                     <div class="drop-zone" data-q-start="7" data-dnd-group="p1-headings">
-                                        7
+                                        <span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>
                                     </div>
                                 </div>
                             </div>
@@ -2356,18 +2395,15 @@
             const sourceZone = draggedItem.parentElement;
             if (sourceZone === e.currentTarget) return;
 
-            const existingItemInTarget = e.currentTarget.querySelector('.drag-item');
-            if (existingItemInTarget) {
-                sourceZone.appendChild(existingItemInTarget);
-            }
-            
+            const hint = e.currentTarget.querySelector('.drop-hint');
+            if (hint) hint.remove();
+
             e.currentTarget.appendChild(draggedItem);
             e.currentTarget.classList.add('filled');
             
             if (sourceZone.classList.contains('drop-zone') && !sourceZone.querySelector('.drag-item')) {
                  sourceZone.classList.remove('filled');
-                 const qNum = sourceZone.dataset.qStart;
-                 sourceZone.innerText = qNum;
+                 sourceZone.innerHTML = '<span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>';
             }
             
             updateAllIndicators();

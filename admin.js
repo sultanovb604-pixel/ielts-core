@@ -179,10 +179,15 @@
     try {
       const login = await request("/api/admin/login", {
         method: "POST",
-        body: JSON.stringify({ username: $("#adminUsername").value, password: $("#adminPassword").value })
+        body: JSON.stringify({
+          username: $("#adminUsername").value.trim(),
+          password: $("#adminPassword").value,
+          securityPin: $("#adminPin")?.value.trim() || ""
+        })
       });
       localStorage.setItem(tokenKey, login.token);
       $("#adminPassword").value = "";
+      if ($("#adminPin")) $("#adminPin").value = "";
       setWorkspace(true);
       await loadWorkspace();
     } catch (error) {
@@ -317,6 +322,41 @@
       setMessage("#promoMessage", error.message, "error");
     }
   });
+  $("#changeAdminPasswordForm")?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const currentPassword = $("#currentAdminPassInput").value.trim();
+    const newPassword = $("#newAdminPassInput").value.trim();
+    const confirmPassword = $("#confirmAdminPassInput").value.trim();
+    const submitBtn = event.currentTarget.querySelector("button[type='submit']");
+
+    if (newPassword !== confirmPassword) {
+      setMessage("#changePassMessage", "Yangi parollar bir-biriga mos kelmadi.", "error");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setMessage("#changePassMessage", "Yangi parol kamida 6 ta belgidan iborat bo‘lishi kerak.", "error");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setMessage("#changePassMessage", "Parol yangilanmoqda...", "");
+
+    try {
+      const response = await request("/api/admin/change-password", {
+        method: "POST",
+        body: JSON.stringify({ currentPassword, newPassword })
+      });
+      setMessage("#changePassMessage", response.message || "Admin paroli muvaffaqiyatli o‘zgartirildi! ✓", "success");
+      $("#currentAdminPassInput").value = "";
+      $("#newAdminPassInput").value = "";
+      $("#confirmAdminPassInput").value = "";
+    } catch (error) {
+      setMessage("#changePassMessage", error.message, "error");
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
   $("#adminLogout").addEventListener("click", async () => {
     try { await request("/api/admin/logout", { method: "POST" }); } catch (_) {}
     localStorage.removeItem(tokenKey);

@@ -498,7 +498,7 @@
               <div class="gemini-modal-body">
                 <p>Connect your free <strong>Google Gemini API Key</strong> for 100% natural, authentic Oxford IELTS examiner conversations:</p>
                 <div class="gemini-input-row">
-                  <input type="password" id="geminiKeyInput" placeholder="Paste your Gemini API key (AIzaSy...)" autocomplete="off" />
+                  <input type="password" id="geminiKeyInput" placeholder="Paste your Gemini API key (e.g. your key)" autocomplete="off" />
                   <button type="button" class="button primary" id="saveGeminiKeyBtn">Save &amp; Connect</button>
                 </div>
                 <div id="geminiFeedbackMsg" class="gemini-feedback-msg" style="display:none;"></div>

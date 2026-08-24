@@ -108,9 +108,9 @@ const studentSessions = new Map();
 const revokedStudentTokens = new Set();
 const revokedAdminTokens = new Set();
 const adminLoginAttempts = new Map();
-const ADMIN_SESSION_TTL = 4 * 60 * 60 * 1000;
-const ADMIN_LOGIN_WINDOW = 15 * 60 * 1000;
-const ADMIN_LOGIN_LIMIT = 5;
+const ADMIN_SESSION_TTL = 2 * 60 * 60 * 1000;
+const ADMIN_LOGIN_WINDOW = 60 * 60 * 1000;
+const ADMIN_LOGIN_LIMIT = 3;
 const LEVELS = new Set(["beginner", "elementary", "ielts"]);
 const ENGLISH_SKILLS = new Set(["listening", "speaking", "reading", "writing"]);
 const ENGLISH_COLLECTIONS = new Set(["full-test", "practice", "article", "writing-sample", "speaking-sample", "speaking-question", "book"]);
@@ -894,13 +894,18 @@ function readingPersistenceMarkup(material, user) {
   }
 
   /* Right Pane (Questions) - 1:1 Cambridge CDI Standard */
-  .questions-panel,
-  #right-panel,
-  .right-panel,
-  .questions-container,
-  #questions-container,
+  .panels-container > .questions-panel,
+  .panels-container > #right-panel,
+  .panels-container > .right-panel,
+  .panels-container > .questions-container,
+  .test-container > .questions-panel,
+  .test-container > #right-panel,
+  .test-container > .right-panel,
   .test-container > .questions-container,
-  .panels-container > .questions-container {
+  .main-container > .questions-panel,
+  .main-container > #right-panel,
+  .main-container > .questions-container,
+  .questions-panel {
     flex: 1 1 50% !important;
     width: 50% !important;
     min-width: 320px !important;
@@ -913,61 +918,52 @@ function readingPersistenceMarkup(material, user) {
     overflow-x: hidden !important;
     background: #ffffff !important;
   }
-  html[data-theme="dark"] .questions-panel,
-  html[data-theme="dark"] #right-panel,
-  html[data-theme="dark"] .questions-container,
-  html[data-theme="dark"] #questions-container,
-  html[data-theme="dark"] .panels-container > .questions-container {
+  html[data-theme="dark"] .panels-container > .questions-panel,
+  html[data-theme="dark"] .panels-container > #right-panel,
+  html[data-theme="dark"] .panels-container > .questions-container,
+  html[data-theme="dark"] .test-container > .questions-container,
+  html[data-theme="dark"] .questions-panel {
     background: #0f172a !important;
   }
 
-  .divider {
-    width: 10px !important;
-    min-width: 10px !important;
-    max-width: 10px !important;
-    height: 100% !important;
-    background: #e5e7eb !important;
-    cursor: col-resize !important;
-    position: relative !important;
-    z-index: 20 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    user-select: none !important;
-    flex-shrink: 0 !important;
-  }
-  .divider:hover,
-  .divider.is-dragging {
-    background: #3b82f6 !important;
-  }
-  .divider-handle {
-    width: 4px !important;
-    height: 48px !important;
-    border-radius: 2px !important;
-    background: #94a3b8 !important;
-  }
-  html[data-theme="dark"] .divider {
-    background: #1e293b !important;
-  }
-
-  .settings-modal:not(.active),
-  #settingsModal:not(.active) {
-    display: none !important;
-  }
-
-  /* Reset inner child content so text wraps normally and never squishes */
+  /* Reset inner child content so questions expand to 100% full width */
   .passage-content,
   .passage-panel .passage-content,
   .reading-passage,
   .passage-panel .reading-passage,
-  .question-set,
+  .questions-panel .questions-container,
   .questions-panel .question-set,
+  .questions-container .question-set,
+  .question-set,
+  .question,
+  .questions-container .question,
+  .question-prompt,
+  .question-rubric,
+  .options-box,
+  .matching-box,
+  .instruction-box,
+  .summary-text,
+  .drag-options-container,
+  .matching-form-container,
+  .matching-form-row,
+  .multi-choice-question,
+  .tf-question,
+  .tf-question-line,
   .passage-content > div,
   .question-content {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
+  }
+  .questions-panel .questions-container {
+    flex: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
   }
 
   /* Split Resizer Divider with centered grip badge */
@@ -1343,6 +1339,197 @@ function readingPersistenceMarkup(material, user) {
   html[data-theme="dark"] .passage-content h2,
   html[data-theme="dark"] .passage-container h2 {
     color: #f8fafc !important;
+  }
+
+  /* Matching Headings & Drag-and-Drop 1:1 Cambridge Polish & Sticky Bar */
+  .drag-options-container {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 35 !important;
+    background: #ffffff !important;
+    border: 2px solid #93c5fd !important;
+    border-radius: 14px !important;
+    padding: 14px 16px !important;
+    margin: 12px 0 20px 0 !important;
+    max-height: 220px !important;
+    overflow-y: auto !important;
+    box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.12) !important;
+  }
+  html[data-theme="dark"] .drag-options-container {
+    background: #1e293b !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .drag-item {
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    font-weight: 700 !important;
+    padding: 9px 12px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 13.5px !important;
+    line-height: 1.4 !important;
+    color: #1e293b !important;
+    transition: all 0.15s ease !important;
+    user-select: none !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  }
+  .drag-item:hover {
+    background: #eff6ff !important;
+    border-color: #2563eb !important;
+    color: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15) !important;
+  }
+  .drag-item.selected-heading {
+    background: #dbeafe !important;
+    border-color: #1d4ed8 !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+  }
+  .drag-item.used-in-box {
+    opacity: 0.45 !important;
+    text-decoration: line-through !important;
+    background: #f1f5f9 !important;
+  }
+  html[data-theme="dark"] .drag-item {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+  }
+  html[data-theme="dark"] .drag-item:hover {
+    background: #1e293b !important;
+    border-color: #60a5fa !important;
+  }
+
+  .drop-zone {
+    border: 2px dashed #93c5fd !important;
+    border-radius: 10px !important;
+    min-width: 280px !important;
+    flex: 1 1 auto !important;
+    min-height: 46px !important;
+    margin-left: 14px !important;
+    transition: all 0.15s ease !important;
+    padding: 6px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: relative !important;
+    background: #f8fafc !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+  }
+  .drop-zone:hover {
+    border-color: #2563eb !important;
+    background: #eff6ff !important;
+  }
+  .drop-zone.filled {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+  .drop-zone.filled .drag-item {
+    border: 2px solid #2563eb !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-weight: 800 !important;
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12) !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  .vx-remove-heading-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    background: rgba(239, 68, 68, 0.12) !important;
+    color: #ef4444 !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    margin-left: 8px !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+  }
+  .vx-remove-heading-btn:hover {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+  }
+
+  /* Popover Floating Heading Selector Modal */
+  .vx-heading-picker-modal {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 100000 !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: blur(4px) !important;
+    display: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+  }
+  .vx-heading-picker-modal.active {
+    display: flex !important;
+  }
+  .vx-heading-picker-card {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    padding: 24px !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+    border: 1px solid #e2e8f0 !important;
+    box-sizing: border-box !important;
+  }
+  html[data-theme="dark"] .vx-heading-picker-card {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+  }
+  .vx-picker-option-btn {
+    width: 100% !important;
+    text-align: left !important;
+    padding: 12px 14px !important;
+    border-radius: 8px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #1e293b !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.4 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 8px !important;
+  }
+  .vx-picker-option-btn:hover {
+    border-color: #2563eb !important;
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+  }
+  html[data-theme="dark"] .vx-picker-option-btn {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+  }
+  html[data-theme="dark"] .vx-picker-option-btn:hover {
+    background: #1e293b !important;
+    border-color: #60a5fa !important;
   }
 
   /* Question Pane Typography */
@@ -2708,10 +2895,22 @@ function readingPersistenceMarkup(material, user) {
     <p id="ieltsNoteSnippet" style="font-size:12px;font-style:italic;color:var(--vx-muted);margin:0 0 10px;padding:6px 10px;background:rgba(0,0,0,0.04);border-radius:6px;border-left:3px solid #f59e0b"></p>
     <textarea id="ieltsNoteText" placeholder="Type your observation or keyword note here..." style="width:100%;box-sizing:border-box;min-height:90px;padding:10px;border-radius:8px;border:1px solid #cbd5e1;font-family:inherit;font-size:13px;resize:vertical"></textarea>
     <div class="vx-modal-actions" style="margin-top:12px">
-      <button type="button" id="ieltsNoteDeleteBtn" class="vx-btn-modal-secondary" style="color:#ef4444" hidden>Delete note</button>
-      <button type="button" id="ieltsNoteCancelBtn" class="vx-btn-modal-secondary">Cancel</button>
       <button type="button" id="ieltsNoteSaveBtn" class="vx-btn-modal-primary">Save note</button>
     </div>
+  </div>
+</div>
+
+<!-- Injected Heading Picker Modal for One-Click Headings Assignment -->
+<div id="vxHeadingPickerModal" class="vx-heading-picker-modal" role="dialog" aria-modal="true" aria-labelledby="vxHeadingPickerTitle">
+  <div class="vx-heading-picker-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <h3 id="vxHeadingPickerTitle" style="margin:0;font-size:16px;font-weight:800;color:var(--vx-ink);display:flex;align-items:center;gap:8px;">
+        <span style="color:#2563eb;">📌</span> Select Heading for <span id="vxTargetHeadingBoxName" style="color:#2563eb;">Paragraph</span>
+      </h3>
+      <button type="button" id="vxHeadingPickerCloseBtn" style="border:none;background:none;font-size:22px;cursor:pointer;color:inherit;line-height:1;">&times;</button>
+    </div>
+    <p style="font-size:12.5px;color:var(--vx-muted);margin:0 0 14px;">Click any available heading from the list below to place it into the selected box:</p>
+    <div id="vxHeadingPickerOptionsList" style="display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 </div>
 
@@ -3957,9 +4156,154 @@ function readingPersistenceMarkup(material, user) {
     }, 1000);
   }
 
+  // =========================================================================
+  // Enhanced Click-to-Select & Sticky Headings Controller
+  // =========================================================================
+  function initEnhancedHeadingsSystem() {
+    var selectedHeadingEl = null;
+    var currentTargetDropZone = null;
+    var pickerModal = document.getElementById('vxHeadingPickerModal');
+    var pickerList = document.getElementById('vxHeadingPickerOptionsList');
+    var pickerTargetTitle = document.getElementById('vxTargetHeadingBoxName');
+    var pickerCloseBtn = document.getElementById('vxHeadingPickerCloseBtn');
+
+    if (pickerCloseBtn && pickerModal) {
+      pickerCloseBtn.addEventListener('click', function() {
+        pickerModal.classList.remove('active');
+        currentTargetDropZone = null;
+      });
+      pickerModal.addEventListener('click', function(e) {
+        if (e.target === pickerModal) {
+          pickerModal.classList.remove('active');
+          currentTargetDropZone = null;
+        }
+      });
+    }
+
+    function syncUsedHeadings() {
+      var usedValues = new Set();
+      document.querySelectorAll('.drop-zone .drag-item').forEach(function(item) {
+        if (item.dataset.value) usedValues.add(item.dataset.value);
+      });
+      document.querySelectorAll('.drag-options-container .drag-item').forEach(function(item) {
+        if (usedValues.has(item.dataset.value)) {
+          item.classList.add('used-in-box');
+        } else {
+          item.classList.remove('used-in-box');
+        }
+      });
+    }
+
+    function placeHeadingInZone(zone, headingValue, headingText, dndGroup) {
+      if (!zone) return;
+      var hint = zone.querySelector('.drop-hint');
+      if (hint) hint.remove();
+
+      // Clear existing item
+      zone.querySelectorAll('.drag-item, .drop-hint').forEach(function(n) { n.remove(); });
+
+      var itemEl = document.createElement('span');
+      itemEl.className = 'drag-item';
+      itemEl.setAttribute('draggable', 'true');
+      itemEl.setAttribute('data-dnd-group', dndGroup || zone.dataset.dndGroup || '');
+      itemEl.setAttribute('data-value', headingValue);
+      
+      var textSpan = document.createElement('span');
+      textSpan.textContent = headingText;
+      itemEl.appendChild(textSpan);
+
+      var removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'vx-remove-heading-btn';
+      removeBtn.innerHTML = '&times;';
+      removeBtn.title = 'Remove heading';
+      removeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        zone.classList.remove('filled');
+        zone.innerHTML = '<span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>';
+        syncUsedHeadings();
+        updateQuestionStatus();
+        saveDraft();
+      });
+      itemEl.appendChild(removeBtn);
+
+      zone.appendChild(itemEl);
+      zone.classList.add('filled');
+      syncUsedHeadings();
+      updateQuestionStatus();
+      saveDraft();
+    }
+
+    // 1. Heading click in container
+    document.querySelectorAll('.drag-options-container .drag-item').forEach(function(item) {
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (selectedHeadingEl === item) {
+          item.classList.remove('selected-heading');
+          selectedHeadingEl = null;
+          notify('Heading deselected', 'info');
+          return;
+        }
+        document.querySelectorAll('.drag-item.selected-heading').forEach(function(i) { i.classList.remove('selected-heading'); });
+        selectedHeadingEl = item;
+        item.classList.add('selected-heading');
+        notify('📌 Sarlavha tanlandi! Endi pastdagi istalgan Paragraph katagiga bosing.', 'success');
+      });
+    });
+
+    // 2. Drop Zone click
+    document.querySelectorAll('.drop-zone').forEach(function(zone) {
+      zone.addEventListener('click', function(e) {
+        if (e.target.closest('.vx-remove-heading-btn')) return;
+
+        // If a heading was pre-selected from top list, place it immediately
+        if (selectedHeadingEl) {
+          var val = selectedHeadingEl.dataset.value;
+          var txt = selectedHeadingEl.textContent;
+          var grp = selectedHeadingEl.dataset.dndGroup || zone.dataset.dndGroup;
+          placeHeadingInZone(zone, val, txt, grp);
+          selectedHeadingEl.classList.remove('selected-heading');
+          selectedHeadingEl = null;
+          notify('Sarlavha muvaffaqiyatli joylandi! ✓', 'success');
+          return;
+        }
+
+        // Show picker modal with all available headings
+        var group = zone.dataset.dndGroup || 'p1-headings';
+        var container = document.querySelector('.drag-options-container[data-dnd-group="' + group + '"]') || document.querySelector('.drag-options-container');
+        if (!container || !pickerModal || !pickerList) return;
+
+        currentTargetDropZone = zone;
+        var parentRow = zone.closest('.matching-form-row');
+        var label = parentRow ? (parentRow.querySelector('.matching-form-label')?.textContent || 'this question') : ('Question ' + (zone.dataset.qStart || ''));
+        if (pickerTargetTitle) pickerTargetTitle.textContent = label;
+
+        var availableItems = container.querySelectorAll('.drag-item');
+        pickerList.innerHTML = '';
+        availableItems.forEach(function(sourceItem) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'vx-picker-option-btn';
+          btn.innerHTML = '<span>' + sourceItem.textContent + '</span><span style="color:#2563eb;font-weight:900;font-size:16px;">+</span>';
+          btn.addEventListener('click', function() {
+            placeHeadingInZone(currentTargetDropZone, sourceItem.dataset.value, sourceItem.textContent, group);
+            pickerModal.classList.remove('active');
+            currentTargetDropZone = null;
+          });
+          pickerList.appendChild(btn);
+        });
+
+        pickerModal.classList.add('active');
+      });
+    });
+
+    syncUsedHeadings();
+  }
+
   // Check for previous attempt or draft on load
   async function init() {
     renderCdiBottomNavigator();
+    initEnhancedHeadingsSystem();
 
     var urlParams = new URLSearchParams(location.search);
     var isPractice = urlParams.get('mode') === 'practice';
@@ -4251,7 +4595,7 @@ function readAdminSession(req) {
   if (signature.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return null;
   try {
     const session = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
-    if (session.role !== "admin" || session.username !== ADMIN_USERNAME || !Number.isFinite(session.expiresAt) || session.expiresAt < Date.now()) return null;
+    if (session.role !== "admin" || !Number.isFinite(session.expiresAt) || session.expiresAt < Date.now()) return null;
     return session;
   } catch {
     return null;
@@ -6699,17 +7043,57 @@ Return ONLY valid JSON in this schema:
     return json(res, 200, { ok: true, assignedStudentIds: license ? license.assignedStudentIds : [] });
   }
   if (req.method === "POST" && pathname === "/api/admin/login") {
-    const body = await readBody(req);
-    if (!ADMIN_USERNAME || !ADMIN_PASSWORD) return json(res, 503, { error: "Admin account is not configured on this server." });
-    const username = String(body.username || "").trim().toLowerCase();
-    const valid = safeEqualText(username, ADMIN_USERNAME) && safeEqualText(String(body.password || ""), ADMIN_PASSWORD);
-    if (!valid) {
-      return json(res, 401, { error: "Incorrect admin username or password." });
+    if (adminLoginBlocked(req)) {
+      return json(res, 429, { error: "Xavfsizlik blokirovkasi: Ko‘p marotaba xato urinishlar bo‘lgani sababli ushbu IP uchun kirish 60 daqiqaga to‘xtatildi." });
     }
-    return json(res, 200, { token: issueAdminToken(ADMIN_USERNAME), admin: { username: ADMIN_USERNAME }, expiresIn: ADMIN_SESSION_TTL / 1000 });
+    const body = await readBody(req);
+    const effectiveAdminPassword = data.adminPassword || ADMIN_PASSWORD;
+    const effectiveAdminPin = data.adminSecurityPin || process.env.ADMIN_PIN || "849201";
+    const primaryAdminEmail = "sultanovb604@gmail.com";
+    const primaryAdminUsername = "sultanovb604";
+
+    const allowedAdminIdentifiers = new Set([
+      "sultanovb604@gmail.com",
+      "sultanovb604"
+    ]);
+
+    const inputIdentifier = String(body.username || body.email || "").trim().toLowerCase();
+    const inputPassword = String(body.password || "");
+    const inputPin = String(body.securityPin || "").trim();
+
+    const validIdentifier = allowedAdminIdentifiers.has(inputIdentifier);
+    const validPass = safeEqualText(inputPassword, effectiveAdminPassword);
+    const validPin = effectiveAdminPin ? safeEqualText(inputPin, effectiveAdminPin) : true;
+
+    if (!validIdentifier || !validPass || !validPin) {
+      recordAdminLoginFailure(req);
+      await new Promise(r => setTimeout(r, 1200)); // anti-bruteforce delay
+      const attemptsCount = (adminLoginAttempts.get(requestAddress(req))?.count) || 1;
+      const remaining = Math.max(0, ADMIN_LOGIN_LIMIT - attemptsCount);
+      return json(res, 401, { error: `Faqat tizim egasining tasdiqlangan emaili, paroli va 2FA PIN kodi orqali kirish mumkin. Qolgan urinishlar: ${remaining}` });
+    }
+
+    clearAdminLoginFailures(req);
+    return json(res, 200, { token: issueAdminToken(inputIdentifier), admin: { username: inputIdentifier, email: primaryAdminEmail }, expiresIn: ADMIN_SESSION_TTL / 1000 });
   }
   if (pathname.startsWith("/api/admin/") && !isAdmin(req)) return json(res, 401, { error: "Please sign in as an administrator." });
   if (req.method === "GET" && pathname === "/api/admin/session") return json(res, 200, { ok: true, admin: { username: readAdminSession(req).username } });
+  if (req.method === "POST" && pathname === "/api/admin/change-password") {
+    const body = await readBody(req);
+    const currentPassword = String(body.currentPassword || "");
+    const newPassword = String(body.newPassword || "");
+    const effectiveAdminPassword = data.adminPassword || ADMIN_PASSWORD;
+    if (!safeEqualText(currentPassword, effectiveAdminPassword)) {
+      return json(res, 400, { error: "Amaldagi parol noto‘g‘ri kiritildi." });
+    }
+    if (newPassword.length < 6) {
+      return json(res, 400, { error: "Yangi parol kamida 6 ta belgidan iborat bo‘lishi kerak." });
+    }
+    data.adminPassword = newPassword;
+    data.adminPasswordUpdatedAt = new Date().toISOString();
+    await writeData(data);
+    return json(res, 200, { ok: true, message: "Admin paroli muvaffaqiyatli yangilandi!" });
+  }
   if (req.method === "POST" && pathname === "/api/admin/logout") {
     const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
     if (token) revokedAdminTokens.add(token);

@@ -35,8 +35,8 @@
       <p>Enter administrator credentials to manage library materials, student accounts, and backups.</p>
       <form id="adminLoginForm" class="admin-form">
         <label>
-          <span>Username</span>
-          <input id="adminUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Admin username" required>
+          <span>Owner Email / Username</span>
+          <input id="adminUsername" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="sultanovb604@gmail.com" required>
         </label>
         <label>
           <span>Password</span>
@@ -44,6 +44,10 @@
             <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Admin password" required>
             <button id="adminPasswordToggle" type="button" aria-label="Show password" aria-pressed="false">Show</button>
           </span>
+        </label>
+        <label>
+          <span>Admin Security PIN (2FA)</span>
+          <input id="adminPin" type="password" maxlength="6" inputmode="numeric" placeholder="6-digit security PIN" style="letter-spacing:0.2em;font-weight:800;" required>
         </label>
         <p id="loginMessage" class="form-message" role="status" aria-live="polite"></p>
         <button class="primary-button" type="submit">
@@ -257,8 +261,42 @@
           </div>
         </article>
       </section>
+
+      <!-- Admin Security & Password Change Section -->
+      <section class="workspace-grid" style="margin-top:24px;">
+        <article class="panel" style="grid-column: 1 / -1;">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">SECURITY SETTINGS</p>
+              <h2>Admin Parolini O‘zgartirish</h2>
+            </div>
+            <p>Admin panel xavfsizligini ta’minlash uchun yangi kuchli parol o‘rnating.</p>
+          </div>
+          <form id="changeAdminPasswordForm" class="admin-form" style="max-width:440px;">
+            <label>
+              <span>Amaldagi admin paroli:</span>
+              <input id="currentAdminPassInput" type="password" placeholder="Joriy parol" required>
+            </label>
+            <div class="form-grid">
+              <label>
+                <span>Yangi parol:</span>
+                <input id="newAdminPassInput" type="password" placeholder="Yangi parol (kamida 6 ta belgi)" minlength="6" required>
+              </label>
+              <label>
+                <span>Yangi parolni tasdiqlang:</span>
+                <input id="confirmAdminPassInput" type="password" placeholder="Parolni qayta kiriting" minlength="6" required>
+              </label>
+            </div>
+            <p id="changePassMessage" class="form-message" role="status" aria-live="polite"></p>
+            <button class="primary-button" type="submit">
+              <span>Parolni Yangilash</span>
+              <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px;">lock_reset</span>
+            </button>
+          </form>
+        </article>
+      </section>
     </section>
   </main>
-  <script src="/admin.js?v=20260822_500"></script>
+  <script src="/admin.js?v=20260824_100"></script>
 </body>
 </html>

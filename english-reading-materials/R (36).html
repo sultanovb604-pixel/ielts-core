@@ -3509,7 +3509,7 @@
                  sourceZone.classList.remove('filled');
                  const qNum = sourceZone.dataset.qStart;
                  if (sourceZone.classList.contains('drop-zone')) {
-                     sourceZone.innerText = qNum; // Restore the question number
+                     sourceZone.innerHTML = '<span class="drop-hint" style="color:#94a3b8;font-size:13px;font-style:italic;pointer-events:none;">Drop heading here or click to select</span>'; // Restore the question number
                  }
             }
             

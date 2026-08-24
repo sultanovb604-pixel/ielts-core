@@ -98,6 +98,141 @@
     return { context, width, height };
   };
 
+  const renderDailyActivity = (progress, results) => {
+    const barsGrid = document.querySelector('#activityBarsGrid');
+    const labelsGrid = document.querySelector('#activityDaysLabels');
+    const streakBadge = document.querySelector('#dailyStreakBadge');
+    const timeBadge = document.querySelector('#dailyActiveTimeBadge');
+    const goalEl = document.querySelector('#weeklyGoalProgress');
+
+    if (!barsGrid || !labelsGrid) return;
+
+    const streak = progress?.streak || 0;
+    if (streakBadge) {
+      streakBadge.textContent = `🔥 ${streak} Kunlik Streak`;
+      streakBadge.style.color = streak > 0 ? '#c2410c' : '#64748b';
+      streakBadge.style.background = streak > 0 ? '#fff7ed' : '#f1f5f9';
+      streakBadge.style.borderColor = streak > 0 ? '#ffedd5' : '#e2e8f0';
+    }
+
+    const activityList = Array.isArray(progress?.activity) && progress.activity.length === 7
+      ? progress.activity
+      : Array.from({ length: 7 }, (_, i) => {
+          const d = new Date();
+          d.setDate(d.getDate() - (6 - i));
+          return { date: d.toISOString().slice(0, 10), count: 0 };
+        });
+
+    const dayNames = ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'];
+    let todayMinutes = 0;
+    const maxCount = Math.max(1, ...activityList.map(a => Number(a.count) || 0));
+
+    // Calculate today's minutes from attempts
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayAttempts = results.filter(r => (r.createdAt || '').slice(0, 10) === todayStr);
+    todayMinutes = Math.round(todayAttempts.reduce((s, r) => s + (Number(r.durationSeconds) || 1800), 0) / 60);
+
+    if (timeBadge) {
+      timeBadge.textContent = `${todayMinutes} min bugun`;
+    }
+
+    if (goalEl) {
+      const completedThisWeek = progress?.completedThisWeek || todayAttempts.length || 0;
+      goalEl.textContent = `Haftalik reja: ${completedThisWeek}/5 test`;
+    }
+
+    barsGrid.innerHTML = activityList.map((item, idx) => {
+      const dateObj = new Date(item.date + 'T00:00:00Z');
+      const count = Number(item.count) || 0;
+      const heightPct = count > 0 ? Math.max(22, Math.min(100, Math.round((count / maxCount) * 100))) : 8;
+      const isToday = item.date === todayStr;
+      const bgStyle = count > 0 
+        ? (isToday ? 'background:linear-gradient(180deg, #1468f3, #2563eb);' : 'background:#2563eb;') 
+        : '';
+      const tooltipText = `${count} ta test topshirildi (${item.date})`;
+
+      return `
+        <div class="activity-bar-col" title="${tooltipText}">
+          <div class="activity-bar-tooltip">${count > 0 ? `${count} test` : 'Dam olish'}</div>
+          <div class="activity-bar-fill ${count === 0 ? 'empty-bar' : ''}" style="height:${heightPct}%;${bgStyle}"></div>
+        </div>
+      `;
+    }).join('');
+
+    labelsGrid.innerHTML = activityList.map(item => {
+      const dateObj = new Date(item.date + 'T00:00:00Z');
+      const dayName = dayNames[dateObj.getUTCDay()];
+      const isToday = item.date === todayStr;
+      return `<span style="${isToday ? 'color:#2563eb;font-weight:900;' : ''}">${isToday ? 'Bugun' : dayName}</span>`;
+    }).join('');
+  };
+
+  const renderSkillMatrix = (data, progress) => {
+    const getCefr = (band) => {
+      if (!band || band < 2.0) return { label: 'Boshlangʻich', cls: 'tag-focus' };
+      if (band >= 8.5) return { label: 'C2 Proficient (8.5+)', cls: 'tag-mastered' };
+      if (band >= 7.5) return { label: 'C1 Advanced (7.5–8.0)', cls: 'tag-good' };
+      if (band >= 6.5) return { label: 'B2 Vantage (6.5–7.0)', cls: 'tag-good' };
+      if (band >= 5.5) return { label: 'B2 Independent (5.5–6.0)', cls: 'tag-mid' };
+      return { label: 'B1 Threshold (4.5–5.0)', cls: 'tag-focus' };
+    };
+
+    // 1. Reading
+    const rBand = data?.reading?.averageBand || data?.reading?.bestBand || null;
+    const rCount = data?.reading?.totalAttempts || 0;
+    const rEl = document.querySelector('#matrixReadingBand');
+    const rCefr = document.querySelector('#matrixReadingCefr');
+    const rCountEl = document.querySelector('#matrixReadingCount');
+    if (rEl) rEl.textContent = rBand ? `Band ${Number(rBand).toFixed(1)}` : '—';
+    if (rCefr) {
+      const cefr = getCefr(rBand);
+      rCefr.textContent = cefr.label;
+      rCefr.className = `diag-status-tag ${cefr.cls}`;
+    }
+    if (rCountEl) rCountEl.textContent = `${rCount} ta test topshirildi`;
+
+    // 2. Listening
+    const lBand = data?.listening?.averageBand || data?.listening?.bestBand || (progress?.bestListeningBand ? Number(progress.bestListeningBand) : null);
+    const lCount = data?.listening?.totalAttempts || 0;
+    const lEl = document.querySelector('#matrixListeningBand');
+    const lCefr = document.querySelector('#matrixListeningCefr');
+    const lCountEl = document.querySelector('#matrixListeningCount');
+    if (lEl) lEl.textContent = lBand ? `Band ${Number(lBand).toFixed(1)}` : '—';
+    if (lCefr) {
+      const cefr = getCefr(lBand);
+      lCefr.textContent = cefr.label;
+      lCefr.className = `diag-status-tag ${cefr.cls}`;
+    }
+    if (lCountEl) lCountEl.textContent = `${lCount} ta test topshirildi`;
+
+    // 3. Writing
+    const wBand = data?.writing?.averageBand || data?.writing?.bestBand || null;
+    const wCount = data?.writing?.totalSubmissions || 0;
+    const wEl = document.querySelector('#matrixWritingBand');
+    const wCefr = document.querySelector('#matrixWritingCefr');
+    const wCountEl = document.querySelector('#matrixWritingCount');
+    if (wEl) wEl.textContent = wBand ? `Band ${Number(wBand).toFixed(1)}` : '—';
+    if (wCefr) {
+      const cefr = getCefr(wBand);
+      wCefr.textContent = cefr.label;
+      wCefr.className = `diag-status-tag ${cefr.cls}`;
+    }
+    if (wCountEl) wCountEl.textContent = `${wCount} ta esse yozildi`;
+
+    // 4. Speaking
+    const sBand = data?.speaking?.estimatedBand || 6.5;
+    const sEl = document.querySelector('#matrixSpeakingBand');
+    const sCefr = document.querySelector('#matrixSpeakingCefr');
+    const sCountEl = document.querySelector('#matrixSpeakingCount');
+    if (sEl) sEl.textContent = `Band ${Number(sBand).toFixed(1)}`;
+    if (sCefr) {
+      const cefr = getCefr(sBand);
+      sCefr.textContent = cefr.label;
+      sCefr.className = `diag-status-tag ${cefr.cls}`;
+    }
+    if (sCountEl) sCountEl.textContent = 'Examiner Room';
+  };
+
   const renderScoreTrend = results => {
     const canvas = document.querySelector('#scoreTrendChart');
     const empty = document.querySelector('#scoreTrendEmpty');
@@ -106,19 +241,19 @@
 
     let points = [];
     if (currentSkillView === 'reading') {
-      points = results.filter(item => item.source === 'reading' && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 7).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
+      points = results.filter(item => item.source === 'reading' && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
     } else if (currentSkillView === 'listening') {
-      points = results.filter(item => item.source === 'listening' && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 7).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
+      points = results.filter(item => item.source === 'listening' && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
     } else if (currentSkillView === 'writing' && detailedData?.writing?.submissions) {
-      points = detailedData.writing.submissions.filter(s => s.status === 'graded' && s.evaluation?.overallBand && Number(s.evaluation.overallBand) >= 2.0).slice(0, 7).reverse().map(s => Number(s.evaluation.overallBand));
+      points = detailedData.writing.submissions.filter(s => s.status === 'graded' && s.evaluation?.overallBand && Number(s.evaluation.overallBand) >= 2.0).slice(0, 10).reverse().map(s => Number(s.evaluation.overallBand));
     } else {
-      points = results.filter(item => ['reading', 'listening'].includes(item.source) && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 7).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
+      points = results.filter(item => ['reading', 'listening'].includes(item.source) && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
     }
 
     empty.hidden = points.length > 0;
     canvas.hidden = points.length === 0;
     if (!points.length) {
-      insight.textContent = 'Take 1 scored IELTS test to see your progress curve';
+      insight.textContent = '1 ta toʻliq IELTS test topshirib natija traektoriyasini koʻring';
       return;
     }
 
@@ -127,96 +262,94 @@
     const ink = dark ? '#e8eef8' : '#10213c';
     const muted = dark ? '#7f90a7' : '#8290a5';
     const grid = dark ? '#233247' : '#e7ebf1';
-    const blue = '#1f73ef';
-    const pad = { top: 18, right: 18, bottom: 28, left: 38 };
+    const blue = '#2563eb';
+    const pad = { top: 22, right: 24, bottom: 28, left: 44 };
     const chartWidth = width - pad.left - pad.right;
     const chartHeight = height - pad.top - pad.bottom;
     const x = index => pad.left + (points.length === 1 ? chartWidth / 2 : chartWidth * index / (points.length - 1));
-    const y = value => pad.top + chartHeight - (value / 9) * chartHeight;
+    const y = value => pad.top + chartHeight - ((value - 2) / 7) * chartHeight; // Scale from Band 2 to Band 9
 
     context.font = '10px Inter, system-ui, sans-serif';
     context.textAlign = 'right';
     context.textBaseline = 'middle';
-    [0, 3, 6, 9].forEach(value => {
-      const yy = y(value);
-      context.strokeStyle = grid;
+
+    // Benchmark guideline levels: 6.0, 7.0, 8.0, 9.0
+    const benchmarks = [
+      { band: 9.0, label: '9.0 (Expert)', color: 'rgba(16,185,129,0.3)' },
+      { band: 8.0, label: '8.0 (Very Good)', color: 'rgba(37,99,235,0.3)' },
+      { band: 7.0, label: '7.0 (Good User)', color: 'rgba(37,99,235,0.2)' },
+      { band: 6.0, label: '6.0 (Competent)', color: 'rgba(245,158,11,0.25)' },
+      { band: 5.0, label: '5.0', color: grid }
+    ];
+
+    benchmarks.forEach(bm => {
+      const yy = y(bm.band);
+      context.strokeStyle = bm.color;
       context.lineWidth = 1;
+      context.setLineDash(bm.band >= 6.0 ? [4, 4] : []);
       context.beginPath(); context.moveTo(pad.left, yy); context.lineTo(width - pad.right, yy); context.stroke();
-      context.fillStyle = muted; context.fillText(value.toFixed(1), pad.left - 8, yy);
+      context.setLineDash([]);
+      context.fillStyle = muted;
+      context.fillText(bm.band.toFixed(1), pad.left - 8, yy);
     });
 
     if (points.length > 1) {
-      context.beginPath(); context.moveTo(x(0), y(points[0]));
-      points.slice(1).forEach((value, index) => context.lineTo(x(index + 1), y(value)));
-      context.lineTo(x(points.length - 1), y(0)); context.lineTo(x(0), y(0)); context.closePath();
-      context.fillStyle = dark ? 'rgba(43,124,255,.13)' : 'rgba(31,115,239,.09)'; context.fill();
-      context.beginPath(); context.moveTo(x(0), y(points[0]));
-      points.slice(1).forEach((value, index) => context.lineTo(x(index + 1), y(value)));
-      context.strokeStyle = blue; context.lineWidth = 2.5; context.lineJoin = 'round'; context.lineCap = 'round'; context.stroke();
+      // Area Fill
+      context.beginPath();
+      context.moveTo(x(0), y(points[0]));
+      points.slice(1).forEach((val, idx) => context.lineTo(x(idx + 1), y(val)));
+      context.lineTo(x(points.length - 1), pad.top + chartHeight);
+      context.lineTo(x(0), pad.top + chartHeight);
+      context.closePath();
+
+      const gradient = context.createLinearGradient(0, pad.top, 0, pad.top + chartHeight);
+      gradient.addColorStop(0, dark ? 'rgba(37,99,235,0.35)' : 'rgba(37,99,235,0.22)');
+      gradient.addColorStop(1, dark ? 'rgba(37,99,235,0.02)' : 'rgba(37,99,235,0.01)');
+      context.fillStyle = gradient;
+      context.fill();
+
+      // Line Stroke
+      context.beginPath();
+      context.moveTo(x(0), y(points[0]));
+      points.slice(1).forEach((val, idx) => context.lineTo(x(idx + 1), y(val)));
+      context.strokeStyle = blue;
+      context.lineWidth = 3;
+      context.lineJoin = 'round';
+      context.lineCap = 'round';
+      context.stroke();
     }
+
+    // Points & Tooltip Labels
     points.forEach((value, index) => {
-      context.beginPath(); context.arc(x(index), y(value), 4.5, 0, Math.PI * 2); context.fillStyle = '#fff'; context.fill();
-      context.lineWidth = 2.5; context.strokeStyle = blue; context.stroke();
-      context.fillStyle = ink; context.textAlign = 'center'; context.textBaseline = 'bottom'; context.font = '700 10px Inter, system-ui, sans-serif'; context.fillText(value.toFixed(1), x(index), y(value) - 9);
+      const px = x(index);
+      const py = y(value);
+      context.beginPath();
+      context.arc(px, py, 5, 0, Math.PI * 2);
+      context.fillStyle = '#ffffff';
+      context.fill();
+      context.lineWidth = 2.5;
+      context.strokeStyle = blue;
+      context.stroke();
+
+      context.fillStyle = ink;
+      context.textAlign = 'center';
+      context.textBaseline = 'bottom';
+      context.font = '700 10.5px Inter, system-ui, sans-serif';
+      context.fillText(value.toFixed(1), px, py - 8);
     });
+
     const delta = points.length > 1 ? points.at(-1) - points.at(-2) : null;
-    insight.textContent = delta === null ? 'First test recorded' : delta === 0 ? 'Consistent performance' : `${delta > 0 ? '+' : ''}${delta.toFixed(1)} band from previous attempt`;
+    insight.textContent = delta === null ? 'Ilk natija saqlandi' : delta === 0 ? 'Barqaror natija' : `${delta > 0 ? '+' : ''}${delta.toFixed(1)} band oʻsish`;
     insight.classList.toggle('positive', delta > 0);
     insight.classList.toggle('negative', delta < 0);
     canvas.setAttribute('aria-label', `Recent bands: ${points.map(value => value.toFixed(1)).join(', ')}`);
   };
 
-  const renderOutcomeChart = (results, progress = null) => {
-    const canvas = document.querySelector('#answerOutcomeChart');
-    if (!canvas) return;
-
-    let avgBand = null;
-    let latestBand = null;
-    let bestBand = null;
-    let totalText = 'No tests scored yet';
-
-    if (currentSkillView === 'reading') {
-      avgBand = detailedData?.reading?.averageBand || null;
-      bestBand = detailedData?.reading?.bestBand || null;
-      latestBand = results.find(r => r.source === 'reading')?.band || null;
-      totalText = `${detailedData?.reading?.totalAttempts || 0} scored Reading tests`;
-    } else if (currentSkillView === 'listening') {
-      avgBand = detailedData?.listening?.averageBand || null;
-      bestBand = detailedData?.listening?.bestBand || null;
-      latestBand = results.find(r => r.source === 'listening')?.band || null;
-      totalText = `${detailedData?.listening?.totalAttempts || 0} scored Listening tests`;
-    } else if (currentSkillView === 'writing') {
-      avgBand = detailedData?.writing?.averageBand || null;
-      bestBand = detailedData?.writing?.bestBand || null;
-      totalText = `${detailedData?.writing?.gradedCount || 0} graded essays`;
-    } else {
-      avgBand = detailedData?.overall?.predictedBand || (progress?.averageBand ? Number(progress.averageBand) : null);
-      bestBand = progress?.bestBand ? Number(progress.bestBand) : null;
-      latestBand = progress?.latestBand ? Number(progress.latestBand) : null;
-      totalText = `${results.length} total IELTS attempts`;
-    }
-
-    document.querySelector('#outcomeAccuracy').textContent = avgBand === null ? '—' : Number(avgBand).toFixed(1);
-    document.querySelector('#outcomeCorrect').textContent = latestBand === null ? '—' : Number(latestBand).toFixed(1);
-    document.querySelector('#outcomeIncorrect').textContent = bestBand === null ? '—' : Number(bestBand).toFixed(1);
-    document.querySelector('#outcomeTotal').textContent = totalText;
-
-    const { context, width, height } = prepareCanvas(canvas);
-    const dark = document.documentElement.dataset.theme === 'dark';
-    const centerX = width / 2;
-    const centerY = height / 2;
-    const radius = Math.max(24, Math.min(width, height) / 2 - 10);
-    context.lineWidth = 13;
-    context.lineCap = 'round';
-    context.beginPath(); context.arc(centerX, centerY, radius, 0, Math.PI * 2); context.strokeStyle = dark ? '#263448' : '#e8edf4'; context.stroke();
-    if (avgBand && Number(avgBand) > 0) {
-      context.beginPath(); context.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (Number(avgBand) / 9)); context.strokeStyle = '#1f73ef'; context.stroke();
-    }
-  };
-
   const renderProgressCharts = (results, progress = chartProgress) => {
     chartResults = results;
     chartProgress = progress;
+    renderDailyActivity(progress, results);
+    renderSkillMatrix(detailedData, progress);
     updateSkillView();
   };
   let chartResizeFrame = 0;
