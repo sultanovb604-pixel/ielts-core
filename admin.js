@@ -171,16 +171,39 @@
     });
   }
 
+  async function ensureFirebaseAuth() {
+    if (window.firebase && window.firebase.auth) {
+      if (!firebase.apps.length && window.firebaseConfig) {
+        firebase.initializeApp(window.firebaseConfig);
+      }
+      return window.firebase;
+    }
+    const loadScript = src => new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    if (!window.firebase) {
+      await loadScript("https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js");
+    }
+    if (!window.firebase?.auth) {
+      await loadScript("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js");
+    }
+    if (window.firebase && !firebase.apps.length && window.firebaseConfig) {
+      firebase.initializeApp(window.firebaseConfig);
+    }
+    return window.firebase;
+  }
+
   $("#adminGoogleLoginBtn")?.addEventListener("click", async () => {
     setMessage("#loginMessage", "Google bilan ulanmoqda...");
-    if (typeof firebase === "undefined" || !firebase.auth) {
-      setMessage("#loginMessage", "Firebase tizimi yuklanmadi. Sahifani yangilang (F5).", "error");
-      return;
-    }
     try {
-      const provider = new firebase.auth.GoogleAuthProvider();
+      const fb = await ensureFirebaseAuth();
+      const provider = new fb.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
-      const result = await firebase.auth().signInWithPopup(provider);
+      const result = await fb.auth().signInWithPopup(provider);
       const user = result.user;
       const idToken = await user.getIdToken();
 

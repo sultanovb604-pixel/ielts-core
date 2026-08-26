@@ -26,6 +26,32 @@
       .catch(() => {});
   }
 
+  async function ensureFirebaseAuth() {
+    if (window.firebase && window.firebase.auth) {
+      if (!firebase.apps.length && window.firebaseConfig) {
+        firebase.initializeApp(window.firebaseConfig);
+      }
+      return window.firebase;
+    }
+    const loadScript = src => new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    if (!window.firebase) {
+      await loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+    }
+    if (!window.firebase?.auth) {
+      await loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js');
+    }
+    if (window.firebase && !firebase.apps.length && window.firebaseConfig) {
+      firebase.initializeApp(window.firebaseConfig);
+    }
+    return window.firebase;
+  }
+
   // Handle Google Sign-In / Sign-Up in 1 Click
   const googleButtons = document.querySelectorAll('[data-google-auth]');
 
@@ -36,13 +62,9 @@
     }
     setMessage('Google bilan ulanmoqda...');
 
-    if (typeof firebase === 'undefined' || !firebase.auth) {
-      setMessage('Firebase tizimi yuklanmoqda, iltimos sahifani yangilang (F5).');
-      return;
-    }
-
     try {
-      const provider = new firebase.auth.GoogleAuthProvider();
+      const fb = await ensureFirebaseAuth();
+      const provider = new fb.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
       const result = await firebase.auth().signInWithPopup(provider);
       const user = result.user;
