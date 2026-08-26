@@ -198,16 +198,19 @@
   }
 
   $("#adminGoogleLoginBtn")?.addEventListener("click", async () => {
-    setMessage("#loginMessage", "Google bilan ulanmoqda...");
+    setMessage("#loginMessage", "Google oynasi ochilmoqda...");
     try {
       const fb = await ensureFirebaseAuth();
       const provider = new fb.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       const result = await fb.auth().signInWithPopup(provider);
       const user = result.user;
+      if (!user || !user.email) {
+        throw new Error("Google profilingizdan email ma’lumoti olinmadi.");
+      }
       const idToken = await user.getIdToken();
 
-      setMessage("#loginMessage", "Admin huquqlari tekshirilmoqda...", "");
+      setMessage("#loginMessage", `Hisob (${user.email}) tekshirilmoqda...`, "");
       const res = await fetch("/api/admin/firebase-google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -219,17 +222,23 @@
         })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Admin login muvaffaqiyatsiz bo‘ldi.");
+      if (!res.ok) {
+        throw new Error(data.error || "Admin login muvaffaqiyatsiz bo‘ldi.");
+      }
 
       localStorage.setItem(tokenKey, data.token);
       setMessage("#loginMessage", "Xush kelibsiz, Bosh Administrator! Ochilmoqda...", "success");
       setWorkspace(true);
       await loadWorkspace();
     } catch (err) {
+      console.error("Admin Google Auth Error:", err);
       if (err.code === "auth/popup-closed-by-user") {
-        setMessage("#loginMessage", "");
+        setMessage("#loginMessage", "Google oynasi yopildi.", "");
+      } else if (err.code === "auth/popup-blocked") {
+        setMessage("#loginMessage", "Brauzeringiz popup oynani blokladi. Iltimos ruxsat bering.", "error");
       } else {
-        setMessage("#loginMessage", err.message || "Google admin kirish xatoligi.", "error");
+        const msg = err.message || (typeof err === "string" ? err : "Google orqali kirishda xatolik yuz berdi.");
+        setMessage("#loginMessage", msg, "error");
       }
     }
   });
