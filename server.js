@@ -5309,6 +5309,10 @@ async function api(req, res, pathname) {
     const email = String(body.email || "").trim().toLowerCase();
     const name = String(body.name || "").trim();
     const uid = String(body.uid || "").trim();
+    const role = body.role === "teacher" ? "teacher" : "student";
+    const avatarUrl = String(body.avatarUrl || "").trim();
+    const learning = String(body.learning || "").trim();
+    const goal = String(body.goal || "").trim();
 
     if (!email) return json(res, 400, { error: "Google hisobi emaili topilmadi." });
 
@@ -5326,6 +5330,10 @@ async function api(req, res, pathname) {
         username,
         email,
         googleId: uid,
+        role,
+        avatarUrl,
+        learning,
+        goal,
         plan: "free",
         authProvider: "google",
         grade: "beginner",
@@ -5334,12 +5342,11 @@ async function api(req, res, pathname) {
       data.users.push(student);
       await writeData(data);
     } else {
-      if (!student.googleId || !student.email) {
-        student.googleId = uid;
-        student.authProvider = "google";
-        if (!student.email) student.email = email;
-        await writeData(data);
-      }
+      let changed = false;
+      if (!student.googleId) { student.googleId = uid; student.authProvider = "google"; changed = true; }
+      if (!student.email) { student.email = email; changed = true; }
+      if (!student.avatarUrl && avatarUrl) { student.avatarUrl = avatarUrl; changed = true; }
+      if (changed) await writeData(data);
     }
 
     const token = issueStudentToken(student.id);

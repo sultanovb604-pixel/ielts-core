@@ -42,12 +42,17 @@
           <h1 class="auth-title">Sign in to your workspace.</h1>
           <p class="resource-meta">Access your saved IELTS tests, progress analytics, and personal word bank.</p>
           
-          <a class="google-auth-button" data-google-auth href="/api/auth/google">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" aria-hidden="true">
-            <span>Continue with Google</span>
+          <!-- PRIMARY HERO GOOGLE LOGIN BUTTON -->
+          <a class="google-auth-button google-auth-hero" data-google-auth href="/api/auth/google" style="margin-top:20px;min-height:56px;border:2px solid #3b82f6;background:#ffffff;box-shadow:0 6px 20px -2px rgba(37,99,235,0.18);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:14px;text-decoration:none;padding:0 20px;cursor:pointer;transition:all 0.2s ease;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="24" height="24" style="flex-shrink:0;">
+            <div style="text-align:left;flex:1;">
+              <strong style="display:block;font-size:14.5px;color:#0f172a;font-weight:800;line-height:1.2;">Google orqali 1 bosishda kirish</strong>
+              <small style="display:block;font-size:11.5px;color:#64748b;margin-top:2px;">Parol yozish shart emas &middot; Tezkor va xavfsiz</small>
+            </div>
+            <span class="material-symbols-outlined" style="color:#2563eb;font-weight:800;" aria-hidden="true">arrow_forward</span>
           </a>
           
-          <div class="auth-divider"><span>or sign in with username</span></div>
+          <div class="auth-divider" style="margin-top:24px;"><span>yoki login va parol orqali kirish</span></div>
           
           <form class="form" id="authForm">
             <label class="field">

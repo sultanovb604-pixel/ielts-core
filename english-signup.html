@@ -76,40 +76,46 @@
           <p class="resource-meta">No credit card required. Free starter access to full tests and lessons.</p>
           
           <div class="auth-choice-summary" id="authChoiceSummary"></div>
-          
-          <a class="google-auth-button" data-google-auth href="/api/auth/google">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" aria-hidden="true">
-            <span>Continue with Google</span>
+
+          <div class="field" style="margin-top:20px;">
+            <span style="font-size:12.5px;font-weight:700;color:#475569;display:block;margin-bottom:6px;">1. Siz kimsiz? / Select your role</span>
+            <div class="auth-role-selector" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <label class="auth-role-card selected" id="roleCardStudent" style="cursor:pointer;border:2px solid #1468f3;border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;background:#eff6ff;transition:all 0.15s ease;">
+                <input type="radio" name="role" value="student" checked style="margin-top:2px;accent-color:#1468f3;cursor:pointer;">
+                <div>
+                  <strong style="display:block;font-size:13.5px;color:#0f172a;margin-bottom:2px;">🎓 Student (O'quvchi)</strong>
+                  <small style="color:#64748b;font-size:11.5px;line-height:1.3;display:block;">Practice IELTS tests & track score</small>
+                </div>
+              </label>
+              <label class="auth-role-card" id="roleCardTeacher" style="cursor:pointer;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;background:#ffffff;transition:all 0.15s ease;">
+                <input type="radio" name="role" value="teacher" style="margin-top:2px;accent-color:#1468f3;cursor:pointer;">
+                <div>
+                  <strong style="display:block;font-size:13.5px;color:#0f172a;margin-bottom:2px;">👨‍🏫 Teacher (O'qituvchi)</strong>
+                  <small style="color:#64748b;font-size:11.5px;line-height:1.3;display:block;">Manage cohorts & assignments</small>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- PRIMARY HERO GOOGLE SIGN-UP BUTTON -->
+          <a class="google-auth-button google-auth-hero" data-google-auth href="/api/auth/google" style="margin-top:16px;min-height:56px;border:2px solid #3b82f6;background:#ffffff;box-shadow:0 6px 20px -2px rgba(37,99,235,0.18);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:14px;text-decoration:none;padding:0 20px;cursor:pointer;transition:all 0.2s ease;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="24" height="24" style="flex-shrink:0;">
+            <div style="text-align:left;flex:1;">
+              <strong style="display:block;font-size:14.5px;color:#0f172a;font-weight:800;line-height:1.2;">Google orqali 1 bosishda ro‘yxatdan o‘tish</strong>
+              <small style="display:block;font-size:11.5px;color:#64748b;margin-top:2px;">Taxallus va parol yozish shart emas &middot; Tezkor va xavfsiz</small>
+            </div>
+            <span class="material-symbols-outlined" style="color:#2563eb;font-weight:800;" aria-hidden="true">arrow_forward</span>
           </a>
           
-          <div class="auth-divider"><span>or register with username</span></div>
+          <div class="auth-divider" style="margin-top:24px;"><span>yoki oddiy username/parol bilan ro‘yxatdan o‘tish</span></div>
           
-          <form class="form" id="authForm">
-            <div class="field">
-              <span>Account Type / Ro'yxatdan o'tish turi</span>
-              <div class="auth-role-selector" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
-                <label class="auth-role-card selected" id="roleCardStudent" style="cursor:pointer;border:2px solid #1468f3;border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;background:#eff6ff;transition:all 0.15s ease;">
-                  <input type="radio" name="role" value="student" checked style="margin-top:2px;accent-color:#1468f3;cursor:pointer;">
-                  <div>
-                    <strong style="display:block;font-size:13.5px;color:#0f172a;margin-bottom:2px;">🎓 Student (O'quvchi)</strong>
-                    <small style="color:#64748b;font-size:11.5px;line-height:1.3;display:block;">Practice IELTS tests & track score</small>
-                  </div>
-                </label>
-                <label class="auth-role-card" id="roleCardTeacher" style="cursor:pointer;border:2px solid #cbd5e1;border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;background:#ffffff;transition:all 0.15s ease;">
-                  <input type="radio" name="role" value="teacher" style="margin-top:2px;accent-color:#1468f3;cursor:pointer;">
-                  <div>
-                    <strong style="display:block;font-size:13.5px;color:#0f172a;margin-bottom:2px;">👨‍🏫 Teacher (O'qituvchi)</strong>
-                    <small style="color:#64748b;font-size:11.5px;line-height:1.3;display:block;">Manage cohorts, assignments & grade essays</small>
-                  </div>
-                </label>
-              </div>
-            </div>
+          <form class="form" id="authForm" style="margin-top:16px;">
             <label class="field">
               <span>Full name</span>
               <input name="name" autocomplete="name" minlength="2" maxlength="60" placeholder="e.g. Jasur Alimov" required>
             </label>
             <label class="field">
-              <span>Username</span>
+              <span>Username / Taxallus</span>
               <small>4–24 characters: letters, numbers or _</small>
               <input name="username" autocomplete="username" pattern="[A-Za-z0-9_]{4,24}" minlength="4" maxlength="24" autocapitalize="none" spellcheck="false" placeholder="Choose a username" required>
             </label>
@@ -129,8 +135,8 @@
               </span>
             </label>
             <p id="authMessage" class="form-message" role="status" aria-live="polite"></p>
-            <button class="button primary large" type="submit">
-              <span>Create account</span>
+            <button class="button secondary large" type="submit" style="font-weight:700;">
+              <span>Ro‘yxatdan o‘tish (Username bilan)</span>
               <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
             </button>
             <p class="consent">By creating an account, you agree to use IELTS Core responsibly.</p>

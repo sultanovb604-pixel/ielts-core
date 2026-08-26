@@ -32,6 +32,7 @@
       const idToken = await user.getIdToken();
       setMessage('Connecting your Google account...');
 
+      const selectedRole = document.querySelector('input[name="role"]:checked')?.value || 'student';
       const res = await fetch('/api/auth/firebase-google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -39,7 +40,11 @@
           idToken,
           email: user.email,
           name: user.displayName || user.email.split('@')[0],
-          uid: user.uid
+          avatarUrl: user.photoURL || '',
+          uid: user.uid,
+          role: selectedRole,
+          learning: preferences.learning || '',
+          goal: preferences.goal || ''
         })
       });
       const data = await res.json();
