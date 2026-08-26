@@ -70,8 +70,6 @@
     googleLink.addEventListener('click', handleFirebaseGoogleAuth);
   }
 
-  if (googleError) setMessage(googleError);
-
   document.querySelectorAll('[data-password-toggle]').forEach(button => button.addEventListener('click', () => {
     const input = document.querySelector(`#${button.dataset.passwordToggle}`);
     const visible = input.type === 'text';
