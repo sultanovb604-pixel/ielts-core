@@ -171,6 +171,46 @@
     });
   }
 
+  $("#adminGoogleLoginBtn")?.addEventListener("click", async () => {
+    setMessage("#loginMessage", "Google bilan ulanmoqda...");
+    if (typeof firebase === "undefined" || !firebase.auth) {
+      setMessage("#loginMessage", "Firebase tizimi yuklanmadi. Sahifani yangilang (F5).", "error");
+      return;
+    }
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+      const result = await firebase.auth().signInWithPopup(provider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+
+      setMessage("#loginMessage", "Admin huquqlari tekshirilmoqda...", "");
+      const res = await fetch("/api/admin/firebase-google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          idToken,
+          email: user.email,
+          name: user.displayName || user.email.split("@")[0],
+          uid: user.uid
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Admin login muvaffaqiyatsiz bo‘ldi.");
+
+      localStorage.setItem(tokenKey, data.token);
+      setMessage("#loginMessage", "Xush kelibsiz, Bosh Administrator! Ochilmoqda...", "success");
+      setWorkspace(true);
+      await loadWorkspace();
+    } catch (err) {
+      if (err.code === "auth/popup-closed-by-user") {
+        setMessage("#loginMessage", "");
+      } else {
+        setMessage("#loginMessage", err.message || "Google admin kirish xatoligi.", "error");
+      }
+    }
+  });
+
   $("#adminLoginForm").addEventListener("submit", async event => {
     event.preventDefault();
     const submit = event.currentTarget.querySelector("button[type=submit]");

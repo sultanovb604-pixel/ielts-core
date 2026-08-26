@@ -33,6 +33,20 @@
       <p class="eyebrow">ADMINISTRATIVE ACCESS</p>
       <h1 id="adminLoginTitle">Sign in to manage IELTS Core.</h1>
       <p>Enter administrator credentials to manage library materials, student accounts, and backups.</p>
+
+      <!-- PRIMARY 1-CLICK GOOGLE ADMIN LOGIN -->
+      <button id="adminGoogleLoginBtn" type="button" class="google-auth-button" style="width:100%;box-sizing:border-box;margin-top:16px;min-height:52px;border:2px solid #2563eb;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 20px;cursor:pointer;background:#ffffff;font-size:14px;font-weight:800;color:#0f172a;box-shadow:0 4px 14px rgba(37,99,235,0.18);transition:all 0.15s ease;">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="22" height="22">
+        <span>Google orqali Admin bo‘lib kirish</span>
+      </button>
+      <small style="display:block;text-align:center;color:#64748b;font-size:11.5px;margin-top:6px;">🔒 Faqat tizim egasi sultanovb604@gmail.com kira oladi</small>
+
+      <div style="display:flex;align-items:center;gap:12px;margin:22px 0 16px;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">
+        <span style="flex:1;height:1px;background:#e2e8f0;"></span>
+        <span>yoki parol va 2FA PIN bilan</span>
+        <span style="flex:1;height:1px;background:#e2e8f0;"></span>
+      </div>
+
       <form id="adminLoginForm" class="admin-form">
         <label>
           <span>Owner Email / Username</span>
@@ -296,7 +310,14 @@
         </article>
       </section>
     </section>
-  </main>
-  <script src="/admin.js?v=20260824_100"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="/firebase-config.js"></script>
+  <script>
+    if (typeof firebase !== 'undefined' && window.firebaseConfig) {
+      firebase.initializeApp(window.firebaseConfig);
+    }
+  </script>
+  <script src="/admin.js?v=20260826_100"></script>
 </body>
 </html>

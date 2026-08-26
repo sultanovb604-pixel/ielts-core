@@ -7125,6 +7125,29 @@ Return ONLY valid JSON in this schema:
     await writeData(data);
     return json(res, 200, { ok: true, assignedStudentIds: license ? license.assignedStudentIds : [] });
   }
+  if (req.method === "POST" && pathname === "/api/admin/firebase-google") {
+    if (adminLoginBlocked(req)) {
+      return json(res, 429, { error: "Xavfsizlik blokirovkasi: Ko‘p marotaba xato urinishlar bo‘lgani sababli ushbu IP uchun kirish 60 daqiqaga to‘xtatildi." });
+    }
+    const body = await readBody(req);
+    const email = String(body.email || "").trim().toLowerCase();
+    const primaryAdminEmail = "sultanovb604@gmail.com";
+
+    if (email !== primaryAdminEmail) {
+      recordAdminLoginFailure(req);
+      await new Promise(r => setTimeout(r, 1200));
+      return json(res, 403, {
+        error: `Ruxsat berilmadi! Ushbu Google hisob (${email || 'noma\'lum'}) admin emas. Admin panelga faqat ${primaryAdminEmail} kira oladi.`
+      });
+    }
+
+    clearAdminLoginFailures(req);
+    return json(res, 200, {
+      token: issueAdminToken(primaryAdminEmail),
+      admin: { username: "sultanovb604", email: primaryAdminEmail },
+      expiresIn: ADMIN_SESSION_TTL / 1000
+    });
+  }
   if (req.method === "POST" && pathname === "/api/admin/login") {
     if (adminLoginBlocked(req)) {
       return json(res, 429, { error: "Xavfsizlik blokirovkasi: Ko‘p marotaba xato urinishlar bo‘lgani sababli ushbu IP uchun kirish 60 daqiqaga to‘xtatildi." });
