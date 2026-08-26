@@ -16,28 +16,55 @@
 
   const googleLink = document.querySelector('[data-google-auth]');
   const googleDivider = googleLink?.nextElementSibling?.classList.contains('auth-divider') ? googleLink.nextElementSibling : null;
-  const enableGoogleLink = () => {
-    const googleUrl = new URL('/api/auth/google', location.origin);
-    googleUrl.searchParams.set('next', destination);
-    if (['foundation', 'speaking', 'ielts'].includes(preferences.learning)) googleUrl.searchParams.set('learning', preferences.learning);
-    if (['confidence', 'school', 'future'].includes(preferences.goal)) googleUrl.searchParams.set('goal', preferences.goal);
-    googleLink.href = `${googleUrl.pathname}${googleUrl.search}`;
+
+  async function handleFirebaseGoogleAuth(e) {
+    if (e) e.preventDefault();
+    if (typeof firebase === 'undefined' || !firebase.auth) {
+      window.location.href = '/api/auth/google';
+      return;
+    }
+    setMessage('Opening Google Sign-In...');
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const result = await firebase.auth().signInWithPopup(provider);
+      const user = result.user;
+      const idToken = await user.getIdToken();
+      setMessage('Connecting your Google account...');
+
+      const res = await fetch('/api/auth/firebase-google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          idToken,
+          email: user.email,
+          name: user.displayName || user.email.split('@')[0],
+          uid: user.uid
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Google sign-in failed.');
+
+      localStorage.setItem('vortex_student_token', data.token);
+      setMessage('Sign-in successful! Opening your workspace...', true);
+      setTimeout(() => {
+        window.location.href = destination || '/english/account';
+      }, 500);
+    } catch (err) {
+      if (err.code === 'auth/popup-closed-by-user') {
+        setMessage('');
+      } else {
+        setMessage(err.message || 'Google sign-in failed.');
+      }
+    }
+  }
+
+  if (googleLink) {
     googleLink.hidden = false;
     if (googleDivider) googleDivider.hidden = false;
-  };
-  const hideUnavailableGoogleLink = () => {
-    if (!googleLink) return;
-    googleLink.hidden = true;
-    googleLink.removeAttribute('href');
-    if (googleDivider) googleDivider.hidden = true;
-  };
-  if (googleLink && !googleTicket) {
-    hideUnavailableGoogleLink();
-    fetch('/api/auth/google/config', { headers: { Accept: 'application/json' } })
-      .then(response => response.ok ? response.json() : Promise.reject())
-      .then(config => config.enabled ? enableGoogleLink() : hideUnavailableGoogleLink())
-      .catch(hideUnavailableGoogleLink);
+    googleLink.addEventListener('click', handleFirebaseGoogleAuth);
   }
+
   if (googleError) setMessage(googleError);
 
   document.querySelectorAll('[data-password-toggle]').forEach(button => button.addEventListener('click', () => {

@@ -141,7 +141,15 @@
   </main>
 
   <footer class="app-footer">IELTS Core &middot; Your personal learning path.</footer>
-  <script src="/english-site.js?v=20260823_999"></script>
-  <script src="/english-auth.js?v=20260823_999"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="/firebase-config.js"></script>
+  <script>
+    if (typeof firebase !== 'undefined' && window.firebaseConfig) {
+      firebase.initializeApp(window.firebaseConfig);
+    }
+  </script>
+  <script src="/english-site.js?v=20260826_100"></script>
+  <script src="/english-auth.js?v=20260826_100"></script>
 </body>
 </html>

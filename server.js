@@ -1,4 +1,5 @@
 const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
@@ -108,6 +109,7 @@ const studentSessions = new Map();
 const revokedStudentTokens = new Set();
 const revokedAdminTokens = new Set();
 const adminLoginAttempts = new Map();
+const STUDENT_SESSION_TTL = 30 * 24 * 60 * 60 * 1000;
 const ADMIN_SESSION_TTL = 2 * 60 * 60 * 1000;
 const ADMIN_LOGIN_WINDOW = 60 * 60 * 1000;
 const ADMIN_LOGIN_LIMIT = 3;
@@ -4537,6 +4539,9 @@ async function writeData(data) {
     try { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2)); } catch (e) {}
   }
 
+  // Background sync to Cloud Firestore
+  syncStateToFirestore(data);
+
   const database = await getDatabase();
   if (database) {
     // Non-blocking background cloud persistence (never blocks client response)
@@ -4552,6 +4557,32 @@ async function writeData(data) {
       }
     })();
   }
+}
+
+async function syncStateToFirestore(stateData) {
+  const projectId = process.env.FIREBASE_PROJECT_ID || "ieltscorecom";
+  const apiKey = process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus";
+  if (!projectId || !apiKey || !stateData) return;
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/vortex_state/default?key=${apiKey}`;
+    const payload = JSON.stringify({
+      fields: {
+        usersCount: { integerValue: String(stateData.users ? stateData.users.length : 0) },
+        updatedAt: { stringValue: new Date().toISOString() },
+        stateJson: { stringValue: JSON.stringify(stateData) }
+      }
+    });
+    const req = https.request(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(payload)
+      }
+    });
+    req.on("error", () => {});
+    req.write(payload);
+    req.end();
+  } catch (_) {}
 }
 
 function json(res, status, body, extraHeaders = {}) {
@@ -5273,8 +5304,53 @@ async function api(req, res, pathname) {
     data.vocabulary.splice(index, 1); await writeData(data);
     return json(res, 200, { ok: true });
   }
+  if (req.method === "POST" && pathname === "/api/auth/firebase-google") {
+    const body = await readBody(req);
+    const email = String(body.email || "").trim().toLowerCase();
+    const name = String(body.name || "").trim();
+    const uid = String(body.uid || "").trim();
+
+    if (!email) return json(res, 400, { error: "Google hisobi emaili topilmadi." });
+
+    let student = data.users.find(u => (u.email && u.email.toLowerCase() === email) || u.googleId === uid);
+    if (!student) {
+      const baseUsername = email.split("@")[0].replace(/[^a-zA-Z0-9_]/g, "");
+      let username = baseUsername;
+      let counter = 1;
+      while (data.users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        username = `${baseUsername}_${counter++}`;
+      }
+      student = {
+        id: crypto.randomUUID(),
+        name: name || username,
+        username,
+        email,
+        googleId: uid,
+        plan: "free",
+        authProvider: "google",
+        grade: "beginner",
+        createdAt: new Date().toISOString()
+      };
+      data.users.push(student);
+      await writeData(data);
+    } else {
+      if (!student.googleId || !student.email) {
+        student.googleId = uid;
+        student.authProvider = "google";
+        if (!student.email) student.email = email;
+        await writeData(data);
+      }
+    }
+
+    const token = issueStudentToken(student.id);
+    return json(res, 200, {
+      token,
+      user: safeUser(student),
+      expiresIn: STUDENT_SESSION_TTL / 1000
+    });
+  }
   if (req.method === "GET" && pathname === "/api/auth/google/config") {
-    return json(res, 200, { enabled: Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET), callbackUrl: googleCallbackUrl(req) });
+    return json(res, 200, { enabled: true, callbackUrl: googleCallbackUrl(req) });
   }
   if (req.method === "GET" && pathname === "/api/auth/google") {
     const requestUrl = new URL(req.url, `http://${req.headers.host}`);

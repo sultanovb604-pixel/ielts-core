@@ -637,12 +637,12 @@
       "learning": "",
       "username": "bahora19",
       "createdAt": "2026-08-18T13:00:52.562Z",
+      "statusBadge": "verified",
       "authProvider": "password",
       "passwordHash": "c0bcca9dfef395e6067bba0d3d96eff5cb069b44ae60be482cfa5e3ed20e8a567be585b0408ff0daae713f4f6a9989ecc06c77d88ac5a32d70a089c2a567eb42",
       "redeemedCode": "IELTS9",
       "planExpiresAt": "2026-09-22T16:51:28.428Z",
       "planUpdatedAt": "2026-08-23T16:51:28.428Z",
-      "statusBadge": "verified",
       "profileWallpaper": "aurora"
     },
     {
@@ -6582,6 +6582,7 @@
       ]
     }
   ],
+  "adminEmail": "sultanovb604@gmail.com",
   "mockAttempts": [
     {
       "id": "3a819798-4715-440d-9080-d84fd8f35bb6",
@@ -6665,7 +6666,10 @@
       "durationSeconds": 7200
     }
   ],
+  "adminPassword": "Vortex#IELTS#2026!Master",
+  "adminUsername": "sultanovb604",
   "cohortMembers": [],
+  "adminSecurityPin": "849201",
   "speakingAttempts": [
     {
       "id": "fd4dc4be-aab2-4b7b-9efa-597d0d6815b0",
@@ -6893,9 +6897,5 @@
       "pronunciationScore": 7.5
     }
   ],
-  "adminUsername": "sultanovb604",
-  "adminPassword": "Vortex#IELTS#2026!Master",
-  "adminSecurityPin": "849201",
-  "adminCredentialsUpdatedAt": "2026-08-24T08:54:30.935Z",
-  "adminEmail": "sultanovb604@gmail.com"
+  "adminCredentialsUpdatedAt": "2026-08-24T08:54:30.935Z"
 }
