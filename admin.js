@@ -172,10 +172,17 @@
   }
 
   async function ensureFirebaseAuth() {
+    const fbConfig = window.firebaseConfig || {
+      apiKey: "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus",
+      authDomain: "ieltscorecom.firebaseapp.com",
+      projectId: "ieltscorecom",
+      storageBucket: "ieltscorecom.firebasestorage.app",
+      messagingSenderId: "937610994904",
+      appId: "1:937610994904:web:bbab5fcead08965dbee3ad"
+    };
+
     if (window.firebase && window.firebase.auth) {
-      if (!firebase.apps.length && window.firebaseConfig) {
-        firebase.initializeApp(window.firebaseConfig);
-      }
+      if (!firebase.apps.length) firebase.initializeApp(fbConfig);
       return window.firebase;
     }
     const loadScript = src => new Promise((resolve, reject) => {
@@ -191,8 +198,8 @@
     if (!window.firebase?.auth) {
       await loadScript("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js");
     }
-    if (window.firebase && !firebase.apps.length && window.firebaseConfig) {
-      firebase.initializeApp(window.firebaseConfig);
+    if (window.firebase && !firebase.apps.length) {
+      firebase.initializeApp(fbConfig);
     }
     return window.firebase;
   }
