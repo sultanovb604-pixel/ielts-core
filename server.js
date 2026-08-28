@@ -5087,11 +5087,11 @@ function detailedStudentAnalytics(user, data) {
       criteriaAverages
     },
     speaking: {
-      estimatedBand: 6.5,
-      fluency: 7.0,
-      lexicalResource: 6.5,
-      grammarAccuracy: 6.5,
-      pronunciation: 7.0
+      estimatedBand: null,
+      fluency: null,
+      lexicalResource: null,
+      grammarAccuracy: null,
+      pronunciation: null
     }
   };
 }

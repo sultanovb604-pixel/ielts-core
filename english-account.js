@@ -220,11 +220,11 @@
     if (wCountEl) wCountEl.textContent = `${wCount} ta esse yozildi`;
 
     // 4. Speaking
-    const sBand = data?.speaking?.estimatedBand || 6.5;
+    const sBand = data?.speaking?.estimatedBand || null;
     const sEl = document.querySelector('#matrixSpeakingBand');
     const sCefr = document.querySelector('#matrixSpeakingCefr');
     const sCountEl = document.querySelector('#matrixSpeakingCount');
-    if (sEl) sEl.textContent = `Band ${Number(sBand).toFixed(1)}`;
+    if (sEl) sEl.textContent = sBand ? `Band ${Number(sBand).toFixed(1)}` : '—';
     if (sCefr) {
       const cefr = getCefr(sBand);
       sCefr.textContent = cefr.label;
