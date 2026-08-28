@@ -3137,6 +3137,7 @@ function readingPersistenceMarkup(material, user) {
 
 <script id="vortex-reading-save-script">
 (function() {
+  ${readingBand.toString()}
   var material = ${config};
   var totalQuestions = Number(material.questionCount) || 40;
   var token = localStorage.getItem('vortex-english-token') || (document.cookie.match(/(?:^|;\s*)vortex_english_token=([^;]+)/) ? decodeURIComponent(RegExp.$1) : null);

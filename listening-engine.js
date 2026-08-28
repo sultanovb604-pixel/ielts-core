@@ -1814,6 +1814,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
 
 <script id="vortex-listening-engine-script">
 (function() {
+  ${listeningBand.toString()}
   var material = ${config};
   var token = localStorage.getItem('vortex-english-token') || (document.cookie.match(/(?:^|;\s*)vortex_english_token=([^;]+)/) ? decodeURIComponent(RegExp.$1) : null);
   var audios = material.audios || [];
