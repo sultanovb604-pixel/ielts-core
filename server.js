@@ -7659,8 +7659,9 @@ const server = http.createServer(async (req, res) => {
       "/english/mock-exam": "english-mock-exam.html",
       "/english/speaking": "english-speaking.html",
       "/english/speaking-studio": "english-speaking.html",
-      "/admin": "admin.html",
-      "/english/admin": "admin.html"
+      "/bunyodvibecodern1": "admin.html",
+      
+      
     };
     const englishNestedAssets = new Set([
       "english-pages.css", "english-site.js", "english-practice.js", "english-materials.js",
