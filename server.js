@@ -4510,8 +4510,14 @@ async function syncStateFromDb() {
     isSyncingDb = false;
   }
   if (!inMemoryData) {
-    try { inMemoryData = normalizeData(JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))); }
-    catch { inMemoryData = emptyData(); }
+    let firebaseData = await syncStateFromFirestore();
+    if (firebaseData) {
+      inMemoryData = normalizeData(firebaseData);
+      try { fs.writeFileSync(DATA_FILE, JSON.stringify(inMemoryData, null, 2)); } catch (_) {}
+    } else {
+      try { inMemoryData = normalizeData(JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))); }
+      catch { inMemoryData = emptyData(); }
+    }
     inMemoryCachedAt = Date.now();
   }
   return inMemoryData;
@@ -4558,6 +4564,30 @@ async function writeData(data) {
       }
     })();
   }
+}
+
+async function syncStateFromFirestore() {
+  const projectId = process.env.FIREBASE_PROJECT_ID || "ieltscorecom";
+  const apiKey = process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus";
+  if (!projectId || !apiKey) return null;
+  return new Promise(resolve => {
+    const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/vortex_state/default?key=${apiKey}`;
+    const req = https.request(url, { method: "GET" }, res => {
+      if (res.statusCode !== 200) return resolve(null);
+      let body = "";
+      res.on("data", chunk => body += chunk);
+      res.on("end", () => {
+        try {
+          const doc = JSON.parse(body);
+          if (doc.fields && doc.fields.stateJson && doc.fields.stateJson.stringValue) {
+            resolve(JSON.parse(doc.fields.stateJson.stringValue));
+          } else { resolve(null); }
+        } catch (_) { resolve(null); }
+      });
+    });
+    req.on("error", () => resolve(null));
+    req.end();
+  });
 }
 
 async function syncStateToFirestore(stateData) {
