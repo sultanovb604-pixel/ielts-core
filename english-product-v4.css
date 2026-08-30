@@ -1096,7 +1096,7 @@ html[data-theme="dark"] .v4-public-page .app-nav a { color:#94a3b8; }
 html[data-theme="dark"] .v4-public-page .app-nav a:hover { color:#38bdf8; }
 html[data-theme="dark"] .v4-public-page .theme-toggle { color:#f4f7fb; border-color:#24354a; background:#0e1927; }
 html[data-theme="dark"] .v4-hero { background:transparent; }
-html[data-theme="dark"] .v4-hero-glow { background: radial-gradient(ellipse at center, rgba(20, 104, 243, 0.22) 0%, rgba(99, 102, 241, 0.08) 50%, transparent 80%); }
+html[data-theme="dark"] .v4-hero-glow { background: radial-gradient(ellipse at center, rgba(20, 104, 243, 0.08) 0%, rgba(99, 102, 241, 0.03) 50%, transparent 80%); }
 html[data-theme="dark"] .v4-hero-copy h1,html[data-theme="dark"] .v4-section-head h2 { color:#f4f7fb; }
 html[data-theme="dark"] .v4-hero-copy>p:not(.v4-kicker),html[data-theme="dark"] .v4-section-head>p:last-child { color:#94a3b8; }
 html[data-theme="dark"] .v4-public-page .v4-actions .button.secondary { color:#f4f7fb; border-color:#24354a; background:#0e1927; }
@@ -1117,7 +1117,7 @@ html[data-theme="dark"] .v4-mock-stat { background:#0d1a2d; border-color:#1e3049
 html[data-theme="dark"] .v4-mock-stat strong { color:#f4f7fb; }
 html[data-theme="dark"] .v4-timeline-item { background:#0d1a2d; border-color:#1e3049; }
 html[data-theme="dark"] .v4-timeline-item b { color:#f4f7fb; }
-html[data-theme="dark"] .v4-timeline-item.active { background:#132947; border-color:var(--v4-blue); }
+html[data-theme="dark"] .v4-timeline-item.active { background:#132947; border-color:#2563eb; }
 html[data-theme="dark"] .v4-bento-section { background:#070f1d; border-color:#1c2b42; }
 html[data-theme="dark"] .v4-section-head-centered h2 { color:#f4f7fb; }
 html[data-theme="dark"] .v4-bento-card { background:#0b1728; border-color:#1b2d45; }
@@ -1132,7 +1132,7 @@ html[data-theme="dark"] .v4-score-meter span { color:#f4f7fb; }
 html[data-theme="dark"] .v4-stage-mini-tags span { background:#0d1a2d; border-color:#1e3049; color:#60a5fa; }
 html[data-theme="dark"] .v4-path-section { background:#060c17; }
 html[data-theme="dark"] .v4-path-card { background:#0a1526; border-color:#1a2a40; }
-html[data-theme="dark"] .v4-path-card.featured { background:linear-gradient(180deg, #0f2038 0%, #0a1526 100%); border-color:var(--v4-blue); }
+html[data-theme="dark"] .v4-path-card.featured { background:linear-gradient(180deg, #0f2038 0%, #0a1526 100%); border-color:#2563eb; }
 html[data-theme="dark"] .v4-path-card h3 { color:#f4f7fb; }
 html[data-theme="dark"] .v4-path-meta { border-color:#1a2a40; color:#94a3b8; }
 html[data-theme="dark"] .v4-footer { color:#99a9bf !important; border-color:#1a2a40 !important; background:#060c17 !important; }

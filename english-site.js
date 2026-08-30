@@ -334,6 +334,10 @@
     const mountTestLaunchModal = () => {
       if (document.querySelector('#testLaunchModal')) return;
 
+      const isPremium = user && user.plan === 'premium';
+      const realModeDisabled = !isPremium ? 'disabled' : '';
+      const realModeLock = !isPremium ? '<span class="material-symbols-outlined" style="font-size:14px; margin-left:8px; color: #f43f5e;">lock</span>' : '';
+
       const modal = document.createElement('div');
       modal.className = 'test-launch-modal';
       modal.id = 'testLaunchModal';
@@ -376,26 +380,26 @@
             <span class="test-launch-section-title">CHOOSE EXAM MODE</span>
             <div class="test-mode-grid">
               <!-- Mode 1: Real Exam Mode -->
-              <label class="test-mode-card selected" id="cardModeReal">
+              <label class="test-mode-card ${isPremium ? 'selected' : 'locked'}" id="cardModeReal" style="${!isPremium ? 'opacity: 0.6; cursor: not-allowed; border-color: var(--v4-border);' : ''}">
                 <span class="test-mode-badge real">
                   <span class="material-symbols-outlined" aria-hidden="true" style="font-size:14px">verified</span>
                   <span>100% Real Exam Interface</span>
                 </span>
                 <div class="test-mode-card-title-row">
-                  <input type="radio" name="testExamMode" value="real" class="test-mode-radio" checked>
-                  <h3>Real Exam Mode</h3>
+                  <input type="radio" name="testExamMode" value="real" class="test-mode-radio" ${isPremium ? 'checked' : ''} ${realModeDisabled}>
+                  <h3>Real Exam Mode ${realModeLock}</h3>
                 </div>
-                <p class="test-mode-desc">Practice in an exact copy of the real computer-based exam interface with official split pane, timed countdown, and CDI highlight & notes.</p>
+                <p class="test-mode-desc">Practice in an exact copy of the real computer-based exam interface with official split pane, timed countdown, and CDI highlight & notes.${!isPremium ? ' <b>Premium Only.</b>' : ''}</p>
               </label>
 
               <!-- Mode 2: Practice Mode -->
-              <label class="test-mode-card" id="cardModePractice">
+              <label class="test-mode-card ${!isPremium ? 'selected' : ''}" id="cardModePractice">
                 <span class="test-mode-badge practice">
                   <span class="material-symbols-outlined" aria-hidden="true" style="font-size:14px">tune</span>
                   <span>Daily Practice Interface</span>
                 </span>
                 <div class="test-mode-card-title-row">
-                  <input type="radio" name="testExamMode" value="practice" class="test-mode-radio">
+                  <input type="radio" name="testExamMode" value="practice" class="test-mode-radio" ${!isPremium ? 'checked' : ''}>
                   <h3>Practice Mode</h3>
                 </div>
                 <p class="test-mode-desc">Practice in the comfortable daily practice interface — easier to navigate, built for daily drills with flexible section checking.</p>
@@ -430,7 +434,11 @@
       const realRadio = modal.querySelector('input[value="real"]');
       const practiceRadio = modal.querySelector('input[value="practice"]');
 
-      realCard?.addEventListener('click', () => {
+      realCard?.addEventListener('click', (e) => {
+        if (!isPremium) {
+          e.preventDefault();
+          return;
+        }
         realRadio.checked = true;
         realCard.classList.add('selected');
         practiceCard.classList.remove('selected');
@@ -445,6 +453,7 @@
       modal.querySelector('#startTestFinalBtn')?.addEventListener('click', () => {
         if (!currentTargetUrl) return;
         const selectedMode = practiceRadio?.checked ? 'practice' : 'real';
+        if (selectedMode === 'real' && !isPremium) return;
         const url = new URL(currentTargetUrl, location.origin);
         url.searchParams.set('mode', selectedMode);
         if (token && !url.searchParams.has('token')) {

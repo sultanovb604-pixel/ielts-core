@@ -7632,6 +7632,10 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
         return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium material</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Premium Reading material</h1><p>This full test is available with the Premium plan.</p><a href="/english/materials?level=ielts&skill=reading">Back to materials</a></main></body></html>');
       }
+      if (requestUrl.searchParams.get("mode") === "real" && activeUser.plan !== "premium") {
+        res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+        return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium required</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Real Exam Mode is Locked</h1><p>Real Exam Mode is a premium feature. Please upgrade your plan or use Practice mode.</p><a href="/english/materials">Back to materials</a></main></body></html>');
+      }
       const file = path.join(READING_MATERIALS_DIR, material.fileName);
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(sanitizeReadingHtml(fs.readFileSync(file, "utf8"), material, activeUser));
@@ -7662,6 +7666,10 @@ const server = http.createServer(async (req, res) => {
         }
         res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
         return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium material</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Premium Listening material</h1><p>This full test is available with the Premium plan.</p><a href="/english/materials?level=ielts&skill=listening">Back to materials</a></main></body></html>');
+      }
+      if (requestUrl.searchParams.get("mode") === "real" && activeUser.plan !== "premium") {
+        res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+        return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium required</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Real Exam Mode is Locked</h1><p>Real Exam Mode is a premium feature. Please upgrade your plan or use Practice mode.</p><a href="/english/materials">Back to materials</a></main></body></html>');
       }
       const testFile = material.fileName ? path.join(LISTENING_MATERIALS_DIR, material.fileName) : ENGLISH_EXAM_SOURCE;
       if (!fs.existsSync(testFile)) {
