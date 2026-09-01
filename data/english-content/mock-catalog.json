@@ -11,7 +11,7 @@
     "listening": {
       "id": "listening-full-test-01",
       "title": "IELTS Listening Full Test 01",
-      "format": "4 Parts В· 40 Questions",
+      "format": "4 Parts - 40 Questions",
       "durationMinutes": 35,
       "audioCount": 4,
       "fileName": "Full Listening CDI. (5).html"
@@ -20,7 +20,7 @@
       "id": "reading-full-test-01",
       "title": "IELTS Academic Reading Test 01",
       "fileName": "Reading Full  Test.html",
-      "format": "3 Passages В· 40 Questions",
+      "format": "3 Passages - 40 Questions",
       "durationMinutes": 60
     },
     "writing": {
@@ -28,14 +28,14 @@
       "title": "IELTS Academic Writing Test 01",
       "durationMinutes": 60,
       "task1": {
-        "title": "Task 1 вЂ” Data & Chart Report",
+        "title": "Task 1 - Data & Chart Report",
         "type": "Bar Chart",
         "prompt": "The chart below shows the percentage of households in different income brackets that owned consumer electronics in 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
         "minWords": 150,
         "suggestedMinutes": 20
       },
       "task2": {
-        "title": "Task 2 вЂ” Essay Argument",
+        "title": "Task 2 - Essay Argument",
         "type": "Discussion & Opinion",
         "prompt": "Some people believe that university education should be entirely free for all eligible students. Others argue that students should pay for their higher education because it benefits them personally.\n\nDiscuss both views and give your own opinion.\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nWrite at least 250 words.",
         "minWords": 250,
@@ -55,7 +55,7 @@
     "listening": {
       "id": "listening-full-test-02",
       "title": "IELTS Listening Full Test 02",
-      "format": "4 Parts В· 40 Questions",
+      "format": "4 Parts - 40 Questions",
       "durationMinutes": 35,
       "audioCount": 4,
       "fileName": "Listening (9) (3).html"
@@ -64,7 +64,7 @@
       "id": "reading-full-test-02",
       "title": "IELTS Academic Reading Test 02",
       "fileName": "Reading Full Test CD (3).html",
-      "format": "3 Passages В· 40 Questions",
+      "format": "3 Passages - 40 Questions",
       "durationMinutes": 60
     },
     "writing": {
@@ -72,14 +72,14 @@
       "title": "IELTS Academic Writing Test 02",
       "durationMinutes": 60,
       "task1": {
-        "title": "Task 1 вЂ” Process Diagram",
+        "title": "Task 1 - Process Diagram",
         "type": "Process & Flowchart",
         "prompt": "The diagram illustrates the process of recycling plastic bottles to produce high-grade polyester fabric for apparel.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.",
         "minWords": 150,
         "suggestedMinutes": 20
       },
       "task2": {
-        "title": "Task 2 вЂ” Essay Argument",
+        "title": "Task 2 - Essay Argument",
         "type": "Causes & Effects",
         "prompt": "In many modern cities, an increasing number of young adults are choosing to live alone rather than with family or partners.\n\nWhat are the primary causes of this trend, and does it bring more advantages or disadvantages to society?\n\nWrite at least 250 words.",
         "minWords": 250,
@@ -99,7 +99,7 @@
     "listening": {
       "id": "listening-full-test-03",
       "title": "IELTS Listening Full Test 03",
-      "format": "4 Parts В· 40 Questions",
+      "format": "4 Parts - 40 Questions",
       "durationMinutes": 35,
       "audioCount": 4,
       "fileName": "Listening (11) (2).html"
@@ -108,7 +108,7 @@
       "id": "reading-full-test-03",
       "title": "IELTS Academic Reading Test 03",
       "fileName": "IELTS_Reading_Practice (2).html",
-      "format": "3 Passages В· 40 Questions",
+      "format": "3 Passages - 40 Questions",
       "durationMinutes": 60
     },
     "writing": {
@@ -116,14 +116,14 @@
       "title": "IELTS Academic Writing Test 03",
       "durationMinutes": 60,
       "task1": {
-        "title": "Task 1 вЂ” Map Comparison",
+        "title": "Task 1 - Map Comparison",
         "type": "Urban Development Map",
         "prompt": "The two maps show the layout of the coastal town of Harwich in 1995 and after recent developments today.\n\nSummarise the information by selecting and reporting the main changes.\n\nWrite at least 150 words.",
         "minWords": 150,
         "suggestedMinutes": 20
       },
       "task2": {
-        "title": "Task 2 вЂ” Essay Argument",
+        "title": "Task 2 - Essay Argument",
         "type": "Opinion / Agreement",
         "prompt": "With the rise of artificial intelligence and automation, some argue that human creativity and critical thinking are diminishing.\n\nTo what extent do you agree or disagree with this view?\n\nWrite at least 250 words.",
         "minWords": 250,

@@ -99,7 +99,7 @@
             <button type="button" class="vx-card-btn vx-btn-unlock full-width" onclick="window.showUpgradeModal ? window.showUpgradeModal() : location.href='/english/pricing'">
               <span class="material-symbols-outlined">lock</span>
               <span>Unlock with Premium (30 000 UZS / oy)</span>
-              <span aria-hidden="true">в†’</span>
+              <span aria-hidden="true">&rarr;</span>
             </button>
           </div>`;
       } else if (item.completed) {
@@ -120,7 +120,7 @@
             <button type="button" class="vx-card-btn vx-btn-primary full-width" onclick="window.launchMockPreFlight('${escapeHtml(item.id)}', '${escapeHtml(item.title)}')">
               <span class="material-symbols-outlined">play_arrow</span>
               <span>Start Full Mock Exam</span>
-              <span aria-hidden="true">в†’</span>
+              <span aria-hidden="true">&rarr;</span>
             </button>
           </div>`;
       }
@@ -138,11 +138,11 @@
             <div class="mock-sections-list">
               <div class="mock-section-row">
                 <span class="mock-section-name"><span class="material-symbols-outlined">headphones</span> Listening</span>
-                <span class="mock-section-meta">${escapeHtml(item.listening?.format || '4 Parts В· 40 Qs')} (~35 min)</span>
+                <span class="mock-section-meta">${escapeHtml(item.listening?.format || '4 Parts &bull; 40 Qs')} (~35 min)</span>
               </div>
               <div class="mock-section-row">
                 <span class="mock-section-name"><span class="material-symbols-outlined">menu_book</span> Reading</span>
-                <span class="mock-section-meta">${escapeHtml(item.reading?.format || '3 Passages В· 40 Qs')} (60 min)</span>
+                <span class="mock-section-meta">${escapeHtml(item.reading?.format || '3 Passages &bull; 40 Qs')} (60 min)</span>
               </div>
               <div class="mock-section-row">
                 <span class="mock-section-name"><span class="material-symbols-outlined">edit_note</span> Writing</span>
@@ -190,7 +190,7 @@
             <span class="material-symbols-outlined" style="font-size:24px;color:#059669;flex-shrink:0;">timer</span>
             <div>
               <strong>Exam Timing & Flow:</strong>
-              <p style="margin:2px 0 0;color:#64748b;">Total exam time is approximately 2 hours and 35 minutes across 3 uninterrupted stages (Listening вћ” Reading вћ” Writing).</p>
+              <p style="margin:2px 0 0;color:#64748b;">Total exam time is approximately 2 hours and 35 minutes across 3 uninterrupted stages (Listening &rarr; Reading &rarr; Writing).</p>
             </div>
           </div>
         </div>
@@ -217,3 +217,4 @@
 
   loadData();
 })();
+
