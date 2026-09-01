@@ -5657,3 +5657,9 @@ body.user-is-premium #sidebarUpgradeBtn {
   margin-right: 8px;
   letter-spacing: 0;
 }
+
+.app-mark img {
+  /* Turn original logo into Official IELTS Red (#E31837) */
+  filter: brightness(0) saturate(100%) invert(18%) sepia(85%) saturate(5451%) hue-rotate(346deg) brightness(97%) contrast(98%) !important;
+  transform: scale(1.15); /* Make it slightly bigger and bolder */
+}
