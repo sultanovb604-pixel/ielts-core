@@ -5971,13 +5971,14 @@ Respond with authentic examiner dialogue and strict objective grading in JSON fo
 
   // Pure Friendly Casual Chat Engine (Emma - 100% Informal, Chill Speaking Buddy like a friend on FaceTime)
   async function callGeminiCasualChat(userTranscript, history, geminiKey) {
-    const systemInstruction = `You are Emma, a fun, super chill, and friendly 24-year-old speaking buddy hanging out on a real-time voice call.
+    const systemInstruction = `You are a fun, super chill, and friendly speaking buddy hanging out on a real-time voice call.
 STYLE GUIDELINES (CRITICAL):
 - Speak COMPLETELY CASUALLY and INFORMALLY, exactly like a close friend talking on FaceTime or at a coffee shop!
 - Use natural spoken contractions ("I'm", "it's", "gonna", "kinda", "super cool") and lively conversational reactions ("Oh wow!", "Haha totally,", "No way!", "That's awesome,", "Oh I love that!").
 - NEVER sound robotic, formal, academic, or textbook-like. Be warm, enthusiastic, and authentic.
 - Keep it punchy, engaging, and brief (2 to 3 natural spoken sentences, 25-45 words).
 - If they ask for facts, share cool, mind-blowing facts in a super fun and accessible way!
+- MEMORY IS CRITICAL: You MUST remember what the user said earlier in the conversation. Refer back to their previous answers if it makes sense, showing you actually listen. Do not repeat the same questions.
 
 NOTE ON USER SPEECH: Input comes from live Speech-To-Text (ASR). Intelligently understand what they mean and fix any minor transcription typos in "cleanedTranscript".
 
@@ -5987,62 +5988,74 @@ Return ONLY valid JSON matching this schema:
   "replyText": "Your chill, informal, lively conversational spoken response"
 }`;
 
+    const contents = [];
+    if (history && Array.isArray(history) && history.length > 0) {
+      history.forEach(t => {
+        contents.push({
+          role: t.role === 'model' ? 'model' : 'user',
+          parts: [{ text: t.text }]
+        });
+      });
+    } else {
+      contents.push({ role: "user", parts: [{ text: userTranscript }] });
+    }
+
     return await queryGeminiApi({
       systemInstruction: { parts: [{ text: systemInstruction }] },
-      contents: [{ role: "user", parts: [{ text: userTranscript }] }],
+      contents: contents,
       generationConfig: { responseMimeType: "application/json", temperature: 0.85 }
     }, geminiKey);
   }
 
   function generateSmartContextualCasualReply(text) {
-    const clean = String(text || "").trim();
-    if (!clean || clean.length < 3) {
-      return "Hey! I'm listening. What's on your mind today?";
+      const clean = String(text || "").trim();
+      if (!clean || clean.length < 3) {
+        return "Hey! I'm listening. What's on your mind today?";
+      }
+  
+      const lower = clean.toLowerCase();
+  
+      if (/^(hi|hello|hey|good morning|good afternoon|good evening)/i.test(lower) && clean.split(/\s+/).length <= 4) {
+        return "Hey there! Great to chat with you today. How's everything going?";
+      }
+      if (/formula\s*1|f1|racing|verstappen|hamilton|ferrari|red bull|grand prix/i.test(lower)) {
+        return "F1 is so wild right now! Max Verstappen and all the race drama make every weekend super exciting. Do you watch the races often?";
+      }
+      if (/chess|blitz|grandmaster|magnus|opening|checkmate/i.test(lower)) {
+        return "Chess is so addictive! Are you more into quick blitz games on your phone, or sitting down over a real board with friends?";
+      }
+      if (/guitar|piano|drum|violin|acoustic|instrument|song/i.test(lower)) {
+        return "No way, playing music is so cool! How long have you been playing, and what's your favorite song to jam to?";
+      }
+      if (/python|javascript|react|node|coding|programming|developer|software|app/i.test(lower)) {
+        return "Coding is awesome! What kind of fun projects or apps are you building lately?";
+      }
+      if (/gym|workout|fitness|running|muscle|exercise|training/i.test(lower)) {
+        return "Working out feels so good for clearing your head! What's your go-to workout lately — lifting weights or running?";
+      }
+      if (/food|cook|eat|recipe|restaurant|dish|pizza|sushi/i.test(lower)) {
+        return "Mmm, that sounds delicious! Are you a master chef at home, or do you love finding cool new food spots?";
+      }
+      if (/movie|film|cinema|watch|series|actor|netflix/i.test(lower)) {
+        return "Oh, I love good movies! Seen anything recently that totally blew you away?";
+      }
+      if (/travel|country|trip|visit|city|holiday|vacation/i.test(lower)) {
+        return "Traveling is the absolute best! If you could hop on a plane right now, where would you go?";
+      }
+      if (/tired|stress|busy|relax|sleep|rest|exhausted/i.test(lower)) {
+        return "It's so important to recharge when days get hectic. What helps you unwind and relax the most after a demanding day?";
+      }
+  
+      const fallbacks = [
+        "That makes a lot of sense. Tell me a bit more about that!",
+        "Oh wow, I totally get what you mean. What else is on your mind?",
+        "Yeah, exactly! It's so interesting to think about it that way. What do you think is the biggest reason for that?",
+        "I love that perspective. Has anything recently happened that made you think about this?",
+        "Haha, absolutely! So, what are your plans for the rest of the day?",
+        "That's super cool. I'd love to hear more of your thoughts on it!"
+      ];
+      return fallbacks[Math.floor(Math.random() * fallbacks.length)];
     }
-
-    const lower = clean.toLowerCase();
-
-    if (/^(hi|hello|hey|good morning|good afternoon|good evening)/i.test(lower) && clean.split(/\s+/).length <= 4) {
-      return "Hey there! Great to chat with you today. How's everything going?";
-    }
-    if (/formula\s*1|f1|racing|verstappen|hamilton|ferrari|red bull|grand prix/i.test(lower)) {
-      return "F1 is so wild right now! Max Verstappen and all the race drama make every weekend super exciting. Do you watch the races often?";
-    }
-    if (/chess|blitz|grandmaster|magnus|opening|checkmate/i.test(lower)) {
-      return "Chess is so addictive! Are you more into quick blitz games on your phone, or sitting down over a real board with friends?";
-    }
-    if (/guitar|piano|drum|violin|acoustic|instrument|song/i.test(lower)) {
-      return "No way, playing music is so cool! How long have you been playing, and what's your favorite song to jam to?";
-    }
-    if (/python|javascript|react|node|coding|programming|developer|software|app/i.test(lower)) {
-      return "Coding is awesome! What kind of fun projects or apps are you building lately?";
-    }
-    if (/gym|workout|fitness|running|muscle|exercise|training/i.test(lower)) {
-      return "Working out feels so good for clearing your head! What's your go-to workout lately — lifting weights or running?";
-    }
-    if (/food|cook|eat|recipe|restaurant|dish|pizza|sushi/i.test(lower)) {
-      return "Mmm, that sounds delicious! Are you a master chef at home, or do you love finding cool new food spots?";
-    }
-    if (/movie|film|cinema|watch|series|actor|netflix/i.test(lower)) {
-      return "Oh, I love good movies! Seen anything recently that totally blew you away?";
-    }
-    if (/travel|country|trip|visit|city|holiday|vacation/i.test(lower)) {
-      return "Traveling is the absolute best! If you could hop on a plane right now, where would you go?";
-    }
-    if (/tired|stress|busy|relax|sleep|rest|exhausted/i.test(lower)) {
-      return "It's so important to recharge when days get hectic. What helps you unwind and relax the most after a demanding day?";
-    }
-
-    const stopWords = new Set(['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'you', 'your', 'he', 'she', 'it', 'they', 'what', 'which', 'who', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'can', 'will', 'just', 'should', 'now', 'want', 'talk', 'like', 'really', 'think', 'feel', 'tell']);
-    const words = clean.replace(/[^a-zA-Z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w.toLowerCase()));
-    const topicWords = words.slice(-3).join(' ');
-
-    if (topicWords) {
-      return `Talking about ${topicWords} sounds really interesting! What got you thinking about that today, and what's your take on it?`;
-    }
-
-    return "That's a thoughtful point! How does that usually impact your daily routine or perspective?";
-  }
 
   // Dynamic Gemini Question / Cue Card Generator
   async function generateGeminiExamStart(stage, geminiKey) {
