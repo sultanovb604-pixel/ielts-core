@@ -463,7 +463,7 @@ function articleSelection(reader, blockId, start, end) {
   return text ? { block, start: from, end: to, text } : null;
 }
 
-function readingPersistenceMarkup(material, user) {
+function readingPersistenceMarkup(material, user, requestedMode) {
   const totalQuestions = Number(material.questionCount) || 40;
   const passageCount = Number(material.passageCount) || (material.materialKind === "full-test" ? 3 : 1);
   const durationSeconds = material.materialKind === "full-test" ? 3600 : (passageCount > 1 ? passageCount * 1200 : 1200);
@@ -483,6 +483,7 @@ function readingPersistenceMarkup(material, user) {
 
   return `
 <style id="vortex-reading-exam-styles">
+    ${requestedMode === "mock" ? "#deliver-button, #deliver-btn, .footer__deliverButton___3FM07, .deliverButton, #submitBtn, .submit-btn, #submit-btn, #vxHeaderSubmitBtn, .header, .cdi-header { display: none !important; pointer-events: none !important; }" : ""}
   :root {
     --vx-ink: #0c1c38;
     --vx-muted: #5e6f88;
@@ -4393,7 +4394,7 @@ function roundToIeltsBand(num) {
   return intPart + 1.0;
 }
 
-function sanitizeReadingHtml(source, material, user) {
+function sanitizeReadingHtml(source, material, user, requestedMode) {
   const clean = source
     .replace(/body::(?:before|after)\s*\{[\s\S]*?\}/gi, "")
     .replace(/\.(?:telegram-link|brand-link)(?::[a-z-]+)?\s*\{[^}]*\}/gi, "")
@@ -4411,7 +4412,7 @@ function sanitizeReadingHtml(source, material, user) {
       return `<style>${sanitizedCss}</style>`;
     });
 
-  const persistence = readingPersistenceMarkup(material, user);
+  const persistence = readingPersistenceMarkup(material, user, requestedMode);
   return /<\/body>/i.test(clean) ? clean.replace(/<\/body>/i, `${persistence}\n</body>`) : `${clean}${persistence}`;
 }
 
@@ -7592,20 +7593,23 @@ const server = http.createServer(async (req, res) => {
 
     // Sitemap.xml
     if (req.method === "GET" && pathname === "/sitemap.xml") {
-      const host = req.headers.host || "ieltscore.uz";
+      const host = req.headers.host || "ieltscore.org";
       const proto = req.headers["x-forwarded-proto"] || "https";
       const urls = [
-        "/english",
-        "/english/courses",
-        "/english/practice",
-        "/english/materials",
-        "/english/pricing",
-        "/english/writing-editor",
-        "/english/teacher",
-        "/english/account",
-        "/english/signup",
-        "/english/login"
-      ];
+          "/english",
+          "/english/mock-tests",
+          "/english/speaking",
+          "/english/practice",
+          "/english/materials",
+          "/english/courses",
+          "/english/pricing",
+          "/english/writing-editor",
+          "/english/vocabulary",
+          "/english/teacher",
+          "/english/account",
+          "/english/signup",
+          "/english/login"
+        ];
       const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `  <url>\n    <loc>${proto}://${host}${u}</loc>\n    <changefreq>daily</changefreq>\n    <priority>${u === "/english" ? "1.0" : "0.8"}</priority>\n  </url>`).join("\n")}\n</urlset>`;
       res.writeHead(200, { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=86400" });
       return res.end(xml);
@@ -7651,7 +7655,7 @@ const server = http.createServer(async (req, res) => {
       }
       const file = path.join(READING_MATERIALS_DIR, material.fileName);
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-      return res.end(sanitizeReadingHtml(fs.readFileSync(file, "utf8"), material, activeUser));
+      return res.end(sanitizeReadingHtml(fs.readFileSync(file, "utf8"), material, activeUser, requestUrl.searchParams.get("mode")));
     }
     if (pathname.startsWith("/english/audio/")) {
       const audioFileName = path.basename(pathname);
