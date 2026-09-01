@@ -7802,7 +7802,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(302, { Location: "/english", "Cache-Control": "no-store" });
       return res.end();
     }
-    if (pathname.startsWith("/api/")) return await api(req, res, pathname);
+    if (pathname.startsWith("/api/") || pathname === "/health") return await api(req, res, pathname);
     if (pathname === "/english/content-file") {
       const data = await readData();
       const user = studentFromRequest(req, data);
