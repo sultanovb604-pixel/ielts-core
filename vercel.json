@@ -3,7 +3,7 @@
   "regions": ["fra1"],
   "functions": {
     "server.js": {
-      "includeFiles": "{*.html,*.css,*.js,assets/**,data/english-content/**,english-reading-materials/**,vendor/**}",
+      "includeFiles": "{*.html,*.css,english-*.js,admin.js,firebase-config.js,listening-engine.js,speaking-avatar.js,speaking-recorder.js,assets/**,data/**,english-reading-materials/**,english-listening-materials/**,vendor/**}",
       "maxDuration": 30
     }
   },

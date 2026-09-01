@@ -1,4 +1,5 @@
-﻿const http = require("http");
+const zlib = require("zlib");
+const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
@@ -7,6 +8,75 @@ const vm = require("vm");
 const { neon } = require("@neondatabase/serverless");
 
 const ROOT = __dirname;
+
+const STATIC_CACHE = new Map();
+
+function serveCompressedFile(req, res, filePath, contentType, isStaticAsset) {
+  const acceptEncoding = req.headers["accept-encoding"] || "";
+  const stat = fs.statSync(filePath);
+  const mtime = stat.mtimeMs;
+  const etag = '"' + stat.size + '-' + mtime + '"';
+
+  if (req.headers["if-none-match"] === etag) {
+    res.writeHead(304, { "ETag": etag });
+    return res.end();
+  }
+
+  const cacheControl = isStaticAsset
+    ? "public, max-age=604800, stale-while-revalidate=86400"
+    : "no-cache";
+
+  const headers = {
+    "Content-Type": contentType,
+    "Cache-Control": cacheControl,
+    "ETag": etag,
+    "Vary": "Accept-Encoding"
+  };
+
+  const isCompressibleText = /^(?:text\/|application\/(?:javascript|json|xml|svg\+xml)|image\/svg\+xml)/i.test(contentType);
+
+  // Check in-memory cache for small to medium text files (< 1MB)
+  if (stat.size < 1024 * 1024 && isCompressibleText) {
+    const cached = STATIC_CACHE.get(filePath);
+    if (cached && cached.mtime === mtime) {
+      if (acceptEncoding.includes("gzip")) {
+        headers["Content-Encoding"] = "gzip";
+        res.writeHead(200, headers);
+        return res.end(cached.gzipped);
+      } else {
+        res.writeHead(200, headers);
+        return res.end(cached.raw);
+      }
+    }
+
+    const raw = fs.readFileSync(filePath);
+    const gzipped = zlib.gzipSync(raw, { level: 6 });
+    STATIC_CACHE.set(filePath, { mtime, raw, gzipped });
+
+    if (acceptEncoding.includes("gzip")) {
+      headers["Content-Encoding"] = "gzip";
+      res.writeHead(200, headers);
+      return res.end(gzipped);
+    } else {
+      res.writeHead(200, headers);
+      return res.end(raw);
+    }
+  }
+
+  // Stream larger files / binary files (images, audio)
+  if (acceptEncoding.includes("gzip") && isCompressibleText) {
+    headers["Content-Encoding"] = "gzip";
+    res.writeHead(200, headers);
+    const rawStream = fs.createReadStream(filePath);
+    const gzipStream = zlib.createGzip({ level: 6 });
+    rawStream.pipe(gzipStream).pipe(res);
+  } else {
+    headers["Content-Length"] = stat.size;
+    res.writeHead(200, headers);
+    fs.createReadStream(filePath).pipe(res);
+  }
+}
+
 
 function loadEnvironmentFile(fileName) {
   const envFile = path.join(ROOT, fileName);
@@ -98,10 +168,17 @@ function performDataBackup(data) {
 const DATA_FILE = process.env.VORTEX_DATA_FILE ? path.resolve(String(process.env.VORTEX_DATA_FILE)) : path.join(DATA_DIR, "vortex-data.json");
 const DATABASE_URL = String(process.env.DATABASE_URL || "").trim();
 const PORT = Number(process.env.PORT || 4173);
-const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || "admin").trim().toLowerCase();
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
-if (!process.env.ADMIN_PASSWORD) console.warn("WARNING: ADMIN_PASSWORD is not set in environment. Using default fallback for development.");
-const SESSION_SECRET = process.env.SESSION_SECRET || crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex");
+const IS_PRODUCTION = String(process.env.NODE_ENV || "").toLowerCase() === "production";
+const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || ADMIN_EMAIL.split("@")[0] || "admin").trim().toLowerCase();
+const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || (IS_PRODUCTION ? "" : "admin123")).trim();
+const ADMIN_PIN = String(process.env.ADMIN_PIN || "").trim();
+const SESSION_SECRET = String(process.env.SESSION_SECRET || (IS_PRODUCTION ? "" : crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex"))).trim();
+const FIREBASE_API_KEY = String(process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus").trim();
+if (!SESSION_SECRET) throw new Error("SESSION_SECRET must be configured in production.");
+if (!ADMIN_EMAIL && IS_PRODUCTION) console.warn("WARNING: ADMIN_EMAIL is not configured; Google-based admin login is disabled.");
+if (!ADMIN_PASSWORD && IS_PRODUCTION) console.warn("WARNING: ADMIN_PASSWORD is not configured; password-based admin login is disabled.");
+if (!ADMIN_PIN && IS_PRODUCTION) console.warn("WARNING: ADMIN_PIN is not configured; password-based admin login is disabled.");
 const GOOGLE_CLIENT_ID = String(process.env.GOOGLE_CLIENT_ID || "").trim();
 const GOOGLE_CLIENT_SECRET = String(process.env.GOOGLE_CLIENT_SECRET || "").trim();
 const GOOGLE_REDIRECT_URI = String(process.env.GOOGLE_REDIRECT_URI || "").trim();
@@ -117,11 +194,36 @@ const LEVELS = new Set(["beginner", "elementary", "ielts"]);
 const ENGLISH_SKILLS = new Set(["listening", "speaking", "reading", "writing"]);
 const ENGLISH_COLLECTIONS = new Set(["full-test", "practice", "article", "writing-sample", "speaking-sample", "speaking-question", "book"]);
 
+async function verifyFirebaseIdToken(idToken) {
+  const token = String(idToken || "").trim();
+  if (!token || token.length > 10000 || !FIREBASE_API_KEY) return null;
+  try {
+    const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(FIREBASE_API_KEY)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken: token })
+    });
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const account = Array.isArray(payload.users) ? payload.users[0] : null;
+    const email = String(account?.email || "").trim().toLowerCase();
+    if (!account?.localId || !email || account.emailVerified === false) return null;
+    return {
+      uid: String(account.localId),
+      email,
+      name: String(account.displayName || email.split("@")[0]).trim(),
+      avatarUrl: String(account.photoUrl || "").trim()
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
 function normalizeReadingText(source) {
   return source
     .replace(/&nbsp;|&#160;/gi, " ")
-    .replace(/&ndash;|&#8211;|&#x2013;/gi, "вЂ“")
-    .replace(/&mdash;|&#8212;|&#x2014;/gi, "вЂ”")
+    .replace(/&ndash;|&#8211;|&#x2013;/gi, "–")
+    .replace(/&mdash;|&#8212;|&#x2014;/gi, "—")
     .replace(/&amp;/gi, "&")
     .replace(/&#39;|&apos;/gi, "'")
     .replace(/&quot;/gi, '"');
@@ -130,7 +232,7 @@ function normalizeReadingText(source) {
 function readingQuestionNumbers(source) {
   const normalized = normalizeReadingText(source);
   const questions = new Set();
-  const rangePattern = /Questions?\s*(?:<[^>]+>|\s|:)*?(\d{1,2})\s*(?:-|вЂ“|вЂ”|to)\s*(\d{1,2})/gi;
+  const rangePattern = /Questions?\s*(?:<[^>]+>|\s|:)*?(\d{1,2})\s*(?:-|–|—|to)\s*(\d{1,2})/gi;
   for (const match of normalized.matchAll(rangePattern)) {
     const start = Number(match[1]);
     const end = Number(match[2]);
@@ -160,7 +262,7 @@ function cleanReadingTopic(fileName, source) {
     .trim();
   let title = matched ? normalizeReadingText(matched[1]).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : base;
   title = title
-    .replace(/^IELTS\s+(?:Academic\s+)?Reading\s*(?:Practice|Test)?\s*[-вЂ“вЂ”:]?\s*/i, "")
+    .replace(/^IELTS\s+(?:Academic\s+)?Reading\s*(?:Practice|Test)?\s*[-–—:]?\s*/i, "")
     .replace(/\s*\|.*$/g, "")
     .trim();
   if (!title || /^(?:practice|offline|complete practice|full reading practice)$/i.test(title)) title = base;
@@ -380,8 +482,8 @@ function readReadingCatalog(forceRefresh = false) {
   catalog.filter(item => item.materialKind !== "full-test").forEach(item => {
     const fallback = item.materialKind === "skill-practice" ? "Matching Headings" : "Academic passage";
     item.title = item.materialKind === "skill-practice"
-      ? `IELTS Reading Skill Practice вЂ” ${item.sourceTitle || fallback}`
-      : `IELTS Reading Passage вЂ” ${item.sourceTitle || fallback}`;
+      ? `IELTS Reading Skill Practice — ${item.sourceTitle || fallback}`
+      : `IELTS Reading Passage — ${item.sourceTitle || fallback}`;
     item.description = item.materialKind === "skill-practice"
       ? "Focused question-type practice for targeted improvement."
       : "Single-passage computer-delivered practice.";
@@ -990,7 +1092,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   .divider::after,
   #divider::after,
   #resize-handle::after {
-    content: 'в†”' !important;
+    content: '↔' !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -2908,7 +3010,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   <div class="vx-heading-picker-card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <h3 id="vxHeadingPickerTitle" style="margin:0;font-size:16px;font-weight:800;color:var(--vx-ink);display:flex;align-items:center;gap:8px;">
-        <span style="color:#2563eb;">рџ“Њ</span> Select Heading for <span id="vxTargetHeadingBoxName" style="color:#2563eb;">Paragraph</span>
+        <span style="color:#2563eb;">📌</span> Select Heading for <span id="vxTargetHeadingBoxName" style="color:#2563eb;">Paragraph</span>
       </h3>
       <button type="button" id="vxHeadingPickerCloseBtn" style="border:none;background:none;font-size:22px;cursor:pointer;color:inherit;line-height:1;">&times;</button>
     </div>
@@ -2956,7 +3058,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 <!-- Injected Sub-Rubric Banner -->
 <div class="vx-cdi-subrubric" id="vxCdiSubrubric" role="region" aria-label="Part instruction">
   <strong id="vxCurrentPartTitle">Part 1</strong>
-  <span id="vxCurrentPartDesc">Read the text and answer questions 1вЂ“13.</span>
+  <span id="vxCurrentPartDesc">Read the text and answer questions 1–13.</span>
 </div>
 
 <!-- Injected Mobile Viewport Switcher -->
@@ -3003,9 +3105,9 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     <span style="display:inline-block;padding:4px 14px;border-radius:999px;font-size:11.5px;font-weight:800;background:#fef3c7;color:#b45309;margin-bottom:16px;border:1px solid #fde68a;">IELTS Core Premium Exclusive</span>
     <div style="font-size:13.5px;color:#475569;line-height:1.6;margin:0 0 22px;text-align:left;background:#f8fafc;padding:14px 18px;border-radius:10px;border:1px solid #e2e8f0;">
       Real Exam Mode simulates official computer-delivered IELTS exam conditions:
-      <br>вЂў <strong>60-minute strict countdown timer</strong>
-      <br>вЂў <strong>Official Cambridge Band scoring & full diagnostics</strong>
-      <br>вЂў <strong>Realistic exam pressure with no pauses</strong>
+      <br>• <strong>60-minute strict countdown timer</strong>
+      <br>• <strong>Official Cambridge Band scoring & full diagnostics</strong>
+      <br>• <strong>Realistic exam pressure with no pauses</strong>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       <a href="/english/pricing" class="vx-btn-modal-primary" style="width:100%;box-sizing:border-box;font-size:13.5px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:42px;">
@@ -3015,7 +3117,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
         Continue in Untimed Practice Mode
       </button>
       <a href="/english/materials?level=ielts&skill=reading" style="font-size:12px;color:#64748b;text-decoration:none;margin-top:4px;font-weight:600;">
-        в†ђ Back to Materials Library
+        ← Back to Materials Library
       </a>
     </div>
   </div>
@@ -3059,8 +3161,8 @@ function readingPersistenceMarkup(material, user, requestedMode) {
         <div class="vx-res-sub">Official Computer-Delivered Academic Reading Assessment</div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <span class="vx-res-section-badge" id="vxResultSectionBadge">READING В· 40 Questions</span>
-        <button type="button" class="vx-res-close-x" id="vxReadingResultsCloseTopBtn" title="Close report">вњ•</button>
+        <span class="vx-res-section-badge" id="vxResultSectionBadge">READING · 40 Questions</span>
+        <button type="button" class="vx-res-close-x" id="vxReadingResultsCloseTopBtn" title="Close report">✕</button>
       </div>
     </div>
 
@@ -3070,7 +3172,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       <div class="vx-res-kpi-card primary">
         <div class="vx-res-kpi-label">IELTS Official Band</div>
         <div class="vx-res-band-val" id="vxResultBandNum">--</div>
-        <div class="vx-res-cefr-badge" id="vxResultCefrBadge">CEFR B2 В· Competent User</div>
+        <div class="vx-res-cefr-badge" id="vxResultCefrBadge">CEFR B2 · Competent User</div>
       </div>
 
       <!-- 2. Raw Accuracy & Breakdown -->
@@ -3171,7 +3273,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   if (isPracticeMode) {
     document.body.classList.add('vx-practice-mode');
     var subtitle = document.querySelector('.vx-exam-subtitle');
-    if (subtitle) subtitle.innerHTML = '<span style="color:#0284c7;font-weight:700;">[PRACTICE MODE]</span> В· Focused Practice & Drill';
+    if (subtitle) subtitle.innerHTML = '<span style="color:#0284c7;font-weight:700;">[PRACTICE MODE]</span> · Focused Practice & Drill';
   }
 
   var themeToggle = document.getElementById('vxThemeToggle');
@@ -3294,17 +3396,17 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   var flaggedQuestions = new Set();
 
   var partsConfig = totalQuestions === 40 ? [
-    { part: 1, start: 1, end: 13, count: 13, title: 'Part 1', desc: 'Read the text and answer questions 1вЂ“13.' },
-    { part: 2, start: 14, end: 26, count: 13, title: 'Part 2', desc: 'Read the text and answer questions 14вЂ“26.' },
-    { part: 3, start: 27, end: 40, count: 14, title: 'Part 3', desc: 'Read the text and answer questions 27вЂ“40.' }
+    { part: 1, start: 1, end: 13, count: 13, title: 'Part 1', desc: 'Read the text and answer questions 1–13.' },
+    { part: 2, start: 14, end: 26, count: 13, title: 'Part 2', desc: 'Read the text and answer questions 14–26.' },
+    { part: 3, start: 27, end: 40, count: 14, title: 'Part 3', desc: 'Read the text and answer questions 27–40.' }
   ] : [
-    { part: 1, start: 1, end: totalQuestions, count: totalQuestions, title: 'Part 1', desc: 'Read the text and answer questions 1вЂ“' + totalQuestions + '.' }
+    { part: 1, start: 1, end: totalQuestions, count: totalQuestions, title: 'Part 1', desc: 'Read the text and answer questions 1–' + totalQuestions + '.' }
   ];
 
   function switchCdiPart(partNum) {
     currentPart = partNum;
 
-    // 1. If page defines global switchToPart (e.g. R 3вЂ“49 series, Reading 7, etc.)
+    // 1. If page defines global switchToPart (e.g. R 3–49 series, Reading 7, etc.)
     if (typeof window.switchToPart === 'function') {
       try { window.switchToPart(partNum); } catch(e) {}
     }
@@ -3435,7 +3537,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       switchCdiPart(targetPart);
     }
 
-    // If page defines goToQuestion (e.g. R 3вЂ“49 series)
+    // If page defines goToQuestion (e.g. R 3–49 series)
     if (typeof window.goToQuestion === 'function') {
       try { window.goToQuestion(qNum); } catch(e) {}
     }
@@ -3608,7 +3710,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   }
 
   function autoSubmitTimeUp() {
-    notify('Time is up! Submitting your answersвЂ¦', 'error');
+    notify('Time is up! Submitting your answers…', 'error');
     submitExam();
   }
 
@@ -3664,13 +3766,13 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 
   function getBandCefr(band) {
     var b = Number(band) || 0;
-    if (b >= 8.5) return 'CEFR C2 В· Expert User';
-    if (b >= 7.5) return 'CEFR C1 В· Very Good User';
-    if (b >= 6.5) return 'CEFR B2+ В· Good User';
-    if (b >= 5.5) return 'CEFR B2 В· Competent User';
-    if (b >= 4.5) return 'CEFR B1 В· Modest User';
-    if (b > 0) return 'CEFR A2 В· Limited User';
-    return 'No Band В· Incomplete Attempt';
+    if (b >= 8.5) return 'CEFR C2 · Expert User';
+    if (b >= 7.5) return 'CEFR C1 · Very Good User';
+    if (b >= 6.5) return 'CEFR B2+ · Good User';
+    if (b >= 5.5) return 'CEFR B2 · Competent User';
+    if (b >= 4.5) return 'CEFR B1 · Modest User';
+    if (b > 0) return 'CEFR A2 · Limited User';
+    return 'No Band · Incomplete Attempt';
   }
 
   function showVerifiedResult(attempt, duration) {
@@ -3718,7 +3820,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       }
       partsGrid.innerHTML = partBreakdown.map(function(p) {
         var isZero = p.mistakes === 0;
-        return '<div class="vx-res-part-card"><div class="vx-res-part-name">' + p.part + '</div><div class="vx-res-part-score" style="color:' + (isZero ? '#10b981' : '#dc2626') + '">' + (isZero ? 'вњ” Perfect Score' : p.mistakes + ' mistake' + (p.mistakes === 1 ? '' : 's')) + '</div></div>';
+        return '<div class="vx-res-part-card"><div class="vx-res-part-name">' + p.part + '</div><div class="vx-res-part-score" style="color:' + (isZero ? '#10b981' : '#dc2626') + '">' + (isZero ? '✔ Perfect Score' : p.mistakes + ' mistake' + (p.mistakes === 1 ? '' : 's')) + '</div></div>';
       }).join('');
     }
 
@@ -3729,7 +3831,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       var pillsHtml = '';
       for (var q = 1; q <= total; q++) {
         var isIncorrect = incorrectSet.has(q);
-        pillsHtml += '<button type="button" class="vx-res-pill-btn ' + (isIncorrect ? 'incorrect' : 'correct') + '" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + (isIncorrect ? 'вњ• Q' : 'вњ“ Q') + q + '</button>';
+        pillsHtml += '<button type="button" class="vx-res-pill-btn ' + (isIncorrect ? 'incorrect' : 'correct') + '" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + (isIncorrect ? '✕ Q' : '✓ Q') + q + '</button>';
       }
       pillsWrap.innerHTML = pillsHtml;
 
@@ -3805,7 +3907,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     var total = Number(attempt.total) || totalQuestions || 40;
 
     // Update Header with Score Report & Retake Buttons and Score text
-    var bandText = attempt.band !== null && attempt.band !== undefined ? ' В· Band ' + Number(attempt.band).toFixed(1) : '';
+    var bandText = attempt.band !== null && attempt.band !== undefined ? ' · Band ' + Number(attempt.band).toFixed(1) : '';
     var scoreSummary = attempt.correct + '/' + total + bandText;
 
     var headerReportBtn = document.getElementById('vxHeaderScoreReportBtn');
@@ -3840,7 +3942,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     if (currentAttemptData) {
       applyReviewModeUi(currentAttemptData);
     }
-    notify('Detailed Review & Explanations: Coming soon in next update! рџљЂ', 'success');
+    notify('Detailed Review & Explanations: Coming soon in next update! 🚀', 'success');
   });
 
   document.getElementById('vxReportIssueBtn')?.addEventListener('click', function() {
@@ -3951,7 +4053,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     activeNoteSpan = existingSpan || null;
     currentSelectionRange = range ? range.cloneRange() : null;
     var snippet = existingSpan ? existingSpan.textContent.trim() : (range ? range.toString().trim() : '');
-    if (noteSnippet) noteSnippet.textContent = 'вЂњ' + (snippet.length > 80 ? snippet.slice(0, 80) + 'вЂ¦' : snippet) + 'вЂќ';
+    if (noteSnippet) noteSnippet.textContent = '“' + (snippet.length > 80 ? snippet.slice(0, 80) + '…' : snippet) + '”';
     if (noteText) noteText.value = existingSpan ? existingSpan.getAttribute('data-note') || '' : '';
     if (noteDeleteBtn) noteDeleteBtn.hidden = !existingSpan;
     if (noteModal) noteModal.classList.add('show');
@@ -4094,7 +4196,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     var pill = e.target.closest('.vx-q-pill');
     if (pill) {
       pill.classList.toggle('flagged');
-      notify(pill.classList.contains('flagged') ? 'Question ' + pill.getAttribute('data-q-num') + ' flagged for review рџљ©' : 'Flag removed', 'success');
+      notify(pill.classList.contains('flagged') ? 'Question ' + pill.getAttribute('data-q-num') + ' flagged for review 🚩' : 'Flag removed', 'success');
     }
   });
 
@@ -4150,7 +4252,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
         e.stopPropagation();
         isPracticePaused = !isPracticePaused;
         pauseBtn.innerHTML = isPracticePaused ? '<i class="fas fa-play" style="font-size:11px;color:#10b981"></i>' : '<i class="fas fa-pause" style="font-size:11px"></i>';
-        notify(isPracticePaused ? 'Practice Timer Paused вЏё' : 'Practice Timer Resumed в–¶', 'success');
+        notify(isPracticePaused ? 'Practice Timer Paused ⏸' : 'Practice Timer Resumed ▶', 'success');
       });
     }
     timerInterval = setInterval(function() {
@@ -4251,7 +4353,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
         document.querySelectorAll('.drag-item.selected-heading').forEach(function(i) { i.classList.remove('selected-heading'); });
         selectedHeadingEl = item;
         item.classList.add('selected-heading');
-        notify('рџ“Њ Sarlavha tanlandi! Endi pastdagi istalgan Paragraph katagiga bosing.', 'success');
+        notify('📌 Sarlavha tanlandi! Endi pastdagi istalgan Paragraph katagiga bosing.', 'success');
       });
     });
 
@@ -4268,7 +4370,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
           placeHeadingInZone(zone, val, txt, grp);
           selectedHeadingEl.classList.remove('selected-heading');
           selectedHeadingEl = null;
-          notify('Sarlavha muvaffaqiyatli joylandi! вњ“', 'success');
+          notify('Sarlavha muvaffaqiyatli joylandi! ✓', 'success');
           return;
         }
 
@@ -4359,7 +4461,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
           return;
         }
         restoreAnswers(data.attempt.answers);
-        var bandText = data.attempt.band !== null && data.attempt.band !== undefined ? ' В· Band ' + Number(data.attempt.band).toFixed(1) : '';
+        var bandText = data.attempt.band !== null && data.attempt.band !== undefined ? ' · Band ' + Number(data.attempt.band).toFixed(1) : '';
         var scoreSummary = data.attempt.correct + '/' + data.attempt.total + bandText;
         currentAttemptData = data.attempt;
         applyReviewModeUi(data.attempt);
@@ -4589,6 +4691,98 @@ async function syncStateFromFirestore() {
     req.on("error", () => resolve(null));
     req.end();
   });
+}
+
+
+const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
+const SUPABASE_KEY = String(process.env.SUPABASE_KEY || "").trim();
+
+async function syncStateToSupabase(stateData) {
+  if (!SUPABASE_URL || !SUPABASE_KEY || !stateData) return;
+  try {
+    // 1. Sync latest users
+    if (Array.isArray(stateData.users) && stateData.users.length > 0) {
+      const userRows = stateData.users.slice(0, 50).map(u => ({
+        id: u.id,
+        name: u.name || "Student",
+        username: u.username || u.email || "user_" + String(u.id).slice(0,6),
+        password_hash: u.passwordHash || u.password || "hash",
+        role: u.role || (u.isAdmin ? "admin" : (u.isTeacher ? "teacher" : "student")),
+        plan: u.plan || (u.isPremium ? "premium" : "free"),
+        created_at: u.createdAt || new Date().toISOString()
+      }));
+
+      fetch(`${SUPABASE_URL}/rest/v1/users`, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "resolution=merge-duplicates"
+        },
+        body: JSON.stringify(userRows)
+      }).catch(() => {});
+    }
+
+    // 2. Sync latest mock attempts
+    if (Array.isArray(stateData.mockAttempts) && stateData.mockAttempts.length > 0) {
+      const mockRows = stateData.mockAttempts.slice(0, 10).map(m => ({
+        id: m.id,
+        student_id: m.studentId || null,
+        mock_id: m.mockId || "MOCK-01",
+        mock_title: m.mockTitle || "IELTS Full Mock",
+        overall_band: m.overallBand || 6.0,
+        listening_band: m.listeningBand || null,
+        reading_band: m.readingBand || null,
+        writing_band: m.writingBand || null,
+        listening_data: m.listening || {},
+        reading_data: m.reading || {},
+        writing_data: m.writing || {},
+        created_at: m.createdAt || new Date().toISOString()
+      }));
+
+      fetch(`${SUPABASE_URL}/rest/v1/mock_attempts`, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "resolution=merge-duplicates"
+        },
+        body: JSON.stringify(mockRows)
+      }).catch(() => {});
+    }
+
+    // 3. Sync speaking attempts
+    if (Array.isArray(stateData.speakingAttempts) && stateData.speakingAttempts.length > 0) {
+      const speakingRows = stateData.speakingAttempts.slice(0, 10).map(s => ({
+        id: s.id,
+        student_id: s.studentId || null,
+        student_name: s.studentName || "Candidate",
+        mode: s.mode || "exam",
+        topic_title: s.topicTitle || "Speaking Mock",
+        overall_band: s.overallBand || 6.0,
+        fluency_score: s.fluencyScore || 6.0,
+        lexical_score: s.lexicalScore || 6.0,
+        grammar_score: s.grammarScore || 6.0,
+        pronunciation_score: s.pronunciationScore || 6.0,
+        transcripts: s.transcripts || [],
+        audio_url: s.audioUrl || null,
+        created_at: s.createdAt || new Date().toISOString()
+      }));
+
+      fetch(`${SUPABASE_URL}/rest/v1/speaking_attempts`, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "resolution=merge-duplicates"
+        },
+        body: JSON.stringify(speakingRows)
+      }).catch(() => {});
+    }
+  } catch (e) {}
 }
 
 async function syncStateToFirestore(stateData) {
@@ -5338,15 +5532,11 @@ async function api(req, res, pathname) {
   }
   if (req.method === "POST" && pathname === "/api/auth/firebase-google") {
     const body = await readBody(req);
-    const email = String(body.email || "").trim().toLowerCase();
-    const name = String(body.name || "").trim();
-    const uid = String(body.uid || "").trim();
-    const role = body.role === "teacher" ? "teacher" : "student";
-    const avatarUrl = String(body.avatarUrl || "").trim();
+    const verifiedGoogleUser = await verifyFirebaseIdToken(body.idToken);
+    if (!verifiedGoogleUser) return json(res, 401, { error: "Google sessiyasi tasdiqlanmadi. Qayta kirib ko‘ring." });
+    const { email, name, uid, avatarUrl } = verifiedGoogleUser;
     const learning = String(body.learning || "").trim();
     const goal = String(body.goal || "").trim();
-
-    if (!email) return json(res, 400, { error: "Google hisobi emaili topilmadi." });
 
     let student = data.users.find(u => (u.email && u.email.toLowerCase() === email) || u.googleId === uid);
     if (!student) {
@@ -5362,7 +5552,7 @@ async function api(req, res, pathname) {
         username,
         email,
         googleId: uid,
-        role,
+        role: "student",
         avatarUrl,
         learning,
         goal,
@@ -5877,28 +6067,7 @@ async function api(req, res, pathname) {
   }
 
   function getActiveGeminiKey() {
-    if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
-    try {
-      if (fs.existsSync(DATA_FILE)) {
-        const parsed = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
-        if (parsed.geminiApiKey) return parsed.geminiApiKey;
-      }
-    } catch(e) {}
-    try {
-      const dataFile = path.join(DATA_DIR, "data.json");
-      if (fs.existsSync(dataFile)) {
-        const parsed = JSON.parse(fs.readFileSync(dataFile, "utf8"));
-        if (parsed.geminiApiKey) return parsed.geminiApiKey;
-      }
-    } catch(e) {}
-    try {
-      const p = path.join(ROOT, "vortex-data.json");
-      if (fs.existsSync(p)) {
-        const parsed = JSON.parse(fs.readFileSync(p, "utf8"));
-        if (parsed.geminiApiKey) return parsed.geminiApiKey;
-      }
-    } catch(e) {}
-    return null;
+    return String(process.env.GEMINI_API_KEY || "").trim() || null;
   }
 
   // --- GOOGLE GEMINI REAL AI MULTI-MODEL POOL ENGINE ---
@@ -6112,46 +6281,29 @@ Return JSON: {
   }
 
   if (req.method === "POST" && pathname === "/api/speaking/generate-question") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Please sign in to use AI speaking practice." });
     const body = await readBody(req);
     const stage = String(body.stage || "part1");
-    const geminiKey = process.env.GEMINI_API_KEY || data.geminiApiKey;
+    const geminiKey = getActiveGeminiKey();
     const dynamicQ = await generateGeminiExamStart(stage, geminiKey);
     return json(res, 200, { success: true, data: dynamicQ });
   }
 
   if (req.method === "GET" && pathname === "/api/speaking/gemini-status") {
-    const key = process.env.GEMINI_API_KEY || data.geminiApiKey;
+    const key = getActiveGeminiKey();
     return json(res, 200, {
-      configured: Boolean(key),
-      maskedKey: key ? `${key.slice(0, 6)}...${key.slice(-4)}` : null
+      configured: Boolean(key)
     });
   }
 
   if (req.method === "POST" && pathname === "/api/speaking/set-gemini-key") {
-    const body = await readBody(req);
-    const key = String(body.apiKey || "").trim();
-    if (!key) return json(res, 400, { error: "Please provide a valid Gemini API key." });
-
-    data.geminiApiKey = key;
-    process.env.GEMINI_API_KEY = key;
-    await writeData(data);
-
-    try {
-      if (fs.existsSync(".env")) {
-        let envContent = fs.readFileSync(".env", "utf8");
-        if (envContent.includes("GEMINI_API_KEY=")) {
-          envContent = envContent.replace(/GEMINI_API_KEY=.*/, `GEMINI_API_KEY=${key}`);
-        } else {
-          envContent += `\nGEMINI_API_KEY=${key}\n`;
-        }
-        fs.writeFileSync(".env", envContent, "utf8");
-      }
-    } catch(e) {}
-
-    return json(res, 200, { success: true, message: "Gemini AI Key saved successfully!" });
+    return json(res, 405, { error: "Gemini API key must be configured as a Vercel environment variable." });
   }
 
   if (req.method === "POST" && pathname === "/api/speaking/ai-turn") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Please sign in to use AI speaking practice." });
     const body = await readBody(req);
     const mode = String(body.mode || "exam");
     const stage = String(body.stage || "part1");
@@ -6159,7 +6311,7 @@ Return JSON: {
     const currentQuestion = String(body.currentQuestion || "");
 
     const wordCount = userTranscript ? userTranscript.split(/\s+/).length : 0;
-    const geminiKey = body.geminiApiKey || (typeof data !== 'undefined' && data?.geminiApiKey) || process.env.GEMINI_API_KEY || getActiveGeminiKey();
+    const geminiKey = getActiveGeminiKey();
 
     // --- CASUAL PRACTICE MODE (Friendly Conversation Partner) ---
     if (mode === "practice") {
@@ -6366,9 +6518,11 @@ Return ONLY valid JSON in this schema:
   }
 
   if (req.method === "POST" && pathname === "/api/speaking/grade-full-exam") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Please sign in to grade a speaking exam." });
     const body = await readBody(req);
     const transcripts = Array.isArray(body.transcripts) ? body.transcripts : [];
-    const geminiKey = body.geminiApiKey || (typeof data !== 'undefined' && data?.geminiApiKey) || process.env.GEMINI_API_KEY || getActiveGeminiKey();
+    const geminiKey = getActiveGeminiKey();
 
     // 1. Try Gemini Grading
     if (geminiKey && transcripts.length > 0) {
@@ -7202,40 +7356,39 @@ Return ONLY valid JSON in this schema:
   }
   if (req.method === "POST" && pathname === "/api/admin/firebase-google") {
     if (adminLoginBlocked(req)) {
-      return json(res, 429, { error: "Xavfsizlik blokirovkasi: KoвЂp marotaba xato urinishlar boвЂlgani sababli ushbu IP uchun kirish 60 daqiqaga toвЂxtatildi." });
+      return json(res, 429, { error: "Xavfsizlik blokirovkasi: Ko‘p marotaba xato urinishlar bo‘lgani sababli ushbu IP uchun kirish 60 daqiqaga to‘xtatildi." });
     }
     const body = await readBody(req);
-    const email = String(body.email || "").trim().toLowerCase();
-    const primaryAdminEmail = "sultanovb604@gmail.com";
+    const verifiedGoogleUser = await verifyFirebaseIdToken(body.idToken);
+    const email = verifiedGoogleUser?.email || "";
 
-    if (email !== primaryAdminEmail) {
+    if (!verifiedGoogleUser || email !== ADMIN_EMAIL) {
       recordAdminLoginFailure(req);
       await new Promise(r => setTimeout(r, 1200));
-      return json(res, 403, {
-        error: `Ruxsat berilmadi! Ushbu Google hisob (${email || 'noma\'lum'}) admin emas. Admin panelga faqat ${primaryAdminEmail} kira oladi.`
-      });
+      return json(res, 403, { error: "Ruxsat berilmadi. Tasdiqlangan administrator Google hisobi talab qilinadi." });
     }
 
     clearAdminLoginFailures(req);
     return json(res, 200, {
-      token: issueAdminToken(primaryAdminEmail),
-      admin: { username: "sultanovb604", email: primaryAdminEmail },
+      token: issueAdminToken(ADMIN_EMAIL),
+      admin: { username: ADMIN_USERNAME, email: ADMIN_EMAIL },
       expiresIn: ADMIN_SESSION_TTL / 1000
     });
   }
   if (req.method === "POST" && pathname === "/api/admin/login") {
     if (adminLoginBlocked(req)) {
-      return json(res, 429, { error: "Xavfsizlik blokirovkasi: KoвЂp marotaba xato urinishlar boвЂlgani sababli ushbu IP uchun kirish 60 daqiqaga toвЂxtatildi." });
+      return json(res, 429, { error: "Xavfsizlik blokirovkasi: Ko‘p marotaba xato urinishlar bo‘lgani sababli ushbu IP uchun kirish 60 daqiqaga to‘xtatildi." });
     }
     const body = await readBody(req);
     const effectiveAdminPassword = data.adminPassword || ADMIN_PASSWORD;
-    const effectiveAdminPin = data.adminSecurityPin || process.env.ADMIN_PIN || "849201";
-    const primaryAdminEmail = "sultanovb604@gmail.com";
-    const primaryAdminUsername = "sultanovb604";
+    const effectiveAdminPin = data.adminSecurityPin || ADMIN_PIN;
+    if (!effectiveAdminPassword || !effectiveAdminPin) {
+      return json(res, 503, { error: "Password orqali admin kirishi sozlanmagan. Google orqali kiring yoki Vercel environment variables’ni sozlang." });
+    }
 
     const allowedAdminIdentifiers = new Set([
-      "sultanovb604@gmail.com",
-      "sultanovb604"
+      ADMIN_EMAIL,
+      ADMIN_USERNAME
     ]);
 
     const inputIdentifier = String(body.username || body.email || "").trim().toLowerCase();
@@ -7255,7 +7408,7 @@ Return ONLY valid JSON in this schema:
     }
 
     clearAdminLoginFailures(req);
-    return json(res, 200, { token: issueAdminToken(inputIdentifier), admin: { username: inputIdentifier, email: primaryAdminEmail }, expiresIn: ADMIN_SESSION_TTL / 1000 });
+    return json(res, 200, { token: issueAdminToken(inputIdentifier), admin: { username: ADMIN_USERNAME, email: ADMIN_EMAIL }, expiresIn: ADMIN_SESSION_TTL / 1000 });
   }
   if (pathname.startsWith("/api/admin/") && !isAdmin(req)) return json(res, 401, { error: "Please sign in as an administrator." });
   if (req.method === "GET" && pathname === "/api/admin/session") return json(res, 200, { ok: true, admin: { username: readAdminSession(req).username } });
@@ -7265,10 +7418,10 @@ Return ONLY valid JSON in this schema:
     const newPassword = String(body.newPassword || "");
     const effectiveAdminPassword = data.adminPassword || ADMIN_PASSWORD;
     if (!safeEqualText(currentPassword, effectiveAdminPassword)) {
-      return json(res, 400, { error: "Amaldagi parol notoвЂgвЂri kiritildi." });
+      return json(res, 400, { error: "Amaldagi parol noto‘g‘ri kiritildi." });
     }
     if (newPassword.length < 6) {
-      return json(res, 400, { error: "Yangi parol kamida 6 ta belgidan iborat boвЂlishi kerak." });
+      return json(res, 400, { error: "Yangi parol kamida 6 ta belgidan iborat bo‘lishi kerak." });
     }
     data.adminPassword = newPassword;
     data.adminPasswordUpdatedAt = new Date().toISOString();
@@ -7373,7 +7526,7 @@ Return ONLY valid JSON in this schema:
     user.planUpdatedAt = new Date().toISOString();
     user.redeemedCode = code;
     await writeData(data);
-    return json(res, 200, { ok: true, message: `рџЊџ IELTS Core Premium (${days} kun) muvaffaqiyatli faollashtirildi!`, user: safeUser(user) });
+    return json(res, 200, { ok: true, message: `🌟 IELTS Core Premium (${days} kun) muvaffaqiyatli faollashtirildi!`, user: safeUser(user) });
   }
   if (req.method === "GET" && pathname === "/api/admin/promo-codes") {
     return json(res, 200, data.promoCodes || []);
@@ -7570,7 +7723,7 @@ function listeningPersistenceMarkup(user) {
   function notify(message,type){status.querySelector('span').textContent=message;status.className='show '+(type||'');window.clearTimeout(notify.timer);notify.timer=window.setTimeout(function(){status.className='';},6500);}
   function collectAnswers(){var answers=[];for(var number=1;number<=40;number+=1){var key='q'+number;var direct=document.getElementById(key);var checked=document.querySelector('input[name="'+key+'"]:checked');var value=checked?checked.value:(direct?direct.value:'');answers.push({key:key,value:String(value||'')});}return answers;}
   function scoreFromPage(){var node=document.getElementById('score-summary');var match=String(node&&node.textContent||'').match(/scored\s+(\d+)\s+out of\s+40/i);return match?Number(match[1]):null;}
-  async function saveResult(){if(saved||saving||scoreFromPage()===null)return;saving=true;if(!token){notify('Sign in before taking a test to save the result.','error');saving=false;return;}try{var response=await fetch('/api/listening-attempts',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({materialId:material.id,answers:collectAnswers(),durationSeconds:Math.round((Date.now()-startedAt)/1000)})});var data=await response.json().catch(function(){return {};});if(!response.ok)throw new Error(data.error||'Listening result could not be saved.');saved=true;notify('Saved: '+data.attempt.correct+'/'+data.attempt.total+' В· IELTS Listening Band '+Number(data.attempt.band).toFixed(1),'');}catch(error){notify(error.message||'Listening result could not be saved.','error');}finally{saving=false;}}
+  async function saveResult(){if(saved||saving||scoreFromPage()===null)return;saving=true;if(!token){notify('Sign in before taking a test to save the result.','error');saving=false;return;}try{var response=await fetch('/api/listening-attempts',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({materialId:material.id,answers:collectAnswers(),durationSeconds:Math.round((Date.now()-startedAt)/1000)})});var data=await response.json().catch(function(){return {};});if(!response.ok)throw new Error(data.error||'Listening result could not be saved.');saved=true;notify('Saved: '+data.attempt.correct+'/'+data.attempt.total+' · IELTS Listening Band '+Number(data.attempt.band).toFixed(1),'');}catch(error){notify(error.message||'Listening result could not be saved.','error');}finally{saving=false;}}
   function saveWhenReady(remaining){window.setTimeout(function(){if(scoreFromPage()!==null)saveResult();else if(remaining>0)saveWhenReady(remaining-1);},250);}
   document.addEventListener('click',function(event){var control=event.target.closest('button,input[type="submit"]');if(!control)return;var label=String(control.textContent||control.value||control.getAttribute('aria-label')||'').trim();if(/check answers|submit|finish|deliver|review your answers/i.test(label))saveWhenReady(16);},true);
   var scoreNode=document.getElementById('score-summary');if(scoreNode)new MutationObserver(function(){saveWhenReady(2);}).observe(scoreNode,{subtree:true,childList:true,characterData:true});
@@ -7584,7 +7737,7 @@ function readNeutralEnglishExam(user) {
     .replace(/\s*--telegram-color:\s*[^;]+;/gi, "")
     .replace(/\s*body::after\s*\{[\s\S]*?\}\s*/i, "\n")
     .replace(/\s*\.telegram-link\s*\{[\s\S]*?\}\s*\.telegram-link:hover\s*\{[\s\S]*?\}\s*/i, "\n")
-    .replace(/<div class="header-left">[\s\S]*?<\/div>\s*(?=<div class="header-icons">)/i, '<div class="header-left" aria-label="IELTS Listening" style="display:flex;align-items:center;gap:12px;"><a href="/english/materials?level=ielts&skill=listening" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-color);text-decoration:none;font-weight:700;font-size:12px;padding:6px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--secondary-bg);">в†ђ Exit to Library</a><strong style="font-size:14px;font-weight:700;letter-spacing:-0.02em;">IELTS Listening Full Test 01</strong></div>\n    ')
+    .replace(/<div class="header-left">[\s\S]*?<\/div>\s*(?=<div class="header-icons">)/i, '<div class="header-left" aria-label="IELTS Listening" style="display:flex;align-items:center;gap:12px;"><a href="/english/materials?level=ielts&skill=listening" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-color);text-decoration:none;font-weight:700;font-size:12px;padding:6px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--secondary-bg);">← Exit to Library</a><strong style="font-size:14px;font-weight:700;letter-spacing:-0.02em;">IELTS Listening Full Test 01</strong></div>\n    ')
     .replace(/@MINDLESS_WRITER|@FOZILBEK_IELTS|https?:\/\/t\.me\/[^\s"']+|https?:\/\/i\.pinimg\.com\/[^\s"']+/gi, "")
     .replace(/<\/style>/i, "@media (max-width: 768px) { .nav-arrows { display: none; } }\n</style>");
   const persistence = listeningPersistenceMarkup(user);

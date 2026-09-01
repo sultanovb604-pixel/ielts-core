@@ -1,10 +1,10 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Master English with precision from beginner foundations to official computer-delivered IELTS simulation. 40+ authentic full tests, verified band scoring, and saved progress.">
-  <title>IELTS Core вЂ” Official Computer-Delivered IELTS & English Platform</title>
+  <meta name="description" content="Prepare for computer-delivered IELTS with structured English courses, full practice tests, band-score estimates, and saved progress.">
+  <title>IELTS Core — Computer-Delivered IELTS Practice & English Learning</title>
   <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +21,8 @@
       <span>IELTS CORE</span>
       <span class="app-brand-badge">BETA</span>
     </a>
-    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
-    <nav class="app-nav" aria-label="Main navigation">
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="app-nav" id="mainNav" aria-label="Main navigation">
       <a href="/english" aria-current="page">Home</a>
       <a href="/english/courses">Courses</a>
       <a href="/english/practice">Practice</a>
@@ -48,10 +48,10 @@
         <div class="v4-hero-copy">
           <div class="v4-hero-badge">
             <span class="v4-badge-pulse" aria-hidden="true"></span>
-            <span>Cambridge CDI Exam Platform</span>
+            <span>Computer-delivered exam practice</span>
           </div>
-          <h1 id="v4HeroTitle">Master Cambridge IELTS.<br>Achieve your target <span class="v4-hero-gradient">Band 8.0+.</span></h1>
-          <p class="v4-hero-subtitle">From core language foundations to official computer-delivered IELTS simulation. Practice authentic full tests, get verified 0вЂ“9 band evaluations, and track your growth in one focused workspace.</p>
+          <h1 id="v4HeroTitle">Master IELTS practice.<br>Reach your target <span class="v4-hero-gradient">Band 8.0+.</span></h1>
+          <p class="v4-hero-subtitle">Build strong English foundations, practise in a computer-delivered test format, receive 0–9 band-score estimates, and track your growth in one focused workspace.</p>
           
           <div class="v4-actions">
             <a class="button primary large v4-cta-primary" data-start-onboarding href="/english/signup">
@@ -71,11 +71,11 @@
             </div>
             <div class="v4-trust-item">
               <span class="material-symbols-outlined" aria-hidden="true">verified</span>
-              <span><strong>0вЂ“9</strong> Band Score Rubric</span>
+              <span><strong>0–9</strong> Band Score Rubric</span>
             </div>
             <div class="v4-trust-item">
               <span class="material-symbols-outlined" aria-hidden="true">school</span>
-              <span><strong>Cambridge</strong> Standard</span>
+              <span><strong>IELTS-style</strong> Format</span>
             </div>
           </div>
         </div>
@@ -88,13 +88,13 @@
                 <span></span><span></span><span></span>
               </div>
               <div class="v4-mock-tabs" role="tablist" aria-label="Interactive demo selector">
-                <button type="button" class="v4-mock-tab active" data-demo-tab="reading" role="tab" aria-selected="true">
+                <button type="button" class="v4-mock-tab active" id="demoReadingTab" data-demo-tab="reading" role="tab" aria-selected="true" aria-controls="demoReading" tabindex="0">
                   <span class="material-symbols-outlined" aria-hidden="true">menu_book</span> Reading Test
                 </button>
-                <button type="button" class="v4-mock-tab" data-demo-tab="listening" role="tab" aria-selected="false">
+                <button type="button" class="v4-mock-tab" id="demoListeningTab" data-demo-tab="listening" role="tab" aria-selected="false" aria-controls="demoListening" tabindex="-1">
                   <span class="material-symbols-outlined" aria-hidden="true">headphones</span> Listening Test
                 </button>
-                <button type="button" class="v4-mock-tab" data-demo-tab="analytics" role="tab" aria-selected="false">
+                <button type="button" class="v4-mock-tab" id="demoAnalyticsTab" data-demo-tab="analytics" role="tab" aria-selected="false" aria-controls="demoAnalytics" tabindex="-1">
                   <span class="material-symbols-outlined" aria-hidden="true">insights</span> Score Analytics
                 </button>
               </div>
@@ -102,11 +102,11 @@
             </div>
 
             <!-- Panel 1: Reading Exam Live Demo -->
-            <div class="v4-mock-body active" id="demoReading">
+            <div class="v4-mock-body active" id="demoReading" role="tabpanel" aria-labelledby="demoReadingTab">
               <div class="v4-mock-exam-header">
                 <div class="v4-mock-exam-title">
                   <strong>IELTS Academic Reading Test 01</strong>
-                  <small>Passage 1 of 3 В· 40 Questions</small>
+                  <small>Passage 1 of 3 · 40 Questions</small>
                 </div>
                 <div class="v4-mock-timer">
                   <span class="material-symbols-outlined" aria-hidden="true">timer</span>
@@ -146,21 +146,21 @@
                 <span class="material-symbols-outlined" aria-hidden="true">verified</span>
                 <div>
                   <strong>Verified Result: 38 / 40</strong>
-                  <small>IELTS Academic Reading В· Band 8.5</small>
+                  <small>IELTS Academic Reading · Band 8.5</small>
                 </div>
               </div>
             </div>
 
             <!-- Panel 2: Listening Exam Live Demo -->
-            <div class="v4-mock-body" id="demoListening">
+            <div class="v4-mock-body" id="demoListening" role="tabpanel" aria-labelledby="demoListeningTab">
               <div class="v4-mock-exam-header">
                 <div class="v4-mock-exam-title">
                   <strong>IELTS Listening Full Test 01</strong>
-                  <small>Part 1 of 4 В· Audio Simulation</small>
+                  <small>Part 1 of 4 · Audio Simulation</small>
                 </div>
                 <div class="v4-mock-audio-pill">
                   <span class="material-symbols-outlined" aria-hidden="true">volume_up</span>
-                  <span>Authentic British Council Audio</span>
+                  <span>Listening Practice Audio</span>
                 </div>
               </div>
 
@@ -184,14 +184,14 @@
                   </div>
                   <div class="v4-mock-form-row">
                     <span>Maximum Budget:</span>
-                    <input type="text" value="ВЈ 650 / month" readonly>
+                    <input type="text" value="£ 650 / month" readonly>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Panel 3: Score Analytics Live Demo -->
-            <div class="v4-mock-body" id="demoAnalytics">
+            <div class="v4-mock-body" id="demoAnalytics" role="tabpanel" aria-labelledby="demoAnalyticsTab">
               <div class="v4-mock-analytics-head">
                 <div>
                   <span class="v4-mock-subkicker">STUDENT DASHBOARD</span>
@@ -244,8 +244,8 @@
               <div class="v4-bento-icon-box">
                 <span class="material-symbols-outlined" aria-hidden="true">splitscreen</span>
               </div>
-              <h3>Official Computer-Delivered IELTS Interface</h3>
-              <p>Passage pane and question pane balanced side-by-side. Text size adjuster, night mode, countdown timer with visual alerts, and sticky 1вЂ“40 question navigator.</p>
+              <h3>Computer-Delivered IELTS-Style Interface</h3>
+              <p>Passage pane and question pane balanced side-by-side. Text size adjuster, night mode, countdown timer with visual alerts, and sticky 1–40 question navigator.</p>
               <ul class="v4-bento-list">
                 <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Georgia serif typography for reading focus</li>
                 <li><span class="material-symbols-outlined" aria-hidden="true">check</span> 100% responsive on mobile with clean view switcher</li>
@@ -278,10 +278,10 @@
               <span class="material-symbols-outlined" aria-hidden="true">verified</span>
             </div>
             <h3>Server-Verified Band Scoring</h3>
-            <p>Every response is evaluated strictly on the backend against authentic Cambridge answer keys, computing true IELTS 0вЂ“9 bands with zero client-side tampering.</p>
+            <p>Every response is evaluated on the backend against curated answer keys, producing consistent IELTS-style 0–9 band-score estimates without client-side tampering.</p>
             <div class="v4-score-meter">
               <div class="v4-score-meter-bar" style="width:90%"></div>
-              <span>36 / 40 Raw Points в†’ Band 8.5</span>
+              <span>36 / 40 Raw Points → Band 8.5</span>
             </div>
           </div>
 
@@ -293,9 +293,9 @@
             <h3>Foundations Before Exam Technique</h3>
             <p>Structured A1 Beginner and A2 Elementary learning tracks with Oxford 3000 vocabulary flashcards and interactive graded reader articles.</p>
             <div class="v4-stage-mini-tags">
-              <span>01 В· A1 Beginner</span>
-              <span>02 В· A2 Elementary</span>
-              <span>03 В· IELTS Mastery</span>
+              <span>01 · A1 Beginner</span>
+              <span>02 · A2 Elementary</span>
+              <span>03 · IELTS Mastery</span>
             </div>
           </div>
 
@@ -310,7 +310,7 @@
                 <p>All completed tests, timestamps, duration, and question-by-question answers are securely recorded to your personal dashboard. Re-open any past test in Review Mode to analyze mistakes.</p>
               </div>
               <div class="v4-bento-actions">
-                <a href="/english/materials" class="button primary">Browse authentic materials в†’</a>
+                <a href="/english/materials" class="button primary">Browse practice materials →</a>
               </div>
             </div>
           </div>
@@ -329,36 +329,36 @@
 
         <div class="v4-path-grid">
           <a class="v4-path-card" href="/english/courses?level=beginner">
-            <div class="v4-path-badge">STAGE 01 В· A1</div>
+            <div class="v4-path-badge">STAGE 01 · A1</div>
             <h3>Beginner Foundations</h3>
             <p>Master essential English vocabulary, grammatical structure, pronunciation, and everyday introductory dialogues.</p>
             <div class="v4-path-meta">
               <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Core Vocabulary</span>
               <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Sentence Building</span>
             </div>
-            <em>Start Beginner course в†’</em>
+            <em>Start Beginner course →</em>
           </a>
 
           <a class="v4-path-card" href="/english/courses?level=elementary">
-            <div class="v4-path-badge">STAGE 02 В· A2</div>
+            <div class="v4-path-badge">STAGE 02 · A2</div>
             <h3>Elementary Fluency</h3>
             <p>Expand reading comprehension with interactive articles, natural conversation patterns, and listening tracks.</p>
             <div class="v4-path-meta">
               <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Interactive Reader</span>
               <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Audio Practice</span>
             </div>
-            <em>Explore Elementary в†’</em>
+            <em>Explore Elementary →</em>
           </a>
 
           <a class="v4-path-card featured" href="/english/materials?level=ielts&collection=full-test">
-            <div class="v4-path-badge featured">STAGE 03 В· IELTS</div>
+            <div class="v4-path-badge featured">STAGE 03 · IELTS</div>
             <h3>IELTS Full Simulation</h3>
             <p>Full Academic Reading and Listening exams in computer-delivered format with verified band score tracking.</p>
             <div class="v4-path-meta">
               <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Full Exam Practice</span>
-              <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Band 0вЂ“9 Conversion</span>
+              <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Band 0–9 Conversion</span>
             </div>
-            <em>Open IELTS tests repository в†’</em>
+            <em>Open IELTS tests repository →</em>
           </a>
         </div>
       </div>
@@ -369,8 +369,8 @@
       <div class="v4-shell v4-cta-box">
         <div class="v4-cta-content">
           <p class="v4-kicker">READY TO BEGIN?</p>
-          <h2 id="v4CtaTitle">Start practising with authentic IELTS materials today.</h2>
-          <p>Join students preparing with official computer-delivered tests, verified band scoring, and structured lessons.</p>
+          <h2 id="v4CtaTitle">Start practising with focused IELTS materials today.</h2>
+          <p>Prepare with computer-delivered practice tests, consistent band-score estimates, and structured lessons.</p>
         </div>
         <div class="v4-cta-actions">
           <a class="button primary large v4-cta-button" data-start-onboarding href="/english/signup">
@@ -394,7 +394,7 @@
       <nav class="v4-footer-nav" aria-label="Footer navigation">
         <div>
           <strong>Learning</strong>
-          <a href="/english/courses">Courses (A1вЂ“A2)</a>
+          <a href="/english/courses">Courses (A1–A2)</a>
           <a href="/english/practice">Daily Practice</a>
           <a href="/english/materials">Materials Library</a>
         </div>
@@ -416,18 +416,29 @@
 
   <!-- Interactive Demo Tabs Script -->
   <script>
-    document.querySelectorAll('[data-demo-tab]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('[data-demo-tab]').forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        document.querySelectorAll('.v4-mock-body').forEach(panel => panel.classList.remove('active'));
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
-        const target = btn.dataset.demoTab;
-        const panel = document.getElementById('demo' + target.charAt(0).toUpperCase() + target.slice(1));
-        if (panel) panel.classList.add('active');
+    const demoTabs = [...document.querySelectorAll('[data-demo-tab]')];
+    const demoPanels = [...document.querySelectorAll('.v4-mock-body[role="tabpanel"]')];
+    const activateDemoTab = (btn, moveFocus = false) => {
+      demoTabs.forEach(tab => {
+        const selected = tab === btn;
+        tab.classList.toggle('active', selected);
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+      demoPanels.forEach(panel => panel.classList.toggle('active', panel.id === btn.getAttribute('aria-controls')));
+      if (moveFocus) btn.focus();
+    };
+    demoTabs.forEach((btn, index) => {
+      btn.addEventListener('click', () => activateDemoTab(btn));
+      btn.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % demoTabs.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + demoTabs.length) % demoTabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = demoTabs.length - 1;
+        activateDemoTab(demoTabs[nextIndex], true);
       });
     });
 
@@ -455,8 +466,6 @@
   <script src="/english-site.js?v=20260823_999"></script><script src="/english-session.js?v=20260823_999"></script><script src="/english-onboarding.js?v=20260823_999"></script>
 </body>
 </html>
-
-
 
 
 

@@ -89,7 +89,7 @@
         : '<span class="mock-status-pill premium">Premium</span>';
 
       if (item.completed) {
-        statusBadge = `<span class="mock-status-pill completed">Completed В· Band ${Number(item.latestBand || 0).toFixed(1)}</span>`;
+        statusBadge = `<span class="mock-status-pill completed">Completed · Band ${Number(item.latestBand || 0).toFixed(1)}</span>`;
       }
 
       let actionButton = '';
@@ -217,4 +217,3 @@
 
   loadData();
 })();
-

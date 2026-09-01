@@ -26,16 +26,16 @@ async function main() {
   const examHtml = await examResponse.text();
   assert.equal(examResponse.status, 200);
   assert.match(examHtml, /<audio\b/i);
-  assert.match(examHtml, /vortex-listening-save-script/);
+  assert.match(examHtml, /vortex-listening-engine-script/);
+  assert.match(examHtml, /\/api\/listening-attempts/);
   assert.doesNotMatch(examHtml, /https?:\/\/t\.me\//i);
   assert.doesNotMatch(examHtml, /@(?:mindless_writer|fozilbek_ielts)/i);
 
   const answers = {
-    q1: "northeast", q2: "peak season", q3: "weekend", q4: "quiet", q5: "beach",
-    q6: "restaurant", q7: "garden", q8: "Cheffins", q9: "0192477285", q10: "Countryside Living",
-    q11: "A", q12: "A", q13: "B", q14: "C", q15: "C", q16: "B", q17: "C", q18: "D", q19: "A", q20: "F",
-    q21: "C", q22: "B", q23: "B", q24: "B", q25: "C", q26: "A", q27: "F", q28: "D", q29: "E", q30: "A",
-    q31: "smooth", q32: "protection", q33: "half", q34: "still", q35: "salt", q36: "mud", q37: "smell", q38: "pump", q39: "pest", q40: "antibiotic"
+    q1: "B", q2: "B", q3: "C", q4: "A", q5: "D", q6: "B", q7: "write music", q8: "85", q9: "14th September", q10: "Curtis",
+    q11: "lake", q12: "picnic", q13: "flowers", q14: "20", q15: "motor", q16: "art gallery", q17: "concert hall", q18: "2:30", q19: "C", q20: "B",
+    q21: "C", q22: "D", q23: "C", q24: "E", q25: "A", q26: "C", q27: "B", q28: "E", q29: "G", q30: "A",
+    q31: "B", q32: "B", q33: "B", q34: "C", q35: "leak", q36: "conference centre", q37: "balcony", q38: "car park", q39: "exercise", q40: "transport museum"
   };
   const submission = await request("/api/listening-attempts", {
     method: "POST",

@@ -485,41 +485,31 @@
             </div>
           </div>
 
-          <!-- Google Gemini AI Token Modal -->
+          <!-- AI assessment status modal -->
           <div class="zoom-gemini-modal" id="zoomGeminiModal" style="display:none;">
             <div class="gemini-modal-box">
               <div class="gemini-modal-header">
                 <div style="display:flex;align-items:center;gap:8px;">
                   <span class="material-symbols-outlined" style="color:#38bdf8;font-size:22px;">settings_suggest</span>
-                  <strong>Assessment Engine Configuration</strong>
+                  <strong>Assessment Engine Status</strong>
                 </div>
                 <button type="button" class="modal-close-x" id="closeGeminiModalBtn">✕</button>
               </div>
               <div class="gemini-modal-body">
-                <p>To activate the real-time AI Assessment Engine for your speaking test, please connect your authorized processing key:</p>
-                <div class="gemini-input-row">
-                  <input type="password" id="geminiKeyInput" placeholder="Paste your API key here..." autocomplete="off" />
-                  <button type="button" class="button primary" id="saveGeminiKeyBtn">Connect Engine</button>
-                </div>
+                <p>The AI assessment engine is configured securely by the platform administrator. Students should never paste API keys into this page.</p>
                 <div id="geminiFeedbackMsg" class="gemini-feedback-msg" style="display:none;"></div>
-                <div class="gemini-modal-footer">
-                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">
-                    <span>Obtain an Authorized Processing Key</span>
-                    <span class="material-symbols-outlined" style="font-size:13px;">open_in_new</span>
-                  </a>
-                </div>
               </div>
             </div>
           </div>
 
-          <!-- Cambridge Official Speaking Band Score Card Modal -->
+          <!-- IELTS-style speaking band score card modal -->
           <div class="zoom-score-modal" id="zoomExamScoreModal" style="display:none;">
             <div class="score-card-container">
               <div class="score-card-header">
                 <div class="score-card-brand">
                   <span class="material-symbols-outlined score-brand-icon">military_tech</span>
                   <div>
-                    <h3 class="score-main-title">IELTS Speaking Official Evaluation</h3>
+                    <h3 class="score-main-title">IELTS Speaking Practice Evaluation</h3>
                     <p class="score-sub-title">Cambridge English Assessment · Senior Examiner Report</p>
                   </div>
                 </div>
@@ -623,8 +613,6 @@
       this.geminiStatusLabel = this.container.querySelector('#geminiStatusLabel');
       this.geminiModal = this.container.querySelector('#zoomGeminiModal');
       this.closeGeminiBtn = this.container.querySelector('#closeGeminiModalBtn');
-      this.geminiInput = this.container.querySelector('#geminiKeyInput');
-      this.saveGeminiBtn = this.container.querySelector('#saveGeminiKeyBtn');
       this.geminiFeedback = this.container.querySelector('#geminiFeedbackMsg');
 
       // Score Card Elements
@@ -945,44 +933,6 @@
         };
       }
 
-      if (this.saveGeminiBtn) {
-        this.saveGeminiBtn.onclick = async () => {
-          const key = this.geminiInput ? this.geminiInput.value.trim() : '';
-          if (!key) {
-            alert('Please paste a valid Gemini API key.');
-            return;
-          }
-          this.saveGeminiBtn.disabled = true;
-          this.saveGeminiBtn.textContent = 'Connecting...';
-          try {
-            const res = await fetch('/api/speaking/set-gemini-key', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ apiKey: key })
-            });
-            const data = await res.json();
-            if (res.ok) {
-              if (this.geminiFeedback) {
-                this.geminiFeedback.className = 'gemini-feedback-msg success';
-                this.geminiFeedback.textContent = 'Connected successfully! Real-time AI Assessment Engine is now active.';
-                this.geminiFeedback.style.display = 'block';
-              }
-              if (this.geminiStatusLabel) this.geminiStatusLabel.textContent = 'Gemini Active 🟢';
-              if (this.geminiBtn) this.geminiBtn.classList.add('connected');
-              setTimeout(() => {
-                if (this.geminiModal) this.geminiModal.style.display = 'none';
-              }, 1500);
-            } else {
-              alert(data.error || 'Failed to save key');
-            }
-          } catch(e) {
-            alert('Network error connecting to Gemini API.');
-          } finally {
-            this.saveGeminiBtn.disabled = false;
-            this.saveGeminiBtn.textContent = 'Save & Connect';
-          }
-        };
-      }
     }
 
     async checkGeminiStatus() {
@@ -994,7 +944,8 @@
             if (this.geminiStatusLabel) this.geminiStatusLabel.textContent = 'Gemini Active 🟢';
             if (this.geminiBtn) this.geminiBtn.classList.add('connected');
           } else {
-            if (this.geminiStatusLabel) this.geminiStatusLabel.textContent = 'Connect Gemini 🟡';
+            if (this.geminiStatusLabel) this.geminiStatusLabel.textContent = 'AI assessment unavailable';
+            if (this.geminiBtn) this.geminiBtn.classList.remove('connected');
           }
         }
       } catch (e) {}
@@ -1149,7 +1100,7 @@
           const voices = (window._cachedVoices && window._cachedVoices.length > 0)
             ? window._cachedVoices
             : (window.speechSynthesis ? window.speechSynthesis.getVoices() : []);
-          
+
           if (voices && voices.length > 0) {
             const enVoices = voices.filter(v => v.lang && (v.lang.startsWith('en') || v.lang.startsWith('EN')));
             let chosenVoice = null;
