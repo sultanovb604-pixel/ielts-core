@@ -36,8 +36,8 @@
   min-height: 72px;
   margin: 0;
   padding: 0 40px;
-  background: #0b1120; /* Deep Oxford Blue */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
   border-radius: 0;
   box-shadow: none;
   display: flex;
@@ -45,57 +45,63 @@
   justify-content: space-between;
 }
 
-.app-header .app-brand { color: #ffffff !important; }
-.app-header .app-brand-badge { background: rgba(255,255,255,0.1) !important; color: #fff !important; border-color: rgba(255,255,255,0.2) !important; }
-.app-header .app-nav a { color: #94a3b8 !important; }
-.app-header .app-nav a:hover, .app-header .app-nav a[aria-current="page"] { color: #ffffff !important; background: transparent !important; }
-.app-header .plain-link { color: #cbd5e1 !important; }
-.app-header .plain-link:hover { color: #ffffff !important; background: rgba(255,255,255,0.1) !important; }
-.app-header .theme-toggle { border-color: rgba(255,255,255,0.15) !important; color: #cbd5e1 !important; background: rgba(255,255,255,0.05) !important; }
-.app-header .theme-toggle:hover { background: rgba(255,255,255,0.15) !important; color: #fff !important; }
+.app-header .app-brand { color: #0f172a !important; }
+.app-header .app-brand-badge { background: #f1f5f9 !important; color: #64748b !important; border-color: #e2e8f0 !important; }
+.app-header .app-nav a { color: #475569 !important; font-weight: 600 !important; }
+.app-header .app-nav a:hover, .app-header .app-nav a[aria-current="page"] { color: #002b5c !important; background: transparent !important; }
+.app-header .plain-link { color: #475569 !important; }
+.app-header .plain-link:hover { color: #0f172a !important; background: #f1f5f9 !important; }
+.app-header .theme-toggle { display: none !important; }
 
 /* Hero Section Premium Styling */
 .v4-hero {
   position: relative;
-  padding: 80px 0 100px;
+  padding: 90px 0 110px;
   overflow: hidden;
-  background: #0b1120 !important; /* Oxford Blue */
+  background: #ffffff !important;
 }
 
 .v4-hero-glow {
-  background: radial-gradient(circle at 30% 0%, rgba(20, 104, 243, 0.15) 0%, transparent 60%);
+  background: none !important;
 }
 
 .v4-hero-copy h1 {
-  color: #ffffff !important;
-  font-family: 'Times New Roman', Times, serif; /* Or Playfair/Merriweather if loaded */
-  letter-spacing: -0.02em;
+  color: #002b5c !important; 
+  font-family: 'Times New Roman', Times, serif; 
+  letter-spacing: -0.01em;
+  font-weight: 700;
 }
 
 .v4-hero-subtitle {
-  color: #cbd5e1 !important;
+  color: #475569 !important;
+  font-size: 17px !important;
 }
 
 .v4-hero-gradient {
-  color: #38bdf8 !important;
-  background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
+  color: #002b5c !important;
+  background: none !important;
+  -webkit-text-fill-color: #002b5c !important;
 }
 
 .v4-trust-item, .v4-trust-item span {
-  color: #94a3b8 !important;
+  color: #64748b !important;
 }
+.v4-trust-item .material-symbols-outlined { color: #002b5c !important; }
 
 .v4-hero-showcase {
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 40px -10px rgba(0, 43, 92, 0.1) !important;
+  background: #f8fafc !important;
 }
 
 .v4-hero-badge {
-  color: #38bdf8 !important;
-  background: rgba(56, 189, 248, 0.1) !important;
-  border-color: rgba(56, 189, 248, 0.2) !important;
+  color: #002b5c !important;
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  font-family: Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10px !important;
 }.app-header .theme-toggle,
 .premium-product-page .theme-toggle,
 .v4-public-page .theme-toggle {
@@ -5449,6 +5455,7 @@ body.user-is-premium .vx-hero-unlock-btn,
 body.user-is-premium #sidebarUpgradeBtn {
   display: none !important;
 }
+
 
 
 
