@@ -13,7 +13,7 @@
       this.cameraEnabled = true;
       this.subtitlesEnabled = true;
       this.isFullscreen = false;
-      this.viewMode = 'photo'; // 'animated' | 'photo'
+      this.viewMode = 'animated'; // 'animated' | 'photo'
       if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.onvoiceschanged = () => {
           try { window._cachedVoices = window.speechSynthesis.getVoices(); } catch(e) {}
@@ -53,7 +53,307 @@
 
           <!-- Main Zoom Stage Video Frame -->
           <div class="zoom-video-screen" id="zoomVideoScreen">
-            <!-- 2. PHOTO VIEW -->
+            <!-- 1. ANIMATED VECTOR EXAMINER (100% Guaranteed Lip-Sync, Blinking, Head Movement) -->
+            <div class="examiner-vector-view" id="examinerVectorView">
+              <svg class="examiner-scene-svg" viewBox="0 0 800 450" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#f8fafc" />
+                    <stop offset="100%" stop-color="#e2e8f0" />
+                  </linearGradient>
+                  <linearGradient id="deskGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#ca8a04" />
+                    <stop offset="100%" stop-color="#854d0e" />
+                  </linearGradient>
+                  <linearGradient id="suitGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#1e293b" />
+                    <stop offset="100%" stop-color="#0f172a" />
+                  </linearGradient>
+                  <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#fde047" stop-opacity="0.2" />
+                    <stop offset="0%" stop-color="#fed7aa" />
+                    <stop offset="100%" stop-color="#fba471" />
+                  </linearGradient>
+                  <linearGradient id="hairGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#94a3b8" />
+                    <stop offset="50%" stop-color="#cbd5e1" />
+                    <stop offset="100%" stop-color="#64748b" />
+                  </linearGradient>
+                </defs>
+
+                <!-- 1. EXAM PERSONA SCENE (Dr. Alan Sterling - Cambridge Room) -->
+                <g id="sceneExam">
+                  <!-- Background Office & Bookshelf -->
+                  <rect width="800" height="450" fill="url(#wallGrad)" />
+
+                  <!-- Bookshelf Left/Right -->
+                  <rect x="20" y="40" width="160" height="340" fill="#334155" rx="4" />
+                  <line x1="20" y1="120" x2="180" y2="120" stroke="#475569" stroke-width="6" />
+                  <line x1="20" y1="200" x2="180" y2="200" stroke="#475569" stroke-width="6" />
+                  <line x1="20" y1="280" x2="180" y2="280" stroke="#475569" stroke-width="6" />
+                  <!-- Books -->
+                  <rect x="30" y="55" width="18" height="65" fill="#ef4444" rx="2" />
+                  <rect x="52" y="60" width="22" height="60" fill="#3b82f6" rx="2" />
+                  <rect x="78" y="50" width="16" height="70" fill="#10b981" rx="2" />
+                  <rect x="98" y="65" width="24" height="55" fill="#f59e0b" rx="2" />
+                  <rect x="126" y="52" width="20" height="68" fill="#8b5cf6" rx="2" />
+                  <rect x="150" y="58" width="18" height="62" fill="#ec4899" rx="2" />
+
+                  <!-- Bookshelf Right -->
+                  <rect x="620" y="40" width="160" height="340" fill="#334155" rx="4" />
+                  <line x1="620" y1="120" x2="780" y2="120" stroke="#475569" stroke-width="6" />
+                  <line x1="620" y1="200" x2="780" y2="200" stroke="#475569" stroke-width="6" />
+                  <line x1="620" y1="280" x2="780" y2="280" stroke="#475569" stroke-width="6" />
+                  <rect x="635" y="55" width="20" height="65" fill="#06b6d4" rx="2" />
+                  <rect x="660" y="50" width="25" height="70" fill="#1468f3" rx="2" />
+                  <rect x="690" y="62" width="18" height="58" fill="#e11d48" rx="2" />
+                  <rect x="712" y="54" width="22" height="66" fill="#84cc16" rx="2" />
+                  <rect x="738" y="58" width="24" height="62" fill="#f97316" rx="2" />
+
+                  <!-- Certificate on Wall -->
+                  <rect x="220" y="60" width="100" height="80" fill="#ffffff" stroke="#94a3b8" stroke-width="3" rx="2" />
+                  <rect x="230" y="70" width="80" height="60" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+                  <circle cx="270" cy="95" r="12" fill="#eab308" />
+
+                  <!-- British Flag Crest -->
+                  <rect x="520" y="60" width="60" height="40" fill="#1e3a8a" rx="2" />
+                  <path d="M 520,60 L 580,100 M 520,100 L 580,60" stroke="#ffffff" stroke-width="6" />
+                  <path d="M 520,60 L 580,100 M 520,100 L 580,60" stroke="#ef4444" stroke-width="3" />
+                  <path d="M 550,60 L 550,100 M 520,80 L 580,80" stroke="#ffffff" stroke-width="10" />
+                  <path d="M 550,60 L 550,100 M 520,80 L 580,80" stroke="#ef4444" stroke-width="6" />
+
+                  <!-- Examiner Character Group -->
+                  <g class="examiner-full-body" id="examinerFullBody">
+                    <!-- Body & Suit -->
+                    <path d="M 270 450 L 310 280 Q 400 300 490 280 L 530 450 Z" fill="url(#suitGrad)" />
+                    <!-- Shirt Collar -->
+                    <polygon points="370,280 400,340 430,280 400,295" fill="#ffffff" />
+                    <!-- Tie -->
+                    <polygon points="392,295 408,295 414,400 400,420 386,400" fill="#dc2626" />
+                    <line x1="392" y1="320" x2="408" y2="325" stroke="#fbbf24" stroke-width="3" />
+                    <line x1="390" y1="350" x2="410" y2="355" stroke="#fbbf24" stroke-width="3" />
+                    <line x1="388" y1="380" x2="412" y2="385" stroke="#fbbf24" stroke-width="3" />
+                    <!-- Examiner ID Badge -->
+                    <rect x="445" y="320" width="45" height="24" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" />
+                    <text x="450" y="335" font-size="8" font-weight="bold" fill="#0f172a">EXAMINER</text>
+
+                    <!-- Neck -->
+                    <rect x="375" y="240" width="50" height="50" rx="6" fill="url(#skinGrad)" />
+
+                    <!-- Head Group (Animated with subtle bobs) -->
+                    <g class="examiner-head" id="examinerHead">
+                      <!-- Face Contour -->
+                      <ellipse cx="400" cy="190" rx="65" ry="78" fill="url(#skinGrad)" />
+                      <!-- Beard & Chin Outline -->
+                      <path d="M 345,190 Q 345,260 400,268 Q 455,260 455,190 Q 445,245 400,252 Q 355,245 345,190 Z" fill="#94a3b8" opacity="0.45" />
+
+                      <!-- Hair -->
+                      <path d="M 330,180 Q 330,110 400,110 Q 470,110 470,180 Q 450,130 400,130 Q 350,130 330,180 Z" fill="url(#hairGrad)" />
+
+                      <!-- Eyebrows -->
+                      <path d="M 360,162 Q 375,156 390,162" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none" />
+                      <path d="M 410,162 Q 425,156 440,162" stroke="#475569" stroke-width="4" stroke-linecap="round" fill="none" />
+
+                      <!-- Eyes (With Blinking Animation) -->
+                      <g id="examinerEyes">
+                        <ellipse cx="375" cy="175" rx="9" ry="7" fill="#ffffff" />
+                        <circle cx="376" cy="175" r="4.5" fill="#1e3a8a" />
+                        <circle cx="377.5" cy="173.5" r="1.5" fill="#ffffff" />
+
+                        <ellipse cx="425" cy="175" rx="9" ry="7" fill="#ffffff" />
+                        <circle cx="424" cy="175" r="4.5" fill="#1e3a8a" />
+                        <circle cx="425.5" cy="173.5" r="1.5" fill="#ffffff" />
+                      </g>
+                      <!-- Closed Eye Lids (for blink) -->
+                      <g id="examinerEyesClosed" style="display:none;">
+                        <path d="M 365,176 Q 375,182 385,176" stroke="#0f172a" stroke-width="3" fill="none" />
+                        <path d="M 415,176 Q 425,182 435,176" stroke="#0f172a" stroke-width="3" fill="none" />
+                      </g>
+
+                      <!-- Glasses -->
+                      <rect x="360" y="165" width="30" height="20" rx="5" fill="none" stroke="#0f172a" stroke-width="2.5" />
+                      <rect x="410" y="165" width="30" height="20" rx="5" fill="none" stroke="#0f172a" stroke-width="2.5" />
+                      <line x1="390" y1="174" x2="410" y2="174" stroke="#0f172a" stroke-width="2.5" />
+                      <line x1="360" y1="172" x2="340" y2="170" stroke="#0f172a" stroke-width="2" />
+                      <line x1="440" y1="172" x2="460" y2="170" stroke="#0f172a" stroke-width="2" />
+
+                      <!-- Nose -->
+                      <path d="M 400,174 L 396,204 L 404,204 Z" fill="#fba471" opacity="0.7" />
+
+                      <!-- DYNAMIC MOUTH WITH 100% WORKING LIP-SYNC -->
+                      <!-- Resting Closed Smile (when not speaking) -->
+                      <g id="examinerMouthResting">
+                        <path d="M 382,225 Q 400,234 418,225" stroke="#991b1b" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                      </g>
+
+                      <!-- Active Talking Mouth (Morphs dynamically during speech) -->
+                      <g id="examinerMouthTalking" style="display:none;">
+                        <!-- Dark Oral Cavity -->
+                        <ellipse id="vocalCavity" cx="400" cy="227" rx="16" ry="9" fill="#24070e" />
+                        <!-- Upper Teeth -->
+                        <path id="vocalUpperTeeth" d="M 388,220 Q 400,217 412,220 L 410,224 Q 400,222 390,224 Z" fill="#ffffff" />
+                        <!-- Tongue -->
+                        <path id="vocalTongue" d="M 392,232 Q 400,226 408,232 Q 400,235 392,232 Z" fill="#ef4444" opacity="0.8" />
+                        <!-- Upper Lip -->
+                        <path id="vocalUpperLip" d="M 380,224 Q 390,217 400,218 Q 410,217 420,224 Q 400,220 380,224 Z" fill="#b06558" />
+                        <!-- Lower Lip -->
+                        <path id="vocalLowerLip" d="M 380,224 Q 400,238 420,224 Q 400,231 380,224 Z" fill="#c4786a" />
+                      </g>
+                    </g>
+                  </g>
+
+                  <!-- Desk in Foreground -->
+                  <rect x="0" y="390" width="800" height="60" fill="url(#deskGrad)" />
+                  <line x1="0" y1="390" x2="800" y2="390" stroke="#fde047" stroke-width="2" opacity="0.3" />
+
+                  <!-- Desk Items: Laptop & Podcast Mic -->
+                  <polygon points="120,440 240,440 220,380 140,380" fill="#94a3b8" />
+                  <polygon points="140,380 220,380 230,340 130,340" fill="#0f172a" stroke="#cbd5e1" stroke-width="2" />
+                  <circle cx="180" cy="360" r="4" fill="#ffffff" />
+
+                  <rect x="320" y="360" width="16" height="35" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+                  <line x1="328" y1="395" x2="328" y2="420" stroke="#0f172a" stroke-width="4" />
+                  <polygon points="315,420 341,420 335,430 321,430" fill="#334155" />
+                </g>
+
+                <!-- 2. CASUAL AI PARTNER SCENE (Emma Roberts - Modern Creative Studio & Casual Outfit) -->
+                <g id="sceneCasual" style="display:none;">
+                  <defs>
+                    <linearGradient id="casualWallGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#1e1b4b" />
+                      <stop offset="50%" stop-color="#312e81" />
+                      <stop offset="100%" stop-color="#0f172a" />
+                    </linearGradient>
+                    <linearGradient id="casualDeskGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#334155" />
+                      <stop offset="100%" stop-color="#1e293b" />
+                    </linearGradient>
+                    <linearGradient id="hoodieGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#0284c7" />
+                      <stop offset="100%" stop-color="#0369a1" />
+                    </linearGradient>
+                    <linearGradient id="emmaHairGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#78350f" />
+                      <stop offset="50%" stop-color="#92400e" />
+                      <stop offset="100%" stop-color="#b45309" />
+                    </linearGradient>
+                    <linearGradient id="emmaSkinGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#fed7aa" />
+                      <stop offset="100%" stop-color="#fca5a5" />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Modern Loft Background -->
+                  <rect width="800" height="450" fill="url(#casualWallGrad)" />
+
+                  <!-- Warm Ambient Studio Neon & Art -->
+                  <circle cx="200" cy="120" r="140" fill="#6366f1" opacity="0.15" />
+                  <circle cx="620" cy="100" r="160" fill="#ec4899" opacity="0.12" />
+
+                  <!-- Modern Abstract Art on Wall -->
+                  <rect x="80" y="50" width="130" height="90" fill="#1e293b" stroke="#475569" stroke-width="2" rx="8" />
+                  <circle cx="130" cy="90" r="22" fill="#f43f5e" opacity="0.8" />
+                  <polygon points="120,120 180,120 150,70" fill="#38bdf8" opacity="0.7" />
+
+                  <!-- Modern Studio Bookshelf & Plant -->
+                  <rect x="630" y="40" width="130" height="340" fill="#1e293b" rx="6" />
+                  <line x1="630" y1="130" x2="760" y2="130" stroke="#334155" stroke-width="4" />
+                  <line x1="630" y1="220" x2="760" y2="220" stroke="#334155" stroke-width="4" />
+                  <!-- Indoor Plant Pot -->
+                  <rect x="665" y="95" width="30" height="35" rx="3" fill="#e2e8f0" />
+                  <path d="M 680,95 Q 660,60 650,75 Q 675,85 680,95 Z" fill="#22c55e" />
+                  <path d="M 680,95 Q 700,55 710,70 Q 690,85 680,95 Z" fill="#16a34a" />
+                  <path d="M 680,95 Q 680,50 675,65" stroke="#4ade80" stroke-width="3" fill="none" />
+
+                  <!-- Emma Character Body -->
+                  <g class="casual-full-body">
+                    <!-- Modern Hoodie / Casual Outfit -->
+                    <path d="M 280 450 L 320 280 Q 400 300 480 280 L 520 450 Z" fill="url(#hoodieGrad)" />
+                    <!-- Hoodie Drawstrings & Neck -->
+                    <path d="M 360 280 Q 400 310 440 280" fill="none" stroke="#38bdf8" stroke-width="4" />
+                    <line x1="380" y1="295" x2="380" y2="350" stroke="#e0f2fe" stroke-width="3" stroke-linecap="round" />
+                    <line x1="420" y1="295" x2="420" y2="350" stroke="#e0f2fe" stroke-width="3" stroke-linecap="round" />
+
+                    <!-- Neck -->
+                    <rect x="380" y="240" width="40" height="45" rx="6" fill="url(#emmaSkinGrad)" />
+
+                    <!-- Head Group -->
+                    <g class="casual-head" id="casualHead">
+                      <!-- Long Flowing Hair (Back) -->
+                      <path d="M 325 180 Q 310 270 330 330 Q 355 330 350 250 Z" fill="url(#emmaHairGrad)" />
+                      <path d="M 475 180 Q 490 270 470 330 Q 445 330 450 250 Z" fill="url(#emmaHairGrad)" />
+
+                      <!-- Face -->
+                      <ellipse cx="400" cy="190" rx="55" ry="68" fill="url(#emmaSkinGrad)" />
+
+                      <!-- Hair (Front & Bangs) -->
+                      <path d="M 335 170 Q 330 110 400 110 Q 470 110 465 170 Q 440 135 400 135 Q 360 135 335 170 Z" fill="url(#emmaHairGrad)" />
+                      <path d="M 340 150 Q 375 140 395 155 Q 370 165 340 150 Z" fill="url(#emmaHairGrad)" />
+
+                      <!-- Eyebrows -->
+                      <path d="M 365 162 Q 378 156 390 162" stroke="#78350f" stroke-width="3" stroke-linecap="round" fill="none" />
+                      <path d="M 410 162 Q 422 156 435 162" stroke="#78350f" stroke-width="3" stroke-linecap="round" fill="none" />
+
+                      <!-- Eyes (Friendly Brown Eyes) -->
+                      <g id="casualEyes">
+                        <ellipse cx="378" cy="174" rx="8.5" ry="6.5" fill="#ffffff" />
+                        <circle cx="379" cy="174" r="4.2" fill="#451a03" />
+                        <circle cx="380.5" cy="172.5" r="1.5" fill="#ffffff" />
+
+                        <ellipse cx="422" cy="174" rx="8.5" ry="6.5" fill="#ffffff" />
+                        <circle cx="421" cy="174" r="4.2" fill="#451a03" />
+                        <circle cx="422.5" cy="172.5" r="1.5" fill="#ffffff" />
+                      </g>
+                      <!-- Closed Eyes (Blinking) -->
+                      <g id="casualEyesClosed" style="display:none;">
+                        <path d="M 370 175 Q 378 181 386 175" stroke="#451a03" stroke-width="2.5" fill="none" />
+                        <path d="M 414 175 Q 422 181 430 175" stroke="#451a03" stroke-width="2.5" fill="none" />
+                      </g>
+
+                      <!-- Cute Nose -->
+                      <path d="M 400 174 Q 397 196 401 198" stroke="#f87171" stroke-width="2" stroke-linecap="round" fill="none" />
+
+                      <!-- Studio Headset Headphones -->
+                      <path d="M 335 180 Q 330 100 400 95 Q 470 100 465 180" fill="none" stroke="#0f172a" stroke-width="8" stroke-linecap="round" />
+                      <!-- Left Ear Cup -->
+                      <rect x="325" y="165" width="16" height="32" rx="8" fill="#38bdf8" stroke="#0f172a" stroke-width="2" />
+                      <!-- Right Ear Cup -->
+                      <rect x="459" y="165" width="16" height="32" rx="8" fill="#38bdf8" stroke="#0f172a" stroke-width="2" />
+                      <!-- Boom Microphone -->
+                      <path d="M 335 185 Q 345 220 375 225" fill="none" stroke="#0f172a" stroke-width="3" />
+                      <circle cx="377" cy="225" r="5" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
+
+                      <!-- Resting Smile -->
+                      <g id="casualMouthResting">
+                        <path d="M 385 220 Q 400 230 415 220" stroke="#e11d48" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                      </g>
+
+                      <!-- Talking Lip-Sync Mouth -->
+                      <g id="casualMouthTalking" style="display:none;">
+                        <ellipse id="casualVocalCavity" cx="400" cy="223" rx="14" ry="8" fill="#24070e" />
+                        <path id="casualVocalUpperTeeth" d="M 390 217 Q 400 214 410 217 L 409 220 Q 400 218 391 220 Z" fill="#ffffff" />
+                        <path id="casualVocalTongue" d="M 393 227 Q 400 222 407 227 Q 400 230 393 227 Z" fill="#fb7185" />
+                        <path id="casualVocalUpperLip" d="M 384 220 Q 400 215 416 220 Q 400 218 384 220 Z" fill="#e11d48" />
+                        <path id="casualVocalLowerLip" d="M 384 220 Q 400 232 416 220 Q 400 226 384 220 Z" fill="#f43f5e" />
+                      </g>
+                    </g>
+                  </g>
+
+                  <!-- Modern Creative Desk -->
+                  <rect x="0" y="390" width="800" height="60" fill="url(#casualDeskGrad)" />
+                  <line x1="0" y1="390" x2="800" y2="390" stroke="#38bdf8" stroke-width="2" opacity="0.4" />
+
+                  <!-- Modern Coffee Mug on Desk -->
+                  <rect x="220" y="375" width="22" height="28" rx="4" fill="#38bdf8" />
+                  <path d="M 242 380 Q 252 389 242 398" fill="none" stroke="#38bdf8" stroke-width="3" />
+                  <!-- Steam -->
+                  <path d="M 226 370 Q 223 360 228 350" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.6" />
+                  <path d="M 234 370 Q 237 360 232 350" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.6" />
+                </g>
+              </svg>
+            </div>
+
+            <!-- 2. PHOTO VIEW (Alternative) -->
             <div class="examiner-photo-view" id="examinerPhotoView" style="display:flex; width:100%; height:100%;">
               <img src="/assets/examiner_video_call.jpg" alt="Dr. Alan Sterling" class="examiner-photo-feed" style="width:100%; height:100%; object-fit:cover;" />
             </div>
@@ -623,7 +923,11 @@
       }
 
       if (this.styleToggleBtn) {
-        `;
+        this.styleToggleBtn.onclick = () => {
+          this.viewMode = this.viewMode === 'animated' ? 'photo' : 'animated';
+          if (this.vectorView) this.vectorView.style.display = this.viewMode === 'animated' ? 'block' : 'none';
+          if (this.photoView) this.photoView.style.display = this.viewMode === 'photo' ? 'block' : 'none';
+          if (this.styleLabel) this.styleLabel.textContent = `Style: ${this.viewMode === 'animated' ? 'Cartoon' : 'Photo'}`;
         };
       }
 
@@ -889,5 +1193,3 @@
 
   window.SpeakingExaminerAvatar = SpeakingExaminerAvatar;
 })();
-
-
