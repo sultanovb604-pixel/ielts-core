@@ -2888,7 +2888,7 @@ html[data-theme="dark"] body.user-is-premium .dashboard-user-bar .app-mark {
 
 /* Cyberpunk Neon Purple */
 .dashboard-user-bar.wp-neon_purple {
-  background: linear-gradient(135deg, #130520 0%, #2e1065 50%, #701a75 100%) !important;
+  background: linear-gradient(135deg, #0f0a14 0%, #1e142e 50%, #2a1b40 100%) !important;
   border-color: rgba(192, 132, 252, 0.3) !important;
   box-shadow: 0 12px 36px rgba(46, 16, 101, 0.35) !important;
 }
@@ -3121,7 +3121,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: rotate(6deg);
-    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.75)) brightness(1.15);
+    filter: drop-shadow(0 0 1px rgba(245, 158, 11, 0.15)) brightness(1.15);
   }
 }
 .tg-anim-star {
@@ -3136,11 +3136,11 @@ button#openStatusBadgeModalBtn:hover {
   }
   30% {
     transform: translateY(-1px) rotate(-2deg);
-    filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6)) brightness(1.1);
+    filter: drop-shadow(0 0 1px rgba(239, 68, 68, 0.15)) brightness(1.1);
   }
   70% {
     transform: translateY(-0.5px) rotate(2deg);
-    filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.6)) brightness(1.05);
+    filter: drop-shadow(0 0 1px rgba(249, 115, 22, 0.15)) brightness(1.05);
   }
 }
 .tg-anim-fire {
@@ -3155,7 +3155,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   94% {
     transform: translateY(-0.8px);
-    filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.8)) brightness(1.25);
+    filter: drop-shadow(0 0 1px rgba(250, 204, 21, 0.15)) brightness(1.25);
   }
 }
 .tg-anim-bolt {
@@ -3170,7 +3170,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   35% {
     transform: translateY(-0.5px);
-    filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.75)) brightness(1.2);
+    filter: drop-shadow(0 0 1px rgba(56, 189, 248, 0.15)) brightness(1.2);
   }
   70% {
     transform: translateY(0);
@@ -3189,7 +3189,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: translateY(-0.8px) rotate(3deg);
-    filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.65)) brightness(1.15);
+    filter: drop-shadow(0 0 1px rgba(245, 158, 11, 0.15)) brightness(1.15);
   }
 }
 .tg-anim-crown {
@@ -3204,7 +3204,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: translateY(-0.5px);
-    filter: drop-shadow(0 0 4px rgba(2, 132, 199, 0.65)) brightness(1.15);
+    filter: drop-shadow(0 0 1px rgba(2, 132, 199, 0.15)) brightness(1.15);
   }
 }
 .tg-anim-verified {
@@ -3219,7 +3219,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: translate(0.5px, -1.2px) rotate(-3deg);
-    filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.6)) brightness(1.12);
+    filter: drop-shadow(0 0 1px rgba(99, 102, 241, 0.15)) brightness(1.12);
   }
 }
 .tg-anim-rocket {
@@ -3234,7 +3234,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: rotate(20deg);
-    filter: drop-shadow(0 0 5px rgba(192, 132, 252, 0.7)) brightness(1.2);
+    filter: drop-shadow(0 0 1px rgba(192, 132, 252, 0.15)) brightness(1.2);
   }
 }
 .tg-anim-sparkle {
@@ -3249,7 +3249,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: rotate(-3deg);
-    filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.65)) brightness(1.12);
+    filter: drop-shadow(0 0 1px rgba(251, 191, 36, 0.15)) brightness(1.12);
   }
 }
 .tg-anim-trophy {
@@ -3264,7 +3264,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: rotate(3deg);
-    filter: drop-shadow(0 0 5px rgba(52, 211, 153, 0.65)) brightness(1.12);
+    filter: drop-shadow(0 0 1px rgba(52, 211, 153, 0.15)) brightness(1.12);
   }
 }
 .tg-anim-graduate {
@@ -3279,7 +3279,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: translateY(-0.5px);
-    filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.65)) brightness(1.15);
+    filter: drop-shadow(0 0 1px rgba(239, 68, 68, 0.15)) brightness(1.15);
   }
 }
 .tg-anim-target {
@@ -3294,7 +3294,7 @@ button#openStatusBadgeModalBtn:hover {
   }
   50% {
     transform: rotate(3deg);
-    filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.65)) brightness(1.15);
+    filter: drop-shadow(0 0 1px rgba(168, 85, 247, 0.15)) brightness(1.15);
   }
 }
 .tg-anim-gamer {
@@ -3963,7 +3963,7 @@ body.member-sidebar-collapsed .member-sidebar {
 .member-sidebar-pro-card:hover {
   transform: translateY(-2px);
   border-color: rgba(250, 204, 21, 0.4);
-  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.5), 0 0 20px rgba(250, 204, 21, 0.15);
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.5);
 }
 
 .pro-card-collapsed-badge {
@@ -4030,7 +4030,7 @@ body.member-sidebar-collapsed .member-sidebar {
   justify-content: center;
   background: linear-gradient(135deg, #0f172a, #1e293b);
   border: 1.5px solid rgba(250, 204, 21, 0.35);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 10px rgba(250, 204, 21, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .member-sidebar-collapsed .pro-card-expanded-content {

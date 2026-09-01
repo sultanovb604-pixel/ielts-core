@@ -222,14 +222,19 @@
             </div>
           </div>
         ` : ''}
-        <a class="member-sidebar-profile" href="/english/account" aria-label="Open student dashboard">
-          <span class="member-avatar">${avatarContent}</span>
-          <span class="member-profile-info">
-            <strong>${safe(user.name || 'Student')}</strong>
-            <small class="${user.plan === 'premium' ? 'plan-premium' : 'plan-free'}">${planLabel}</small>
-          </span>
-          <span class="material-symbols-outlined member-profile-arrow" aria-hidden="true">chevron_right</span>
-        </a>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button type="button" id="sidebarThemeToggleBtn" title="Toggle dark mode" aria-label="Toggle dark mode" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:inherit; cursor:pointer; padding:8px; border-radius:10px; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+              <span class="material-symbols-outlined" style="font-size:20px;">light_mode</span>
+            </button>
+            <a class="member-sidebar-profile" href="/english/account" aria-label="Open student dashboard" style="flex:1; margin-top:0;">
+              <span class="member-avatar">${avatarContent}</span>
+              <span class="member-profile-info">
+                <strong>${safe(user.name || 'Student')}</strong>
+                <small class="${user.plan === 'premium' ? 'plan-premium' : 'plan-free'}">${planLabel}</small>
+              </span>
+              <span class="material-symbols-outlined member-profile-arrow" aria-hidden="true">chevron_right</span>
+            </a>
+          </div>
       </div>
     `;
 
@@ -300,12 +305,28 @@
       if (icon) icon.textContent = isCollapsed ? 'chevron_right' : 'chevron_left';
     });
 
-    sidebar.querySelector('#sidebarUpgradeBtn')?.addEventListener('click', () => {
-      if (typeof window.showUpgradeModal === 'function') window.showUpgradeModal();
-    });
+      sidebar.querySelector('#sidebarUpgradeBtn')?.addEventListener('click', () => {
+        if (typeof window.showUpgradeModal === 'function') window.showUpgradeModal();
+      });
 
-    // Sidebar Scroll Position Persistence & Active Link Visibility
-    const navEl = sidebar.querySelector('.member-sidebar-nav');
+      const stBtn = sidebar.querySelector('#sidebarThemeToggleBtn');
+      if (stBtn) {
+        const updateStBtn = () => {
+          const isDark = document.documentElement.dataset.theme === 'dark';
+          stBtn.querySelector('span').textContent = isDark ? 'light_mode' : 'dark_mode';
+        };
+        updateStBtn();
+        stBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const root = document.documentElement;
+          root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          localStorage.setItem('vortex-english-theme', root.dataset.theme);
+          updateStBtn();
+        });
+      }
+
+      // Sidebar Scroll Position Persistence & Active Link Visibility
+      const navEl = sidebar.querySelector('.member-sidebar-nav');
     if (navEl) {
       const savedNavScroll = sessionStorage.getItem('vortex-sidebar-nav-scroll');
       if (savedNavScroll !== null) {
