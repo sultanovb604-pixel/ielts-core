@@ -130,7 +130,7 @@
     // Calculate today's minutes from attempts
     const todayStr = new Date().toISOString().slice(0, 10);
     const todayAttempts = results.filter(r => (r.createdAt || '').slice(0, 10) === todayStr);
-    todayMinutes = Math.round(todayAttempts.reduce((s, r) => s + (Number(r.durationSeconds) || 1800), 0) / 60);
+    todayMinutes = todayAttempts.length > 0 ? Math.round(todayAttempts.reduce((s, r) => s + (Number(r.durationSeconds) || 1800), 0) / 60) : (activityList.find(a => a.date === todayStr)?.count || 0) * 30;
 
     if (timeBadge) {
       timeBadge.textContent = `${todayMinutes} min bugun`;
@@ -253,7 +253,7 @@
     empty.hidden = points.length > 0;
     canvas.hidden = points.length === 0;
     if (!points.length) {
-      insight.textContent = '1 ta toʻliq IELTS test topshirib natija traektoriyasini koʻring';
+      insight.textContent = 'To`liq baholanadigan (Scored) Reading yoki Listening testi topshirib natija traektoriyasini ko`ring';
       return;
     }
 
