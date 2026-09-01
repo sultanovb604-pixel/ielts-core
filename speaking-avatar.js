@@ -13,7 +13,7 @@
       this.cameraEnabled = true;
       this.subtitlesEnabled = true;
       this.isFullscreen = false;
-      this.viewMode = 'animated'; // 'animated' | 'photo'
+      this.viewMode = 'photo'; // 'animated' | 'photo'
       if (typeof window !== 'undefined' && window.speechSynthesis) {
         window.speechSynthesis.onvoiceschanged = () => {
           try { window._cachedVoices = window.speechSynthesis.getVoices(); } catch(e) {}
@@ -1193,3 +1193,4 @@
 
   window.SpeakingExaminerAvatar = SpeakingExaminerAvatar;
 })();
+
