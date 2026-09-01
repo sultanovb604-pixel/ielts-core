@@ -5533,8 +5533,10 @@ body.user-is-premium #sidebarUpgradeBtn {
   transform: scale(1.15); /* Make it slightly bigger and bolder */
 }
 
+
+
 /* ==========================================================================
-   BRITISH HARMONY: BLUE (Brand) + RED (Action) + WHITE (Space)
+   PREMIUM BLUE THEME (Brand Original)
    ========================================================================== */
 .app-header,
 .premium-product-page .app-header,
@@ -5557,26 +5559,25 @@ body.user-is-premium #sidebarUpgradeBtn {
 }
 
 .app-header .app-brand { color: #0f172a !important; font-weight: 900 !important; font-size: 20px !important; letter-spacing: -0.03em !important; }
-.app-header .app-brand-badge { background: #E31837 !important; color: #ffffff !important; border: none !important; font-weight: 800 !important; }
+.app-header .app-brand-badge { background: #eff6ff !important; color: #1468f3 !important; border: 1px solid #bfdbfe !important; font-weight: 800 !important; }
 .app-header .app-nav a { color: #0f172a !important; font-weight: 700 !important; font-size: 14px !important; text-transform: uppercase; letter-spacing: 0.02em; }
 .app-header .app-nav a:hover, .app-header .app-nav a[aria-current="page"] { color: #1468f3 !important; background: transparent !important; }
 .app-header .plain-link { color: #0f172a !important; font-weight: 700 !important; text-transform: uppercase; font-size: 14px !important; }
 .app-header .plain-link:hover { color: #1468f3 !important; background: transparent !important; }
 .app-header .theme-toggle { display: none !important; }
 
-/* The Logo stays original Blue, but let's just restore any filter so it's original */
 .app-mark img {
   filter: none !important;
   transform: scale(1.1);
 }
 
-/* Bold Action Buttons - RED */
+/* Primary Action Buttons - BLUE */
 .app-header .button.primary,
 .v4-public-page .button.primary,
 .v4-actions .button.primary {
-  background: #E31837 !important;
+  background: #1468f3 !important;
   color: #ffffff !important;
-  border-radius: 4px !important;
+  border-radius: 6px !important;
   font-weight: 800 !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -5586,22 +5587,24 @@ body.user-is-premium #sidebarUpgradeBtn {
 .app-header .button.primary:hover,
 .v4-public-page .button.primary:hover,
 .v4-actions .button.primary:hover {
-  background: #bd102a !important;
+  background: #0758db !important;
   transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(20, 104, 243, 0.3) !important;
 }
 
-/* Secondary Action Buttons - BLUE */
+/* Secondary Action Buttons */
 .v4-actions .button.secondary {
   background: #ffffff !important;
-  color: #1468f3 !important;
-  border: 2px solid #1468f3 !important;
-  border-radius: 4px !important;
+  color: #0f172a !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 6px !important;
   font-weight: 800 !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 .v4-actions .button.secondary:hover {
-  background: #f0f6ff !important;
+  border-color: #cbd5e1 !important;
+  background: #f8fafc !important;
 }
 
 /* Hero Section */
@@ -5639,7 +5642,7 @@ body.user-is-premium #sidebarUpgradeBtn {
 }
 
 .v4-trust-item, .v4-trust-item span { color: #0f172a !important; font-weight: 700 !important; }
-.v4-trust-item .material-symbols-outlined { color: #E31837 !important; }
+.v4-trust-item .material-symbols-outlined { color: #1468f3 !important; }
 
 /* Small blue badge above heading */
 .v4-hero-badge {
@@ -5650,7 +5653,7 @@ body.user-is-premium #sidebarUpgradeBtn {
   text-transform: uppercase !important;
   letter-spacing: 0.1em !important;
   font-size: 11px !important;
-  border-radius: 4px !important;
+  border-radius: 99px !important;
 }
 .v4-badge-pulse { background: #1468f3 !important; box-shadow: none !important; animation: none !important; }
 
@@ -5659,18 +5662,18 @@ body.user-is-premium #sidebarUpgradeBtn {
   border: 1px solid #eaeaea !important;
   box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
   background: #ffffff !important;
-  border-radius: 8px !important;
+  border-radius: 12px !important;
 }
 .v4-mock-topbar {
   background: #0f172a !important;
   border-bottom: none !important;
-  border-radius: 8px 8px 0 0 !important;
+  border-radius: 12px 12px 0 0 !important;
 }
-.v4-mock-tab.active { color: #ffffff !important; border-bottom: 2px solid #E31837 !important; }
+.v4-mock-tab.active { color: #ffffff !important; border-bottom: 2px solid #1468f3 !important; }
 .v4-mock-score-float {
   background: #0f172a !important;
   color: #ffffff !important;
   border: none !important;
-  border-radius: 6px !important;
+  border-radius: 8px !important;
 }
 .v4-mock-score-float .material-symbols-outlined { color: #4ade80 !important; }
