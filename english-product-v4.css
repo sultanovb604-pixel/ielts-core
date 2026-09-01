@@ -5641,3 +5641,19 @@ body.user-is-premium #sidebarUpgradeBtn {
   border-radius: 6px !important;
 }
 .v4-mock-score-float .material-symbols-outlined { color: #4ade80 !important; }
+
+.app-mark-red {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #E31837 !important;
+  color: #ffffff !important;
+  font-family: Arial, sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 16px !important;
+  border-radius: 6px !important;
+  margin-right: 8px;
+  letter-spacing: 0;
+}
