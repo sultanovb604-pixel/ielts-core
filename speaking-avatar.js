@@ -354,8 +354,8 @@
             </div>
 
             <!-- 2. PHOTO VIEW (Alternative) -->
-            <div class="examiner-photo-view" id="examinerPhotoView" style="display:none;">
-              <img src="/assets/examiner_video_call.jpg" alt="Dr. Alan Sterling" class="examiner-photo-feed" />
+            <div class="examiner-photo-view" id="examinerPhotoView" style="display:flex; width:100%; height:100%;">
+              <img src="/assets/examiner_video_call.jpg" alt="Dr. Alan Sterling" class="examiner-photo-feed" style="width:100%; height:100%; object-fit:cover;" />
             </div>
 
             <!-- Active Audio Waveform -->

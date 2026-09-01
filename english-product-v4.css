@@ -405,7 +405,7 @@
 
 /* Authenticated product navigation */
 .member-layout { padding-left:236px; }
-.member-sidebar { width:236px; padding:22px 14px 16px; color:#d0d8e5; border-right:1px solid #1b2b40; background:linear-gradient(180deg,#07111e 0%,#091525 58%,#07101c 100%); box-shadow:12px 0 38px rgba(5,16,32,.08); scrollbar-color:#293b54 transparent; }
+.member-sidebar { width:236px; padding:22px 14px 16px; color:#d0d8e5; border-right:1px solid #1b2b40; background:#0f172a; box-shadow:12px 0 38px rgba(5,16,32,.08); scrollbar-color:#293b54 transparent; }
 .member-sidebar-top { padding:0 8px 20px; border-bottom:1px solid #202936; }
 .member-sidebar-brand { gap:10px; color:#f5f7fa; font-size:12px; letter-spacing:-.015em; }
 .member-sidebar-top .app-mark { width:34px; height:34px; border-radius:10px; box-shadow:none; }
@@ -780,7 +780,7 @@
   background: #ffffff;
   border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 20px !important;
-  box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   overflow: hidden;
 }
 .diagnostic-grid {
@@ -913,7 +913,7 @@
   background: #ffffff;
   border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: 20px !important;
-  box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 .skill-matrix-grid {
   display: grid;
@@ -1796,7 +1796,7 @@ html[data-theme="dark"] .onboarding-choices span {
   border-radius: 20px;
   background: linear-gradient(145deg, #09172c, #0e223f);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 20px 50px rgba(7, 18, 36, 0.22);
 }
 .auth-aside-badge {
@@ -2090,7 +2090,7 @@ html[data-theme="dark"] .onboarding-choices span {
   border-radius: 18px;
   background: linear-gradient(135deg, #09172c, #0e223f);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 20px 50px rgba(7, 18, 36, 0.22);
 }
 .courses-page .course-next .page-kicker {
@@ -3949,11 +3949,11 @@ body.member-sidebar-collapsed .member-sidebar {
 .member-sidebar-pro-card {
   margin-bottom: 10px;
   border-radius: 13px;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   color: #ffffff;
   cursor: pointer;
-  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.35);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
   position: relative;
@@ -3963,7 +3963,7 @@ body.member-sidebar-collapsed .member-sidebar {
 .member-sidebar-pro-card:hover {
   transform: translateY(-2px);
   border-color: rgba(250, 204, 21, 0.4);
-  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.5);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .pro-card-collapsed-badge {
@@ -5503,6 +5503,7 @@ body.user-is-premium .vx-hero-unlock-btn,
 body.user-is-premium #sidebarUpgradeBtn {
   display: none !important;
 }
+
 
 
 
