@@ -30,127 +30,73 @@
 .premium-product-page .app-header,
 .v4-public-page .app-header {
   position: sticky;
-  top: 14px;
+  top: 0;
   z-index: 100;
-  width: min(1280px, calc(100% - 32px));
-  min-height: 62px;
-  margin: 14px auto 0;
-  padding: 8px 14px 8px 18px;
+  width: 100%;
+  min-height: 72px;
+  margin: 0;
+  padding: 0 40px;
+  background: #0b1120; /* Deep Oxford Blue */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(218, 228, 241, 0.9);
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 10px 32px -8px rgba(12, 28, 56, 0.08), 0 2px 6px -1px rgba(12, 28, 56, 0.03);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Brand Identity */
-.app-brand,
-.v4-public-page .app-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--v4-ink);
-  font-family: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
-  font-weight: 800;
-  font-size: 14px;
-  letter-spacing: -0.025em;
-  padding: 4px 6px;
-  border-radius: 999px;
-  transition: opacity 0.15s ease;
-}
-.app-brand:hover {
-  opacity: 0.9;
-}
-.app-mark,
-.premium-product-page .app-mark,
-.v4-public-page .app-mark {
-  height: 28px;
-  width: auto;
-  min-width: 38px;
-  background: transparent;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: none;
-  border: none;
-}
-.app-mark img,
-.app-mark svg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-.app-brand-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 7px;
-  border-radius: 6px;
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--v4-blue);
-  background: rgba(20, 104, 243, 0.08);
-  border: 1px solid rgba(20, 104, 243, 0.18);
-  margin-left: 2px;
+.app-header .app-brand { color: #ffffff !important; }
+.app-header .app-brand-badge { background: rgba(255,255,255,0.1) !important; color: #fff !important; border-color: rgba(255,255,255,0.2) !important; }
+.app-header .app-nav a { color: #94a3b8 !important; }
+.app-header .app-nav a:hover, .app-header .app-nav a[aria-current="page"] { color: #ffffff !important; background: transparent !important; }
+.app-header .plain-link { color: #cbd5e1 !important; }
+.app-header .plain-link:hover { color: #ffffff !important; background: rgba(255,255,255,0.1) !important; }
+.app-header .theme-toggle { border-color: rgba(255,255,255,0.15) !important; color: #cbd5e1 !important; background: rgba(255,255,255,0.05) !important; }
+.app-header .theme-toggle:hover { background: rgba(255,255,255,0.15) !important; color: #fff !important; }
+
+/* Hero Section Premium Styling */
+.v4-hero {
+  position: relative;
+  padding: 80px 0 100px;
+  overflow: hidden;
+  background: #0b1120 !important; /* Oxford Blue */
 }
 
-/* Navigation Links */
-.app-nav,
-.v4-public-page .app-nav {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.app-nav a,
-.v4-public-page .app-nav a {
-  padding: 7px 14px;
-  border-radius: 999px;
-  color: #475569;
-  font-weight: 600;
-  font-size: 13px;
-  text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.app-nav a:hover,
-.v4-public-page .app-nav a:hover {
-  color: var(--v4-ink);
-  background: rgba(12, 28, 56, 0.05);
-}
-.app-nav a::after,
-.v4-public-page .app-nav a::after {
-  display: none !important;
-  content: none !important;
-}
-.nav-badge {
-  font-size: 9.5px;
-  font-weight: 800;
-  padding: 1px 6px;
-  border-radius: 999px;
-  color: #fff;
-  background: linear-gradient(135deg, #1468f3, #4f46e5);
+.v4-hero-glow {
+  background: radial-gradient(circle at 30% 0%, rgba(20, 104, 243, 0.15) 0%, transparent 60%);
 }
 
-/* Right-side Actions & Theme Switch */
-.app-actions,
-.v4-public-page .app-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 0;
+.v4-hero-copy h1 {
+  color: #ffffff !important;
+  font-family: 'Times New Roman', Times, serif; /* Or Playfair/Merriweather if loaded */
+  letter-spacing: -0.02em;
 }
-.app-header .theme-toggle,
+
+.v4-hero-subtitle {
+  color: #cbd5e1 !important;
+}
+
+.v4-hero-gradient {
+  color: #38bdf8 !important;
+  background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.v4-trust-item, .v4-trust-item span {
+  color: #94a3b8 !important;
+}
+
+.v4-hero-showcase {
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5) !important;
+}
+
+.v4-hero-badge {
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.1) !important;
+  border-color: rgba(56, 189, 248, 0.2) !important;
+}.app-header .theme-toggle,
 .premium-product-page .theme-toggle,
 .v4-public-page .theme-toggle {
   width: 36px;
@@ -5503,6 +5449,7 @@ body.user-is-premium .vx-hero-unlock-btn,
 body.user-is-premium #sidebarUpgradeBtn {
   display: none !important;
 }
+
 
 
 
