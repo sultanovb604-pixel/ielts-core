@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IELTS Listening Practice — Test Two</title>
+<title>IELTS Listening Practice вЂ” Test Two</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -246,7 +246,7 @@ body::after {
     color: var(--correct-color); font-weight: 700; margin-left: 10px;
     display: inline-block; vertical-align: middle; white-space: nowrap;
 }
-.correct-inline::before { content: "→ "; font-weight: 700; }
+.correct-inline::before { content: "в†’ "; font-weight: 700; }
 
 .question-title { font-weight: bold; margin-bottom: 10px; font-size: 16px; }
 .centered-title { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 15px; }
@@ -455,7 +455,7 @@ body::after {
 @keyframes flash { 0% { background-color: #e6f4ff; } 100% { background-color: transparent; } }
 .question.flash { animation: flash 1s ease-out; }
 </style>
-  <link rel="icon" type="image/svg+xml" href="/assets/ielts-core-mark.png">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
 </head>
 <body>
 
@@ -1006,22 +1006,22 @@ body::after {
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
     <h2 style="font-size:22px;font-weight:800;color:#0f172a;margin:0 0 8px;letter-spacing:-0.03em;">Real Exam Mode is Locked</h2>
-    <span style="display:inline-block;padding:4px 14px;border-radius:999px;font-size:11.5px;font-weight:800;background:#fef3c7;color:#b45309;margin-bottom:16px;border:1px solid #fde68a;">★ IELTS Core Premium Exclusive</span>
+    <span style="display:inline-block;padding:4px 14px;border-radius:999px;font-size:11.5px;font-weight:800;background:#fef3c7;color:#b45309;margin-bottom:16px;border:1px solid #fde68a;">в… IELTS Core Premium Exclusive</span>
     <div style="font-size:13.5px;color:#475569;line-height:1.6;margin:0 0 22px;text-align:left;background:#f8fafc;padding:14px 18px;border-radius:10px;border:1px solid #e2e8f0;">
       Real Exam Mode simulates official computer-delivered IELTS exam conditions:
-      <br>• <strong>Strict single-playback audio exam pacing</strong>
-      <br>• <strong>Official Cambridge Band scoring & full diagnostics</strong>
-      <br>• <strong>Realistic exam pressure with full test verification</strong>
+      <br>вЂў <strong>Strict single-playback audio exam pacing</strong>
+      <br>вЂў <strong>Official Cambridge Band scoring & full diagnostics</strong>
+      <br>вЂў <strong>Realistic exam pressure with full test verification</strong>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       <a href="/english/pricing" style="min-height:42px;padding:0 22px;border:0;border-radius:10px;background:#1468f3;color:#fff;font-size:13.5px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(20,104,243,0.28);">
-        ★ Unlock Premium Access (30 000 UZS / oy)
+        в… Unlock Premium Access (30 000 UZS / oy)
       </a>
       <button type="button" id="vxListSwitchToPracticeBtn" style="min-height:40px;padding:0 18px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#334155;font-size:13px;font-weight:700;cursor:pointer;">
         Continue in Untimed Practice Mode
       </button>
       <a href="/english/materials?level=ielts&skill=listening" style="font-size:12px;color:#64748b;text-decoration:none;margin-top:4px;font-weight:600;">
-        ← Back to Materials Library
+        в†ђ Back to Materials Library
       </a>
     </div>
   </div>
@@ -1417,7 +1417,7 @@ function checkAnswers() {
     const pillsWrap = document.getElementById('vxListIncorrectPills');
     if (pillsWrap) {
         if (incorrectQuestions.length === 0) {
-            pillsWrap.innerHTML = '<span style="display:inline-block;padding:6px 14px;border-radius:8px;background:#ecfdf5;color:#059669;font-size:13px;font-weight:700;">🎉 Perfect score! No incorrect questions.</span>';
+            pillsWrap.innerHTML = '<span style="display:inline-block;padding:6px 14px;border-radius:8px;background:#ecfdf5;color:#059669;font-size:13px;font-weight:700;">рџЋ‰ Perfect score! No incorrect questions.</span>';
         } else {
             pillsWrap.innerHTML = incorrectQuestions.map(qNum => {
                 return `<button type="button" class="vx-res-q-pill" data-jump-q="${qNum}" style="display:inline-flex;align-items:center;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700;background:#fef2f2;color:#ef4444;border:1px solid #fecaca;cursor:pointer;">Question ${qNum}</button>`;
@@ -1698,3 +1698,4 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 </html>
+

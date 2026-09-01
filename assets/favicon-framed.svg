@@ -1,0 +1,34 @@
+﻿<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100" height="100" rx="22" fill="#ffffff" />
+  <g transform="translate(14, 14) scale(2)">
+    <defs>
+      <linearGradient id="vxSlateTop" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#334155"/>
+        <stop offset="100%" stop-color="#1e293b"/>
+      </linearGradient>
+      <linearGradient id="vxSlateBottom" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#1e293b"/>
+        <stop offset="100%" stop-color="#0f172a"/>
+      </linearGradient>
+      <linearGradient id="vxBlueTop" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#38bdf8"/>
+        <stop offset="100%" stop-color="#2563eb"/>
+      </linearGradient>
+      <linearGradient id="vxBlueBottom" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#2563eb"/>
+        <stop offset="100%" stop-color="#1d4ed8"/>
+      </linearGradient>
+    </defs>
+
+    <path d="M12 6L14.8 8.8L8 15.6L4 14L12 6Z" fill="#475569"/>
+    <path d="M12 6L20 14L16 18L12 14L14.8 11.2L12 8.4L12 6Z" fill="url(#vxSlateTop)"/>
+    <path d="M4 14L4 22L12 30L12 24.4L7.6 20L8 15.6L4 14Z" fill="url(#vxSlateBottom)"/>
+    <path d="M12 30L20 22L16 18L12 22L12 24.4L12 30Z" fill="#0f172a"/>
+    <path d="M24 6L16 14L20 18L24 14L21.2 11.2L24 8.4L24 6Z" fill="url(#vxBlueTop)"/>
+    <path d="M24 6L32 14L32 22L28 20L28 15.6L24 11.6L24 6Z" fill="#38bdf8"/>
+    <path d="M24 30L16 22L20 18L24 22L21.2 24.8L24 27.6L24 30Z" fill="url(#vxBlueBottom)"/>
+    <path d="M32 22L24 30L24 24.4L28.4 20L32 22Z" fill="#1d4ed8"/>
+    <path d="M16 14L18 12L20 14L18 16L16 14Z" fill="#1e293b"/>
+    <path d="M16 22L18 20L20 22L18 24L16 22Z" fill="#2563eb"/>
+  </g>
+</svg>

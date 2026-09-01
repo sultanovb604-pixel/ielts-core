@@ -1,0 +1,1 @@
+const fs = require('fs'); const code = fs.readFileSync('speaking-avatar.js', 'utf8'); console.log(code.split('\').length - 1);
