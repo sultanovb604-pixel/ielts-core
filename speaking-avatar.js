@@ -1141,22 +1141,41 @@
 
       setTimeout(() => {
         const utterance = new SpeechSynthesisUtterance(text);
-        const isPractice = this.currentPersona === 'practice';
-        utterance.rate = isPractice ? 1.02 : 0.95;
-        utterance.pitch = isPractice ? 1.15 : 1.0;
+          const isPractice = this.currentPersona === 'practice';
+          // Natural human cadence & realistic pitch
+          utterance.rate = isPractice ? 1.0 : 0.96;
+          utterance.pitch = isPractice ? 1.02 : 0.98;
 
-        const voices = (window._cachedVoices && window._cachedVoices.length > 0)
-          ? window._cachedVoices
-          : (window.speechSynthesis ? window.speechSynthesis.getVoices() : []);
-        if (voices && voices.length > 0) {
-          let chosenVoice = null;
-          if (isPractice) {
-            chosenVoice = voices.find(v => (v.name.includes('Emma') || v.name.includes('Zira') || v.name.includes('Jenny') || v.name.includes('Samantha') || (v.lang && v.lang.startsWith('en') && v.name.toLowerCase().includes('female')))) || voices.find(v => v.lang && v.lang.startsWith('en'));
-          } else {
-            chosenVoice = voices.find(v => (v.lang && (v.lang.includes('en-GB') || v.lang.includes('en_GB'))) || v.name.includes('UK') || v.name.includes('British') || v.name.includes('George') || v.name.includes('Oliver') || v.name.includes('Daniel')) || voices.find(v => v.lang && v.lang.startsWith('en'));
+          const voices = (window._cachedVoices && window._cachedVoices.length > 0)
+            ? window._cachedVoices
+            : (window.speechSynthesis ? window.speechSynthesis.getVoices() : []);
+          
+          if (voices && voices.length > 0) {
+            const enVoices = voices.filter(v => v.lang && (v.lang.startsWith('en') || v.lang.startsWith('EN')));
+            let chosenVoice = null;
+
+            if (isPractice) {
+              // 1. Natural / Neural Online Female Voices (Microsoft Sonia, Jenny, Aria, Google)
+              chosenVoice = enVoices.find(v => (v.name.includes('Natural') || v.name.includes('Online')) && (v.name.includes('Sonia') || v.name.includes('Jenny') || v.name.includes('Aria') || v.name.includes('Emma') || v.name.includes('Libby') || v.name.includes('Ava')))
+                || enVoices.find(v => (v.name.includes('Google') || v.name.includes('Natural')) && (v.name.includes('Female') || v.name.includes('UK English') || v.name.includes('US English')))
+                || enVoices.find(v => (v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Karen') || v.name.includes('Moira')))
+                || enVoices.find(v => !v.name.includes('Desktop') && !v.name.includes('Zira') && !v.name.includes('David') && !v.name.includes('Hazel'))
+                || enVoices[0];
+            } else {
+              // Examiner: Authentic British Male / Neural Online (Ryan, Oliver, George, Daniel, Google UK Male)
+              chosenVoice = enVoices.find(v => (v.name.includes('Natural') || v.name.includes('Online')) && (v.name.includes('Ryan') || v.name.includes('Oliver') || v.name.includes('George') || v.name.includes('Arthur') || v.name.includes('Thomas') || v.lang.includes('en-GB') || v.lang.includes('en_GB')))
+                || enVoices.find(v => (v.name.includes('Google UK English Male') || v.name.includes('Google UK English')))
+                || enVoices.find(v => (v.lang && (v.lang.includes('en-GB') || v.lang.includes('en_GB'))) && (v.name.includes('Daniel') || v.name.includes('Oliver') || v.name.includes('George') || v.name.includes('Male')))
+                || enVoices.find(v => (v.name.includes('Natural') || v.name.includes('Online')) && (v.name.includes('Guy') || v.name.includes('Christopher') || v.name.includes('Eric')))
+                || enVoices.find(v => v.lang && (v.lang.includes('en-GB') || v.lang.includes('en_GB')))
+                || enVoices.find(v => !v.name.includes('Desktop') && !v.name.includes('Zira') && !v.name.includes('David') && !v.name.includes('Hazel'))
+                || enVoices[0];
+            }
+
+            if (chosenVoice) {
+              utterance.voice = chosenVoice;
+            }
           }
-          if (chosenVoice) utterance.voice = chosenVoice;
-        }
 
         window._activeUtterance = utterance;
 

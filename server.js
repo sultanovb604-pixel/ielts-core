@@ -5890,11 +5890,11 @@ async function api(req, res, pathname) {
 
   // --- GOOGLE GEMINI REAL AI MULTI-MODEL POOL ENGINE ---
   const GEMINI_MODELS_POOL = [
-    'gemini-flash-latest',
-    'gemini-3.5-flash',
-    'gemini-flash-lite-latest',
-    'gemini-3.1-flash-lite',
-    'gemini-3.6-flash'
+    'gemini-2.0-flash',
+    'gemini-1.5-flash',
+    'gemini-2.5-flash',
+    'gemini-1.5-pro',
+    'gemini-flash-latest'
   ];
 
   async function queryGeminiApi(payload, geminiKey) {
@@ -5933,60 +5933,62 @@ async function api(req, res, pathname) {
   }
 
   async function callGeminiSpeakingExaminer(userTranscript, stage, currentQuestion, topicContext, geminiKey) {
-    const systemPrompt = `You are Dr. Alan Sterling, a certified Senior Cambridge IELTS Examiner conducting an official IELTS Speaking exam.
-ASSESSMENT CRITERIA (STRICT CAMBRIDGE STANDARDS):
-- Grade objectively and strictly against official IELTS Band Descriptors. DO NOT inflate scores.
-- Band 4.0-5.0: Very short, fragmented answers, frequent pauses, basic vocabulary, repetitive errors.
-- Band 5.5-6.0: Basic communication achieved, mix of simple/complex sentences with noticeable errors or basic vocabulary.
-- Band 6.5-7.0: Speaks at length with good fluency, uses some less common vocabulary and complex structures with occasional slips.
-- Band 7.5+: Highly fluent, sophisticated lexical range, flexible complex grammar with only rare non-systematic slips.
+    const systemPrompt = `You are Dr. Alan Sterling, a distinguished, authentic British Senior Cambridge IELTS Examiner conducting an official IELTS Speaking examination.
+YOUR TONE & PERSONA:
+- Professional, calm, polite, and reassuring with natural British English phrasing.
+- Speak in complete, smooth, authentic examiner sentences. NEVER sound robotic, choppy, or curt.
+- Always acknowledge the candidate's specific answer naturally (e.g., "Thank you. That is an interesting perspective.", "I see, thank you.", "Right, thank you very much.") before smoothly introducing the next question.
+- Do NOT repeat the exact same transition. Vary your phrasing naturally like an experienced Cambridge examiner.
 
-NOTE ON CANDIDATE SPEECH: The user's input comes from raw live Speech-To-Text (ASR). Intelligently understand their real meaning in "cleanedTranscript".
+EXAMINATION CRITERIA (STRICT CAMBRIDGE DESCRIPTORS):
+- Grade objectively and rigorously based on Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, and Pronunciation.
+- Band 4.0-5.0: Very short, limited structures, frequent hesitations, basic vocabulary.
+- Band 5.5-6.0: Communicates adequately, mixes simple/complex sentences with some inaccuracies.
+- Band 6.5-7.0: Fluent, uses idioms/less common words, complex structures with good control.
+- Band 7.5+: Highly sophisticated, effortless discourse, wide lexical repertoire.
 
-Return ONLY valid JSON matching this schema:
+Return ONLY valid JSON in this exact schema:
 {
-  "cleanedTranscript": "Polished, clean version of candidate's answer",
-  "naturalMarker": "A short conversational bridge (1-3 words, e.g. 'Right.', 'I see.')",
-  "generatedFollowUp": "The next IELTS question (1-2 sentences)",
-  "fluency": 5.5,
-  "lexical": 5.5,
-  "grammar": 5.5,
+  "cleanedTranscript": "Polished transcription of candidate's speech",
+  "spokenExaminerResponse": "Complete, authentic examiner speech to speak aloud (e.g. 'Thank you. That is quite insightful. Now, moving on, how do you think technology has influenced how people spend their free time?')",
+  "naturalMarker": "Short examiner transition phrase (e.g. 'Thank you. Now let\'s explore...')",
+  "generatedFollowUp": "The follow-up IELTS question itself",
+  "fluency": 6.0,
+  "lexical": 6.0,
+  "grammar": 6.0,
   "pronunciation": 6.0,
-  "feedback": "Concise feedback point",
-  "vocabTips": ["appropriate_word1", "appropriate_word2"]
+  "feedback": "1-2 sentences of specific Cambridge examiner feedback on what was good and what to improve",
+  "vocabTips": ["advanced_idiom_or_collocation_1", "advanced_idiom_or_collocation_2"]
 }`;
 
     const userPrompt = `IELTS Stage: ${stage}
 Current Question: "${currentQuestion}"
 Topic: "${topicContext || 'General'}"
-Candidate's spoken answer: "${userTranscript}"
+Candidate's answer: "${userTranscript}"
 
-Respond with authentic examiner dialogue and strict objective grading in JSON format.`;
+Respond as Dr. Alan Sterling with authentic examiner speech and objective Cambridge grading in JSON.`;
 
     return await queryGeminiApi({
       systemInstruction: { parts: [{ text: systemPrompt }] },
       contents: [{ role: "user", parts: [{ text: userPrompt }] }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0.2 }
+      generationConfig: { responseMimeType: "application/json", temperature: 0.3 }
     }, geminiKey);
   }
 
   // Pure Friendly Casual Chat Engine (Emma - 100% Informal, Chill Speaking Buddy like a friend on FaceTime)
   async function callGeminiCasualChat(userTranscript, history, geminiKey) {
-    const systemInstruction = `You are a fun, super chill, and friendly speaking buddy hanging out on a real-time voice call.
-STYLE GUIDELINES (CRITICAL):
-- Speak COMPLETELY CASUALLY and INFORMALLY, exactly like a close friend talking on FaceTime or at a coffee shop!
-- Use natural spoken contractions ("I'm", "it's", "gonna", "kinda", "super cool") and lively conversational reactions ("Oh wow!", "Haha totally,", "No way!", "That's awesome,", "Oh I love that!").
-- NEVER sound robotic, formal, academic, or textbook-like. Be warm, enthusiastic, and authentic.
-- Keep it punchy, engaging, and brief (2 to 3 natural spoken sentences, 25-45 words).
-- If they ask for facts, share cool, mind-blowing facts in a super fun and accessible way!
-- MEMORY IS CRITICAL: You MUST remember what the user said earlier in the conversation. Refer back to their previous answers if it makes sense, showing you actually listen. Do not repeat the same questions.
-
-NOTE ON USER SPEECH: Input comes from live Speech-To-Text (ASR). Intelligently understand what they mean and fix any minor transcription typos in "cleanedTranscript".
+    const systemInstruction = `You are Emma, an energetic, friendly, and authentic English speaking partner on a live voice call (like FaceTime or WhatsApp).
+YOUR SPEAKING STYLE (CRITICAL):
+- Sound 100% human, spontaneous, warm, and lively!
+- Use natural conversational fillers and expressions ("Oh wow, really?", "Haha I totally get that!", "No way, that sounds incredible!", "To be honest, I've always thought...", "Oh, that's such a good point!").
+- Use natural contractions ("I'm", "you're", "it's", "that's", "gonna", "kinda").
+- NEVER preach, lecture, or sound like a robot/textbook. Keep it brief (2-3 lively sentences, 25-45 words) and end with an easy, engaging question to keep the chat rolling.
+- Actively react to what the candidate just said before sharing your own thoughts.
 
 Return ONLY valid JSON matching this schema:
 {
   "cleanedTranscript": "Polished, grammatically clean version of user's speech",
-  "replyText": "Your chill, informal, lively conversational spoken response"
+  "replyText": "Your lively, human, conversational response (spoken aloud)"
 }`;
 
     const contents = [];
@@ -6170,8 +6172,9 @@ Return JSON: {
           isGeminiPowered: true,
           mode: "exam",
           wordCount,
-          naturalMarker: geminiResult.naturalMarker || "Right.",
-          generatedFollowUp: geminiResult.generatedFollowUp || "How do you feel about that in your daily routine?",
+          spokenExaminerResponse: geminiResult.spokenExaminerResponse || null,
+          naturalMarker: geminiResult.naturalMarker || "Thank you.",
+          generatedFollowUp: geminiResult.generatedFollowUp || "Could you tell me a little more about that?",
           evaluation: {
             fluency: geminiResult.fluency || 6.5,
             lexical: geminiResult.lexical || 6.5,

@@ -478,10 +478,10 @@
           avatar.setState('idle');
           currentQuestionIdx++;
           if (examStage === 1 && currentQuestionIdx < 3) {
-            const nextQ = data.generatedFollowUp || activePart1Topic?.questions[currentQuestionIdx] || "How do you feel about that in your daily routine?";
-            const conversationalSpeech = (data.naturalMarker ? data.naturalMarker + ' ' : '') + nextQ;
-            currentQuestionText = nextQ;
-            avatar.speakText(conversationalSpeech);
+            const nextQ = data.generatedFollowUp || activePart1Topic?.questions[currentQuestionIdx] || "Could you elaborate a bit more on that?";
+              const conversationalSpeech = data.spokenExaminerResponse || ((data.naturalMarker ? data.naturalMarker + ' ' : '') + nextQ);
+              currentQuestionText = nextQ;
+              avatar.speakText(conversationalSpeech);
           } else if (examStage === 1 && currentQuestionIdx >= 3) {
             currentQuestionIdx = 0;
             askPart2CueCard();
@@ -489,10 +489,10 @@
             currentQuestionIdx = 0;
             askPart3Question();
           } else if (examStage === 3 && currentQuestionIdx < 2) {
-            const nextQ = data.generatedFollowUp || activePart2Card?.part3[currentQuestionIdx] || "Why is that significant for modern society?";
-            const conversationalSpeech = (data.naturalMarker ? data.naturalMarker + ' ' : '') + nextQ;
-            currentQuestionText = nextQ;
-            avatar.speakText(conversationalSpeech);
+            const nextQ = data.generatedFollowUp || activePart2Card?.part3[currentQuestionIdx] || "Why do you think that is significant in today's society?";
+              const conversationalSpeech = data.spokenExaminerResponse || ((data.naturalMarker ? data.naturalMarker + ' ' : '') + nextQ);
+              currentQuestionText = nextQ;
+              avatar.speakText(conversationalSpeech);
           } else {
             finishSpeakingExam();
           }
