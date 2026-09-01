@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="IELTS Core AI Speaking Examiner & Voice Studio with animated human examiner, audio recording, and criteria evaluation.">
-  <title>AI Speaking Studio | IELTS Core</title>
+  <meta name="description" content="IELTS Core Virtual AI Speaking Examiner & Voice Assessment with automated criteria evaluation.">
+  <title>Virtual AI Examiner | IELTS Core</title>
   <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
   <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +30,7 @@
       <a href="/english/courses">Courses</a>
       <a href="/english/practice">Practice</a>
       <a href="/english/materials">Materials</a>
-      <a href="/english/speaking" aria-current="page">Speaking Studio</a>
+      <a href="/english/speaking" aria-current="page">AI Speaking</a>
       <a href="/english/pricing">Pricing</a>
       <a href="/english/account">Dashboard</a>
     </nav>
@@ -46,18 +46,18 @@
       <nav class="vx-breadcrumb-bar" aria-label="Breadcrumb">
         <a href="/english/materials"><span class="material-symbols-outlined">home</span> Materials</a>
         <span class="sep">/</span>
-        <span class="current">AI Speaking Video Call Examination</span>
+        <span class="current">AI Speaking Video Assessment</span>
       </nav>
 
       <!-- Mode Switcher Bar -->
       <div class="speaking-mode-bar">
         <button type="button" class="speaking-mode-btn active" id="modeBtnExam" data-mode="exam">
           <span class="material-symbols-outlined">videocam</span>
-          <span>Zoom Real Exam</span>
+          <span>Official Simulation</span>
         </button>
         <button type="button" class="speaking-mode-btn" id="modeBtnPractice" data-mode="practice">
           <span class="material-symbols-outlined">forum</span>
-          <span>Casual AI Partner (Free Chat)</span>
+          <span>Practice AI Assistant</span>
         </button>
         <button type="button" class="speaking-mode-btn" id="modeBtnSolo" data-mode="solo">
           <span class="material-symbols-outlined">mic</span>

@@ -370,7 +370,7 @@
             <!-- Examiner Name Tag Overlay -->
             <div class="zoom-examiner-tag">
               <span class="material-symbols-outlined" id="examinerSpeakerIcon" style="font-size:16px;color:#38bdf8;">volume_up</span>
-              <span class="examiner-name">Dr. Alan Sterling (Senior Cambridge Examiner)</span>
+              <span class="examiner-name">Virtual AI Examiner (IELTS Core)</span>
             </div>
 
             <!-- Picture-in-Picture Candidate Self Webcam -->
@@ -440,7 +440,7 @@
                   </button>
                 </div>
                 <h3 class="start-title" id="startOverlayTitle">Join Official Video Examination</h3>
-                <p class="start-desc" id="startOverlayDesc">Dr. Alan Sterling is waiting in the Cambridge exam room.<br/>Click to start the live video interview.</p>
+                <p class="start-desc" id="startOverlayDesc">The Virtual AI Examiner is waiting in the secure virtual room.<br/>Click to start the live automated assessment.</p>
                 <button type="button" class="start-action-btn" id="startActionBtn">
                   <span class="material-symbols-outlined">play_circle</span>
                   <span id="startActionBtnLabel">Start Examination</span>
@@ -490,21 +490,21 @@
             <div class="gemini-modal-box">
               <div class="gemini-modal-header">
                 <div style="display:flex;align-items:center;gap:8px;">
-                  <span class="material-symbols-outlined" style="color:#38bdf8;font-size:22px;">auto_awesome</span>
-                  <strong>Google Gemini Real AI Engine</strong>
+                  <span class="material-symbols-outlined" style="color:#38bdf8;font-size:22px;">settings_suggest</span>
+                  <strong>Assessment Engine Configuration</strong>
                 </div>
                 <button type="button" class="modal-close-x" id="closeGeminiModalBtn">✕</button>
               </div>
               <div class="gemini-modal-body">
-                <p>Connect your free <strong>Google Gemini API Key</strong> for 100% natural, authentic Oxford IELTS examiner conversations:</p>
+                <p>To activate the real-time AI Assessment Engine for your speaking test, please connect your authorized processing key:</p>
                 <div class="gemini-input-row">
-                  <input type="password" id="geminiKeyInput" placeholder="Paste your Gemini API key (e.g. your key)" autocomplete="off" />
-                  <button type="button" class="button primary" id="saveGeminiKeyBtn">Save &amp; Connect</button>
+                  <input type="password" id="geminiKeyInput" placeholder="Paste your API key here..." autocomplete="off" />
+                  <button type="button" class="button primary" id="saveGeminiKeyBtn">Connect Engine</button>
                 </div>
                 <div id="geminiFeedbackMsg" class="gemini-feedback-msg" style="display:none;"></div>
                 <div class="gemini-modal-footer">
                   <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">
-                    <span>Get a Free Key at Google AI Studio</span>
+                    <span>Obtain an Authorized Processing Key</span>
                     <span class="material-symbols-outlined" style="font-size:13px;">open_in_new</span>
                   </a>
                 </div>
@@ -536,7 +536,7 @@
                   <div class="examiner-verdict-box">
                     <div class="examiner-avatar-chip">
                       <span class="material-symbols-outlined">person</span>
-                      <strong>Dr. Alan Sterling (Examiner Verdict)</strong>
+                      <strong>AI Examiner Verdict</strong>
                     </div>
                     <p class="examiner-summary-text" id="scoreExaminerSummary">"A highly articulate and competent performance demonstrating natural coherence and strong lexical variety throughout all 3 parts of the examination."</p>
                   </div>
@@ -722,8 +722,8 @@
 
       if (this.examinerNameTag) {
         this.examinerNameTag.textContent = this.currentPersona === 'practice' 
-          ? 'Emma Roberts (AI Speaking Partner)' 
-          : 'Dr. Alan Sterling (Senior Cambridge Examiner)';
+          ? 'Virtual AI Partner (IELTS Core)' 
+          : 'Virtual AI Examiner (IELTS Core)';
       }
       if (this.roomTitleEl) {
         this.roomTitleEl.textContent = this.currentPersona === 'practice'
@@ -963,15 +963,15 @@
             const data = await res.json();
             if (res.ok) {
               if (this.geminiFeedback) {
-                this.geminiFeedback.style.display = 'block';
                 this.geminiFeedback.className = 'gemini-feedback-msg success';
-                this.geminiFeedback.textContent = 'Connected successfully! Google Gemini Real AI is now active.';
+                this.geminiFeedback.textContent = 'Connected successfully! Real-time AI Assessment Engine is now active.';
+                this.geminiFeedback.style.display = 'block';
               }
               if (this.geminiStatusLabel) this.geminiStatusLabel.textContent = 'Gemini Active 🟢';
               if (this.geminiBtn) this.geminiBtn.classList.add('connected');
               setTimeout(() => {
                 if (this.geminiModal) this.geminiModal.style.display = 'none';
-              }, 1200);
+              }, 1500);
             } else {
               alert(data.error || 'Failed to save key');
             }

@@ -205,7 +205,7 @@
       practiceFeedbackBox.style.display = 'none';
       loadRandomCueCard();
     } else if (mode === 'practice') {
-      // Pure Casual AI Speaking Partner (Emma Roberts)
+      // Practice AI Partner
       stageIndicator.style.display = 'none';
       if (avatar.slideOverlay) avatar.slideOverlay.style.display = 'none';
       practiceFeedbackBox.style.display = 'none';
@@ -216,22 +216,22 @@
       if (avatar.nextTurnBtn) avatar.nextTurnBtn.style.display = 'none';
 
       avatar.showStartOverlay({
-        title: 'Start Casual AI Conversation',
-        desc: 'Connect with <strong>Emma Roberts</strong>, your friendly AI Speaking Partner.<br/>Speak naturally about any topic in real time.',
+        title: 'Start Practice Assistant Session',
+        desc: 'Connect with your <strong>Practice AI Assistant</strong>.<br/>Speak naturally about any topic in real time.',
         btnLabel: 'Start Practice Call',
         onStart: () => {
           beginCasualChat();
         }
       });
     } else {
-      // Real Cambridge Exam Mode (Dr. Alan Sterling)
+      // Real Cambridge Exam Mode
       stageIndicator.style.display = 'flex';
       if (avatar.slideOverlay) avatar.slideOverlay.style.display = 'none';
       practiceFeedbackBox.style.display = 'none';
       
       avatar.showStartOverlay({
-        title: 'Join Official Video Examination',
-        desc: '<strong>Dr. Alan Sterling</strong> is waiting in the Cambridge exam room.<br/>Click to start the live video interview.',
+        title: 'Join Official Video Assessment',
+        desc: 'The <strong>Virtual AI Examiner</strong> is waiting in the secure virtual room.<br/>Click to start the live video interview.',
         btnLabel: 'Start Examination',
         onStart: () => {
           beginExamInterview();
@@ -241,7 +241,7 @@
   }
 
   function beginCasualChat() {
-    const greeting = "Hey there! I'm Emma. So great to connect with you! What's on your mind today?";
+    const greeting = "Hey there! I'm your AI Assistant. So great to connect with you! What's on your mind today?";
     currentQuestionText = greeting;
     practiceFeedbackBox.style.display = 'block';
     practiceTipText.textContent = '🟢 Hands-Free Voice Chat Active (Speak naturally, AI listens and responds)';
