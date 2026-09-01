@@ -5903,7 +5903,7 @@ async function api(req, res, pathname) {
     for (const model of GEMINI_MODELS_POOL) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 4000);
+      const timer = setTimeout(() => controller.abort(), 15000);
 
       try {
         const response = await fetch(url, {
