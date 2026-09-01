@@ -130,7 +130,7 @@
     // Calculate today's minutes from attempts
     const todayStr = new Date().toISOString().slice(0, 10);
     const todayAttempts = results.filter(r => (r.createdAt || '').slice(0, 10) === todayStr);
-    todayMinutes = todayAttempts.length > 0 ? Math.round(todayAttempts.reduce((s, r) => s + (Number(r.durationSeconds) || 1800), 0) / 60) : (activityList.find(a => a.date === todayStr)?.count || 0) * 30;
+    let totalSecs = todayAttempts.reduce((s, r) => s + (Number(r.durationSeconds) || 0), 0); if(totalSecs>0 && totalSecs<60){ todayMinutes=1; } else { todayMinutes=Math.round(totalSecs/60); }
 
     if (timeBadge) {
       timeBadge.textContent = `${todayMinutes} min bugun`;
