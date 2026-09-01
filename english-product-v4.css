@@ -26,6 +26,130 @@
 }
 
 /* Modern Floating Island Header */
+.app-header,
+.premium-product-page .app-header,
+.v4-public-page .app-header {
+  position: sticky;
+  top: 14px;
+  z-index: 100;
+  width: min(1280px, calc(100% - 32px));
+  min-height: 62px;
+  margin: 14px auto 0;
+  padding: 8px 14px 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(218, 228, 241, 0.9);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 10px 32px -8px rgba(12, 28, 56, 0.08), 0 2px 6px -1px rgba(12, 28, 56, 0.03);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Brand Identity */
+.app-brand,
+.v4-public-page .app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--v4-ink);
+  font-family: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.025em;
+  padding: 4px 6px;
+  border-radius: 999px;
+  transition: opacity 0.15s ease;
+}
+.app-brand:hover {
+  opacity: 0.9;
+}
+.app-mark,
+.premium-product-page .app-mark,
+.v4-public-page .app-mark {
+  height: 28px;
+  width: auto;
+  min-width: 38px;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  border: none;
+}
+.app-mark img,
+.app-mark svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.app-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--v4-blue);
+  background: rgba(20, 104, 243, 0.08);
+  border: 1px solid rgba(20, 104, 243, 0.18);
+  margin-left: 2px;
+}
+
+/* Navigation Links */
+.app-nav,
+.v4-public-page .app-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.app-nav a,
+.v4-public-page .app-nav a {
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: #475569;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.app-nav a:hover,
+.v4-public-page .app-nav a:hover {
+  color: var(--v4-ink);
+  background: rgba(12, 28, 56, 0.05);
+}
+.app-nav a::after,
+.v4-public-page .app-nav a::after {
+  display: none !important;
+  content: none !important;
+}
+.nav-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #1468f3, #4f46e5);
+}
+
+/* Right-side Actions & Theme Switch */
+.app-actions,
+.v4-public-page .app-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 0;
+}
 .app-header .theme-toggle,
 .premium-product-page .theme-toggle,
 .v4-public-page .theme-toggle {
@@ -5385,12 +5509,116 @@ body.user-is-premium #sidebarUpgradeBtn {
 
 
 
-
-
 /* ==========================================================================
    OFFICIAL IELTS RED / BOLD THEME OVERRIDES
    ========================================================================== */
+.app-header,
+.premium-product-page .app-header,
+.v4-public-page .app-header {
+  position: sticky;
+  top: 0 !important;
+  z-index: 100;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 80px !important;
+  margin: 0 !important;
+  padding: 0 5% !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #eaeaea !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
 
+.app-header .app-brand { color: #111111 !important; font-weight: 900 !important; font-size: 20px !important; letter-spacing: -0.03em !important; }
+.app-header .app-brand-badge { background: #E31837 !important; color: #ffffff !important; border: none !important; font-weight: 800 !important; }
+.app-header .app-nav a { color: #111111 !important; font-weight: 700 !important; font-size: 14px !important; text-transform: uppercase; letter-spacing: 0.02em; }
+.app-header .app-nav a:hover, .app-header .app-nav a[aria-current="page"] { color: #E31837 !important; background: transparent !important; }
+.app-header .plain-link { color: #111111 !important; font-weight: 700 !important; text-transform: uppercase; font-size: 14px !important; }
+.app-header .plain-link:hover { color: #E31837 !important; background: transparent !important; }
+.app-header .theme-toggle { display: none !important; }
+
+/* Bold Red Buttons */
+.app-header .button.primary,
+.v4-public-page .button.primary,
+.v4-actions .button.primary {
+  background: #E31837 !important;
+  color: #ffffff !important;
+  border-radius: 4px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: none !important;
+  border: none !important;
+}
+.app-header .button.primary:hover,
+.v4-public-page .button.primary:hover,
+.v4-actions .button.primary:hover {
+  background: #bd102a !important;
+  transform: none !important;
+}
+
+.v4-actions .button.secondary {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 2px solid #111111 !important;
+  border-radius: 4px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.v4-actions .button.secondary:hover {
+  background: #f5f5f5 !important;
+}
+
+/* Hero Section */
+.v4-hero {
+  position: relative !important;
+  padding: 100px 0 120px !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+.v4-hero-glow { display: none !important; }
+
+.v4-hero-copy h1 {
+  color: #111111 !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(42px, 5vw, 64px) !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.05 !important;
+  text-transform: none !important;
+}
+
+.v4-hero-subtitle {
+  color: #555555 !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  line-height: 1.6 !important;
+  margin-top: 24px !important;
+}
+
+.v4-hero-gradient {
+  color: #E31837 !important;
+  background: none !important;
+  -webkit-text-fill-color: #E31837 !important;
+}
+
+.v4-trust-item, .v4-trust-item span { color: #111111 !important; font-weight: 700 !important; }
+.v4-trust-item .material-symbols-outlined { color: #E31837 !important; }
+
+.v4-hero-badge {
+  color: #E31837 !important;
+  background: rgba(227, 24, 55, 0.1) !important;
+  border: 1px solid rgba(227, 24, 55, 0.2) !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-size: 11px !important;
+  border-radius: 4px !important;
+}
 .v4-badge-pulse { background: #E31837 !important; box-shadow: none !important; animation: none !important; }
 
 /* Clean Showcase */
@@ -5413,4 +5641,3 @@ body.user-is-premium #sidebarUpgradeBtn {
   border-radius: 6px !important;
 }
 .v4-mock-score-float .material-symbols-outlined { color: #4ade80 !important; }
-
