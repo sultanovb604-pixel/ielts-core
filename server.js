@@ -1,4 +1,4 @@
-const http = require("http");
+﻿const http = require("http");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
@@ -120,8 +120,8 @@ const ENGLISH_COLLECTIONS = new Set(["full-test", "practice", "article", "writin
 function normalizeReadingText(source) {
   return source
     .replace(/&nbsp;|&#160;/gi, " ")
-    .replace(/&ndash;|&#8211;|&#x2013;/gi, "–")
-    .replace(/&mdash;|&#8212;|&#x2014;/gi, "—")
+    .replace(/&ndash;|&#8211;|&#x2013;/gi, "вЂ“")
+    .replace(/&mdash;|&#8212;|&#x2014;/gi, "вЂ”")
     .replace(/&amp;/gi, "&")
     .replace(/&#39;|&apos;/gi, "'")
     .replace(/&quot;/gi, '"');
@@ -130,7 +130,7 @@ function normalizeReadingText(source) {
 function readingQuestionNumbers(source) {
   const normalized = normalizeReadingText(source);
   const questions = new Set();
-  const rangePattern = /Questions?\s*(?:<[^>]+>|\s|:)*?(\d{1,2})\s*(?:-|–|—|to)\s*(\d{1,2})/gi;
+  const rangePattern = /Questions?\s*(?:<[^>]+>|\s|:)*?(\d{1,2})\s*(?:-|вЂ“|вЂ”|to)\s*(\d{1,2})/gi;
   for (const match of normalized.matchAll(rangePattern)) {
     const start = Number(match[1]);
     const end = Number(match[2]);
@@ -160,7 +160,7 @@ function cleanReadingTopic(fileName, source) {
     .trim();
   let title = matched ? normalizeReadingText(matched[1]).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : base;
   title = title
-    .replace(/^IELTS\s+(?:Academic\s+)?Reading\s*(?:Practice|Test)?\s*[-–—:]?\s*/i, "")
+    .replace(/^IELTS\s+(?:Academic\s+)?Reading\s*(?:Practice|Test)?\s*[-вЂ“вЂ”:]?\s*/i, "")
     .replace(/\s*\|.*$/g, "")
     .trim();
   if (!title || /^(?:practice|offline|complete practice|full reading practice)$/i.test(title)) title = base;
@@ -380,8 +380,8 @@ function readReadingCatalog(forceRefresh = false) {
   catalog.filter(item => item.materialKind !== "full-test").forEach(item => {
     const fallback = item.materialKind === "skill-practice" ? "Matching Headings" : "Academic passage";
     item.title = item.materialKind === "skill-practice"
-      ? `IELTS Reading Skill Practice — ${item.sourceTitle || fallback}`
-      : `IELTS Reading Passage — ${item.sourceTitle || fallback}`;
+      ? `IELTS Reading Skill Practice вЂ” ${item.sourceTitle || fallback}`
+      : `IELTS Reading Passage вЂ” ${item.sourceTitle || fallback}`;
     item.description = item.materialKind === "skill-practice"
       ? "Focused question-type practice for targeted improvement."
       : "Single-passage computer-delivered practice.";
@@ -989,7 +989,7 @@ function readingPersistenceMarkup(material, user) {
   .divider::after,
   #divider::after,
   #resize-handle::after {
-    content: '↔' !important;
+    content: 'в†”' !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -2907,7 +2907,7 @@ function readingPersistenceMarkup(material, user) {
   <div class="vx-heading-picker-card">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <h3 id="vxHeadingPickerTitle" style="margin:0;font-size:16px;font-weight:800;color:var(--vx-ink);display:flex;align-items:center;gap:8px;">
-        <span style="color:#2563eb;">📌</span> Select Heading for <span id="vxTargetHeadingBoxName" style="color:#2563eb;">Paragraph</span>
+        <span style="color:#2563eb;">рџ“Њ</span> Select Heading for <span id="vxTargetHeadingBoxName" style="color:#2563eb;">Paragraph</span>
       </h3>
       <button type="button" id="vxHeadingPickerCloseBtn" style="border:none;background:none;font-size:22px;cursor:pointer;color:inherit;line-height:1;">&times;</button>
     </div>
@@ -2955,7 +2955,7 @@ function readingPersistenceMarkup(material, user) {
 <!-- Injected Sub-Rubric Banner -->
 <div class="vx-cdi-subrubric" id="vxCdiSubrubric" role="region" aria-label="Part instruction">
   <strong id="vxCurrentPartTitle">Part 1</strong>
-  <span id="vxCurrentPartDesc">Read the text and answer questions 1–13.</span>
+  <span id="vxCurrentPartDesc">Read the text and answer questions 1вЂ“13.</span>
 </div>
 
 <!-- Injected Mobile Viewport Switcher -->
@@ -3002,9 +3002,9 @@ function readingPersistenceMarkup(material, user) {
     <span style="display:inline-block;padding:4px 14px;border-radius:999px;font-size:11.5px;font-weight:800;background:#fef3c7;color:#b45309;margin-bottom:16px;border:1px solid #fde68a;">IELTS Core Premium Exclusive</span>
     <div style="font-size:13.5px;color:#475569;line-height:1.6;margin:0 0 22px;text-align:left;background:#f8fafc;padding:14px 18px;border-radius:10px;border:1px solid #e2e8f0;">
       Real Exam Mode simulates official computer-delivered IELTS exam conditions:
-      <br>• <strong>60-minute strict countdown timer</strong>
-      <br>• <strong>Official Cambridge Band scoring & full diagnostics</strong>
-      <br>• <strong>Realistic exam pressure with no pauses</strong>
+      <br>вЂў <strong>60-minute strict countdown timer</strong>
+      <br>вЂў <strong>Official Cambridge Band scoring & full diagnostics</strong>
+      <br>вЂў <strong>Realistic exam pressure with no pauses</strong>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;">
       <a href="/english/pricing" class="vx-btn-modal-primary" style="width:100%;box-sizing:border-box;font-size:13.5px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:42px;">
@@ -3014,7 +3014,7 @@ function readingPersistenceMarkup(material, user) {
         Continue in Untimed Practice Mode
       </button>
       <a href="/english/materials?level=ielts&skill=reading" style="font-size:12px;color:#64748b;text-decoration:none;margin-top:4px;font-weight:600;">
-        ← Back to Materials Library
+        в†ђ Back to Materials Library
       </a>
     </div>
   </div>
@@ -3058,8 +3058,8 @@ function readingPersistenceMarkup(material, user) {
         <div class="vx-res-sub">Official Computer-Delivered Academic Reading Assessment</div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;">
-        <span class="vx-res-section-badge" id="vxResultSectionBadge">READING · 40 Questions</span>
-        <button type="button" class="vx-res-close-x" id="vxReadingResultsCloseTopBtn" title="Close report">✕</button>
+        <span class="vx-res-section-badge" id="vxResultSectionBadge">READING В· 40 Questions</span>
+        <button type="button" class="vx-res-close-x" id="vxReadingResultsCloseTopBtn" title="Close report">вњ•</button>
       </div>
     </div>
 
@@ -3069,7 +3069,7 @@ function readingPersistenceMarkup(material, user) {
       <div class="vx-res-kpi-card primary">
         <div class="vx-res-kpi-label">IELTS Official Band</div>
         <div class="vx-res-band-val" id="vxResultBandNum">--</div>
-        <div class="vx-res-cefr-badge" id="vxResultCefrBadge">CEFR B2 · Competent User</div>
+        <div class="vx-res-cefr-badge" id="vxResultCefrBadge">CEFR B2 В· Competent User</div>
       </div>
 
       <!-- 2. Raw Accuracy & Breakdown -->
@@ -3170,7 +3170,7 @@ function readingPersistenceMarkup(material, user) {
   if (isPracticeMode) {
     document.body.classList.add('vx-practice-mode');
     var subtitle = document.querySelector('.vx-exam-subtitle');
-    if (subtitle) subtitle.innerHTML = '<span style="color:#0284c7;font-weight:700;">[PRACTICE MODE]</span> · Focused Practice & Drill';
+    if (subtitle) subtitle.innerHTML = '<span style="color:#0284c7;font-weight:700;">[PRACTICE MODE]</span> В· Focused Practice & Drill';
   }
 
   var themeToggle = document.getElementById('vxThemeToggle');
@@ -3293,17 +3293,17 @@ function readingPersistenceMarkup(material, user) {
   var flaggedQuestions = new Set();
 
   var partsConfig = totalQuestions === 40 ? [
-    { part: 1, start: 1, end: 13, count: 13, title: 'Part 1', desc: 'Read the text and answer questions 1–13.' },
-    { part: 2, start: 14, end: 26, count: 13, title: 'Part 2', desc: 'Read the text and answer questions 14–26.' },
-    { part: 3, start: 27, end: 40, count: 14, title: 'Part 3', desc: 'Read the text and answer questions 27–40.' }
+    { part: 1, start: 1, end: 13, count: 13, title: 'Part 1', desc: 'Read the text and answer questions 1вЂ“13.' },
+    { part: 2, start: 14, end: 26, count: 13, title: 'Part 2', desc: 'Read the text and answer questions 14вЂ“26.' },
+    { part: 3, start: 27, end: 40, count: 14, title: 'Part 3', desc: 'Read the text and answer questions 27вЂ“40.' }
   ] : [
-    { part: 1, start: 1, end: totalQuestions, count: totalQuestions, title: 'Part 1', desc: 'Read the text and answer questions 1–' + totalQuestions + '.' }
+    { part: 1, start: 1, end: totalQuestions, count: totalQuestions, title: 'Part 1', desc: 'Read the text and answer questions 1вЂ“' + totalQuestions + '.' }
   ];
 
   function switchCdiPart(partNum) {
     currentPart = partNum;
 
-    // 1. If page defines global switchToPart (e.g. R 3–49 series, Reading 7, etc.)
+    // 1. If page defines global switchToPart (e.g. R 3вЂ“49 series, Reading 7, etc.)
     if (typeof window.switchToPart === 'function') {
       try { window.switchToPart(partNum); } catch(e) {}
     }
@@ -3434,7 +3434,7 @@ function readingPersistenceMarkup(material, user) {
       switchCdiPart(targetPart);
     }
 
-    // If page defines goToQuestion (e.g. R 3–49 series)
+    // If page defines goToQuestion (e.g. R 3вЂ“49 series)
     if (typeof window.goToQuestion === 'function') {
       try { window.goToQuestion(qNum); } catch(e) {}
     }
@@ -3607,7 +3607,7 @@ function readingPersistenceMarkup(material, user) {
   }
 
   function autoSubmitTimeUp() {
-    notify('Time is up! Submitting your answers…', 'error');
+    notify('Time is up! Submitting your answersвЂ¦', 'error');
     submitExam();
   }
 
@@ -3663,13 +3663,13 @@ function readingPersistenceMarkup(material, user) {
 
   function getBandCefr(band) {
     var b = Number(band) || 0;
-    if (b >= 8.5) return 'CEFR C2 · Expert User';
-    if (b >= 7.5) return 'CEFR C1 · Very Good User';
-    if (b >= 6.5) return 'CEFR B2+ · Good User';
-    if (b >= 5.5) return 'CEFR B2 · Competent User';
-    if (b >= 4.5) return 'CEFR B1 · Modest User';
-    if (b > 0) return 'CEFR A2 · Limited User';
-    return 'No Band · Incomplete Attempt';
+    if (b >= 8.5) return 'CEFR C2 В· Expert User';
+    if (b >= 7.5) return 'CEFR C1 В· Very Good User';
+    if (b >= 6.5) return 'CEFR B2+ В· Good User';
+    if (b >= 5.5) return 'CEFR B2 В· Competent User';
+    if (b >= 4.5) return 'CEFR B1 В· Modest User';
+    if (b > 0) return 'CEFR A2 В· Limited User';
+    return 'No Band В· Incomplete Attempt';
   }
 
   function showVerifiedResult(attempt, duration) {
@@ -3717,7 +3717,7 @@ function readingPersistenceMarkup(material, user) {
       }
       partsGrid.innerHTML = partBreakdown.map(function(p) {
         var isZero = p.mistakes === 0;
-        return '<div class="vx-res-part-card"><div class="vx-res-part-name">' + p.part + '</div><div class="vx-res-part-score" style="color:' + (isZero ? '#10b981' : '#dc2626') + '">' + (isZero ? '✔ Perfect Score' : p.mistakes + ' mistake' + (p.mistakes === 1 ? '' : 's')) + '</div></div>';
+        return '<div class="vx-res-part-card"><div class="vx-res-part-name">' + p.part + '</div><div class="vx-res-part-score" style="color:' + (isZero ? '#10b981' : '#dc2626') + '">' + (isZero ? 'вњ” Perfect Score' : p.mistakes + ' mistake' + (p.mistakes === 1 ? '' : 's')) + '</div></div>';
       }).join('');
     }
 
@@ -3728,7 +3728,7 @@ function readingPersistenceMarkup(material, user) {
       var pillsHtml = '';
       for (var q = 1; q <= total; q++) {
         var isIncorrect = incorrectSet.has(q);
-        pillsHtml += '<button type="button" class="vx-res-pill-btn ' + (isIncorrect ? 'incorrect' : 'correct') + '" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + (isIncorrect ? '✕ Q' : '✓ Q') + q + '</button>';
+        pillsHtml += '<button type="button" class="vx-res-pill-btn ' + (isIncorrect ? 'incorrect' : 'correct') + '" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + (isIncorrect ? 'вњ• Q' : 'вњ“ Q') + q + '</button>';
       }
       pillsWrap.innerHTML = pillsHtml;
 
@@ -3804,7 +3804,7 @@ function readingPersistenceMarkup(material, user) {
     var total = Number(attempt.total) || totalQuestions || 40;
 
     // Update Header with Score Report & Retake Buttons and Score text
-    var bandText = attempt.band !== null && attempt.band !== undefined ? ' · Band ' + Number(attempt.band).toFixed(1) : '';
+    var bandText = attempt.band !== null && attempt.band !== undefined ? ' В· Band ' + Number(attempt.band).toFixed(1) : '';
     var scoreSummary = attempt.correct + '/' + total + bandText;
 
     var headerReportBtn = document.getElementById('vxHeaderScoreReportBtn');
@@ -3839,7 +3839,7 @@ function readingPersistenceMarkup(material, user) {
     if (currentAttemptData) {
       applyReviewModeUi(currentAttemptData);
     }
-    notify('Detailed Review & Explanations: Coming soon in next update! 🚀', 'success');
+    notify('Detailed Review & Explanations: Coming soon in next update! рџљЂ', 'success');
   });
 
   document.getElementById('vxReportIssueBtn')?.addEventListener('click', function() {
@@ -3950,7 +3950,7 @@ function readingPersistenceMarkup(material, user) {
     activeNoteSpan = existingSpan || null;
     currentSelectionRange = range ? range.cloneRange() : null;
     var snippet = existingSpan ? existingSpan.textContent.trim() : (range ? range.toString().trim() : '');
-    if (noteSnippet) noteSnippet.textContent = '“' + (snippet.length > 80 ? snippet.slice(0, 80) + '…' : snippet) + '”';
+    if (noteSnippet) noteSnippet.textContent = 'вЂњ' + (snippet.length > 80 ? snippet.slice(0, 80) + 'вЂ¦' : snippet) + 'вЂќ';
     if (noteText) noteText.value = existingSpan ? existingSpan.getAttribute('data-note') || '' : '';
     if (noteDeleteBtn) noteDeleteBtn.hidden = !existingSpan;
     if (noteModal) noteModal.classList.add('show');
@@ -4093,7 +4093,7 @@ function readingPersistenceMarkup(material, user) {
     var pill = e.target.closest('.vx-q-pill');
     if (pill) {
       pill.classList.toggle('flagged');
-      notify(pill.classList.contains('flagged') ? 'Question ' + pill.getAttribute('data-q-num') + ' flagged for review 🚩' : 'Flag removed', 'success');
+      notify(pill.classList.contains('flagged') ? 'Question ' + pill.getAttribute('data-q-num') + ' flagged for review рџљ©' : 'Flag removed', 'success');
     }
   });
 
@@ -4149,7 +4149,7 @@ function readingPersistenceMarkup(material, user) {
         e.stopPropagation();
         isPracticePaused = !isPracticePaused;
         pauseBtn.innerHTML = isPracticePaused ? '<i class="fas fa-play" style="font-size:11px;color:#10b981"></i>' : '<i class="fas fa-pause" style="font-size:11px"></i>';
-        notify(isPracticePaused ? 'Practice Timer Paused ⏸' : 'Practice Timer Resumed ▶', 'success');
+        notify(isPracticePaused ? 'Practice Timer Paused вЏё' : 'Practice Timer Resumed в–¶', 'success');
       });
     }
     timerInterval = setInterval(function() {
@@ -4250,7 +4250,7 @@ function readingPersistenceMarkup(material, user) {
         document.querySelectorAll('.drag-item.selected-heading').forEach(function(i) { i.classList.remove('selected-heading'); });
         selectedHeadingEl = item;
         item.classList.add('selected-heading');
-        notify('📌 Sarlavha tanlandi! Endi pastdagi istalgan Paragraph katagiga bosing.', 'success');
+        notify('рџ“Њ Sarlavha tanlandi! Endi pastdagi istalgan Paragraph katagiga bosing.', 'success');
       });
     });
 
@@ -4267,7 +4267,7 @@ function readingPersistenceMarkup(material, user) {
           placeHeadingInZone(zone, val, txt, grp);
           selectedHeadingEl.classList.remove('selected-heading');
           selectedHeadingEl = null;
-          notify('Sarlavha muvaffaqiyatli joylandi! ✓', 'success');
+          notify('Sarlavha muvaffaqiyatli joylandi! вњ“', 'success');
           return;
         }
 
@@ -4358,7 +4358,7 @@ function readingPersistenceMarkup(material, user) {
           return;
         }
         restoreAnswers(data.attempt.answers);
-        var bandText = data.attempt.band !== null && data.attempt.band !== undefined ? ' · Band ' + Number(data.attempt.band).toFixed(1) : '';
+        var bandText = data.attempt.band !== null && data.attempt.band !== undefined ? ' В· Band ' + Number(data.attempt.band).toFixed(1) : '';
         var scoreSummary = data.attempt.correct + '/' + data.attempt.total + bandText;
         currentAttemptData = data.attempt;
         applyReviewModeUi(data.attempt);
@@ -5735,7 +5735,7 @@ async function api(req, res, pathname) {
       return json(res, 403, { error: "This Mock Exam requires IELTS Core Premium." });
     }
 
-    const lMaterial = readListeningCatalog().find(item => item.id === mockItem.listening.id);
+    const lMaterial = readListeningCatalog().find(item => item.id === mockItem.listening.id || item.fileName === mockItem.listening.fileName);
     let lSource = "";
     if (lMaterial && lMaterial.fileName) {
       const lFile = path.join(LISTENING_MATERIALS_DIR, lMaterial.fileName);
@@ -5779,7 +5779,7 @@ async function api(req, res, pathname) {
     let listeningScore = 0;
     let listeningBand = 0;
     let listeningEval = null;
-    const lMaterial = readListeningCatalog().find(item => item.id === mockItem.listening.id);
+    const lMaterial = readListeningCatalog().find(item => item.id === mockItem.listening.id || item.fileName === mockItem.listening.fileName);
     if (lMaterial && Array.isArray(body.listeningAnswers)) {
       listeningEval = scoreListeningAnswers(lMaterial, body.listeningAnswers, true);
       listeningScore = Number(listeningEval.correct) || 0;
@@ -6031,7 +6031,7 @@ Return ONLY valid JSON matching this schema:
         return "Coding is awesome! What kind of fun projects or apps are you building lately?";
       }
       if (/gym|workout|fitness|running|muscle|exercise|training/i.test(lower)) {
-        return "Working out feels so good for clearing your head! What's your go-to workout lately — lifting weights or running?";
+        return "Working out feels so good for clearing your head! What's your go-to workout lately вЂ” lifting weights or running?";
       }
       if (/food|cook|eat|recipe|restaurant|dish|pizza|sushi/i.test(lower)) {
         return "Mmm, that sounds delicious! Are you a master chef at home, or do you love finding cool new food spots?";
@@ -7171,7 +7171,7 @@ Return ONLY valid JSON in this schema:
   }
   if (req.method === "POST" && pathname === "/api/admin/firebase-google") {
     if (adminLoginBlocked(req)) {
-      return json(res, 429, { error: "Xavfsizlik blokirovkasi: Ko‘p marotaba xato urinishlar bo‘lgani sababli ushbu IP uchun kirish 60 daqiqaga to‘xtatildi." });
+      return json(res, 429, { error: "Xavfsizlik blokirovkasi: KoвЂp marotaba xato urinishlar boвЂlgani sababli ushbu IP uchun kirish 60 daqiqaga toвЂxtatildi." });
     }
     const body = await readBody(req);
     const email = String(body.email || "").trim().toLowerCase();
@@ -7194,7 +7194,7 @@ Return ONLY valid JSON in this schema:
   }
   if (req.method === "POST" && pathname === "/api/admin/login") {
     if (adminLoginBlocked(req)) {
-      return json(res, 429, { error: "Xavfsizlik blokirovkasi: Ko‘p marotaba xato urinishlar bo‘lgani sababli ushbu IP uchun kirish 60 daqiqaga to‘xtatildi." });
+      return json(res, 429, { error: "Xavfsizlik blokirovkasi: KoвЂp marotaba xato urinishlar boвЂlgani sababli ushbu IP uchun kirish 60 daqiqaga toвЂxtatildi." });
     }
     const body = await readBody(req);
     const effectiveAdminPassword = data.adminPassword || ADMIN_PASSWORD;
@@ -7234,10 +7234,10 @@ Return ONLY valid JSON in this schema:
     const newPassword = String(body.newPassword || "");
     const effectiveAdminPassword = data.adminPassword || ADMIN_PASSWORD;
     if (!safeEqualText(currentPassword, effectiveAdminPassword)) {
-      return json(res, 400, { error: "Amaldagi parol noto‘g‘ri kiritildi." });
+      return json(res, 400, { error: "Amaldagi parol notoвЂgвЂri kiritildi." });
     }
     if (newPassword.length < 6) {
-      return json(res, 400, { error: "Yangi parol kamida 6 ta belgidan iborat bo‘lishi kerak." });
+      return json(res, 400, { error: "Yangi parol kamida 6 ta belgidan iborat boвЂlishi kerak." });
     }
     data.adminPassword = newPassword;
     data.adminPasswordUpdatedAt = new Date().toISOString();
@@ -7342,7 +7342,7 @@ Return ONLY valid JSON in this schema:
     user.planUpdatedAt = new Date().toISOString();
     user.redeemedCode = code;
     await writeData(data);
-    return json(res, 200, { ok: true, message: `🌟 IELTS Core Premium (${days} kun) muvaffaqiyatli faollashtirildi!`, user: safeUser(user) });
+    return json(res, 200, { ok: true, message: `рџЊџ IELTS Core Premium (${days} kun) muvaffaqiyatli faollashtirildi!`, user: safeUser(user) });
   }
   if (req.method === "GET" && pathname === "/api/admin/promo-codes") {
     return json(res, 200, data.promoCodes || []);
@@ -7539,7 +7539,7 @@ function listeningPersistenceMarkup(user) {
   function notify(message,type){status.querySelector('span').textContent=message;status.className='show '+(type||'');window.clearTimeout(notify.timer);notify.timer=window.setTimeout(function(){status.className='';},6500);}
   function collectAnswers(){var answers=[];for(var number=1;number<=40;number+=1){var key='q'+number;var direct=document.getElementById(key);var checked=document.querySelector('input[name="'+key+'"]:checked');var value=checked?checked.value:(direct?direct.value:'');answers.push({key:key,value:String(value||'')});}return answers;}
   function scoreFromPage(){var node=document.getElementById('score-summary');var match=String(node&&node.textContent||'').match(/scored\s+(\d+)\s+out of\s+40/i);return match?Number(match[1]):null;}
-  async function saveResult(){if(saved||saving||scoreFromPage()===null)return;saving=true;if(!token){notify('Sign in before taking a test to save the result.','error');saving=false;return;}try{var response=await fetch('/api/listening-attempts',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({materialId:material.id,answers:collectAnswers(),durationSeconds:Math.round((Date.now()-startedAt)/1000)})});var data=await response.json().catch(function(){return {};});if(!response.ok)throw new Error(data.error||'Listening result could not be saved.');saved=true;notify('Saved: '+data.attempt.correct+'/'+data.attempt.total+' · IELTS Listening Band '+Number(data.attempt.band).toFixed(1),'');}catch(error){notify(error.message||'Listening result could not be saved.','error');}finally{saving=false;}}
+  async function saveResult(){if(saved||saving||scoreFromPage()===null)return;saving=true;if(!token){notify('Sign in before taking a test to save the result.','error');saving=false;return;}try{var response=await fetch('/api/listening-attempts',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({materialId:material.id,answers:collectAnswers(),durationSeconds:Math.round((Date.now()-startedAt)/1000)})});var data=await response.json().catch(function(){return {};});if(!response.ok)throw new Error(data.error||'Listening result could not be saved.');saved=true;notify('Saved: '+data.attempt.correct+'/'+data.attempt.total+' В· IELTS Listening Band '+Number(data.attempt.band).toFixed(1),'');}catch(error){notify(error.message||'Listening result could not be saved.','error');}finally{saving=false;}}
   function saveWhenReady(remaining){window.setTimeout(function(){if(scoreFromPage()!==null)saveResult();else if(remaining>0)saveWhenReady(remaining-1);},250);}
   document.addEventListener('click',function(event){var control=event.target.closest('button,input[type="submit"]');if(!control)return;var label=String(control.textContent||control.value||control.getAttribute('aria-label')||'').trim();if(/check answers|submit|finish|deliver|review your answers/i.test(label))saveWhenReady(16);},true);
   var scoreNode=document.getElementById('score-summary');if(scoreNode)new MutationObserver(function(){saveWhenReady(2);}).observe(scoreNode,{subtree:true,childList:true,characterData:true});
@@ -7553,7 +7553,7 @@ function readNeutralEnglishExam(user) {
     .replace(/\s*--telegram-color:\s*[^;]+;/gi, "")
     .replace(/\s*body::after\s*\{[\s\S]*?\}\s*/i, "\n")
     .replace(/\s*\.telegram-link\s*\{[\s\S]*?\}\s*\.telegram-link:hover\s*\{[\s\S]*?\}\s*/i, "\n")
-    .replace(/<div class="header-left">[\s\S]*?<\/div>\s*(?=<div class="header-icons">)/i, '<div class="header-left" aria-label="IELTS Listening" style="display:flex;align-items:center;gap:12px;"><a href="/english/materials?level=ielts&skill=listening" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-color);text-decoration:none;font-weight:700;font-size:12px;padding:6px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--secondary-bg);">← Exit to Library</a><strong style="font-size:14px;font-weight:700;letter-spacing:-0.02em;">IELTS Listening Full Test 01</strong></div>\n    ')
+    .replace(/<div class="header-left">[\s\S]*?<\/div>\s*(?=<div class="header-icons">)/i, '<div class="header-left" aria-label="IELTS Listening" style="display:flex;align-items:center;gap:12px;"><a href="/english/materials?level=ielts&skill=listening" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-color);text-decoration:none;font-weight:700;font-size:12px;padding:6px 12px;border:1px solid var(--border-color);border-radius:8px;background:var(--secondary-bg);">в†ђ Exit to Library</a><strong style="font-size:14px;font-weight:700;letter-spacing:-0.02em;">IELTS Listening Full Test 01</strong></div>\n    ')
     .replace(/@MINDLESS_WRITER|@FOZILBEK_IELTS|https?:\/\/t\.me\/[^\s"']+|https?:\/\/i\.pinimg\.com\/[^\s"']+/gi, "")
     .replace(/<\/style>/i, "@media (max-width: 768px) { .nav-arrows { display: none; } }\n</style>");
   const persistence = listeningPersistenceMarkup(user);
