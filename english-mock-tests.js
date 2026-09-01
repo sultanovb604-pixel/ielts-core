@@ -1,4 +1,4 @@
-// IELTS Core Full Mock Exams Hub JS
+﻿// IELTS Core Full Mock Exams Hub JS
 (function () {
   'use strict';
 
@@ -89,7 +89,7 @@
         : '<span class="mock-status-pill premium">Premium</span>';
 
       if (item.completed) {
-        statusBadge = `<span class="mock-status-pill completed">Completed · Band ${Number(item.latestBand || 0).toFixed(1)}</span>`;
+        statusBadge = `<span class="mock-status-pill completed">Completed В· Band ${Number(item.latestBand || 0).toFixed(1)}</span>`;
       }
 
       let actionButton = '';
@@ -99,7 +99,7 @@
             <button type="button" class="vx-card-btn vx-btn-unlock full-width" onclick="window.showUpgradeModal ? window.showUpgradeModal() : location.href='/english/pricing'">
               <span class="material-symbols-outlined">lock</span>
               <span>Unlock with Premium (30 000 UZS / oy)</span>
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true">в†’</span>
             </button>
           </div>`;
       } else if (item.completed) {
@@ -120,7 +120,7 @@
             <button type="button" class="vx-card-btn vx-btn-primary full-width" onclick="window.launchMockPreFlight('${escapeHtml(item.id)}', '${escapeHtml(item.title)}')">
               <span class="material-symbols-outlined">play_arrow</span>
               <span>Start Full Mock Exam</span>
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true">в†’</span>
             </button>
           </div>`;
       }
@@ -138,11 +138,11 @@
             <div class="mock-sections-list">
               <div class="mock-section-row">
                 <span class="mock-section-name"><span class="material-symbols-outlined">headphones</span> Listening</span>
-                <span class="mock-section-meta">${escapeHtml(item.listening?.format || '4 Parts · 40 Qs')} (~35 min)</span>
+                <span class="mock-section-meta">${escapeHtml(item.listening?.format || '4 Parts В· 40 Qs')} (~35 min)</span>
               </div>
               <div class="mock-section-row">
                 <span class="mock-section-name"><span class="material-symbols-outlined">menu_book</span> Reading</span>
-                <span class="mock-section-meta">${escapeHtml(item.reading?.format || '3 Passages · 40 Qs')} (60 min)</span>
+                <span class="mock-section-meta">${escapeHtml(item.reading?.format || '3 Passages В· 40 Qs')} (60 min)</span>
               </div>
               <div class="mock-section-row">
                 <span class="mock-section-name"><span class="material-symbols-outlined">edit_note</span> Writing</span>
@@ -174,7 +174,7 @@
             <h2>${escapeHtml(title)}</h2>
             <p style="margin:0;font-size:13px;color:var(--v4-muted);">Authentic Cambridge Computer-Delivered IELTS Simulation</p>
           </div>
-          <button type="button" class="test-launch-close" onclick="document.getElementById('mockPreFlightModal').classList.remove('active')">&times;</button>
+          <button type="button" class="test-launch-close" onclick="document.getElementById('mockPreFlightModal').classList.remove('show')">&times;</button>
         </div>
 
         <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
@@ -190,13 +190,13 @@
             <span class="material-symbols-outlined" style="font-size:24px;color:#059669;flex-shrink:0;">timer</span>
             <div>
               <strong>Exam Timing & Flow:</strong>
-              <p style="margin:2px 0 0;color:#64748b;">Total exam time is approximately 2 hours and 35 minutes across 3 uninterrupted stages (Listening ➔ Reading ➔ Writing).</p>
+              <p style="margin:2px 0 0;color:#64748b;">Total exam time is approximately 2 hours and 35 minutes across 3 uninterrupted stages (Listening вћ” Reading вћ” Writing).</p>
             </div>
           </div>
         </div>
 
         <div style="display:flex;gap:12px;padding:16px 24px 22px;justify-content:flex-end;border-top:1px solid #e2e8f0;">
-          <button type="button" class="button secondary" style="padding:0 20px;height:42px;border-radius:10px;font-weight:700;" onclick="document.getElementById('mockPreFlightModal').classList.remove('active')">Cancel</button>
+          <button type="button" class="button secondary" style="padding:0 20px;height:42px;border-radius:10px;font-weight:700;" onclick="document.getElementById('mockPreFlightModal').classList.remove('show')">Cancel</button>
           <a href="/english/mock-exam?id=${encodeURIComponent(mockId)}" class="button primary" style="padding:0 24px;height:42px;border-radius:10px;font-weight:800;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
             <span>Begin Full Mock Exam</span>
             <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
@@ -204,7 +204,7 @@
         </div>
       </div>`;
 
-    modal.classList.add('active');
+    modal.classList.add('show');
   };
 
   function escapeHtml(str) {
