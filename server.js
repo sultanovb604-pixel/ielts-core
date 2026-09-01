@@ -5879,6 +5879,19 @@ async function api(req, res, pathname) {
   function getActiveGeminiKey() {
     if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
     try {
+      if (fs.existsSync(DATA_FILE)) {
+        const parsed = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+        if (parsed.geminiApiKey) return parsed.geminiApiKey;
+      }
+    } catch(e) {}
+    try {
+      const dataFile = path.join(DATA_DIR, "data.json");
+      if (fs.existsSync(dataFile)) {
+        const parsed = JSON.parse(fs.readFileSync(dataFile, "utf8"));
+        if (parsed.geminiApiKey) return parsed.geminiApiKey;
+      }
+    } catch(e) {}
+    try {
       const p = path.join(ROOT, "vortex-data.json");
       if (fs.existsSync(p)) {
         const parsed = JSON.parse(fs.readFileSync(p, "utf8"));
@@ -6011,54 +6024,68 @@ Return ONLY valid JSON matching this schema:
   }
 
   function generateSmartContextualCasualReply(text) {
-      const clean = String(text || "").trim();
-      if (!clean || clean.length < 3) {
-        return "Hey! I'm listening. What's on your mind today?";
-      }
-  
-      const lower = clean.toLowerCase();
-  
-      if (/^(hi|hello|hey|good morning|good afternoon|good evening)/i.test(lower) && clean.split(/\s+/).length <= 4) {
-        return "Hey there! Great to chat with you today. How's everything going?";
-      }
-      if (/formula\s*1|f1|racing|verstappen|hamilton|ferrari|red bull|grand prix/i.test(lower)) {
-        return "F1 is so wild right now! Max Verstappen and all the race drama make every weekend super exciting. Do you watch the races often?";
-      }
-      if (/chess|blitz|grandmaster|magnus|opening|checkmate/i.test(lower)) {
-        return "Chess is so addictive! Are you more into quick blitz games on your phone, or sitting down over a real board with friends?";
-      }
-      if (/guitar|piano|drum|violin|acoustic|instrument|song/i.test(lower)) {
-        return "No way, playing music is so cool! How long have you been playing, and what's your favorite song to jam to?";
-      }
-      if (/python|javascript|react|node|coding|programming|developer|software|app/i.test(lower)) {
-        return "Coding is awesome! What kind of fun projects or apps are you building lately?";
-      }
-      if (/gym|workout|fitness|running|muscle|exercise|training/i.test(lower)) {
-        return "Working out feels so good for clearing your head! What's your go-to workout lately вЂ” lifting weights or running?";
-      }
-      if (/food|cook|eat|recipe|restaurant|dish|pizza|sushi/i.test(lower)) {
-        return "Mmm, that sounds delicious! Are you a master chef at home, or do you love finding cool new food spots?";
-      }
-      if (/movie|film|cinema|watch|series|actor|netflix/i.test(lower)) {
-        return "Oh, I love good movies! Seen anything recently that totally blew you away?";
-      }
-      if (/travel|country|trip|visit|city|holiday|vacation/i.test(lower)) {
-        return "Traveling is the absolute best! If you could hop on a plane right now, where would you go?";
-      }
-      if (/tired|stress|busy|relax|sleep|rest|exhausted/i.test(lower)) {
-        return "It's so important to recharge when days get hectic. What helps you unwind and relax the most after a demanding day?";
-      }
-  
-      const fallbacks = [
-        "That makes a lot of sense. Tell me a bit more about that!",
-        "Oh wow, I totally get what you mean. What else is on your mind?",
-        "Yeah, exactly! It's so interesting to think about it that way. What do you think is the biggest reason for that?",
-        "I love that perspective. Has anything recently happened that made you think about this?",
-        "Haha, absolutely! So, what are your plans for the rest of the day?",
-        "That's super cool. I'd love to hear more of your thoughts on it!"
-      ];
-      return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    const clean = String(text || "").trim();
+    if (!clean || clean.length < 2) {
+      return "Hey there! I'm listening. What's on your mind today?";
     }
+
+    const lower = clean.toLowerCase();
+
+    // Greetings & pleasantries
+    if (/hi|hello|hey|how are you|how're you|how r u|how is it going|how's it going|what's up|whats up|good morning|good afternoon|good evening/i.test(lower)) {
+      const greetings = [
+        "Hey there! I'm doing great, thanks for asking! How are you doing today?",
+        "Hi! It's so nice to chat with you. How has your day been going?",
+        "Hello! I'm doing really well. What have you been up to today?"
+      ];
+      return greetings[Math.floor(Math.random() * greetings.length)];
+    }
+
+    if (/name|who are you|what are you/i.test(lower)) {
+      return "I'm Emma, your friendly speaking partner! We can chat about anything you like � travel, hobbies, tech, or daily life. What's on your mind?";
+    }
+
+    if (/weather|rain|sunny|cold|hot|snow|climate/i.test(lower)) {
+      return "The weather really sets the mood, doesn't it? How's the weather where you are right now?";
+    }
+
+    if (/formulas*1|f1|racing|verstappen|hamilton|ferrari|red bull|grand prix/i.test(lower)) {
+      return "F1 is so exciting right now! Max Verstappen and all the race drama make every weekend wild. Do you watch the races often?";
+    }
+    if (/chess|blitz|grandmaster|magnus|opening|checkmate/i.test(lower)) {
+      return "Chess is so fun! Are you more into quick blitz games on your phone, or playing on a real board with friends?";
+    }
+    if (/guitar|piano|drum|violin|acoustic|instrument|song|music/i.test(lower)) {
+      return "Playing music is awesome! What kind of songs or instruments do you enjoy the most?";
+    }
+    if (/python|javascript|react|node|coding|programming|developer|software|app/i.test(lower)) {
+      return "Coding is super cool! What kind of projects or ideas are you working on lately?";
+    }
+    if (/gym|workout|fitness|running|muscle|exercise|training/i.test(lower)) {
+      return "Staying active feels so good! What's your favorite way to stay fit � gym, running, or outdoor sports?";
+    }
+    if (/food|cook|eat|recipe|restaurant|dish|pizza|sushi|plov|somsa/i.test(lower)) {
+      return "Mmm, delicious food! Do you enjoy cooking at home, or do you prefer eating out with friends?";
+    }
+    if (/movie|film|cinema|watch|series|actor|netflix/i.test(lower)) {
+      return "I love good movies and shows! Have you watched anything recently that you really loved?";
+    }
+    if (/travel|country|trip|visit|city|holiday|vacation/i.test(lower)) {
+      return "Traveling is the best! If you could travel to any country in the world right now, where would you go?";
+    }
+    if (/tired|stress|busy|relax|sleep|rest|exhausted/i.test(lower)) {
+      return "It's so important to unwind when life gets busy. What helps you relax the most after a long day?";
+    }
+
+    const fallbacks = [
+      "That sounds really interesting! Tell me more about that.",
+      "Haha, totally! What else has been going on with you lately?",
+      "Oh, I see! What do you think is the main reason for that?",
+      "That's so cool! How did you get into that?",
+      "I hear you! What are your plans for the rest of the day?"
+    ];
+    return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+  }
 
   // Dynamic Gemini Question / Cue Card Generator
   async function generateGeminiExamStart(stage, geminiKey) {
@@ -6132,7 +6159,7 @@ Return JSON: {
     const currentQuestion = String(body.currentQuestion || "");
 
     const wordCount = userTranscript ? userTranscript.split(/\s+/).length : 0;
-    const geminiKey = body.geminiApiKey || getActiveGeminiKey();
+    const geminiKey = body.geminiApiKey || (typeof data !== 'undefined' && data?.geminiApiKey) || process.env.GEMINI_API_KEY || getActiveGeminiKey();
 
     // --- CASUAL PRACTICE MODE (Friendly Conversation Partner) ---
     if (mode === "practice") {
@@ -6341,7 +6368,7 @@ Return ONLY valid JSON in this schema:
   if (req.method === "POST" && pathname === "/api/speaking/grade-full-exam") {
     const body = await readBody(req);
     const transcripts = Array.isArray(body.transcripts) ? body.transcripts : [];
-    const geminiKey = body.geminiApiKey || getActiveGeminiKey();
+    const geminiKey = body.geminiApiKey || (typeof data !== 'undefined' && data?.geminiApiKey) || process.env.GEMINI_API_KEY || getActiveGeminiKey();
 
     // 1. Try Gemini Grading
     if (geminiKey && transcripts.length > 0) {
