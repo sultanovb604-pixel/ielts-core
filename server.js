@@ -173,9 +173,22 @@ const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || "").trim().toLowerCase();
 const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || ADMIN_EMAIL.split("@")[0] || "admin").trim().toLowerCase();
 const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || (IS_PRODUCTION ? "" : "admin123")).trim();
 const ADMIN_PIN = String(process.env.ADMIN_PIN || "").trim();
-const SESSION_SECRET = String(process.env.SESSION_SECRET || (IS_PRODUCTION ? "" : crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex"))).trim();
+const EXPLICIT_SESSION_SECRET = String(process.env.SESSION_SECRET || "").trim();
+const SESSION_SECRET_FALLBACK = [
+  ["GOOGLE_CLIENT_SECRET", process.env.GOOGLE_CLIENT_SECRET],
+  ["SUPABASE_KEY", process.env.SUPABASE_KEY],
+  ["DATABASE_URL", process.env.DATABASE_URL],
+  ["GEMINI_API_KEY", process.env.GEMINI_API_KEY],
+  ["ADMIN_PASSWORD", process.env.ADMIN_PASSWORD]
+].find(([, value]) => String(value || "").trim());
+const SESSION_SECRET = EXPLICIT_SESSION_SECRET || (SESSION_SECRET_FALLBACK
+  ? crypto.createHash("sha256").update(`ielts-core:session:v1:${String(SESSION_SECRET_FALLBACK[1]).trim()}`).digest("hex")
+  : (IS_PRODUCTION ? "" : crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex")));
 const FIREBASE_API_KEY = String(process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus").trim();
-if (!SESSION_SECRET) throw new Error("SESSION_SECRET must be configured in production.");
+if (!SESSION_SECRET) throw new Error("SESSION_SECRET or another private server credential must be configured in production.");
+if (IS_PRODUCTION && !EXPLICIT_SESSION_SECRET && SESSION_SECRET_FALLBACK) {
+  console.warn(`WARNING: SESSION_SECRET is not configured; session signing is derived from ${SESSION_SECRET_FALLBACK[0]}. Configure a dedicated SESSION_SECRET.`);
+}
 if (!ADMIN_EMAIL && IS_PRODUCTION) console.warn("WARNING: ADMIN_EMAIL is not configured; Google-based admin login is disabled.");
 if (!ADMIN_PASSWORD && IS_PRODUCTION) console.warn("WARNING: ADMIN_PASSWORD is not configured; password-based admin login is disabled.");
 if (!ADMIN_PIN && IS_PRODUCTION) console.warn("WARNING: ADMIN_PIN is not configured; password-based admin login is disabled.");
