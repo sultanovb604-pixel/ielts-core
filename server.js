@@ -174,21 +174,9 @@ const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || ADMIN_EMAIL.split("@
 const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || (IS_PRODUCTION ? "" : "admin123")).trim();
 const ADMIN_PIN = String(process.env.ADMIN_PIN || "").trim();
 const EXPLICIT_SESSION_SECRET = String(process.env.SESSION_SECRET || "").trim();
-const SESSION_SECRET_FALLBACK = [
-  ["GOOGLE_CLIENT_SECRET", process.env.GOOGLE_CLIENT_SECRET],
-  ["SUPABASE_KEY", process.env.SUPABASE_KEY],
-  ["DATABASE_URL", process.env.DATABASE_URL],
-  ["GEMINI_API_KEY", process.env.GEMINI_API_KEY],
-  ["ADMIN_PASSWORD", process.env.ADMIN_PASSWORD]
-].find(([, value]) => String(value || "").trim());
-const SESSION_SECRET = EXPLICIT_SESSION_SECRET || (SESSION_SECRET_FALLBACK
-  ? crypto.createHash("sha256").update(`ielts-core:session:v1:${String(SESSION_SECRET_FALLBACK[1]).trim()}`).digest("hex")
-  : (IS_PRODUCTION ? "" : crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex")));
+const SESSION_SECRET = EXPLICIT_SESSION_SECRET || (IS_PRODUCTION ? "" : crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex"));
 const FIREBASE_API_KEY = String(process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus").trim();
-if (!SESSION_SECRET) throw new Error("SESSION_SECRET or another private server credential must be configured in production.");
-if (IS_PRODUCTION && !EXPLICIT_SESSION_SECRET && SESSION_SECRET_FALLBACK) {
-  console.warn(`WARNING: SESSION_SECRET is not configured; session signing is derived from ${SESSION_SECRET_FALLBACK[0]}. Configure a dedicated SESSION_SECRET.`);
-}
+if (!SESSION_SECRET && IS_PRODUCTION) console.error("ERROR: SESSION_SECRET is not configured; authenticated API routes are disabled until it is set.");
 if (!ADMIN_EMAIL && IS_PRODUCTION) console.warn("WARNING: ADMIN_EMAIL is not configured; Google-based admin login is disabled.");
 if (!ADMIN_PASSWORD && IS_PRODUCTION) console.warn("WARNING: ADMIN_PASSWORD is not configured; password-based admin login is disabled.");
 if (!ADMIN_PIN && IS_PRODUCTION) console.warn("WARNING: ADMIN_PIN is not configured; password-based admin login is disabled.");
@@ -4851,12 +4839,14 @@ function safeEqualText(left, right) {
 }
 
 function issueAdminToken(username) {
+  if (!SESSION_SECRET) return null;
   const encoded = Buffer.from(JSON.stringify({ role: "admin", username, expiresAt: Date.now() + ADMIN_SESSION_TTL })).toString("base64url");
   const signature = crypto.createHmac("sha256", SESSION_SECRET).update(`admin:${encoded}`).digest("base64url");
   return `${encoded}.${signature}`;
 }
 
 function readAdminSession(req) {
+  if (!SESSION_SECRET) return null;
   const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
   if (!token || revokedAdminTokens.has(token)) return null;
   const [encoded, signature] = token.split(".");
@@ -4931,6 +4921,7 @@ function clearStudentAuthFailures(req) {
 }
 
 function studentFromRequest(req, data) {
+  if (!SESSION_SECRET) return null;
   let token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
   if (!token && req.headers.cookie) {
     const match = req.headers.cookie.match(/(?:^|;\s*)vortex_english_token=([^;]+)/);
@@ -4955,6 +4946,7 @@ function studentFromRequest(req, data) {
 }
 
 function issueStudentToken(userId) {
+  if (!SESSION_SECRET) return null;
   const encoded = Buffer.from(JSON.stringify({ userId, expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000 })).toString("base64url");
   const signature = crypto.createHmac("sha256", SESSION_SECRET).update(encoded).digest("base64url");
   return `${encoded}.${signature}`;
@@ -4966,12 +4958,14 @@ function safeEnglishRedirect(value, fallback = "/english/account") {
 }
 
 function issueScopedToken(purpose, payload, ttlMs) {
+  if (!SESSION_SECRET) return null;
   const encoded = Buffer.from(JSON.stringify({ ...payload, expiresAt: Date.now() + ttlMs, nonce: crypto.randomBytes(12).toString("base64url") })).toString("base64url");
   const signature = crypto.createHmac("sha256", SESSION_SECRET).update(`${purpose}:${encoded}`).digest("base64url");
   return `${encoded}.${signature}`;
 }
 
 function readScopedToken(purpose, token) {
+  if (!SESSION_SECRET) return null;
   const [encoded, signature] = String(token || "").split(".");
   if (!encoded || !signature) return null;
   const expected = crypto.createHmac("sha256", SESSION_SECRET).update(`${purpose}:${encoded}`).digest("base64url");
@@ -5345,6 +5339,12 @@ async function api(req, res, pathname) {
       database: dbStatus,
       version: "2.4.0",
       nodeEnv: process.env.NODE_ENV || "development"
+    });
+  }
+  if (!SESSION_SECRET) {
+    return json(res, 503, {
+      error: "Authentication service is temporarily unavailable.",
+      code: "SESSION_SECRET_NOT_CONFIGURED"
     });
   }
   const data = await readData();
