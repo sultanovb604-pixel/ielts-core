@@ -4592,45 +4592,83 @@ async function getDatabase() {
 let inMemoryData = null;
 let inMemoryCachedAt = 0;
 let isSyncingDb = false;
+const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
+const SUPABASE_KEY = String(process.env.SUPABASE_KEY || "").trim();
+const SUPABASE_CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_KEY);
+const FIRESTORE_PROJECT_ID = String(process.env.FIREBASE_PROJECT_ID || "").trim();
+const FIRESTORE_API_KEY = String(process.env.FIREBASE_API_KEY || "").trim();
+const FIRESTORE_CONFIGURED = Boolean(FIRESTORE_PROJECT_ID && FIRESTORE_API_KEY);
+const DURABLE_STORAGE_CONFIGURED = Boolean(SUPABASE_CONFIGURED || DATABASE_URL || FIRESTORE_CONFIGURED);
+if (Boolean(SUPABASE_URL) !== Boolean(SUPABASE_KEY)) console.error("ERROR: SUPABASE_URL and SUPABASE_KEY must both be configured.");
+if (IS_PRODUCTION && !DURABLE_STORAGE_CONFIGURED) console.error("ERROR: No durable database is configured; state-changing API routes are disabled.");
+const SUPABASE_CACHE_MS = 5_000;
+let supabaseLastReadAt = 0;
+let supabaseLastWriteAt = 0;
+let supabaseLastError = "";
+let supabaseWriteQueue = Promise.resolve();
+let activeDataSync = null;
 
 async function syncStateFromDb() {
-  if (isSyncingDb && inMemoryData) return inMemoryData;
+  if (activeDataSync) return activeDataSync;
+  activeDataSync = performDataSync();
+  try {
+    return await activeDataSync;
+  } finally {
+    activeDataSync = null;
+  }
+}
+
+async function performDataSync() {
   isSyncingDb = true;
   try {
+    let nextData = inMemoryData;
     const database = await getDatabase();
     if (database) {
       const rows = await database`SELECT payload, version FROM vortex_state WHERE id = 1`;
       if (rows && rows[0]?.payload) {
-        const data = normalizeData(rows[0].payload);
-        Object.defineProperty(data, "__version", { value: Number(rows[0]?.version || 1), writable: true, enumerable: false });
-        inMemoryData = data;
-        inMemoryCachedAt = Date.now();
-        return data;
+        nextData = normalizeData(rows[0].payload);
+        Object.defineProperty(nextData, "__version", { value: Number(rows[0]?.version || 1), writable: true, enumerable: false });
       }
     }
+    if (!nextData) {
+      const firebaseData = await syncStateFromFirestore();
+      if (firebaseData) {
+        nextData = normalizeData(firebaseData);
+        try { fs.writeFileSync(DATA_FILE, JSON.stringify(nextData, null, 2)); } catch (_) {}
+      } else {
+        try { nextData = normalizeData(JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))); }
+        catch { nextData = emptyData(); }
+      }
+    }
+    if (SUPABASE_CONFIGURED) {
+      try {
+        nextData = await syncStateFromSupabase(nextData);
+      } catch (err) {
+        supabaseLastError = err.message;
+        console.error("Supabase read error:", err.message);
+      }
+    }
+    inMemoryData = normalizeData(nextData);
+    inMemoryCachedAt = Date.now();
+    return inMemoryData;
   } catch (err) {
-    console.error("Neon DB sync error:", err.message);
+    console.error("Database sync error:", err.message);
+    if (!inMemoryData) {
+      try { inMemoryData = normalizeData(JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))); }
+      catch { inMemoryData = emptyData(); }
+      inMemoryCachedAt = Date.now();
+    }
+    return inMemoryData;
   } finally {
     isSyncingDb = false;
   }
-  if (!inMemoryData) {
-    let firebaseData = await syncStateFromFirestore();
-    if (firebaseData) {
-      inMemoryData = normalizeData(firebaseData);
-      try { fs.writeFileSync(DATA_FILE, JSON.stringify(inMemoryData, null, 2)); } catch (_) {}
-    } else {
-      try { inMemoryData = normalizeData(JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))); }
-      catch { inMemoryData = emptyData(); }
-    }
-    inMemoryCachedAt = Date.now();
-  }
-  return inMemoryData;
 }
 
 async function readData() {
   const now = Date.now();
   if (inMemoryData) {
-    if (DATABASE_URL && (now - inMemoryCachedAt > 30000) && !isSyncingDb) {
+    const cacheTtl = SUPABASE_CONFIGURED ? SUPABASE_CACHE_MS : 30_000;
+    if ((DATABASE_URL || SUPABASE_CONFIGURED) && (now - inMemoryCachedAt > cacheTtl) && !isSyncingDb) {
       syncStateFromDb().catch(() => {});
     }
     return inMemoryData;
@@ -4639,6 +4677,11 @@ async function readData() {
 }
 
 async function writeData(data) {
+  if (IS_PRODUCTION && !DURABLE_STORAGE_CONFIGURED) {
+    const storageError = new Error("The database is not configured. Please try again later.");
+    storageError.code = "STORAGE_NOT_CONFIGURED";
+    throw storageError;
+  }
   inMemoryData = data;
   inMemoryCachedAt = Date.now();
 
@@ -4650,9 +4693,22 @@ async function writeData(data) {
     try { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2)); } catch (e) {}
   }
 
-  // Background sync to Cloud Firestore
-  syncStateToFirestore(data);
+  if (SUPABASE_CONFIGURED) {
+    const snapshot = normalizeData(JSON.parse(JSON.stringify(data)));
+    const pendingWrite = supabaseWriteQueue.catch(() => {}).then(() => syncStateToSupabase(snapshot));
+    supabaseWriteQueue = pendingWrite;
+    try {
+      await pendingWrite;
+    } catch (err) {
+      const persistenceError = new Error("The database is temporarily unavailable. Please try again.");
+      persistenceError.code = "PERSISTENCE_UNAVAILABLE";
+      persistenceError.cause = err;
+      throw persistenceError;
+    }
+  }
 
+  // Secondary compatibility backups. Supabase is the durable source of truth when configured.
+  syncStateToFirestore(data);
   const database = await getDatabase();
   if (database) {
     // Non-blocking background cloud persistence (never blocks client response)
@@ -4671,11 +4727,9 @@ async function writeData(data) {
 }
 
 async function syncStateFromFirestore() {
-  const projectId = process.env.FIREBASE_PROJECT_ID || "ieltscorecom";
-  const apiKey = process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus";
-  if (!projectId || !apiKey) return null;
+  if (process.env.NODE_ENV === "test" || !FIRESTORE_CONFIGURED) return null;
   return new Promise(resolve => {
-    const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/vortex_state/default?key=${apiKey}`;
+    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/vortex_state/default?key=${FIRESTORE_API_KEY}`;
     const req = https.request(url, { method: "GET" }, res => {
       if (res.statusCode !== 200) return resolve(null);
       let body = "";
@@ -4695,103 +4749,413 @@ async function syncStateFromFirestore() {
 }
 
 
-const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
-const SUPABASE_KEY = String(process.env.SUPABASE_KEY || "").trim();
+const SUPABASE_AUTH_PREFIX = "vortex$1$";
+const supabaseFingerprints = new Map();
+
+function finiteNumber(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function isoDate(value, fallback = new Date(0).toISOString()) {
+  const date = new Date(value || "");
+  return Number.isFinite(date.getTime()) ? date.toISOString() : fallback;
+}
+
+function encodeSupabaseAuth(user) {
+  const payload = {
+    salt: user.salt || "",
+    passwordHash: user.passwordHash || "",
+    email: user.email || "",
+    googleSub: user.googleSub || "",
+    googleId: user.googleId || "",
+    authProvider: user.authProvider || (user.passwordHash ? "password" : "google"),
+    grade: user.grade || "beginner",
+    learning: user.learning || "",
+    goal: user.goal || "",
+    planExpiresAt: user.planExpiresAt || null,
+    statusBadge: user.statusBadge || null,
+    profileWallpaper: user.profileWallpaper || "default",
+    avatarUrl: user.avatarUrl || ""
+  };
+  return SUPABASE_AUTH_PREFIX + Buffer.from(JSON.stringify(payload)).toString("base64url");
+}
+
+function decodeSupabaseAuth(value) {
+  const text = String(value || "");
+  if (!text.startsWith(SUPABASE_AUTH_PREFIX)) return { passwordHash: text };
+  try {
+    const payload = JSON.parse(Buffer.from(text.slice(SUPABASE_AUTH_PREFIX.length), "base64url").toString("utf8"));
+    return payload && typeof payload === "object" ? payload : {};
+  } catch {
+    return {};
+  }
+}
+
+function packSupabaseState(value) {
+  return { vortexVersion: 1, state: value };
+}
+
+function unpackSupabaseState(value) {
+  return value && typeof value === "object" && !Array.isArray(value) && value.vortexVersion === 1 && value.state && typeof value.state === "object"
+    ? value.state
+    : null;
+}
+
+function userToSupabaseRow(user) {
+  return {
+    id: user.id,
+    name: user.name || "Student",
+    username: user.username || user.email || `user_${String(user.id).slice(0, 6)}`,
+    password_hash: encodeSupabaseAuth(user),
+    role: user.role === "teacher" ? "teacher" : "student",
+    plan: user.plan === "premium" ? "premium" : "free",
+    expires_at: isoDate(user.planExpiresAt, "2099-12-31T23:59:59.000Z"),
+    created_at: isoDate(user.createdAt, new Date().toISOString())
+  };
+}
+
+function userFromSupabaseRow(row, existing) {
+  const auth = decodeSupabaseAuth(row.password_hash);
+  const legacyHashMatches = existing && existing.passwordHash && existing.passwordHash === auth.passwordHash;
+  const hasEncodedPlanExpiry = Object.prototype.hasOwnProperty.call(auth, "planExpiresAt");
+  const remoteExpiry = String(row.expires_at || "");
+  const isNoExpirySentinel = remoteExpiry.startsWith("2099-12-31T23:59:59");
+  return {
+    ...(existing || {}),
+    ...auth,
+    id: row.id,
+    name: row.name || existing?.name || "Student",
+    username: String(row.username || existing?.username || "").toLowerCase(),
+    passwordHash: auth.passwordHash || existing?.passwordHash || "",
+    salt: auth.salt || (legacyHashMatches ? existing.salt : ""),
+    role: row.role === "teacher" ? "teacher" : "student",
+    plan: row.plan === "premium" ? "premium" : "free",
+    planExpiresAt: hasEncodedPlanExpiry ? auth.planExpiresAt : (row.plan === "premium" && !isNoExpirySentinel ? row.expires_at : null),
+    grade: auth.grade || existing?.grade || "beginner",
+    createdAt: row.created_at || existing?.createdAt || new Date().toISOString()
+  };
+}
+
+function attemptToSupabaseRow(attempt) {
+  return {
+    id: attempt.id,
+    student_id: attempt.studentId,
+    material_id: attempt.materialId || "unknown",
+    points: Math.round(finiteNumber(attempt.points ?? attempt.correct)),
+    total_questions: Math.round(finiteNumber(attempt.total ?? attempt.totalQuestions)),
+    band: finiteNumber(attempt.band),
+    answers: packSupabaseState(attempt),
+    created_at: isoDate(attempt.createdAt, new Date().toISOString())
+  };
+}
+
+function attemptFromSupabaseRow(row, existing) {
+  const packed = unpackSupabaseState(row.answers);
+  return {
+    ...(existing || {}),
+    ...(packed || {}),
+    id: row.id,
+    studentId: row.student_id,
+    materialId: row.material_id,
+    points: finiteNumber(row.points),
+    correct: finiteNumber(row.points),
+    total: finiteNumber(row.total_questions),
+    band: finiteNumber(row.band),
+    answers: packed?.answers ?? row.answers,
+    createdAt: row.created_at
+  };
+}
+
+function writingToSupabaseRow(submission) {
+  const essay = String(submission.essayContent || "");
+  const task1Text = String(submission.task1Text ?? (submission.mode === "task1" ? essay : ""));
+  const task2Text = String(submission.task2Text ?? (submission.mode === "task2" ? essay : ""));
+  return {
+    id: submission.id,
+    student_id: submission.studentId,
+    topic_id: submission.topicId || submission.assignmentId || submission.id,
+    topic_title: submission.topicTitle || submission.prompt || "IELTS Writing",
+    task1_text: task1Text,
+    task2_text: task2Text,
+    status: submission.status || "submitted",
+    overall_band: finiteNumber(submission.overallBand ?? submission.evaluation?.overallBand),
+    feedback: packSupabaseState(submission),
+    submitted_at: isoDate(submission.submittedAt, new Date().toISOString()),
+    graded_at: isoDate(submission.gradedAt || submission.evaluation?.gradedAt || submission.submittedAt, new Date().toISOString())
+  };
+}
+
+function writingFromSupabaseRow(row, existing) {
+  const packed = unpackSupabaseState(row.feedback);
+  const essayContent = row.task2_text || row.task1_text || "";
+  return {
+    ...(existing || {}),
+    ...(packed || {}),
+    id: row.id,
+    studentId: row.student_id,
+    topicId: row.topic_id,
+    topicTitle: row.topic_title,
+    essayContent: packed?.essayContent ?? essayContent,
+    status: row.status,
+    evaluation: packed?.evaluation ?? row.feedback,
+    overallBand: finiteNumber(row.overall_band),
+    submittedAt: row.submitted_at,
+    gradedAt: row.graded_at
+  };
+}
+
+function speakingToSupabaseRow(attempt) {
+  return {
+    id: attempt.id,
+    student_id: attempt.studentId,
+    student_name: attempt.studentName || "Candidate",
+    mode: attempt.mode || "exam",
+    topic_title: attempt.topicTitle || "Speaking Mock",
+    overall_band: finiteNumber(attempt.overallBand),
+    fluency_score: finiteNumber(attempt.fluencyScore),
+    lexical_score: finiteNumber(attempt.lexicalScore),
+    grammar_score: finiteNumber(attempt.grammarScore),
+    pronunciation_score: finiteNumber(attempt.pronunciationScore),
+    transcripts: packSupabaseState(attempt),
+    audio_url: attempt.audioUrl || "",
+    created_at: isoDate(attempt.createdAt, new Date().toISOString())
+  };
+}
+
+function speakingFromSupabaseRow(row, existing) {
+  const packed = unpackSupabaseState(row.transcripts);
+  return {
+    ...(existing || {}),
+    ...(packed || {}),
+    id: row.id,
+    studentId: row.student_id,
+    studentName: row.student_name,
+    mode: row.mode,
+    topicTitle: row.topic_title,
+    overallBand: finiteNumber(row.overall_band),
+    fluencyScore: finiteNumber(row.fluency_score),
+    lexicalScore: finiteNumber(row.lexical_score),
+    grammarScore: finiteNumber(row.grammar_score),
+    pronunciationScore: finiteNumber(row.pronunciation_score),
+    transcripts: packed?.transcripts ?? row.transcripts,
+    audioUrl: row.audio_url || "",
+    createdAt: row.created_at
+  };
+}
+
+function mockToSupabaseRow(attempt) {
+  return {
+    id: attempt.id,
+    student_id: attempt.studentId,
+    mock_id: attempt.mockId || "MOCK-01",
+    mock_title: attempt.mockTitle || "IELTS Full Mock",
+    overall_band: finiteNumber(attempt.overallBand),
+    listening_band: finiteNumber(attempt.listeningBand),
+    reading_band: finiteNumber(attempt.readingBand),
+    writing_band: finiteNumber(attempt.writingBand),
+    listening_data: attempt.listening || {},
+    reading_data: attempt.reading || {},
+    writing_data: packSupabaseState(attempt),
+    created_at: isoDate(attempt.createdAt, new Date().toISOString())
+  };
+}
+
+function mockFromSupabaseRow(row, existing) {
+  const packed = unpackSupabaseState(row.writing_data);
+  return {
+    ...(existing || {}),
+    ...(packed || {}),
+    id: row.id,
+    studentId: row.student_id,
+    mockId: row.mock_id,
+    mockTitle: row.mock_title,
+    overallBand: finiteNumber(row.overall_band),
+    listeningBand: finiteNumber(row.listening_band),
+    readingBand: finiteNumber(row.reading_band),
+    writingBand: finiteNumber(row.writing_band),
+    listening: packed?.listening ?? row.listening_data,
+    reading: packed?.reading ?? row.reading_data,
+    writing: packed?.writing ?? row.writing_data,
+    createdAt: row.created_at
+  };
+}
+
+function vocabularyToSupabaseRow(item) {
+  return {
+    id: item.id,
+    student_id: item.studentId,
+    word: item.word || "Word",
+    definition: item.definition || item.articleTitle || "Saved vocabulary",
+    example: item.example || item.context || "",
+    created_at: isoDate(item.createdAt, new Date().toISOString())
+  };
+}
+
+function vocabularyFromSupabaseRow(row, existing) {
+  return {
+    ...(existing || {}),
+    id: row.id,
+    studentId: row.student_id,
+    word: row.word,
+    normalized: String(row.word || "").trim().toLowerCase(),
+    definition: row.definition,
+    articleTitle: existing?.articleTitle || row.definition,
+    example: row.example,
+    context: existing?.context || row.example,
+    status: existing?.status || "active",
+    createdAt: row.created_at,
+    updatedAt: existing?.updatedAt || row.created_at
+  };
+}
+
+function supabaseTableDefinitions() {
+  return [
+    { table: "users", stateKey: "users", toRow: userToSupabaseRow, fromRow: userFromSupabaseRow },
+    { table: "reading_attempts", stateKey: "readingAttempts", toRow: attemptToSupabaseRow, fromRow: attemptFromSupabaseRow },
+    { table: "listening_attempts", stateKey: "listeningAttempts", toRow: attemptToSupabaseRow, fromRow: attemptFromSupabaseRow },
+    { table: "writing_submissions", stateKey: "writingSubmissions", toRow: writingToSupabaseRow, fromRow: writingFromSupabaseRow },
+    { table: "speaking_attempts", stateKey: "speakingAttempts", toRow: speakingToSupabaseRow, fromRow: speakingFromSupabaseRow },
+    { table: "mock_attempts", stateKey: "mockAttempts", toRow: mockToSupabaseRow, fromRow: mockFromSupabaseRow },
+    { table: "vocabulary_bank", stateKey: "vocabulary", toRow: vocabularyToSupabaseRow, fromRow: vocabularyFromSupabaseRow }
+  ];
+}
+
+function supabaseFingerprint(row) {
+  return crypto.createHash("sha256").update(JSON.stringify(row)).digest("base64url");
+}
+
+async function supabaseRequest(route, options = {}) {
+  if (!SUPABASE_CONFIGURED) throw new Error("Supabase is not configured.");
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12_000);
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/${route}`, {
+      method: options.method || "GET",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Accept: "application/json",
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...(options.prefer ? { Prefer: options.prefer } : {})
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      signal: controller.signal
+    });
+    if (!response.ok) {
+      const detail = (await response.text()).slice(0, 500);
+      throw new Error(`Supabase ${route.split("?")[0]} failed (${response.status})${detail ? `: ${detail}` : ""}`);
+    }
+    if (response.status === 204) return null;
+    const text = await response.text();
+    return text ? JSON.parse(text) : null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function readSupabaseTable(table) {
+  const rows = [];
+  const pageSize = 1000;
+  for (let offset = 0; ; offset += pageSize) {
+    const page = await supabaseRequest(`${table}?select=*&order=id.asc&offset=${offset}&limit=${pageSize}`);
+    rows.push(...(Array.isArray(page) ? page : []));
+    if (!Array.isArray(page) || page.length < pageSize) return rows;
+  }
+}
+
+async function syncStateFromSupabase(baseData) {
+  const state = normalizeData(baseData);
+  const definitions = supabaseTableDefinitions();
+  const remoteCollections = await Promise.all(definitions.map(async definition => ({
+    definition,
+    rows: await readSupabaseTable(definition.table)
+  })));
+  for (const { definition, rows } of remoteCollections) {
+    const localRows = Array.isArray(state[definition.stateKey]) ? state[definition.stateKey] : [];
+    const localById = new Map(localRows.map(item => [String(item.id), item]));
+    const remoteIds = new Set();
+    const convertedRemoteRows = rows.map(row => {
+      const id = String(row.id);
+      remoteIds.add(id);
+      return definition.fromRow(row, localById.get(id));
+    });
+    const merged = [...convertedRemoteRows];
+    for (const localRow of localRows) {
+      if (!remoteIds.has(String(localRow.id))) merged.push(localRow);
+    }
+    state[definition.stateKey] = merged;
+    supabaseFingerprints.set(definition.table, new Map(convertedRemoteRows.map(row => {
+      const canonical = definition.toRow(row);
+      return [String(canonical.id), supabaseFingerprint(canonical)];
+    })));
+  }
+  supabaseLastReadAt = Date.now();
+  supabaseLastError = "";
+  return state;
+}
+
+async function writeSupabaseTable(definition, stateRows) {
+  const previous = supabaseFingerprints.get(definition.table) || new Map();
+  const currentRows = stateRows.map(definition.toRow);
+  const currentIds = new Set(currentRows.map(row => String(row.id)));
+  const changedRows = currentRows.filter(row => previous.get(String(row.id)) !== supabaseFingerprint(row));
+  const deletedIds = [...previous.keys()].filter(id => !currentIds.has(id));
+
+  for (let index = 0; index < changedRows.length; index += 100) {
+    const batch = changedRows.slice(index, index + 100);
+    await supabaseRequest(`${definition.table}?on_conflict=id`, {
+      method: "POST",
+      prefer: "resolution=merge-duplicates,return=minimal",
+      body: batch
+    });
+  }
+  for (let index = 0; index < deletedIds.length; index += 100) {
+    const batch = deletedIds.slice(index, index + 100).join(",");
+    await supabaseRequest(`${definition.table}?id=in.(${batch})`, { method: "DELETE" });
+  }
+  supabaseFingerprints.set(definition.table, new Map(currentRows.map(row => [String(row.id), supabaseFingerprint(row)])));
+}
 
 async function syncStateToSupabase(stateData) {
-  if (!SUPABASE_URL || !SUPABASE_KEY || !stateData) return;
+  if (!SUPABASE_CONFIGURED || !stateData) return;
   try {
-    // 1. Sync latest users
-    if (Array.isArray(stateData.users) && stateData.users.length > 0) {
-      const userRows = stateData.users.slice(0, 50).map(u => ({
-        id: u.id,
-        name: u.name || "Student",
-        username: u.username || u.email || "user_" + String(u.id).slice(0,6),
-        password_hash: u.passwordHash || u.password || "hash",
-        role: u.role || (u.isAdmin ? "admin" : (u.isTeacher ? "teacher" : "student")),
-        plan: u.plan || (u.isPremium ? "premium" : "free"),
-        created_at: u.createdAt || new Date().toISOString()
-      }));
+    const definitions = supabaseTableDefinitions();
+    const usersDefinition = definitions.find(definition => definition.stateKey === "users");
+    const users = Array.isArray(stateData.users) ? stateData.users : [];
+    const userIds = new Set(users.map(user => String(user.id)));
 
-      fetch(`${SUPABASE_URL}/rest/v1/users`, {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json",
-          "Prefer": "resolution=merge-duplicates"
-        },
-        body: JSON.stringify(userRows)
-      }).catch(() => {});
-    }
+    // Users must exist before child rows because Supabase enforces foreign keys.
+    await writeSupabaseTable(usersDefinition, users);
+    await Promise.all(definitions.filter(definition => definition !== usersDefinition).map(definition => {
+      const rows = Array.isArray(stateData[definition.stateKey]) ? stateData[definition.stateKey] : [];
+      const validRows = rows.filter(row => userIds.has(String(row.studentId)));
+      const orphanCount = rows.length - validRows.length;
+      if (orphanCount > 0) console.warn(`Supabase skipped ${orphanCount} orphaned ${definition.stateKey} row(s).`);
+      return writeSupabaseTable(definition, validRows);
+    }));
+    supabaseLastWriteAt = Date.now();
+    supabaseLastError = "";
+  } catch (err) {
+    supabaseLastError = err.message;
+    console.error("Supabase write error:", err.message);
+    throw err;
+  }
+}
 
-    // 2. Sync latest mock attempts
-    if (Array.isArray(stateData.mockAttempts) && stateData.mockAttempts.length > 0) {
-      const mockRows = stateData.mockAttempts.slice(0, 10).map(m => ({
-        id: m.id,
-        student_id: m.studentId || null,
-        mock_id: m.mockId || "MOCK-01",
-        mock_title: m.mockTitle || "IELTS Full Mock",
-        overall_band: m.overallBand || 6.0,
-        listening_band: m.listeningBand || null,
-        reading_band: m.readingBand || null,
-        writing_band: m.writingBand || null,
-        listening_data: m.listening || {},
-        reading_data: m.reading || {},
-        writing_data: m.writing || {},
-        created_at: m.createdAt || new Date().toISOString()
-      }));
-
-      fetch(`${SUPABASE_URL}/rest/v1/mock_attempts`, {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json",
-          "Prefer": "resolution=merge-duplicates"
-        },
-        body: JSON.stringify(mockRows)
-      }).catch(() => {});
-    }
-
-    // 3. Sync speaking attempts
-    if (Array.isArray(stateData.speakingAttempts) && stateData.speakingAttempts.length > 0) {
-      const speakingRows = stateData.speakingAttempts.slice(0, 10).map(s => ({
-        id: s.id,
-        student_id: s.studentId || null,
-        student_name: s.studentName || "Candidate",
-        mode: s.mode || "exam",
-        topic_title: s.topicTitle || "Speaking Mock",
-        overall_band: s.overallBand || 6.0,
-        fluency_score: s.fluencyScore || 6.0,
-        lexical_score: s.lexicalScore || 6.0,
-        grammar_score: s.grammarScore || 6.0,
-        pronunciation_score: s.pronunciationScore || 6.0,
-        transcripts: s.transcripts || [],
-        audio_url: s.audioUrl || null,
-        created_at: s.createdAt || new Date().toISOString()
-      }));
-
-      fetch(`${SUPABASE_URL}/rest/v1/speaking_attempts`, {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json",
-          "Prefer": "resolution=merge-duplicates"
-        },
-        body: JSON.stringify(speakingRows)
-      }).catch(() => {});
-    }
-  } catch (e) {}
+async function findSupabaseUser(filters, existing) {
+  if (!SUPABASE_CONFIGURED) return null;
+  const clauses = Object.entries(filters).map(([column, value]) => `${column}=eq.${encodeURIComponent(String(value))}`);
+  const rows = await supabaseRequest(`users?select=*&${clauses.join("&")}&limit=1`);
+  if (!Array.isArray(rows) || !rows[0]) return null;
+  const row = rows[0];
+  return userFromSupabaseRow(row, existing);
 }
 
 async function syncStateToFirestore(stateData) {
-  const projectId = process.env.FIREBASE_PROJECT_ID || "ieltscorecom";
-  const apiKey = process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus";
-  if (!projectId || !apiKey || !stateData) return;
+  if (process.env.NODE_ENV === "test" || !FIRESTORE_CONFIGURED || !stateData) return;
   try {
-    const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/vortex_state/default?key=${apiKey}`;
+    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/vortex_state/default?key=${FIRESTORE_API_KEY}`;
     const payload = JSON.stringify({
       fields: {
         usersCount: { integerValue: String(stateData.users ? stateData.users.length : 0) },
@@ -4920,7 +5284,7 @@ function clearStudentAuthFailures(req) {
   studentAuthAttempts.delete(requestAddress(req));
 }
 
-function studentFromRequest(req, data) {
+function studentIdFromRequest(req) {
   if (!SESSION_SECRET) return null;
   let token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
   if (!token && req.headers.cookie) {
@@ -4933,7 +5297,7 @@ function studentFromRequest(req, data) {
   }
   if (!token || revokedStudentTokens.has(token)) return null;
   const userId = studentSessions.get(token);
-  if (userId) return data.users.find(user => user.id === userId) || null;
+  if (userId) return userId;
   const [encoded, signature] = token.split(".");
   if (!encoded || !signature) return null;
   const expected = crypto.createHmac("sha256", SESSION_SECRET).update(encoded).digest("base64url");
@@ -4941,8 +5305,26 @@ function studentFromRequest(req, data) {
   try {
     const session = JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
     if (!session.userId || !Number.isFinite(session.expiresAt) || session.expiresAt < Date.now()) return null;
-    return data.users.find(user => user.id === session.userId) || null;
+    return session.userId;
   } catch { return null; }
+}
+
+function studentFromRequest(req, data) {
+  const userId = studentIdFromRequest(req);
+  return userId ? data.users.find(user => user.id === userId) || null : null;
+}
+
+async function hydrateRequestUserFromSupabase(req, data) {
+  if (!SUPABASE_CONFIGURED) return;
+  const userId = studentIdFromRequest(req);
+  if (!userId || data.users.some(user => user.id === userId)) return;
+  try {
+    const user = await findSupabaseUser({ id: userId });
+    if (user) data.users.push(user);
+  } catch (err) {
+    supabaseLastError = err.message;
+    console.error("Supabase session hydration error:", err.message);
+  }
 }
 
 function issueStudentToken(userId) {
@@ -5330,14 +5712,16 @@ function detailedStudentAnalytics(user, data) {
 
 async function api(req, res, pathname) {
   if (req.method === "GET" && (pathname === "/api/health" || pathname === "/health")) {
-    const dbStatus = databaseClient ? "connected" : (DATABASE_URL ? "connecting" : "local-file");
+    const dbStatus = SUPABASE_CONFIGURED ? "supabase" : (databaseClient ? "neon" : (DATABASE_URL ? "neon-connecting" : (FIRESTORE_CONFIGURED ? "firestore" : "local-file")));
     return json(res, 200, {
-      status: "healthy",
+      status: SESSION_SECRET && DURABLE_STORAGE_CONFIGURED && (!SUPABASE_CONFIGURED || !supabaseLastError) ? "healthy" : "degraded",
       service: "ielts-core",
       uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),
       database: dbStatus,
-      version: "2.4.0",
+      databaseStatus: SUPABASE_CONFIGURED ? (supabaseLastError ? "error" : (supabaseLastReadAt || supabaseLastWriteAt ? "ready" : "connecting")) : (DURABLE_STORAGE_CONFIGURED ? "ready" : "misconfigured"),
+      authentication: SESSION_SECRET ? "ready" : "misconfigured",
+      version: "2.5.0",
       nodeEnv: process.env.NODE_ENV || "development"
     });
   }
@@ -5348,6 +5732,7 @@ async function api(req, res, pathname) {
     });
   }
   const data = await readData();
+  await hydrateRequestUserFromSupabase(req, data);
   if (req.method === "GET" && pathname === "/api/resources") {
     const user = studentFromRequest(req, data);
     if (!user) return json(res, 401, { error: "Sign in to open the learning library." });
@@ -5592,7 +5977,7 @@ async function api(req, res, pathname) {
     });
   }
   if (req.method === "GET" && pathname === "/api/auth/google/config") {
-    return json(res, 200, { enabled: true, callbackUrl: googleCallbackUrl(req) });
+    return json(res, 200, { enabled: Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET), callbackUrl: googleCallbackUrl(req) });
   }
   if (req.method === "GET" && pathname === "/api/auth/google") {
     const requestUrl = new URL(req.url, `http://${req.headers.host}`);
@@ -5688,7 +6073,8 @@ async function api(req, res, pathname) {
     const body = await readBody(req);
     const name = String(body.name || "").trim().replace(/\s+/g, " ").slice(0, 100);
     const username = String(body.username || "").trim().toLowerCase().slice(0, 50);
-    const role = body.role === "teacher" ? "teacher" : "student";
+    // Public registration never grants privileged teacher capabilities.
+    const role = "student";
     const grade = "beginner";
     const password = String(body.password || "");
     const learning = ["foundation", "speaking", "ielts"].includes(body.learning) ? body.learning : "";
@@ -5696,25 +6082,44 @@ async function api(req, res, pathname) {
     const minPassword = 8;
     if (name.length < 2 || !/^[a-z0-9_]{4,24}$/.test(username) || password.length < minPassword || password.length > 100) return json(res, 400, { error: "Check your name, username and password." });
     if (data.users.some(user => user.username === username)) return json(res, 409, { error: "That username is already taken." });
+    if (SUPABASE_CONFIGURED) {
+      const existingRemoteUser = await findSupabaseUser({ username });
+      if (existingRemoteUser) return json(res, 409, { error: "That username is already taken." });
+    }
     const salt = crypto.randomBytes(16).toString("hex");
     const user = { id: crypto.randomUUID(), name, username, role, grade, learning, goal, plan: "free", authProvider: "password", salt, passwordHash: passwordHash(password, salt), createdAt: new Date().toISOString() };
-    data.users.push(user); await writeData(data);
+    data.users.push(user);
+    try {
+      await writeData(data);
+    } catch (err) {
+      data.users = data.users.filter(item => item.id !== user.id);
+      throw err;
+    }
     clearStudentAuthFailures(req);
     const token = issueStudentToken(user.id);
-    return json(res, 201, { token, user: safeUser(user) }, { "Set-Cookie": `vortex_english_token=${token}; Path=/; SameSite=Lax; Max-Age=2592000` });
+    return json(res, 201, { token, user: safeUser(user) }, { "Set-Cookie": `vortex_english_token=${token}; Path=/; SameSite=Lax; Max-Age=2592000${IS_PRODUCTION ? "; Secure" : ""}` });
   }
   if (req.method === "POST" && pathname === "/api/auth/login") {
     if (studentAuthBlocked(req)) return json(res, 429, { error: "Too many failed login attempts. Please try again in 15 minutes." });
     const body = await readBody(req);
     const username = String(body.username || "").trim().toLowerCase();
-    const user = data.users.find(item => item.username === username);
+    let user = data.users.find(item => item.username === username);
+    if (SUPABASE_CONFIGURED) {
+      const remoteUser = await findSupabaseUser({ username }, user);
+      if (remoteUser) {
+        const index = data.users.findIndex(item => item.id === remoteUser.id || item.username === username);
+        if (index >= 0) data.users[index] = remoteUser;
+        else data.users.push(remoteUser);
+        user = remoteUser;
+      }
+    }
     if (!user || !user.salt || !user.passwordHash || passwordHash(String(body.password || ""), user.salt) !== user.passwordHash) {
       recordStudentAuthFailure(req);
       return json(res, 401, { error: "Incorrect username or password." });
     }
     clearStudentAuthFailures(req);
     const token = issueStudentToken(user.id);
-    return json(res, 200, { token, user: safeUser(user) }, { "Set-Cookie": `vortex_english_token=${token}; Path=/; SameSite=Lax; Max-Age=2592000` });
+    return json(res, 200, { token, user: safeUser(user) }, { "Set-Cookie": `vortex_english_token=${token}; Path=/; SameSite=Lax; Max-Age=2592000${IS_PRODUCTION ? "; Secure" : ""}` });
   }
   if (req.method === "GET" && (pathname === "/api/auth/me" || pathname === "/api/auth/session")) {
     const user = studentFromRequest(req, data);
@@ -5730,15 +6135,12 @@ async function api(req, res, pathname) {
       studentSessions.delete(token);
       revokedStudentTokens.add(token);
     }
-    return json(res, 200, { ok: true }, { "Set-Cookie": "vortex_english_token=; Path=/; Max-Age=0; SameSite=Lax" });
+    return json(res, 200, { ok: true }, { "Set-Cookie": `vortex_english_token=; Path=/; Max-Age=0; SameSite=Lax${IS_PRODUCTION ? "; Secure" : ""}` });
   }
   if (req.method === "POST" && pathname === "/api/auth/role") {
     const user = studentFromRequest(req, data);
     if (!user) return json(res, 401, { error: "Please sign in." });
-    const body = await readBody(req);
-    user.role = body.role === "teacher" ? "teacher" : "student";
-    await writeData(data);
-    return json(res, 200, { ok: true, user: safeUser(user) });
+    return json(res, 403, { error: "Role changes require administrator approval." });
   }
   if (req.method === "PUT" && pathname === "/api/auth/password") {
     const user = studentFromRequest(req, data);
@@ -7980,7 +8382,10 @@ const server = http.createServer(async (req, res) => {
     stream.pipe(res);
   } catch (error) {
     console.error("Internal Server Error:", error);
-    json(res, error.code === "STATE_CONFLICT" ? 409 : 500, { error: error.code === "STATE_CONFLICT" ? error.message : "The server could not complete this request." });
+    if (res.headersSent) return res.end();
+    if (error.code === "STATE_CONFLICT") return json(res, 409, { error: error.message });
+    if (error.code === "PERSISTENCE_UNAVAILABLE" || error.code === "STORAGE_NOT_CONFIGURED") return json(res, 503, { error: error.message, code: error.code });
+    json(res, 500, { error: "The server could not complete this request." });
   }
 });
 
