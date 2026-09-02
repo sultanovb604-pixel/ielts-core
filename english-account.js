@@ -241,19 +241,19 @@
 
     let points = [];
     if (currentSkillView === 'reading') {
-      points = results.filter(item => item.source === 'reading' && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
+      points = results.filter(item => item.source === 'reading' && 'band' in item && item.band !== null).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
     } else if (currentSkillView === 'listening') {
-      points = results.filter(item => item.source === 'listening' && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
+      points = results.filter(item => item.source === 'listening' && 'band' in item && item.band !== null).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
     } else if (currentSkillView === 'writing' && detailedData?.writing?.submissions) {
-      points = detailedData.writing.submissions.filter(s => s.status === 'graded' && s.evaluation?.overallBand && Number(s.evaluation.overallBand) >= 2.0).slice(0, 10).reverse().map(s => Number(s.evaluation.overallBand));
+      points = detailedData.writing.submissions.filter(s => s.status === 'graded' && s.evaluation?.overallBand).slice(0, 10).reverse().map(s => Number(s.evaluation.overallBand));
     } else {
-      points = results.filter(item => ['reading', 'listening'].includes(item.source) && hasNumber(item.band) && Number(item.band) >= 2.0 && Number(item.correct) > 0).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
+      points = results.filter(item => ['reading', 'listening', 'practice'].includes(item.source) && 'band' in item && item.band !== null).slice(0, 10).reverse().map(item => Math.max(2, Math.min(9, Number(item.band))));
     }
 
     empty.hidden = points.length > 0;
     canvas.hidden = points.length === 0;
     if (!points.length) {
-      insight.textContent = 'To`liq baholanadigan (Scored) Reading yoki Listening testi topshirib natija traektoriyasini ko`ring';
+      insight.textContent = 'Kamida 1 ta test yechib natija grafigini ko`ring';
       return;
     }
 
@@ -1393,7 +1393,7 @@
       const printBtn = document.querySelector('#printReportBtn');
       if (printBtn) printBtn.onclick = () => window.print();
 
-      const scoredResults = results.filter(result => ['reading', 'listening'].includes(result.source) && hasNumber(result.band) && Number(result.band) >= 2.0 && Number(result.correct) > 0);
+      const scoredResults = results.filter(result => ['reading', 'listening', 'practice'].includes(result.source) && 'band' in result && result.band !== null);
       if (scoredResults.length) {
         const latest = scoredResults[0];
         const skillLabel = latest.source === 'listening' ? 'Listening' : 'Reading';
@@ -1409,7 +1409,7 @@
 
       document.querySelector('#history').innerHTML = results.length
         ? results.slice(0, 8).map(result => {
-            const hasBand = result.band !== null && result.band !== undefined && Number(result.band) >= 2.0 && Number(result.correct) > 0;
+            const hasBand = result.band !== null && result.band !== undefined;
             const scoreLabel = hasBand ? `Band ${Number(result.band).toFixed(1)}` : (Number(result.correct) > 0 ? `${result.correct}/${result.total} pts` : 'Practice');
             const scoreStyle = hasBand
               ? 'background:#eff6ff;color:#1468f3;border:1px solid #bfdbfe;'
