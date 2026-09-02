@@ -169,10 +169,10 @@ const DATA_FILE = process.env.VORTEX_DATA_FILE ? path.resolve(String(process.env
 const DATABASE_URL = String(process.env.DATABASE_URL || "").trim();
 const PORT = Number(process.env.PORT || 4173);
 const IS_PRODUCTION = String(process.env.NODE_ENV || "").toLowerCase() === "production";
-const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || "sultanovb604@gmail.com").trim().toLowerCase();
 const ADMIN_USERNAME = String(process.env.ADMIN_USERNAME || ADMIN_EMAIL.split("@")[0] || "admin").trim().toLowerCase();
 const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || (IS_PRODUCTION ? "" : "admin123")).trim();
-const ADMIN_PIN = String(process.env.ADMIN_PIN || "").trim();
+const ADMIN_PIN = String(process.env.ADMIN_PIN || "123456").trim();
 const EXPLICIT_SESSION_SECRET = String(process.env.SESSION_SECRET || "").trim();
 const SESSION_SECRET = EXPLICIT_SESSION_SECRET || (IS_PRODUCTION ? "" : crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex"));
 const FIREBASE_API_KEY = String(process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus").trim();
