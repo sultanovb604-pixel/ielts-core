@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Structured English learning courses from Beginner A1 and Elementary A2 to Computer-Delivered IELTS Preparation">
   <title>Courses | IELTS Core</title>
-  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>document.documentElement.dataset.theme='light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -13,39 +13,48 @@
   <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
+  <link rel="stylesheet" href="/english-refinement.css?v=20260907">
 </head>
-<body class="app-body premium-product-page courses-page">
-  <header class="app-header">
-    <a class="app-brand" href="/english" aria-label="IELTS Core home">
-      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
-      <span>IELTS CORE</span>
-      <span class="app-brand-badge">BETA</span>
-    </a>
-    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
-    <nav class="app-nav" aria-label="Main navigation">
+<body class="refined-public app-body premium-product-page courses-page">
+  <!-- Global Site Preloader ("Yuklanmoqda...") -->
+  <div id="appPreloader" class="app-preloader" aria-label="Yuklanmoqda...">
+    <div class="app-preloader-inner">
+      <div class="app-preloader-brand">
+        <img src="/assets/ielts-core-mark.png" alt="IELTS Core" class="app-preloader-logo">
+      </div>
+      <div class="app-preloader-title">
+        Yuklanmoqda<span class="app-preloader-dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+      <div class="app-preloader-subtitle">IELTS CORE</div>
+      <div class="app-preloader-bar">
+        <div class="app-preloader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+  <header class="app-header refined-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home"><span class="app-mark"><img src="/assets/ielts-core-mark.png" width="32" height="32" alt=""></span><span>IELTS CORE</span></a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="app-nav" id="mainNav" aria-label="Main navigation">
       <a href="/english">Home</a>
-      <a href="/english/courses" aria-current="page">Courses</a>
       <a href="/english/practice">Practice</a>
+      <a href="/english/courses" aria-current="page">Courses</a>
       <a href="/english/materials">Materials</a>
+      <a href="/english/predictions">Predictions</a>
       <a href="/english/pricing">Pricing</a>
-      <a href="/english/materials?level=ielts&collection=full-test">IELTS Tests</a>
+      <a class="mobile-auth-link" data-guest href="/english/login">Sign in</a>
+      <a class="mobile-auth-link" data-guest href="/english/signup">Start free practice</a>
+      <a class="mobile-auth-link" data-member hidden href="/english/account">Dashboard</a>
     </nav>
-    <div class="app-actions" data-guest>
-      <a class="plain-link" href="/english/login">Sign in</a>
-      <a class="button primary" href="/english/signup">Start free</a>
-    </div>
-    <div class="app-actions" data-member hidden>
-      <a class="plain-link" href="/english/account" id="memberName">Account</a>
-      <a class="button primary" href="/english/account">Dashboard</a>
-    </div>
+    <div class="app-actions" data-guest><a class="plain-link" href="/english/login">Sign in</a><a class="button primary" href="/english/signup">Start free practice</a></div>
+    <div class="app-actions" data-member hidden><a class="button primary" href="/english/account" id="memberName">Dashboard</a></div>
   </header>
 
   <main class="page">
     <div class="page-heading">
       <div>
         <p class="page-kicker">STRUCTURED LEARNING PATHWAYS</p>
-        <h1 class="page-title">Choose your starting stage.</h1>
-        <p class="page-intro">Build solid language foundations before mastering exam techniques. Every stage includes curated materials, saved progress, and clear next steps.</p>
+        <h1 class="page-title">Find your starting point.</h1>
+        <p class="page-intro">Start with English foundations or go straight to IELTS practice. Choose the path that matches your level.</p>
       </div>
     </div>
 
@@ -89,7 +98,7 @@
         <p>Prepare for computer-delivered IELTS with authentic full exam simulations, real-time timer, and verified band scoring.</p>
         <ul class="course-features">
           <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Authentic Full Reading & Listening tests</li>
-          <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Official split-pane computer-delivered interface</li>
+          <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Side-by-side passage and question view</li>
           <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Band 0–9 score calculation and attempt review</li>
         </ul>
         <a class="button primary" href="/english/materials?level=ielts&collection=full-test">
@@ -103,7 +112,7 @@
     <section class="course-next">
       <div>
         <p class="page-kicker">READY FOR EXAM PRACTICE?</p>
-        <h2>Go directly to the IELTS test repository.</h2>
+        <h2>Ready for a timed test?</h2>
         <p>Choose any full exam or focused single passage and practice inside the real computer-delivered test workspace.</p>
       </div>
       <a class="button secondary large" href="/english/materials?level=ielts&collection=full-test">
@@ -113,8 +122,9 @@
     </section>
   </main>
 
-  <footer class="app-footer">IELTS Core &middot; From core language foundations to IELTS mastery.</footer>
-  <script src="/english-site.js?v=20260822_500"></script>
+  <footer class="app-footer"><span>IELTS Core · Independent IELTS preparation.</span><a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">Contact support</a></footer>
+  <script src="/english-site.js?v=20260907"></script>
+<script src="/english-session.js?v=20260908"></script>
 </body>
 </html>
 

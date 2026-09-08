@@ -5,33 +5,48 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Sign in to IELTS Core to access your materials, saved tests and dashboard">
   <title>Sign in | IELTS Core</title>
-  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>document.documentElement.dataset.theme='light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/english-pages.css?v=20260823_999">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260823_999">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
+  <link rel="stylesheet" href="/english-refinement.css?v=20260907">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=block" rel="stylesheet">
 </head>
-<body class="app-body auth-page premium-product-page" data-auth-mode="login">
-  <header class="app-header">
-    <a class="app-brand" href="/english" aria-label="IELTS Core home">
-      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
-      <span>IELTS CORE</span>
-      <span class="app-brand-badge">BETA</span>
-    </a>
-    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
-    <nav class="app-nav" aria-label="Main navigation">
-      <a href="/english">Home</a>
-      <a href="/english/courses">Courses</a>
-      <a href="/english/practice">Practice</a>
-      <a href="/english/materials">Materials</a>
-      <a href="/english/pricing">Pricing</a>
-    </nav>
-    <div class="app-actions">
-      <span class="plain-link">New to IELTS Core?</span>
-      <a class="button primary" href="/english/signup">Create account</a>
+<body class="refined-public app-body auth-page premium-product-page" data-auth-mode="login">
+  <!-- Global Site Preloader ("Yuklanmoqda...") -->
+  <div id="appPreloader" class="app-preloader" aria-label="Yuklanmoqda...">
+    <div class="app-preloader-inner">
+      <div class="app-preloader-brand">
+        <img src="/assets/ielts-core-mark.png" alt="IELTS Core" class="app-preloader-logo">
+      </div>
+      <div class="app-preloader-title">
+        Yuklanmoqda<span class="app-preloader-dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+      <div class="app-preloader-subtitle">IELTS CORE</div>
+      <div class="app-preloader-bar">
+        <div class="app-preloader-bar-fill"></div>
+      </div>
     </div>
+  </div>
+  <header class="app-header refined-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home"><span class="app-mark"><img src="/assets/ielts-core-mark.png" width="32" height="32" alt=""></span><span>IELTS CORE</span></a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="app-nav" id="mainNav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/practice">Practice</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/materials">Materials</a>
+      <a href="/english/predictions">Predictions</a>
+      <a href="/english/pricing">Pricing</a>
+      <a class="mobile-auth-link" data-guest href="/english/login">Sign in</a>
+      <a class="mobile-auth-link" data-guest href="/english/signup">Start free practice</a>
+      <a class="mobile-auth-link" data-member hidden href="/english/account">Dashboard</a>
+    </nav>
+    <div class="app-actions" data-guest><a class="plain-link" href="/english/login">Sign in</a><a class="button primary" href="/english/signup">Start free practice</a></div>
+    <div class="app-actions" data-member hidden><a class="button primary" href="/english/account" id="memberName">Dashboard</a></div>
   </header>
 
   <main class="page">
@@ -41,14 +56,14 @@
           <p class="page-kicker">WELCOME BACK</p>
           <h1 class="auth-title">Sign in to your workspace.</h1>
           <p class="resource-meta">Access your saved IELTS tests, progress analytics, and personal word bank.</p>
-          
+
           <button type="button" class="google-auth-button" data-google-auth style="width:100%;box-sizing:border-box;margin-top:20px;min-height:50px;border:1px solid #c9d3e1;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 20px;cursor:pointer;background:#fff;font-size:14px;font-weight:700;color:#1e293b;box-shadow:0 2px 6px rgba(0,0,0,0.04);transition:all 0.15s ease;">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20">
             <span>Continue with Google</span>
           </button>
-          
+
           <div class="auth-divider" style="margin-top:24px;"><span>or sign in with username</span></div>
-          
+
           <form class="form" id="authForm">
             <label class="field">
               <span>Username</span>
@@ -67,6 +82,8 @@
               <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
             </button>
           </form>
+          <p class="auth-switch">New here? <a data-auth-switch href="/english/signup">Create a free account</a></p>
+          <details class="auth-help"><summary>Need help signing in?</summary><p>For Google accounts, choose Continue with Google. For a forgotten username or password, <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">contact support</a>. Never send your password or a Google verification code.</p></details>
         </div>
       </section>
 
@@ -77,7 +94,7 @@
         </div>
         <h2>A clear, distraction-free environment for IELTS mastery.</h2>
         <p>Your performance history, verified band calculations, and saved attempts remain securely available across every device.</p>
-        
+
         <ul class="auth-benefits-list">
           <li>
             <span class="material-symbols-outlined" aria-hidden="true">verified</span>
@@ -105,7 +122,7 @@
     </section>
   </main>
 
-  <footer class="app-footer">IELTS Core &middot; Your personal learning path.</footer>
+  <footer class="app-footer"><span>IELTS Core · Independent IELTS preparation.</span><a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">Contact support</a></footer>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="/firebase-config.js"></script>
@@ -114,8 +131,9 @@
       firebase.initializeApp(window.firebaseConfig);
     }
   </script>
-  <script src="/english-site.js?v=20260826_100"></script>
-  <script src="/english-auth.js?v=20260826_100"></script>
+  <script src="/english-site.js?v=20260907"></script>
+  <script src="/english-auth.js?v=20260907"></script>
+<script src="/english-session.js?v=20260908"></script>
 </body>
 </html>
 

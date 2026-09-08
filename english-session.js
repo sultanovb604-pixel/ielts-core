@@ -10,7 +10,7 @@
       members.forEach(item => { item.hidden = false; item.style.display = 'flex'; });
       const label = document.querySelector('#memberName');
       if (label) label.textContent = data.user.name.split(' ')[0] || 'Account';
-      document.querySelectorAll('.hero-primary,[data-start-onboarding]').forEach(primary => {
+      document.querySelectorAll('.hero-primary,.v4-cta-primary,[data-start-onboarding]').forEach(primary => {
         primary.href = '/english/account';
         primary.removeAttribute('data-start-onboarding');
         primary.innerHTML = 'Continue learning <span aria-hidden="true">→</span>';

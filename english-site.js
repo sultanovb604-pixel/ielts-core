@@ -3,8 +3,56 @@
   const savedTheme = localStorage.getItem('vortex-english-theme');
   root.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
 
+  // --- GLOBAL APP PRELOADER CONTROLLER ---
+  window.__pageReadyPromises = window.__pageReadyPromises || [];
+  window.__pageReadyPromises.push(new Promise(resolve => {
+    if (document.readyState === 'complete') resolve();
+    else window.addEventListener('load', resolve);
+  }));
+  if (document.fonts && document.fonts.ready) {
+    window.__pageReadyPromises.push(document.fonts.ready.catch(() => {}));
+  }
+
+  const preloaderStartTime = Date.now();
+  let preloaderDismissed = false;
+
+  const dismissPreloader = () => {
+    if (preloaderDismissed) return;
+    preloaderDismissed = true;
+    const preloader = document.getElementById('appPreloader');
+    if (!preloader) return;
+    preloader.classList.add('fade-out');
+    setTimeout(() => {
+      try {
+        if (preloader && preloader.parentNode) preloader.parentNode.removeChild(preloader);
+      } catch (_) {}
+    }, 400);
+  };
+
+  const hideAppPreloader = () => {
+    Promise.all(window.__pageReadyPromises || []).then(() => {
+      const elapsed = Date.now() - preloaderStartTime;
+      const wait = Math.max(0, 450 - elapsed);
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          setTimeout(dismissPreloader, 180);
+        });
+      }, wait);
+    });
+  };
+  window.hideAppPreloader = hideAppPreloader;
+
+  // Maximum safety timeout
+  setTimeout(dismissPreloader, 3500);
+
+  const token = localStorage.getItem('vortex-english-token');
+  const isDataPage = ['/english/materials', '/english/account'].includes(location.pathname);
+  if (!token && !isDataPage) {
+    hideAppPreloader();
+  }
+
   const header = document.querySelector('.app-header');
-  if (header && !header.querySelector('[data-theme-toggle]')) {
+  if (header && !header.classList.contains('refined-header') && !header.querySelector('[data-theme-toggle]')) {
     const themeToggle = document.createElement('button');
     themeToggle.className = 'theme-toggle';
     themeToggle.type = 'button';
@@ -25,9 +73,16 @@
     header.insertBefore(themeToggle, header.querySelector('.app-actions'));
   }
 
+  if (document.body.classList.contains('refined-public')) root.dataset.theme = 'light';
   const menu = document.querySelector('[data-mobile-menu]');
   const nav = document.querySelector('.app-nav');
   if (menu && nav) {
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && nav.classList.contains('open')) {
+        nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-label', 'Open menu'); menu.textContent = 'Menu'; menu.focus();
+      }
+    });
     menu.addEventListener('click', () => {
       const open = nav.classList.toggle('open');
       menu.setAttribute('aria-expanded', String(open));
@@ -43,7 +98,6 @@
     });
   }
 
-  const token = localStorage.getItem('vortex-english-token');
   const safe = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 
   // --- MODERN TOAST NOTIFICATION SYSTEM ---
@@ -141,7 +195,8 @@
       {
         title: 'FULL TESTS & MOCKS',
         links: [
-          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: activePath === '/english/mock-tests' || activePath === '/english/mock-exam' },
+          { label: 'Exam Predictions', icon: 'auto_awesome', href: '/english/predictions', active: activePath === '/english/predictions', badge: 'NEW' },
+          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: activePath === '/english/mock-tests' || activePath === '/english/mock-exam', badge: 'SOON' },
           { label: 'AI Speaking Assessment', icon: 'record_voice_over', href: '/english/speaking', active: activePath === '/english/speaking' || activePath === '/english/speaking-studio' },
           { label: 'Listening Tests', icon: 'headphones', href: '/english/materials?level=ielts&skill=listening&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'listening' && activeCollection === 'full-test' },
           { label: 'Reading Tests', icon: 'menu_book', href: '/english/materials?level=ielts&skill=reading&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'reading' && activeCollection === 'full-test' },
@@ -786,9 +841,11 @@
             }
           }
         }
+        hideAppPreloader();
       })
       .catch(() => {
         localStorage.removeItem('vortex-english-token');
         localStorage.removeItem('vortex-english-student');
+        hideAppPreloader();
       });
 })();

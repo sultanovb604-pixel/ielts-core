@@ -8,6 +8,10 @@
   const next = query.get('next');
   const destination = next && next.startsWith('/english/') ? next : '/english/account';
   const existingToken = localStorage.getItem(tokenKey);
+  // Preserve the requested lesson or catalogue across login/signup.
+  document.querySelectorAll('a[href="/english/login"], a[href="/english/signup"]').forEach(link => {
+    if (next && destination === next) link.search = new URLSearchParams({ next: destination }).toString();
+  });
 
   const setMessage = (text, success = false) => {
     if (!message) return;
@@ -67,7 +71,7 @@
       e.preventDefault();
       e.stopPropagation();
     }
-    setMessage('Google bilan ulanmoqda...');
+    setMessage('Connecting to Google…');
 
     try {
       const fb = await ensureFirebaseAuth();
@@ -77,7 +81,7 @@
       const user = result.user;
       const idToken = await user.getIdToken();
 
-      setMessage('Google hisobi ulandi. Kabinetingizga yo‘naltirilmoqda...', true);
+      setMessage('Google connected. Checking your account…', true);
 
       const res = await fetch('/api/auth/firebase-google', {
         method: 'POST',
@@ -93,13 +97,13 @@
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Google sign-in xatoligi yuz berdi.');
+      if (!res.ok) throw new Error(data.error || 'Google sign-in failed. Please try again.');
 
       localStorage.setItem(tokenKey, data.token);
       localStorage.setItem('vortex_student_token', data.token);
       localStorage.setItem(studentKey, JSON.stringify(data.user));
 
-      setMessage('Muvaffaqiyatli kirdingiz! Ochilmoqda...', true);
+      setMessage('Signed in. Opening your workspace…', true);
       setTimeout(() => {
         window.location.replace(destination);
       }, 300);
@@ -107,7 +111,7 @@
       if (err.code === 'auth/popup-closed-by-user') {
         setMessage('');
       } else {
-        setMessage(err.message || 'Google sign-in xatoligi.');
+        setMessage(err.message || 'Could not sign in with Google.');
       }
     }
   }
@@ -135,14 +139,14 @@
       if (!form.reportValidity()) return;
       const fields = new FormData(form);
       if (mode === 'signup' && fields.get('password') !== fields.get('confirmPassword')) {
-        setMessage('Kiritilgan parollar bir-biriga mos kelmadi.');
+        setMessage('Passwords do not match.');
         form.elements.confirmPassword?.focus();
         return;
       }
       const submit = form.querySelector('[type="submit"]');
       const defaultText = submit.innerHTML;
       submit.disabled = true;
-      submit.textContent = mode === 'signup' ? 'Hisob ochilmoqda...' : 'Kirilmoqda...';
+      submit.textContent = mode === 'signup' ? 'Creating account…' : 'Signing in…';
       form.setAttribute('aria-busy', 'true');
 
       const username = String(fields.get('username') || '').trim().toLowerCase();
@@ -159,13 +163,13 @@
           body: JSON.stringify(payload)
         });
         const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'Xatolik yuz berdi.');
+        if (!response.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
 
         localStorage.setItem(tokenKey, data.token);
         localStorage.setItem('vortex_student_token', data.token);
         localStorage.setItem(studentKey, JSON.stringify(data.user));
 
-        setMessage(mode === 'signup' ? 'Hisob yaratildi! Kabinetga o‘tilmoqda...' : 'Xush kelibsiz! Ochilmoqda...', true);
+        setMessage(mode === 'signup' ? 'Account created. Opening your workspace…' : 'Welcome back. Opening your workspace…', true);
         window.setTimeout(() => window.location.replace(destination), 250);
       } catch (error) {
         setMessage(error.message);

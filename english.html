@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Prepare for computer-delivered IELTS with structured English courses, full practice tests, band-score estimates, and saved progress.">
   <title>IELTS Core — Computer-Delivered IELTS Practice & English Learning</title>
-  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>document.documentElement.dataset.theme='light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -13,31 +13,40 @@
   <link rel="stylesheet" href="/english-pages.css?v=20260823_999">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260901_009">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
+  <link rel="stylesheet" href="/english-refinement.css?v=20260907">
 </head>
-<body class="app-body landing-page v4-public-page">
-  <header class="app-header">
-    <a class="app-brand" href="/english" aria-label="IELTS Core home">
-      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
-      <span>IELTS CORE</span>
-      <span class="app-brand-badge">BETA</span>
-    </a>
+<body class="refined-public app-body landing-page v4-public-page">
+  <!-- Global Site Preloader ("Yuklanmoqda...") -->
+  <div id="appPreloader" class="app-preloader" aria-label="Yuklanmoqda...">
+    <div class="app-preloader-inner">
+      <div class="app-preloader-brand">
+        <img src="/assets/ielts-core-mark.png" alt="IELTS Core" class="app-preloader-logo">
+      </div>
+      <div class="app-preloader-title">
+        Yuklanmoqda<span class="app-preloader-dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+      <div class="app-preloader-subtitle">IELTS CORE</div>
+      <div class="app-preloader-bar">
+        <div class="app-preloader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+  <header class="app-header refined-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home"><span class="app-mark"><img src="/assets/ielts-core-mark.png" width="32" height="32" alt=""></span><span>IELTS CORE</span></a>
     <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">Menu</button>
     <nav class="app-nav" id="mainNav" aria-label="Main navigation">
       <a href="/english" aria-current="page">Home</a>
-      <a href="/english/courses">Courses</a>
       <a href="/english/practice">Practice</a>
+      <a href="/english/courses">Courses</a>
       <a href="/english/materials">Materials</a>
-      <a href="/english/materials?level=ielts&collection=full-test">Full Mock Tests <span class="nav-badge">NEW</span></a>
+      <a href="/english/predictions">Predictions</a>
       <a href="/english/pricing">Pricing</a>
+      <a class="mobile-auth-link" data-guest href="/english/login">Sign in</a>
+      <a class="mobile-auth-link" data-guest href="/english/signup">Start free practice</a>
+      <a class="mobile-auth-link" data-member hidden href="/english/account">Dashboard</a>
     </nav>
-    <div class="app-actions" data-guest>
-      <a class="plain-link" href="/english/login">Sign in</a>
-      <a class="button primary" href="/english/signup">Get Started <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px">arrow_forward</span></a>
-    </div>
-    <div class="app-actions" data-member hidden>
-      <a class="plain-link" href="/english/account" id="memberName">Account</a>
-      <a class="button primary" href="/english/account">Dashboard <span class="material-symbols-outlined" aria-hidden="true" style="font-size:16px">arrow_forward</span></a>
-    </div>
+    <div class="app-actions" data-guest><a class="plain-link" href="/english/login">Sign in</a><a class="button primary" href="/english/signup">Start free practice</a></div>
+    <div class="app-actions" data-member hidden><a class="button primary" href="/english/account" id="memberName">Dashboard</a></div>
   </header>
 
   <main class="v4-landing">
@@ -50,17 +59,17 @@
             <span class="v4-badge-pulse" aria-hidden="true"></span>
             <span>Computer-delivered exam practice</span>
           </div>
-          <h1 id="v4HeroTitle">Master IELTS practice.<br>Reach your target <span class="v4-hero-gradient">Band 8.0+.</span></h1>
-          <p class="v4-hero-subtitle">Build strong English foundations, practise in a computer-delivered test format, receive 0–9 band-score estimates, and track your growth in one focused workspace.</p>
-          
+          <h1 id="v4HeroTitle">Your next band score<br>starts with <span class="v4-hero-gradient">better practice.</span></h1>
+          <p class="v4-hero-subtitle">Practise Reading and Listening, understand your mistakes, and see your progress. One focused workspace for your IELTS preparation.</p>
+
           <div class="v4-actions">
-            <a class="button primary large v4-cta-primary" data-start-onboarding href="/english/signup">
+            <a class="button primary large v4-cta-primary" href="/english/signup">
               <span>Start Free Practice</span>
               <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
             </a>
-            <a class="button secondary large v4-cta-secondary" href="/english/materials?level=ielts&collection=full-test">
+            <a class="button secondary large v4-cta-secondary" href="/english/practice">
               <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
-              <span>Explore Full Mock Tests</span>
+              <span>Explore practice</span>
             </a>
           </div>
 
@@ -98,7 +107,7 @@
                   <span class="material-symbols-outlined" aria-hidden="true">insights</span> Score Analytics
                 </button>
               </div>
-              <div class="v4-mock-badge" aria-hidden="true">LIVE PREVIEW</div>
+              <div class="v4-mock-badge" aria-hidden="true">INTERACTIVE DEMO</div>
             </div>
 
             <!-- Panel 1: Reading Exam Live Demo -->
@@ -145,7 +154,7 @@
               <div class="v4-mock-score-float">
                 <span class="material-symbols-outlined" aria-hidden="true">verified</span>
                 <div>
-                  <strong>Verified Result: 38 / 40</strong>
+                  <strong>Example result: 38 / 40</strong>
                   <small>IELTS Academic Reading · Band 8.5</small>
                 </div>
               </div>
@@ -233,8 +242,8 @@
       <div class="v4-shell">
         <div class="v4-section-head-centered">
           <p class="v4-kicker">ENGINEERED FOR SERIOUS PREPARATION</p>
-          <h2 id="v4BentoTitle">Everything you need to reach Band 7.5+</h2>
-          <p>No artificial gamification or generic quizzes. IELTS Core delivers exact exam simulation and rigorous verification.</p>
+          <h2 id="v4BentoTitle">Practise. Review. Make progress.</h2>
+          <p>Build a study routine around practice tests, clear feedback, and your own progress.</p>
         </div>
 
         <div class="v4-bento-grid">
@@ -244,12 +253,12 @@
               <div class="v4-bento-icon-box">
                 <span class="material-symbols-outlined" aria-hidden="true">splitscreen</span>
               </div>
-              <h3>Computer-Delivered IELTS-Style Interface</h3>
-              <p>Passage pane and question pane balanced side-by-side. Text size adjuster, night mode, countdown timer with visual alerts, and sticky 1–40 question navigator.</p>
+              <h3>Get comfortable with the test format</h3>
+              <p>Read the passage, answer questions, and manage your time in one test workspace.</p>
               <ul class="v4-bento-list">
-                <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Georgia serif typography for reading focus</li>
-                <li><span class="material-symbols-outlined" aria-hidden="true">check</span> 100% responsive on mobile with clean view switcher</li>
-                <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Unanswered question count confirmation before submit</li>
+                <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Adjust text size for comfortable reading</li>
+                <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Switch between passage and questions on mobile</li>
+                <li><span class="material-symbols-outlined" aria-hidden="true">check</span> Check unanswered questions before finishing</li>
               </ul>
             </div>
             <div class="v4-bento-visual">
@@ -277,11 +286,11 @@
             <div class="v4-bento-icon-box">
               <span class="material-symbols-outlined" aria-hidden="true">verified</span>
             </div>
-            <h3>Server-Verified Band Scoring</h3>
-            <p>Every response is evaluated on the backend against curated answer keys, producing consistent IELTS-style 0–9 band-score estimates without client-side tampering.</p>
+            <h3>See where you stand</h3>
+            <p>Get your Reading or Listening score and an estimated IELTS band after a test. Review the answers to guide your next practice session.</p>
             <div class="v4-score-meter">
               <div class="v4-score-meter-bar" style="width:90%"></div>
-              <span>36 / 40 Raw Points → Band 8.5</span>
+              <span>Example result: 36 / 40 → estimated Band 8.0</span>
             </div>
           </div>
 
@@ -306,8 +315,8 @@
                 <div class="v4-bento-icon-box">
                   <span class="material-symbols-outlined" aria-hidden="true">history_edu</span>
                 </div>
-                <h3>Never lose your work. Review every attempt.</h3>
-                <p>All completed tests, timestamps, duration, and question-by-question answers are securely recorded to your personal dashboard. Re-open any past test in Review Mode to analyze mistakes.</p>
+                <h3>Learn from your previous attempts.</h3>
+                <p>Find completed tests in your dashboard and revisit your answers to understand what needs more practice.</p>
               </div>
               <div class="v4-bento-actions">
                 <a href="/english/materials" class="button primary">Browse practice materials →</a>
@@ -373,7 +382,7 @@
           <p>Prepare with computer-delivered practice tests, consistent band-score estimates, and structured lessons.</p>
         </div>
         <div class="v4-cta-actions">
-          <a class="button primary large v4-cta-button" data-start-onboarding href="/english/signup">
+          <a class="button primary large v4-cta-button" href="/english/signup">
             <span>Create free account</span>
             <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
           </a>
@@ -389,7 +398,7 @@
           <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
           <span>IELTS CORE</span>
         </a>
-        <p>A structured English learning and computer-delivered IELTS preparation platform.</p>
+        <p>Independent English learning and IELTS preparation. Practice scores are estimates, not official results.</p><a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">Contact support →</a>
       </div>
       <nav class="v4-footer-nav" aria-label="Footer navigation">
         <div>
@@ -463,7 +472,7 @@
     <div class="onboarding-step" data-step="2"><p class="eyebrow">02 / YOUR GOAL</p><h2>Why do you need English?</h2><p>Your choice will organise lessons and practice.</p><div class="onboarding-choices"><button type="button" data-goal="confidence"><b>Speak with confidence</b><span>Feel comfortable in everyday conversations</span></button><button type="button" data-goal="school"><b>School and exams</b><span>Improve my grades and knowledge</span></button><button type="button" data-goal="future"><b>IELTS band goal</b><span>Prepare with real exam materials</span></button></div></div>
     <div class="onboarding-footer"><span class="onboarding-progress"><i></i><i></i></span><button class="button primary onboarding-next" type="button" disabled>Continue</button></div>
   </dialog>
-  <script src="/english-site.js?v=20260823_999"></script><script src="/english-session.js?v=20260823_999"></script><script src="/english-onboarding.js?v=20260823_999"></script>
+  <script src="/english-site.js?v=20260907"></script><script src="/english-session.js?v=20260908"></script><script src="/english-onboarding.js?v=20260823_999"></script>
 </body>
 </html>
 

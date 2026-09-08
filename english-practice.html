@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Focused skill practice for IELTS and English learners: Reading, Listening, Writing, and Speaking">
   <title>Practice | IELTS Core</title>
-  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>document.documentElement.dataset.theme='light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -13,57 +13,48 @@
   <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
+  <link rel="stylesheet" href="/english-refinement.css?v=20260907">
 </head>
-<body class="app-body premium-product-page practice-page">
-  <header class="app-header">
-    <a class="app-brand" href="/english" aria-label="IELTS Core home">
-      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
-      <span>IELTS CORE</span>
-      <span class="app-brand-badge">BETA</span>
-    </a>
-    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
-    <nav class="app-nav" aria-label="Main navigation">
-      <a href="/english">Home</a>
-      <a href="/english/courses">Courses</a>
-      <a href="/english/practice" aria-current="page">Practice</a>
-      <a href="/english/materials">Materials</a>
-      <a href="/english/pricing">Pricing</a>
-      <a href="/english/materials?level=ielts&collection=full-test">IELTS Tests</a>
-    </nav>
-    <div class="app-actions" data-guest>
-      <a class="plain-link" href="/english/login">Sign in</a>
-      <a class="button primary" href="/english/signup">Start free</a>
-    </div>
-    <div class="app-actions" data-member hidden>
-      <a class="plain-link" href="/english/account" id="memberName">Account</a>
-      <a class="button primary" href="/english/account">Dashboard</a>
-    </div>
-  </header>
-
-  <!-- Top Notification Ribbon -->
-  <div class="vx-top-notification-banner" role="region" aria-label="Announcement">
-    <div class="vx-top-notification-content">
-      <span class="material-symbols-outlined icon-gift">redeem</span>
-      <span><strong>Targeted Skill Practice:</strong> Master individual Reading, Listening, Writing, and Speaking modules with verified scoring.</span>
-      <a href="/english/materials" class="vx-top-notification-btn">Explore Full Tests →</a>
+<body class="refined-public app-body premium-product-page practice-page">
+  <!-- Global Site Preloader ("Yuklanmoqda...") -->
+  <div id="appPreloader" class="app-preloader" aria-label="Yuklanmoqda...">
+    <div class="app-preloader-inner">
+      <div class="app-preloader-brand">
+        <img src="/assets/ielts-core-mark.png" alt="IELTS Core" class="app-preloader-logo">
+      </div>
+      <div class="app-preloader-title">
+        Yuklanmoqda<span class="app-preloader-dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+      <div class="app-preloader-subtitle">IELTS CORE</div>
+      <div class="app-preloader-bar">
+        <div class="app-preloader-bar-fill"></div>
+      </div>
     </div>
   </div>
+  <header class="app-header refined-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home"><span class="app-mark"><img src="/assets/ielts-core-mark.png" width="32" height="32" alt=""></span><span>IELTS CORE</span></a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="app-nav" id="mainNav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/practice" aria-current="page">Practice</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/materials">Materials</a>
+      <a href="/english/predictions">Predictions</a>
+      <a href="/english/pricing">Pricing</a>
+      <a class="mobile-auth-link" data-guest href="/english/login">Sign in</a>
+      <a class="mobile-auth-link" data-guest href="/english/signup">Start free practice</a>
+      <a class="mobile-auth-link" data-member hidden href="/english/account">Dashboard</a>
+    </nav>
+    <div class="app-actions" data-guest><a class="plain-link" href="/english/login">Sign in</a><a class="button primary" href="/english/signup">Start free practice</a></div>
+    <div class="app-actions" data-member hidden><a class="button primary" href="/english/account" id="memberName">Dashboard</a></div>
+  </header>
 
   <main class="page practice-shell">
-    <!-- Breadcrumb Bar -->
-    <nav class="vx-breadcrumb-bar" aria-label="Breadcrumb">
-      <a href="/english/account"><span class="material-symbols-outlined">home</span> Home</a>
-      <span class="sep">/</span>
-      <a href="/english/materials">Materials</a>
-      <span class="sep">/</span>
-      <span class="current">Skill Practice Hub</span>
-    </nav>
-
     <div class="page-heading practice-page-heading">
       <div>
         <p class="page-kicker">FOCUSED SKILL TRAINING</p>
-        <h1 class="page-title" id="practiceTitle">Targeted IELTS Practice Hub</h1>
-        <p class="page-intro">Sharpen individual skills with authentic Cambridge passage drills, audio section workouts, model essays, and speaking cue cards.</p>
+        <h1 class="page-title" id="practiceTitle">Choose a skill. Start practising.</h1>
+        <p class="page-intro">Choose your level and focus on Reading, Listening, Writing, or Speaking.</p>
       </div>
     </div>
 
@@ -74,7 +65,7 @@
           <span class="material-symbols-outlined">layers</span>
           <span>Target Level</span>
         </span>
-        <div class="filter-row level-chips" role="radiogroup" aria-label="Stage filter">
+        <div class="filter-row level-chips" role="group" aria-label="Stage filter">
           <button class="filter" type="button" data-practice-level="all" aria-pressed="true">All Stages</button>
           <button class="filter" type="button" data-practice-level="ielts" aria-pressed="false">IELTS (CDI)</button>
           <button class="filter" type="button" data-practice-level="elementary" aria-pressed="false">Elementary (A2)</button>
@@ -87,7 +78,7 @@
           <span class="material-symbols-outlined">tune</span>
           <span>Filter Skill</span>
         </span>
-        <div class="filter-row skill-chips" role="radiogroup" aria-label="Skill filter">
+        <div class="filter-row skill-chips" role="group" aria-label="Skill filter">
           <button class="filter" type="button" data-skill="all" aria-pressed="true">All Skills</button>
           <button class="filter" type="button" data-skill="reading" aria-pressed="false">Reading</button>
           <button class="filter" type="button" data-skill="listening" aria-pressed="false">Listening</button>
@@ -110,18 +101,14 @@
         </div>
         <h2>IELTS & Graded Reading</h2>
         <p>40+ full computer-delivered Reading exams, focused 1-passage sets, and graded articles with word banking.</p>
-        
+
         <div class="skill-metric-pills">
           <span><i class="material-symbols-outlined">menu_book</i> 3 Passages</span>
           <span><i class="material-symbols-outlined">quiz</i> 40 Questions</span>
           <span><i class="material-symbols-outlined">schedule</i> 60 min</span>
         </div>
 
-        <div class="skill-features-snippet">
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> 3-Passage Timed CDI Simulation</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Instant Band 0–9 Conversion</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> In-Text Highlight & Annotations</span>
-        </div>
+
 
         <div class="skill-card-actions">
           <a class="vx-card-btn vx-btn-primary" href="/english/materials?skill=reading&collection=full-test">
@@ -146,18 +133,14 @@
         </div>
         <h2>Audio & CDI Listening</h2>
         <p>Authentic 4-part IELTS listening tests with high-fidelity native recordings, variable playback speed, and interactive answer sheets.</p>
-        
+
         <div class="skill-metric-pills">
           <span><i class="material-symbols-outlined">headphones</i> 4 Sections</span>
           <span><i class="material-symbols-outlined">quiz</i> 40 Questions</span>
           <span><i class="material-symbols-outlined">schedule</i> 30 min</span>
         </div>
 
-        <div class="skill-features-snippet">
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> 4-Part Exam Audio Simulation</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Audio Speed & Volume Controls</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Part-by-Part Mistake Diagnostics</span>
-        </div>
+
 
         <div class="skill-card-actions">
           <a class="vx-card-btn vx-btn-primary" href="/english/materials?skill=listening&collection=full-test">
@@ -182,18 +165,14 @@
         </div>
         <h2>Model Essays & Task Prompts</h2>
         <p>Band 9 model essays for Task 1 academic charts and Task 2 opinion essays with structural examiner breakdowns.</p>
-        
+
         <div class="skill-metric-pills">
           <span><i class="material-symbols-outlined">edit</i> Task 1 & Task 2</span>
           <span><i class="material-symbols-outlined">history_edu</i> Band 9</span>
           <span><i class="material-symbols-outlined">schedule</i> 60 min</span>
         </div>
 
-        <div class="skill-features-snippet">
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Task 1 & Task 2 Breakdowns</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> High-Scoring Vocabulary Glossaries</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Step-by-Step Structural Templates</span>
-        </div>
+
 
         <div class="skill-card-actions">
           <a class="vx-card-btn vx-btn-primary" href="/english/materials?collection=writing-sample">
@@ -218,18 +197,14 @@
         </div>
         <h2>Cue Cards & Speaking Prompts</h2>
         <p>Part 1, 2, and 3 speaking prompts, cue cards, and everyday dialogue builders for conversational fluency and confidence.</p>
-        
+
         <div class="skill-metric-pills">
           <span><i class="material-symbols-outlined">record_voice_over</i> Parts 1, 2 & 3</span>
           <span><i class="material-symbols-outlined">chat</i> Cue Cards</span>
           <span><i class="material-symbols-outlined">schedule</i> 11–14 min</span>
         </div>
 
-        <div class="skill-features-snippet">
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Cue Card Topics & Follow-ups</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Fluency & Pronunciation Starters</span>
-          <span><i class="material-symbols-outlined" aria-hidden="true">check</i> Model Examiner Sample Responses</span>
-        </div>
+
 
         <div class="skill-card-actions">
           <a class="vx-card-btn vx-btn-primary" href="/english/materials?collection=speaking">
@@ -245,9 +220,10 @@
     </section>
   </main>
 
-  <footer class="app-footer">IELTS Core &middot; Focused practice for every English skill.</footer>
-  <script src="/english-site.js?v=20260822_500"></script>
-  <script src="/english-practice.js?v=20260822_500"></script>
+  <footer class="app-footer"><span>IELTS Core · Independent IELTS preparation.</span><a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">Contact support</a></footer>
+  <script src="/english-site.js?v=20260907"></script>
+  <script src="/english-practice.js?v=20260907"></script>
+<script src="/english-session.js?v=20260908"></script>
 </body>
 </html>
 

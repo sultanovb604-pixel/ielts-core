@@ -1,36 +1,9 @@
 (() => {
   const token = localStorage.getItem('vortex-english-token');
-  const tabs = document.querySelectorAll('.billing-tab');
-  const cards = document.querySelectorAll('[data-plan-card]');
-
-  // Tab Cycle Switcher
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-
-      const cycle = tab.dataset.cycle;
-      cards.forEach(card => {
-        if (card.dataset.planCard === cycle) {
-          card.classList.add('featured');
-        } else {
-          card.classList.remove('featured');
-        }
-      });
-    });
-  });
-
   // Select Pricing Tier
   window.selectPricingTier = (cycle, price) => {
-    if (typeof window.showUpgradeModal === 'function') {
-      window.showUpgradeModal();
-    } else {
-      location.href = `https://t.me/ieltscoreadmin?text=${encodeURIComponent(`Salom! IELTS Core platformasida ${cycle} oylik (${price.toLocaleString()} UZS) Premium tarifini sotib olmoqchiman.`)}`;
-    }
+    const message = `Hello! I would like the ${cycle}-month IELTS Core Premium plan (${price.toLocaleString('en-US')} UZS). Please confirm payment details.`;
+    location.href = `https://t.me/ieltscoreadmin?text=${encodeURIComponent(message)}`;
   };
 
   // Promo Code Redemption Form
@@ -48,12 +21,12 @@
       if (!token) {
         promoFeedback.hidden = false;
         promoFeedback.className = 'promo-feedback error';
-        promoFeedback.innerHTML = 'Promo-kodni faollashtirish uchun avval <a href="/english/login?next=/english/pricing" style="color:inherit;text-decoration:underline;font-weight:800;">tizimga kiring</a> yoki <a href="/english/signup?next=/english/pricing" style="color:inherit;text-decoration:underline;font-weight:800;">roʻyxatdan oʻting</a>.';
+        promoFeedback.innerHTML = 'To apply a promo code, <a href="/english/login?next=/english/pricing" style="color:inherit;text-decoration:underline;font-weight:800;">sign in</a> or <a href="/english/signup?next=/english/pricing" style="color:inherit;text-decoration:underline;font-weight:800;">create an account</a>.';
         return;
       }
 
       promoBtn.disabled = true;
-      promoBtn.textContent = 'Tekshirilmoqda…';
+      promoBtn.textContent = 'Checking…';
 
       try {
         const response = await fetch('/api/student/redeem-code', {
@@ -68,12 +41,12 @@
         const data = await response.json().catch(() => ({}));
 
         if (!response.ok) {
-          throw new Error(data.error || 'Ushbu promo-kod notoʻgʻri yoki muddati tugagan.');
+          throw new Error(data.error || 'This promo code is invalid or has expired.');
         }
 
         promoFeedback.hidden = false;
         promoFeedback.className = 'promo-feedback success';
-        promoFeedback.innerHTML = `🎉 <strong>Tabriklaymiz!</strong> ${escapeHtml(data.message || 'Premium muvaffaqiyatli faollashtirildi!')} <a href="/english/account" style="color:inherit;text-decoration:underline;margin-left:8px;font-weight:800;">Dashboardga oʻtish →</a>`;
+        promoFeedback.innerHTML = `<strong>Code applied.</strong> ${escapeHtml(data.message || 'Premium access is ready.')} <a href="/english/account" style="color:inherit;text-decoration:underline;margin-left:8px;font-weight:800;">Open dashboard →</a>`;
         promoInput.value = '';
       } catch (error) {
         promoFeedback.hidden = false;
@@ -81,7 +54,7 @@
         promoFeedback.textContent = error.message;
       } finally {
         promoBtn.disabled = false;
-        promoBtn.innerHTML = '<span>Faollashtirish</span> <span aria-hidden="true">→</span>';
+        promoBtn.innerHTML = '<span>Apply code</span> <span aria-hidden="true">→</span>';
       }
     });
   }

@@ -28,7 +28,7 @@
     const levelLabel = levelNames[level] || '';
     if (title) {
       if (skill === 'all') {
-        title.textContent = levelLabel ? `${levelLabel} Practice Hub` : 'Targeted IELTS Practice Hub';
+        title.textContent = levelLabel ? `${levelLabel} Practice Hub` : 'Choose a skill. Start practising.';
       } else {
         title.textContent = `${levelLabel ? `${levelLabel} · ` : ''}${labels[skill]} Focused Practice`;
       }
