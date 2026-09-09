@@ -14,8 +14,9 @@
   <link rel="stylesheet" href="/english-product-v4.css?v=20260901_009">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
   <link rel="stylesheet" href="/english-refinement.css?v=20260907">
+  <link rel="stylesheet" href="/english-precision.css?v=20260909">
 </head>
-<body class="refined-public app-body landing-page v4-public-page">
+<body class="precision-home refined-public app-body landing-page v4-public-page">
   <!-- Global Site Preloader ("Yuklanmoqda...") -->
   <div id="appPreloader" class="app-preloader" aria-label="Yuklanmoqda...">
     <div class="app-preloader-inner">
@@ -51,188 +52,66 @@
 
   <main class="v4-landing">
     <!-- Hero Section -->
-    <section class="v4-hero" aria-labelledby="v4HeroTitle">
-      <div class="v4-hero-glow" aria-hidden="true"></div>
-      <div class="v4-shell v4-hero-grid">
-        <div class="v4-hero-copy">
-          <div class="v4-hero-badge">
-            <span class="v4-badge-pulse" aria-hidden="true"></span>
-            <span>Computer-delivered exam practice</span>
+    <section class="precision-hero" aria-labelledby="precisionTitle">
+      <div class="precision-shell precision-grid">
+        <div class="precision-copy">
+          <p class="precision-eyebrow"><span class="material-symbols-outlined" aria-hidden="true">circle</span>Your IELTS practice workspace</p>
+          <h1 id="precisionTitle">Better practice.<br><span>Clearer progress.</span></h1>
+          <p class="precision-description">Practise Reading and Listening, review your mistakes, and build a routine that moves you forward.</p>
+          <div class="precision-actions">
+            <a class="button primary v4-cta-primary" href="/english/signup">Start free practice <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+            <a class="precision-explore" href="/english/practice"><span class="material-symbols-outlined" aria-hidden="true">menu_book</span>Explore practice</a>
           </div>
-          <h1 id="v4HeroTitle">Your next band score<br>starts with <span class="v4-hero-gradient">better practice.</span></h1>
-          <p class="v4-hero-subtitle">Practise Reading and Listening, understand your mistakes, and see your progress. One focused workspace for your IELTS preparation.</p>
-
-          <div class="v4-actions">
-            <a class="button primary large v4-cta-primary" href="/english/signup">
-              <span>Start Free Practice</span>
-              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-            </a>
-            <a class="button secondary large v4-cta-secondary" href="/english/practice">
-              <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
-              <span>Explore practice</span>
-            </a>
-          </div>
-
-          <div class="v4-trust-row" aria-label="Platform Highlights">
-            <div class="v4-trust-item">
-              <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
-              <span><strong>40+</strong> Full Mock Tests</span>
-            </div>
-            <div class="v4-trust-item">
-              <span class="material-symbols-outlined" aria-hidden="true">verified</span>
-              <span><strong>0–9</strong> Band Score Rubric</span>
-            </div>
-            <div class="v4-trust-item">
-              <span class="material-symbols-outlined" aria-hidden="true">school</span>
-              <span><strong>IELTS-style</strong> Format</span>
-            </div>
-          </div>
+          <ul class="precision-benefits" aria-label="Practice tools">
+            <li><span class="material-symbols-outlined" aria-hidden="true">headphones</span>Reading &amp; Listening</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>Estimated bands</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">bookmark</span>Saved progress</li>
+          </ul>
         </div>
-
-        <!-- Live Interactive Showcase -->
-        <div class="v4-hero-showcase" role="region" aria-label="Interactive platform showcase">
-          <div class="v4-mock-browser">
-            <div class="v4-mock-topbar">
-              <div class="v4-mock-dots" aria-hidden="true">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="v4-mock-tabs" role="tablist" aria-label="Interactive demo selector">
-                <button type="button" class="v4-mock-tab active" id="demoReadingTab" data-demo-tab="reading" role="tab" aria-selected="true" aria-controls="demoReading" tabindex="0">
-                  <span class="material-symbols-outlined" aria-hidden="true">menu_book</span> Reading Test
-                </button>
-                <button type="button" class="v4-mock-tab" id="demoListeningTab" data-demo-tab="listening" role="tab" aria-selected="false" aria-controls="demoListening" tabindex="-1">
-                  <span class="material-symbols-outlined" aria-hidden="true">headphones</span> Listening Test
-                </button>
-                <button type="button" class="v4-mock-tab" id="demoAnalyticsTab" data-demo-tab="analytics" role="tab" aria-selected="false" aria-controls="demoAnalytics" tabindex="-1">
-                  <span class="material-symbols-outlined" aria-hidden="true">insights</span> Score Analytics
-                </button>
-              </div>
-              <div class="v4-mock-badge" aria-hidden="true">INTERACTIVE DEMO</div>
+        <div class="precision-demo" role="region" aria-label="Interactive practice example">
+          <div class="precision-demo-toolbar">
+            <div class="precision-tabs" role="tablist" aria-label="Practice demo">
+              <button id="precisionReadingTab" class="precision-tab" type="button" role="tab" aria-selected="true" aria-controls="precisionReading" tabindex="0"><span class="material-symbols-outlined" aria-hidden="true">menu_book</span>Reading</button>
+              <button id="precisionListeningTab" class="precision-tab" type="button" role="tab" aria-selected="false" aria-controls="precisionListening" tabindex="-1"><span class="material-symbols-outlined" aria-hidden="true">headphones</span>Listening</button>
+              <button id="precisionProgressTab" class="precision-tab" type="button" role="tab" aria-selected="false" aria-controls="precisionProgress" tabindex="-1"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>Progress</button>
             </div>
-
-            <!-- Panel 1: Reading Exam Live Demo -->
-            <div class="v4-mock-body active" id="demoReading" role="tabpanel" aria-labelledby="demoReadingTab">
-              <div class="v4-mock-exam-header">
-                <div class="v4-mock-exam-title">
-                  <strong>IELTS Academic Reading Test 01</strong>
-                  <small>Passage 1 of 3 · 40 Questions</small>
-                </div>
-                <div class="v4-mock-timer">
-                  <span class="material-symbols-outlined" aria-hidden="true">timer</span>
-                  <span>58:40</span>
-                </div>
-              </div>
-
-              <div class="v4-mock-split-pane">
-                <div class="v4-mock-passage-col">
-                  <h4>The Aerodynamics of Avian Flight</h4>
-                  <p><strong>[A]</strong> The evolutionary transition of feathered dinosaurs to modern powered flyers represents one of the most significant biomechanical leaps in vertebrate history.</p>
-                  <p><strong>[B]</strong> Recent wind-tunnel telemetry reveals that early asymmetric proto-feathers functioned primarily as passive vortex generators, increasing lift-to-drag ratios during arboreal gliding.</p>
-                </div>
-                <div class="v4-mock-questions-col">
-                  <div class="v4-mock-q-card">
-                    <span class="v4-mock-q-num">Question 1</span>
-                    <p>Early proto-feathers were initially developed solely for thermal insulation rather than aerodynamic assist.</p>
-                    <div class="v4-mock-options">
-                      <label class="v4-mock-opt"><input type="radio" name="demoQ1" value="TRUE"><span>TRUE</span></label>
-                      <label class="v4-mock-opt active"><input type="radio" name="demoQ1" value="FALSE" checked><span>FALSE</span></label>
-                      <label class="v4-mock-opt"><input type="radio" name="demoQ1" value="NOT GIVEN"><span>NOT GIVEN</span></label>
-                    </div>
-                  </div>
-                  <div class="v4-mock-q-card">
-                    <span class="v4-mock-q-num">Question 2</span>
-                    <p>Wind-tunnel experiments demonstrated that asymmetric feathers increased lift during gliding.</p>
-                    <div class="v4-mock-options">
-                      <label class="v4-mock-opt active"><input type="radio" name="demoQ2" value="TRUE" checked><span>TRUE</span></label>
-                      <label class="v4-mock-opt"><input type="radio" name="demoQ2" value="FALSE"><span>FALSE</span></label>
-                      <label class="v4-mock-opt"><input type="radio" name="demoQ2" value="NOT GIVEN"><span>NOT GIVEN</span></label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="v4-mock-score-float">
-                <span class="material-symbols-outlined" aria-hidden="true">verified</span>
-                <div>
-                  <strong>Example result: 38 / 40</strong>
-                  <small>IELTS Academic Reading · Band 8.5</small>
-                </div>
-              </div>
-            </div>
-
-            <!-- Panel 2: Listening Exam Live Demo -->
-            <div class="v4-mock-body" id="demoListening" role="tabpanel" aria-labelledby="demoListeningTab">
-              <div class="v4-mock-exam-header">
-                <div class="v4-mock-exam-title">
-                  <strong>IELTS Listening Full Test 01</strong>
-                  <small>Part 1 of 4 · Audio Simulation</small>
-                </div>
-                <div class="v4-mock-audio-pill">
-                  <span class="material-symbols-outlined" aria-hidden="true">volume_up</span>
-                  <span>Listening Practice Audio</span>
-                </div>
-              </div>
-
-              <div class="v4-mock-listening-content">
-                <div class="v4-mock-audio-bar">
-                  <span class="material-symbols-outlined" aria-hidden="true">play_circle</span>
-                  <div class="v4-audio-waveform">
-                    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                  </div>
-                  <span>04:12 / 30:00</span>
-                </div>
-                <div class="v4-mock-form-q">
-                  <h5>Customer Accommodation Inquiry</h5>
-                  <div class="v4-mock-form-row">
-                    <span>Contact Name:</span>
-                    <strong>Arthur Pendelton</strong>
-                  </div>
-                  <div class="v4-mock-form-row">
-                    <span>Preferred Room Type:</span>
-                    <input type="text" value="Single En-suite" readonly>
-                  </div>
-                  <div class="v4-mock-form-row">
-                    <span>Maximum Budget:</span>
-                    <input type="text" value="£ 650 / month" readonly>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Panel 3: Score Analytics Live Demo -->
-            <div class="v4-mock-body" id="demoAnalytics" role="tabpanel" aria-labelledby="demoAnalyticsTab">
-              <div class="v4-mock-analytics-head">
-                <div>
-                  <span class="v4-mock-subkicker">STUDENT DASHBOARD</span>
-                  <h4>Performance & Band Trajectory</h4>
-                </div>
-                <span class="v4-mock-delta-badge positive">+1.0 Band Progress</span>
-              </div>
-              <div class="v4-mock-stats-grid">
-                <div class="v4-mock-stat">
-                  <span>Current Best Band</span>
-                  <strong>Band 8.5</strong>
-                  <small>38/40 on Full Test 01</small>
-                </div>
-                <div class="v4-mock-stat">
-                  <span>Average Band</span>
-                  <strong>Band 8.0</strong>
-                  <small>Across 12 attempts</small>
-                </div>
-                <div class="v4-mock-stat">
-                  <span>Completed Tests</span>
-                  <strong>14 Tests</strong>
-                  <small>All answers saved</small>
-                </div>
-              </div>
-              <div class="v4-mock-timeline-row">
-                <div class="v4-timeline-item"><span>Test 01</span><b>Band 7.0</b></div>
-                <div class="v4-timeline-item"><span>Test 02</span><b>Band 7.5</b></div>
-                <div class="v4-timeline-item"><span>Test 03</span><b>Band 8.0</b></div>
-                <div class="v4-timeline-item active"><span>Test 04</span><b>Band 8.5</b></div>
-              </div>
-            </div>
+            <span class="precision-time" aria-label="Example timer, 58 minutes 40 seconds"><span class="material-symbols-outlined" aria-hidden="true">timer</span>58:40</span>
           </div>
+          <section class="precision-panel" id="precisionReading" role="tabpanel" aria-labelledby="precisionReadingTab" tabindex="0">
+            <div class="precision-demo-title"><h2>IELTS Academic Reading Test 01</h2><p>Passage 1 of 3 <span class="precision-example-label">· Interactive example</span></p></div>
+            <div class="precision-reading-grid">
+              <article class="precision-passage" aria-labelledby="precisionPassageTitle">
+                <h3 id="precisionPassageTitle">The Aerodynamics of Avian Flight</h3>
+                <p>Birds have evolved a range of adaptations that make flight possible, including lightweight bones, efficient respiratory systems and specially shaped feathers.</p>
+                <p>These features work together to reduce drag and generate lift, allowing birds to maintain stable flight with minimal energy expenditure.</p>
+              </article>
+              <fieldset class="precision-question">
+                <legend class="sr-only">Reading example question</legend>
+                <p class="precision-question-label">Question 1</p>
+                <p id="precisionQuestionText">Which feature is mentioned as helping birds to reduce drag during flight?</p>
+                <div class="precision-answers" role="radiogroup" aria-labelledby="precisionQuestionText">
+                  <label><input type="radio" name="precisionAnswer" value="A"><span class="precision-answer-letter" aria-hidden="true">A</span><span>Lightweight bones</span></label>
+                  <label><input type="radio" name="precisionAnswer" value="B"><span class="precision-answer-letter" aria-hidden="true">B</span><span>Efficient respiratory systems</span></label>
+                  <label><input type="radio" name="precisionAnswer" value="C"><span class="precision-answer-letter" aria-hidden="true">C</span><span>Specially shaped feathers</span></label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="precision-result"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span><span>Example result · <strong>38 / 40</strong> · Estimated Band 8.5</span></div>
+          </section>
+          <section class="precision-panel" id="precisionListening" role="tabpanel" aria-labelledby="precisionListeningTab" tabindex="0" hidden>
+            <div class="precision-demo-title"><h2>Listening practice</h2><p>Example answer sheet · Part 1 of 4</p></div>
+            <div class="precision-listening-grid">
+              <div class="precision-passage"><h3>Accommodation inquiry</h3><p>Practise following a conversation and identifying the details you need.</p><p>This preview shows the answer sheet. Open Listening practice for full tests with audio.</p><a class="precision-explore" href="/english/materials?skill=listening">Explore Listening tests <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></div>
+              <div class="precision-answer-sheet"><h3>Complete the notes</h3><label>Contact name<input type="text" value="Arthur Pendelton" aria-label="Example contact name"></label><label>Room type<input type="text" placeholder="Enter your answer" aria-label="Example room type"></label><label>Monthly budget<input type="text" placeholder="£" aria-label="Example monthly budget"></label></div>
+            </div>
+            <div class="precision-result"><span class="material-symbols-outlined" aria-hidden="true">headphones</span><span>Listen. Find the details. Review your answers.</span></div>
+          </section>
+          <section class="precision-panel" id="precisionProgress" role="tabpanel" aria-labelledby="precisionProgressTab" tabindex="0" hidden>
+            <div class="precision-demo-title"><h2>See your practice take shape</h2><p>Illustrative progress · not a real student's results</p></div>
+            <div class="precision-progress-stats"><div><span>Best estimated band</span><strong>8.5</strong><small>38 / 40 in Reading</small></div><div><span>Practice attempts</span><strong>4</strong><small>Results in one place</small></div></div>
+            <ol class="precision-history"><li><span>Reading practice 01</span><strong>Band 7.0</strong></li><li><span>Reading practice 02</span><strong>Band 7.5</strong></li><li><span>Reading practice 03</span><strong>Band 8.0</strong></li><li><span>Reading practice 04</span><strong>Band 8.5</strong></li></ol>
+            <div class="precision-result"><span class="material-symbols-outlined" aria-hidden="true">bookmark</span><span>Saved attempts. Clear feedback. Your next step.</span></div>
+          </section>
         </div>
       </div>
     </section>
@@ -242,7 +121,7 @@
       <div class="v4-shell">
         <div class="v4-section-head-centered">
           <p class="v4-kicker">ENGINEERED FOR SERIOUS PREPARATION</p>
-          <h2 id="v4BentoTitle">Practise. Review. Make progress.</h2>
+          <h2 id="v4BentoTitle">A focused way to prepare<span class="precision-blue">.</span></h2>
           <p>Build a study routine around practice tests, clear feedback, and your own progress.</p>
         </div>
 
@@ -423,48 +302,7 @@
     </div>
   </footer>
 
-  <!-- Interactive Demo Tabs Script -->
-  <script>
-    const demoTabs = [...document.querySelectorAll('[data-demo-tab]')];
-    const demoPanels = [...document.querySelectorAll('.v4-mock-body[role="tabpanel"]')];
-    const activateDemoTab = (btn, moveFocus = false) => {
-      demoTabs.forEach(tab => {
-        const selected = tab === btn;
-        tab.classList.toggle('active', selected);
-        tab.setAttribute('aria-selected', String(selected));
-        tab.tabIndex = selected ? 0 : -1;
-      });
-      demoPanels.forEach(panel => panel.classList.toggle('active', panel.id === btn.getAttribute('aria-controls')));
-      if (moveFocus) btn.focus();
-    };
-    demoTabs.forEach((btn, index) => {
-      btn.addEventListener('click', () => activateDemoTab(btn));
-      btn.addEventListener('keydown', event => {
-        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
-        event.preventDefault();
-        let nextIndex = index;
-        if (event.key === 'ArrowRight') nextIndex = (index + 1) % demoTabs.length;
-        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + demoTabs.length) % demoTabs.length;
-        if (event.key === 'Home') nextIndex = 0;
-        if (event.key === 'End') nextIndex = demoTabs.length - 1;
-        activateDemoTab(demoTabs[nextIndex], true);
-      });
-    });
-
-    // Interactive Demo Radio buttons
-    document.querySelectorAll('.v4-mock-opt').forEach(opt => {
-      opt.addEventListener('click', e => {
-        const input = opt.querySelector('input');
-        if (!input) return;
-        const name = input.name;
-        document.querySelectorAll(`.v4-mock-opt input[name="${name}"]`).forEach(radio => {
-          radio.closest('.v4-mock-opt')?.classList.remove('active');
-        });
-        input.checked = true;
-        opt.classList.add('active');
-      });
-    });
-  </script>
+  <script src="/english-precision.js?v=20260909"></script>
 
   <dialog class="onboarding" id="onboarding" aria-labelledby="onboardingTitle">
     <div class="onboarding-top"><span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span><span>IELTS CORE</span><button class="onboarding-skip" type="button">Skip for now</button></div>

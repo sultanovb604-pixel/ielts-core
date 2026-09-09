@@ -1,0 +1,149 @@
+/* Selected Precision Studio hero; scoped to the home page. */
+.precision-home { background:#fff!important; }
+.precision-home [hidden],.precision-home .refined-header [hidden] { display:none!important; }
+.precision-home .refined-header { min-height:92px; padding:20px max(32px,calc((100% - 1424px)/2))!important; }
+.precision-home .refined-header .app-brand { font-size:23px!important; letter-spacing:-.045em; }
+.precision-home .refined-header .app-mark { width:52px; height:40px; background:none; box-shadow:none; }
+.precision-home .refined-header .app-mark img { width:52px; height:auto; max-width:100%; object-fit:contain; }
+.precision-home .refined-header .app-nav { gap:28px!important; }
+.precision-home .refined-header .app-nav a { font-size:16px!important; }
+.precision-home .refined-header .app-actions .button { min-height:50px; font-size:16px!important; }
+.precision-home .refined-header .plain-link { font-size:15px; text-transform:uppercase; }
+.precision-shell { width:calc(100% - 80px); max-width:1460px; margin:0 auto; }
+.precision-hero { position:relative; isolation:isolate; padding:84px 0 74px; background:#fff url('/assets/precision-hero-backdrop.png') no-repeat right center; background-size:auto 100%; }
+.precision-grid { display:grid; grid-template-columns:minmax(0,.79fr) minmax(0,1fr); gap:64px; align-items:center; }
+.precision-copy { min-width:0; align-self:start; padding-top:16px; }
+.precision-home .precision-eyebrow { display:inline-flex; align-items:center; gap:9px; margin:0 0 34px; padding:7px 14px; border:1px solid #b8d1ff; border-radius:30px; background:#eaf2ff; color:#1468f3; font-size:13px; font-weight:700; line-height:1.25; letter-spacing:.085em; text-transform:uppercase; }
+.precision-eyebrow .material-symbols-outlined { font-size:10px; font-variation-settings:'FILL' 1; }
+.precision-home .precision-copy h1 { margin:0 0 30px; color:#0c162a; font-size:clamp(42px,4.38vw,80px)!important; font-weight:800!important; line-height:1.12!important; letter-spacing:-.06em!important; }
+.precision-home .precision-copy h1 span,.precision-blue { color:#1468f3; }
+.precision-home .precision-description { margin:0; color:#62748e; font-size:23px; line-height:1.55; font-weight:400; max-width:620px; }
+.precision-actions { display:flex; align-items:center; gap:30px; margin-top:34px; }
+.precision-home .precision-actions .button { display:inline-flex; align-items:center; justify-content:center; gap:16px; padding:17px 24px; min-height:58px; font-size:18px; border-radius:8px!important; white-space:nowrap; }
+.precision-home .precision-explore { display:inline-flex; align-items:center; gap:12px; text-decoration:none; font-size:18px; font-weight:650; color:#1468f3; }
+.precision-explore:hover { text-decoration:underline; text-underline-offset:4px; }
+.precision-explore .material-symbols-outlined { font-size:27px; }
+.precision-benefits { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin:30px 0 0; padding:22px 0 0; list-style:none; border-top:1px solid #dce4ee; }
+.precision-benefits li { display:flex; align-items:center; gap:10px; color:#243d5f; font-size:14px; line-height:1.5; white-space:nowrap; }
+.precision-benefits li+li { border-left:1px solid #dce4ee; padding-left:20px; }
+.precision-benefits .material-symbols-outlined { color:#1468f3; font-size:25px; }
+.precision-demo { min-width:0; overflow:hidden; background:#fff; border:1px solid #e3e8f0; border-radius:16px; box-shadow:0 22px 50px rgba(21,42,70,.08); }
+.precision-demo-toolbar { display:flex; align-items:center; gap:8px; background:#101d33; padding:8px 12px 0; }
+.precision-tabs { display:flex; flex:1; min-width:0; gap:4px; }
+.precision-tab { display:flex; justify-content:center; align-items:center; flex:1; gap:12px; padding:16px 12px; border:0; border-bottom:3px solid transparent; background:none; color:#bdcadd; cursor:pointer; font:600 17px 'DM Sans',sans-serif; }
+.precision-tab[aria-selected=true] { background:#1e304c; color:white; border-bottom-color:#1468f3; border-radius:6px 6px 0 0; }
+.precision-tab:hover { color:white; background:#1e304c; }
+.precision-tab .material-symbols-outlined { font-size:23px; }
+.precision-time { display:inline-flex; align-items:center; gap:6px; flex:0 0 auto; color:#64a7ff; font-size:16px; font-weight:700; padding:6px 10px; margin-bottom:8px; border-radius:20px; background:#182d4a; }
+.precision-time .material-symbols-outlined { font-size:21px; }
+.precision-panel { padding:22px 24px 0; min-height:447px; }
+.precision-home .precision-demo h2 { margin:0; font-family:'DM Sans',sans-serif!important; font-size:19px; font-weight:750; letter-spacing:-.02em!important; line-height:1.4; }
+.precision-demo-title { margin-bottom:12px; }
+.precision-demo-title p { margin:3px 0 0; color:#6b7f9d; font-size:15px; line-height:1.5!important; }
+.precision-example-label { font-size:12px; }
+.precision-reading-grid,.precision-listening-grid { display:grid; grid-template-columns:1fr 1.03fr; gap:12px; }
+.precision-passage { min-width:0; background:#f8fafc; border:1px solid #dce4ee; border-radius:9px; padding:18px; }
+.precision-home .precision-demo h3 { margin:0 0 12px; color:#15253e; font:700 18px/1.4 'DM Sans',sans-serif!important; letter-spacing:-.025em!important; }
+.precision-passage p { color:#556983; font-size:16px; line-height:1.52!important; margin:0 0 20px; }
+.precision-passage p:last-child { margin-bottom:0; }
+.precision-question { min-width:0; margin:0; padding:14px; border:1px solid #dce4ee; border-radius:9px; }
+.precision-question .precision-question-label { color:#1468f3; font-size:15px; font-weight:650; margin:0 0 4px; }
+.precision-question>p { color:#526783; font-size:16px; line-height:1.6; margin:0 0 12px; }
+.precision-answers { display:grid; gap:8px; }
+.precision-answers label { display:flex; align-items:center; gap:10px; position:relative; min-height:51px; padding:7px 10px; border:1px solid #d2dfef; border-radius:7px; cursor:pointer; color:#536781; font-size:15px; line-height:1.35; transition:background .15s,border-color .15s; }
+.precision-answers input { position:absolute; width:1px; height:1px; opacity:0; }
+.precision-answer-letter { display:grid; place-items:center; flex:0 0 32px; height:32px; border:1px solid #c6d5e9; border-radius:50%; background:#eef4fc; color:#324966; font-weight:700; }
+.precision-answers label:has(input:checked) { border-color:#1468f3; background:#edf4ff; color:#174a95; }
+.precision-answers label:has(input:checked) .precision-answer-letter { color:white; background:#1468f3; border-color:#1468f3; }
+.precision-answers label:has(input:focus-visible) { outline:3px solid #1468f3; outline-offset:3px; }
+.precision-answers label:hover { background:#f1f6ff; border-color:#8db6f5; }
+.precision-result { display:flex; align-items:center; justify-content:center; gap:12px; min-height:62px; margin-top:20px; border-top:1px solid #dce4ee; color:#526783; font-size:16px; text-align:center; }
+.precision-result strong,.precision-result>.material-symbols-outlined { color:#1468f3; }
+.precision-result>.material-symbols-outlined { font-size:26px; flex:0 0 auto; }
+.precision-time[hidden],.precision-panel[hidden] { display:none!important; }
+.precision-tab:focus-visible,.precision-panel:focus-visible { outline:3px solid #65a8ff; outline-offset:-4px; }
+.precision-answer-sheet { padding:14px; }
+.precision-answer-sheet label { display:grid; gap:5px; font-size:13px; color:#526783; margin:0 0 12px; }
+.precision-answer-sheet input { width:100%; min-width:0; padding:10px; border:1px solid #cbd8e9; border-radius:7px; background:white; font:16px 'DM Sans',sans-serif; color:#13233b; }
+.precision-progress-stats { display:grid; grid-template-columns:1fr 1fr; gap:24px; padding:12px 0 18px; }
+.precision-progress-stats>div { display:grid; gap:4px; }
+.precision-progress-stats span,.precision-progress-stats small { color:#62748e; font-size:14px; }
+.precision-progress-stats strong { color:#1468f3; font:750 38px 'DM Sans',sans-serif; }
+.precision-history { list-style:none; padding:0; margin:0; }
+.precision-history li { display:flex; justify-content:space-between; padding:12px 0; font-size:15px; border-top:1px solid #e7edf5; color:#526783; }
+.precision-home .v4-bento-section { background:#f3f8fe!important; padding-top:42px!important; }
+.precision-home .v4-bento-section .v4-kicker { display:none; }
+.precision-home #v4BentoTitle { font-size:42px; letter-spacing:-.055em!important; }
+.precision-home .v4-cta-box { padding:44px 48px!important; }
+.precision-home .v4-cta-content h2 { color:#fff!important; }
+.precision-home .v4-cta-content .v4-kicker { color:#8bbdff!important; }
+.precision-home .v4-cta-content p:not(.v4-kicker) { color:#c4d4eb!important; }
+.precision-home .v4-cta-actions { flex:0 0 auto; }
+.precision-home .v4-cta-button { white-space:nowrap; }
+.precision-home .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+@media(max-width:1500px) {
+ .precision-grid { gap:40px; grid-template-columns:minmax(0,.8fr) minmax(0,1fr); }
+ .precision-home .precision-copy h1 { font-size:clamp(40px,4.16vw,63px)!important; }
+ .precision-home .precision-description { font-size:19px; }
+ .precision-actions { gap:22px; }
+ .precision-home .precision-actions .button,.precision-home .precision-explore { font-size:16px; }
+ .precision-home .precision-actions .button { padding:16px 20px; }
+ .precision-benefits li { font-size:12px; gap:6px; }
+ .precision-benefits li+li { padding-left:12px; }
+ .precision-panel { padding:20px 18px 0; }
+ .precision-passage { padding:16px; }
+ .precision-passage p,.precision-question>p { font-size:14px; }
+ .precision-home .precision-demo h3 { font-size:16px!important; }
+ .precision-answers label { font-size:13px; min-height:49px; padding:7px; gap:8px; }
+ .precision-tab { font-size:15px; gap:8px; padding:18px 9px; }
+ .precision-result { font-size:14px; }
+}
+@media(max-width:1150px) {
+ .precision-home .refined-header { padding:16px 28px!important; }
+ .precision-grid { grid-template-columns:1fr; gap:44px; max-width:790px; }
+ .precision-hero { padding:52px 0 58px; background-size:auto 70%; background-position:right bottom; }
+ .precision-copy { max-width:660px; margin:auto; text-align:center; padding-top:0; }
+ .precision-home .precision-copy h1 { font-size:clamp(42px,6.8vw,70px)!important; }
+ .precision-home .precision-description { font-size:21px; margin:auto; }
+ .precision-actions { justify-content:center; }
+ .precision-benefits { justify-content:center; gap:20px; }
+ .precision-panel { min-height:420px; }
+}
+@media(max-width:600px) {
+ .precision-home .v4-cta-box { padding:28px 24px!important; }
+ .precision-home .refined-header { min-height:74px; padding:12px 20px!important; }
+ .precision-home .refined-header .app-brand { font-size:19px!important; }
+ .precision-home .refined-header .app-mark,.precision-home .refined-header .app-mark img { width:40px; }
+ .precision-shell { width:calc(100% - 40px); }
+ .precision-hero { padding:36px 0 40px; }
+ .precision-grid { gap:34px; }
+ .precision-home .precision-eyebrow { font-size:10px; padding:7px 10px; letter-spacing:.055em; margin-bottom:24px; }
+ .precision-home .precision-copy h1 { font-size:clamp(32px,8.8vw,50px)!important; margin-bottom:22px; letter-spacing:-.06em!important; }
+ .precision-home .precision-description { font-size:16px; line-height:1.6; }
+ .precision-actions { flex-direction:column; gap:18px; margin-top:26px; }
+ .precision-home .precision-actions .button { width:100%; min-height:54px; }
+ .precision-home .precision-explore { font-size:16px; }
+ .precision-benefits { justify-content:center; gap:10px 14px; margin-top:24px; padding-top:18px; }
+ .precision-benefits li { font-size:11px; gap:5px; }
+ .precision-benefits li+li { padding-left:0; border:0; }
+ .precision-benefits .material-symbols-outlined { font-size:19px; }
+ .precision-demo { border-radius:12px; }
+ .precision-demo-toolbar { padding:6px 5px 0; }
+ .precision-tab { padding:14px 6px; font-size:12px; gap:5px; }
+ .precision-tab .material-symbols-outlined { font-size:18px; }
+ .precision-time { display:none; }
+ .precision-panel { min-height:0; padding:18px 14px 0; }
+ .precision-home .precision-demo h2 { font-size:16px; }
+ .precision-demo-title p { font-size:13px; }
+ .precision-example-label { display:none; }
+ .precision-reading-grid,.precision-listening-grid { grid-template-columns:1fr; gap:12px; }
+ .precision-passage { padding:16px; }
+ .precision-passage p { font-size:14px; line-height:1.6; margin-bottom:14px; }
+ .precision-question { padding:14px; }
+ .precision-question>p { font-size:14px; }
+ .precision-answers label { font-size:14px; min-height:48px; }
+ .precision-result { font-size:12px; gap:8px; min-height:64px; margin-top:16px; }
+ .precision-result>.material-symbols-outlined { font-size:22px; }
+ .precision-home #v4BentoTitle { font-size:29px; }
+}
+@media(prefers-reduced-motion:reduce) { .precision-home * { transition:none!important; } }
