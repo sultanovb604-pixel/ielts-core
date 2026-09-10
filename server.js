@@ -504,23 +504,6 @@ function readReadingCatalog(forceRefresh = false) {
         questionTypes.push("Notes Completion");
       }
 
-      // Determine Volume / Pack Name
-      let packName = "Volume 10";
-      const camMatch = entry.name.match(/(?:cambridge|cam)\s*(\d+)/i);
-      const volMatch = entry.name.match(/(?:volume|vol)\s*(\d+)/i);
-      const packMatch = entry.name.match(/(?:pack)\s*(\d+)/i);
-      if (camMatch) {
-        packName = `Cambridge ${camMatch[1]}`;
-      } else if (volMatch) {
-        packName = `Volume ${volMatch[1]}`;
-      } else if (packMatch) {
-        packName = `Pack ${packMatch[1]}`;
-      } else {
-        const packs = ["Volume 10", "Cambridge 19", "Pack 6", "Cambridge 18", "Volume 9", "Cambridge 17"];
-        const charSum = entry.name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
-        packName = packs[charSum % packs.length];
-      }
-
       return {
         id,
         sourceTitle: cleanReadingTopic(entry.name, source),
@@ -532,7 +515,6 @@ function readReadingCatalog(forceRefresh = false) {
         questionCount,
         passageCount,
         passageNumber,
-        packName,
         questionTypes,
         materialKind,
         collection: materialKind === "full-test" ? "full-test" : "practice",
@@ -550,17 +532,15 @@ function readReadingCatalog(forceRefresh = false) {
     item.description = "Complete computer-delivered practice under real exam conditions.";
   });
 
-  let passageCounter = 1;
   catalog.filter(item => item.materialKind !== "full-test").forEach(item => {
     const fallback = item.materialKind === "skill-practice" ? "Matching Headings" : "Academic passage";
     const topic = item.sourceTitle || fallback;
-    const pNum = item.passageNumber || 1;
-    const testNum = Math.ceil(passageCounter / 3);
-    item.title = `Test ${testNum} · P${pNum}: ${topic}`;
+    item.title = item.materialKind === "skill-practice"
+      ? `IELTS Reading Skill Practice — ${topic}`
+      : `IELTS Reading Passage — ${topic}`;
     item.description = item.materialKind === "skill-practice"
       ? "Focused question-type practice for targeted improvement."
       : "Single-passage computer-delivered practice.";
-    passageCounter += 1;
   });
   const result = catalog.sort((a, b) => Number(b.free) - Number(a.free) || a.title.localeCompare(b.title, "en", { numeric: true }));
   cachedReadingCatalog = result;

@@ -32,16 +32,13 @@ function readListeningCatalog(forceRefresh = false) {
   try {
     const raw = JSON.parse(fs.readFileSync(LISTENING_CATALOG_FILE, "utf8"));
     if (!Array.isArray(raw)) return [];
-    const packs = ["Volume 10", "Cambridge 19", "Pack 6", "Cambridge 18", "Volume 9", "Cambridge 17"];
     const catalog = raw.map((item, index) => {
       const qTypes = item.questionTypes && item.questionTypes.length
         ? item.questionTypes
         : ["Note Completion", "Form Completion", "Multiple Choice"];
-      const pack = item.packName || packs[index % packs.length];
       const partNum = item.partCount === 1 || item.partNumber ? (item.partNumber || (index % 4) + 1) : null;
       return {
         ...item,
-        packName: pack,
         partNumber: partNum,
         questionTypes: qTypes,
         href: `/english/listening-exam?id=${encodeURIComponent(item.id)}`

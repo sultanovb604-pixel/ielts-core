@@ -11,7 +11,6 @@
   const filterStatus = document.querySelector('#filterStatus');
   const filterType = document.querySelector('#filterType');
   const filterPlan = document.querySelector('#filterPlan');
-  const filterPack = document.querySelector('#filterPack');
 
   // Sidebar & Layout elements
   const sidebar = document.querySelector('#vxCatalogSidebar');
@@ -43,7 +42,6 @@
   let selectedStatus = params.get('status') || 'all';
   let selectedType = params.get('type') || 'all';
   let selectedPlan = params.get('plan') || 'all';
-  let selectedPack = params.get('pack') || 'all';
 
   let resources = [];
   const token = localStorage.getItem('vortex-english-token') || '';
@@ -57,7 +55,6 @@
   if (filterStatus) filterStatus.value = selectedStatus;
   if (filterType) filterType.value = selectedType;
   if (filterPlan) filterPlan.value = selectedPlan;
-  if (filterPack) filterPack.value = selectedPack;
 
   const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -219,7 +216,6 @@
     selectedStatus === 'all' ? url.searchParams.delete('status') : url.searchParams.set('status', selectedStatus);
     selectedType === 'all' ? url.searchParams.delete('type') : url.searchParams.set('type', selectedType);
     selectedPlan === 'all' ? url.searchParams.delete('plan') : url.searchParams.set('plan', selectedPlan);
-    selectedPack === 'all' ? url.searchParams.delete('pack') : url.searchParams.set('pack', selectedPack);
     history.replaceState({}, '', url);
   };
 
@@ -288,17 +284,11 @@
       if (selectedPlan === 'free') matchesPlan = item.access === 'free' || item.free === true;
       else if (selectedPlan === 'premium') matchesPlan = item.access === 'premium' && !item.free;
 
-      // Pack filter
-      let matchesPack = true;
-      if (selectedPack !== 'all') {
-        matchesPack = (item.packName || '').toLowerCase().includes(selectedPack.toLowerCase());
-      }
-
       // Query search
-      const searchText = `${item.title || ''} ${item.description || ''} ${item.sourceTitle || ''} ${item.packName || ''} ${(item.questionTypes || []).join(' ')}`.toLocaleLowerCase('en');
+      const searchText = `${item.title || ''} ${item.description || ''} ${item.sourceTitle || ''} ${(item.questionTypes || []).join(' ')}`.toLocaleLowerCase('en');
       const matchesQuery = !normalized || searchText.includes(normalized);
 
-      return matchesSkill && matchesColl && matchesPassage && matchesStatus && matchesType && matchesPlan && matchesPack && matchesQuery;
+      return matchesSkill && matchesColl && matchesPassage && matchesStatus && matchesType && matchesPlan && matchesQuery;
     });
 
     // Update Result Count
@@ -317,7 +307,7 @@
     }
 
     // Has Active Filters
-    const hasActiveFilters = selectedPassage !== 'all' || selectedStatus !== 'all' || selectedType !== 'all' || selectedPlan !== 'all' || selectedPack !== 'all' || Boolean(normalized);
+    const hasActiveFilters = selectedPassage !== 'all' || selectedStatus !== 'all' || selectedType !== 'all' || selectedPlan !== 'all' || Boolean(normalized);
     if (clearFiltersBtn) {
       clearFiltersBtn.hidden = !hasActiveFilters;
     }
@@ -340,7 +330,20 @@
       const isFree = item.access === 'free' || item.free === true;
       const isLocked = item.locked;
       const isCompleted = item.completed;
-      const pack = item.packName || 'Volume 10';
+      const formatTag = item.materialKind === 'full-test' || inferCollection(item) === 'full-test'
+        ? 'Full Test'
+        : item.skill === 'listening'
+          ? 'Listening'
+          : item.skill === 'writing'
+            ? 'Writing'
+            : item.skill === 'speaking'
+              ? 'Speaking'
+              : 'Reading';
+
+      const metaSubtitle = item.questionCount
+        ? `${item.questionCount} Questions · ${item.skill === 'listening' ? 'Audio CDI' : 'Timed'}`
+        : (item.formatLabel || 'Practice');
+
       const pNum = item.passageNumber || (item.skill === 'listening' ? item.partNumber : 1) || 1;
 
       // Passage / Section badge text
@@ -420,14 +423,14 @@
             </div>
             <div class="vx-card-graphic-center">
             <span class="material-symbols-outlined vx-card-center-icon" aria-hidden="true">${centerIcon}</span>
-              <span class="vx-card-volume-label">${escape(pack)}</span>
+              <span class="vx-card-volume-label">${escape(formatTag)}</span>
             </div>
           </div>
           <div class="vx-card-body">
             <h2 class="vx-card-title">${escape(item.title)}</h2>
             <div class="vx-card-sub-pack">
-              <span class="material-symbols-outlined" style="font-size:15px;color:#94a3b8;">menu_book</span>
-              <span>${escape(pack)}</span>
+              <span class="material-symbols-outlined" style="font-size:15px;color:#94a3b8;">quiz</span>
+              <span>${escape(metaSubtitle)}</span>
             </div>
             <div class="vx-card-qtypes">
               ${visibleChips}
@@ -444,7 +447,6 @@
     selectedStatus = 'all';
     selectedType = 'all';
     selectedPlan = 'all';
-    selectedPack = 'all';
     query = '';
     if (search) search.value = '';
     if (searchClear) searchClear.hidden = true;
@@ -452,7 +454,6 @@
     if (filterStatus) filterStatus.value = 'all';
     if (filterType) filterType.value = 'all';
     if (filterPlan) filterPlan.value = 'all';
-    if (filterPack) filterPack.value = 'all';
     syncUrl();
     render();
   };
@@ -496,14 +497,6 @@
   if (filterPlan) {
     filterPlan.addEventListener('change', () => {
       selectedPlan = filterPlan.value;
-      syncUrl();
-      render();
-    });
-  }
-
-  if (filterPack) {
-    filterPack.addEventListener('change', () => {
-      selectedPack = filterPack.value;
       syncUrl();
       render();
     });
