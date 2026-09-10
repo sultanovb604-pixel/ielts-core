@@ -228,6 +228,7 @@ function serveAudioFile(req, res, filePath) {
 function listeningPersistenceMarkup(material, user, requestedMode) {
   const totalQuestions = Number(material.questionCount) || 40;
   const isFullTest = material.materialKind === "full-test" || totalQuestions === 40;
+  const isMock = requestedMode === "mock";
   const isPractice = requestedMode === "practice" || (!isFullTest && requestedMode !== "real");
   const modeLabel = isPractice ? (isFullTest ? "Practice Mode" : "Section Drill") : "Real Exam";
   const modeClass = isPractice ? "practice-mode" : "real-exam";
@@ -282,6 +283,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   }
 
   /* Eliminate all greenish / tinted background boxes */
+    ${isMock ? "#deliver-button, #deliver-btn, .footer__deliverButton___3FM07, .deliverButton, #submitBtn, .submit-btn, #submit-btn, #vxHeaderSubmitBtn, .header, .cdi-header { display: none !important; pointer-events: none !important; }" : ""}
   .notes-completion-block,
   .notes-box,
   .example-box,
@@ -568,7 +570,16 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   .header-brand,
   #header,
   .part-header,
-  .hl-context-menu {
+  .hl-context-menu,
+  #highlightToolbar,
+  .highlight-toolbar,
+  #toolbar-selection-btns,
+  #toolbar-highlight-btns,
+  #highlightBtn,
+  #selection-toolbar,
+  #noteInputOverlay,
+  #notesPanel,
+  .q-badge {
     display: none !important;
     height: 0 !important;
     min-height: 0 !important;
@@ -1173,6 +1184,310 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     border-color: #334155;
   }
 
+  /* Detailed Answer Key Review Section */
+  .vx-res-answers-table-wrap {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+  }
+  body.night-mode .vx-res-answers-table-wrap {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .vx-res-table-filters {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .vx-filter-tab {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1.5px solid transparent;
+    transition: all 0.15s ease;
+  }
+  body.night-mode .vx-filter-tab {
+    background: #0f172a;
+    color: #94a3b8;
+  }
+  .vx-filter-tab:hover {
+    transform: translateY(-1px);
+  }
+  .vx-filter-tab.active {
+    background: #eff6ff;
+    color: #1468f3;
+    border-color: #bfdbfe;
+  }
+  body.night-mode .vx-filter-tab.active {
+    background: #1e3a8a;
+    color: #93c5fd;
+    border-color: #3b82f6;
+  }
+  .vx-filter-tab.mistakes.active {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+  }
+  body.night-mode .vx-filter-tab.mistakes.active {
+    background: #450a0a;
+    color: #fca5a5;
+    border-color: #991b1b;
+  }
+  .vx-filter-tab.correct.active {
+    background: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+  body.night-mode .vx-filter-tab.correct.active {
+    background: #052e16;
+    color: #86efac;
+    border-color: #166534;
+  }
+
+  .vx-res-answers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 12px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 6px 4px 6px 0;
+    margin-top: 10px;
+  }
+  .vx-ans-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+    transition: all 0.15s ease;
+  }
+  body.night-mode .vx-ans-card {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  .vx-ans-card.is-correct {
+    border-left: 4px solid #10b981;
+  }
+  .vx-ans-card.is-incorrect {
+    border-left: 4px solid #ef4444;
+  }
+  .vx-ans-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .vx-ans-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+  }
+  .vx-ans-badge.correct {
+    background: #dcfce7;
+    color: #166534;
+  }
+  body.night-mode .vx-ans-badge.correct {
+    background: #064e3b;
+    color: #6ee7b7;
+  }
+  .vx-ans-badge.incorrect {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  body.night-mode .vx-ans-badge.incorrect {
+    background: #450a0a;
+    color: #fca5a5;
+  }
+  .vx-ans-data-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12.5px;
+  }
+  .vx-ans-field-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  body.night-mode .vx-ans-field-label {
+    color: #94a3b8;
+  }
+  .vx-ans-user-val {
+    font-weight: 700;
+    color: #0f172a;
+    word-break: break-word;
+  }
+  body.night-mode .vx-ans-user-val {
+    color: #f8fafc;
+  }
+  .vx-ans-user-val.empty {
+    color: #94a3b8;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .vx-ans-correct-val {
+    font-weight: 800;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #a7f3d0;
+    display: inline-block;
+    word-break: break-word;
+    font-size: 12.5px;
+  }
+  body.night-mode .vx-ans-correct-val {
+    background: #064e3b;
+    color: #6ee7b7;
+    border-color: #047857;
+  }
+  .vx-ans-jump-btn {
+    background: none;
+    border: none;
+    color: #1468f3;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 0 0 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+  }
+  .vx-ans-jump-btn:hover {
+    text-decoration: underline;
+  }
+
+  /* Sticky Review Banner & Inline Review Badges */
+  .vx-review-sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 12px 24px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .vx-rsb-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .vx-rsb-badge {
+    background: #1468f3;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+  }
+  .vx-rsb-score {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .vx-rsb-hint {
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  .vx-rsb-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .vx-rsb-btn {
+    padding: 7px 15px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+  }
+  .vx-rsb-btn.primary {
+    background: #10b981;
+    color: #ffffff;
+  }
+  .vx-rsb-btn.primary:hover {
+    background: #059669;
+  }
+  .vx-rsb-btn.secondary {
+    background: #334155;
+    color: #f8fafc;
+  }
+  .vx-rsb-btn.secondary:hover {
+    background: #475569;
+  }
+
+  /* Inline Feedback under Exam Questions in Review Mode */
+  .vx-inline-feedback {
+    display: block;
+    margin: 8px 0;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+  }
+  .vx-inline-feedback.correct {
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    color: #166534;
+  }
+  .vx-inline-feedback.incorrect {
+    background: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    color: #991b1b;
+  }
+  body.night-mode .vx-inline-feedback.correct {
+    background: #064e3b;
+    border-color: #047857;
+    color: #6ee7b7;
+  }
+  body.night-mode .vx-inline-feedback.incorrect {
+    background: #450a0a;
+    border-color: #991b1b;
+    color: #fca5a5;
+  }
+  .vx-inline-feedback strong {
+    font-weight: 800;
+  }
+  .vx-review-input-correct {
+    border-color: #10b981 !important;
+    background-color: #f0fdf4 !important;
+  }
+  .vx-review-input-incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+  }
+
   .vx-btn-modal-secondary {
     min-height: 40px !important;
     padding: 0 18px !important;
@@ -1583,6 +1898,181 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       gap: 6px;
     }
   }
+
+  /* ==========================================================================
+     Authentic IELTS CDI Highlight & Notes System
+     ========================================================================== */
+  .ielts-highlight {
+    background-color: #ffe066 !important;
+    color: #111827 !important;
+    padding: 1px 2px;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    cursor: pointer;
+  }
+  body.night-mode .ielts-highlight,
+  html[data-theme="dark"] .ielts-highlight {
+    background-color: #ffd700 !important;
+    color: #000000 !important;
+  }
+  .ielts-note-highlight {
+    background-color: #fef08a !important;
+    color: #111827 !important;
+    border-bottom: 2px solid #ca8a04 !important;
+    padding: 1px 2px;
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+  }
+  body.night-mode .ielts-note-highlight,
+  html[data-theme="dark"] .ielts-note-highlight {
+    background-color: #fde047 !important;
+    color: #000000 !important;
+    border-bottom-color: #eab308 !important;
+  }
+  .ielts-note-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 240px;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 100001;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .ielts-note-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #0f172a;
+  }
+  .ielts-note-highlight:hover .ielts-note-tooltip {
+    opacity: 1;
+  }
+
+  /* Floating Selection Popover */
+  .ielts-selection-toolbar {
+    position: absolute;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    pointer-events: auto;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  body.night-mode .ielts-selection-toolbar {
+    background: #1e293b;
+    border-color: #475569;
+  }
+  .ielts-tool-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    line-height: 1;
+  }
+  .ielts-tool-btn:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .ielts-tool-btn.btn-clear:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+  }
+
+  /* Authentic Right-Click Context Menu */
+  .ielts-context-menu {
+    position: fixed;
+    z-index: 100000;
+    display: none;
+    flex-direction: column;
+    min-width: 140px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    padding: 4px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  body.night-mode .ielts-context-menu,
+  html[data-theme="dark"] .ielts-context-menu {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+  .ielts-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 12px;
+    border: none;
+    background: transparent;
+    color: #1e293b;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  body.night-mode .ielts-menu-item,
+  html[data-theme="dark"] .ielts-menu-item {
+    color: #f8fafc;
+  }
+  .ielts-menu-item:hover {
+    background: #f1f5f9;
+  }
+  body.night-mode .ielts-menu-item:hover,
+  html[data-theme="dark"] .ielts-menu-item:hover {
+    background: #334155;
+  }
+  .ielts-menu-item.clear {
+    color: #dc2626;
+  }
+  .ielts-menu-item.clear:hover {
+    background: #fef2f2;
+  }
+  body.night-mode .ielts-menu-item.clear {
+    color: #fca5a5;
+  }
+  body.night-mode .ielts-menu-item.clear:hover {
+    background: rgba(220, 38, 38, 0.2);
+  }
+  .ielts-menu-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 3px 0;
+  }
+  body.night-mode .ielts-menu-divider,
+  html[data-theme="dark"] .ielts-menu-divider {
+    background: #334155;
+  }
 </style>
 
 <!-- Audio Element -->
@@ -1790,6 +2280,26 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       </div>
     </div>
 
+    <!-- Complete Answers & Explanations Review Sheet -->
+    <div class="vx-res-answers-table-wrap" id="vxListeningResultAnswersTableWrap">
+      <div class="vx-res-section-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span>Detailed Answer Key & Review</span>
+          <span style="font-size:12px;font-weight:600;color:#64748b;text-transform:none;">(All Official Answers)</span>
+        </div>
+        <!-- Filter Tabs -->
+        <div class="vx-res-table-filters" role="tablist" aria-label="Filter listening answer results">
+          <button type="button" class="vx-filter-tab active" data-res-filter="all">All (<span id="vxListeningFilterAllCount">--</span>)</button>
+          <button type="button" class="vx-filter-tab mistakes" data-res-filter="mistakes">Mistakes (<span id="vxListeningFilterMistakesCount">--</span>)</button>
+          <button type="button" class="vx-filter-tab correct" data-res-filter="correct">Correct (<span id="vxListeningFilterCorrectCount">--</span>)</button>
+        </div>
+      </div>
+
+      <div class="vx-res-answers-grid" id="vxListeningResultAnswersGrid">
+        <!-- Injected dynamically with each question, your answer, and official answer -->
+      </div>
+    </div>
+
     <!-- Bottom Action Bar -->
     <div class="vx-res-footer-actions">
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -1797,8 +2307,9 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right:5px;vertical-align:-2px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           <span>Audio Transcript</span>
         </button>
-        <button type="button" class="vx-btn-modal-disabled" id="vxCloseModalReviewBtn" disabled title="Detailed review coming soon">
-          Review Mistakes (Soon)
+        <button type="button" class="vx-btn-modal-primary" id="vxCloseModalReviewBtn" style="background:#1468f3;color:#ffffff;border-color:#1468f3;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;vertical-align:-2px"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Review Answers in Test</span>
         </button>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -1809,6 +2320,60 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- Injected Authentic IELTS CDI Selection Toolbar -->
+<div id="ieltsSelectionToolbar" class="ielts-selection-toolbar" role="toolbar" aria-label="Text Highlight and Note Actions">
+  <button type="button" id="ieltsHlBtn" class="ielts-tool-btn" title="Highlight selection">
+    <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ffe066;border:1px solid #d97706;"></span>
+    <span>Highlight</span>
+  </button>
+  <button type="button" id="ieltsNoteBtn" class="ielts-tool-btn" title="Add note">
+    <span>📝 Notes</span>
+  </button>
+  <button type="button" id="ieltsClearBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear highlight">
+    <span>Clear</span>
+  </button>
+  <button type="button" id="ieltsClearAllBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear all highlights">
+    <span>Clear all</span>
+  </button>
+</div>
+
+<!-- Injected Authentic IELTS CDI Right-Click Context Menu -->
+<div id="ieltsContextMenu" class="ielts-context-menu" role="menu" aria-label="IELTS Exam Options">
+  <button type="button" id="ieltsCtxHlBtn" class="ielts-menu-item" role="menuitem">
+    <span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#ffe066;border:1px solid #d97706;"></span>
+    <span>Highlight</span>
+  </button>
+  <button type="button" id="ieltsCtxNoteBtn" class="ielts-menu-item" role="menuitem">
+    <span>📝 Notes</span>
+  </button>
+  <div id="ieltsCtxDivider" class="ielts-menu-divider" style="display:none;"></div>
+  <button type="button" id="ieltsCtxClearBtn" class="ielts-menu-item clear" style="display:none;" role="menuitem">
+    <span>✕ Clear</span>
+  </button>
+  <button type="button" id="ieltsCtxClearAllBtn" class="ielts-menu-item clear" style="display:none;" role="menuitem">
+    <span>⊘ Clear all</span>
+  </button>
+</div>
+
+<!-- Injected Authentic IELTS CDI Note Modal -->
+<div id="ieltsNoteModal" class="vx-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="ieltsNoteModalTitle">
+  <div class="vx-modal-card ielts-note-card" style="max-width:440px;background:#ffffff;border-radius:12px;padding:20px;box-shadow:0 12px 36px rgba(0,0,0,0.25);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <h3 id="ieltsNoteModalTitle" style="margin:0;font-size:16px;display:flex;align-items:center;gap:6px;color:#0f172a;">
+        <span>📝 Candidate Note</span>
+      </h3>
+      <button type="button" id="ieltsNoteCloseX" style="border:none;background:none;font-size:20px;cursor:pointer;color:#64748b;line-height:1;">&times;</button>
+    </div>
+    <p id="ieltsNoteSnippet" style="font-size:12px;font-style:italic;color:#64748b;margin:0 0 10px;padding:6px 10px;background:#f8fafc;border-radius:6px;border-left:3px solid #f59e0b;"></p>
+    <textarea id="ieltsNoteText" placeholder="Type your observation or keyword note here..." style="width:100%;box-sizing:border-box;min-height:90px;padding:10px;border-radius:8px;border:1px solid #cbd5e1;font-family:inherit;font-size:13px;resize:vertical;"></textarea>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+      <button type="button" id="ieltsNoteDeleteBtn" class="vx-submit-header-btn" style="color:#dc2626;display:none;margin-right:auto;">Delete note</button>
+      <button type="button" id="ieltsNoteCancelBtn" class="vx-submit-header-btn">Cancel</button>
+      <button type="button" id="ieltsNoteSaveBtn" class="vx-submit-header-btn" style="background:#1468f3;color:#ffffff;border-color:#1468f3;">Save note</button>
+    </div>
   </div>
 </div>
 
@@ -2100,6 +2665,18 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     return 'No Band · Incomplete Attempt';
   }
 
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  var submittedListeningAnswers = [];
+  var currentListeningAttempt = null;
+
   function showVerifiedResult(attempt) {
     var modal = document.getElementById('vxResultsModal');
     var bandNum = document.getElementById('vxResBandNum');
@@ -2158,8 +2735,10 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       }).join('');
     }
 
+    var incorrectQuestions = Array.isArray(attempt.incorrectQuestions) ? attempt.incorrectQuestions : [];
+    var incorrectSet = new Set(incorrectQuestions);
+
     if (mistakesList) {
-      var incorrectSet = new Set(Array.isArray(attempt.incorrectQuestions) ? attempt.incorrectQuestions : []);
       var pillsHtml = '';
       for (var q = 1; q <= total; q++) {
         var isIncorrect = incorrectSet.has(q);
@@ -2171,7 +2750,12 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
         btn.addEventListener('click', function() {
           var qNum = Number(btn.getAttribute('data-jump-q'));
           modal.classList.remove('show');
-          var input = document.getElementById('q' + qNum);
+          if (currentListeningAttempt) applyListeningReviewModeUi(currentListeningAttempt);
+          var input = document.getElementById('q' + qNum) ||
+                      document.querySelector('[data-q="' + qNum + '"]') ||
+                      document.querySelector('[data-question="' + qNum + '"]') ||
+                      document.querySelector('input[name="q' + qNum + '"]') ||
+                      document.querySelector('input[name="question-' + qNum + '"]');
           if (input) {
             input.scrollIntoView({ behavior: 'smooth', block: 'center' });
             input.focus();
@@ -2181,14 +2765,96 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       });
     }
 
+    // Detailed Answer Key Cards & Filter Tabs
+    var answerKey = material.answerKey || attempt.answerKey || {};
+    var answersMap = new Map();
+    var sourceAnswers = submittedListeningAnswers.length ? submittedListeningAnswers : (Array.isArray(attempt.answers) ? attempt.answers : []);
+    sourceAnswers.forEach(function(a) {
+      var k = String(a.key || '').toLowerCase().replace(/^q/, '');
+      var num = parseInt(k, 10);
+      if (Number.isFinite(num)) answersMap.set(num, String(a.value || '').trim());
+    });
+
+    var filterAllCount = document.getElementById('vxListeningFilterAllCount');
+    var filterMistakesCount = document.getElementById('vxListeningFilterMistakesCount');
+    var filterCorrectCount = document.getElementById('vxListeningFilterCorrectCount');
+    var answersGrid = document.getElementById('vxListeningResultAnswersGrid');
+
+    var mistakesCount = incorrectQuestions.length;
+    var correctCount = Math.max(0, total - mistakesCount);
+
+    if (filterAllCount) filterAllCount.textContent = total;
+    if (filterMistakesCount) filterMistakesCount.textContent = mistakesCount;
+    if (filterCorrectCount) filterCorrectCount.textContent = correctCount;
+
+    if (answersGrid) {
+      var cardsHtml = '';
+      for (var q = 1; q <= total; q++) {
+        var isIncorrect = incorrectSet.has(q);
+        var expected = answerKey['q' + q] || answerKey[q] || answerKey[String(q)];
+        var expectedDisplay = Array.isArray(expected) ? expected.join(' / ') : (expected !== undefined && expected !== null ? String(expected) : 'Not specified');
+        var userAns = answersMap.get(q) || '';
+
+        cardsHtml += '<div class="vx-ans-card ' + (isIncorrect ? 'is-incorrect' : 'is-correct') + '" data-ans-status="' + (isIncorrect ? 'mistakes' : 'correct') + '">' +
+          '<div class="vx-ans-card-header">' +
+            '<span class="vx-ans-badge ' + (isIncorrect ? 'incorrect' : 'correct') + '">' + (isIncorrect ? '✕' : '✔') + ' Question ' + q + '</span>' +
+            '<span style="font-size:11px;font-weight:800;letter-spacing:0.04em;color:' + (isIncorrect ? '#ef4444' : '#10b981') + ';">' + (isIncorrect ? 'INCORRECT' : 'CORRECT') + '</span>' +
+          '</div>' +
+          '<div class="vx-ans-data-row">' +
+            '<span class="vx-ans-field-label">Your Answer:</span>' +
+            '<span class="vx-ans-user-val ' + (userAns ? '' : 'empty') + '">' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</span>' +
+          '</div>' +
+          '<div class="vx-ans-data-row">' +
+            '<span class="vx-ans-field-label">Official Correct Answer:</span>' +
+            '<span class="vx-ans-correct-val">' + escapeHtml(expectedDisplay) + '</span>' +
+          '</div>' +
+          '<button type="button" class="vx-ans-jump-btn" data-ans-jump="' + q + '">' +
+            '<span>Inspect in Test</span>' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>' +
+          '</button>' +
+        '</div>';
+      }
+      answersGrid.innerHTML = cardsHtml;
+
+      // Filter Tabs handling
+      document.querySelectorAll('#vxListeningResultAnswersTableWrap .vx-filter-tab').forEach(function(tab) {
+        tab.onclick = function() {
+          document.querySelectorAll('#vxListeningResultAnswersTableWrap .vx-filter-tab').forEach(function(t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          var filter = tab.getAttribute('data-res-filter');
+          answersGrid.querySelectorAll('.vx-ans-card').forEach(function(card) {
+            var st = card.getAttribute('data-ans-status');
+            card.style.display = (filter === 'all' || filter === st) ? 'flex' : 'none';
+          });
+        };
+      });
+
+      // Jump to Question inside test
+      answersGrid.querySelectorAll('[data-ans-jump]').forEach(function(btn) {
+        btn.onclick = function() {
+          var qNum = Number(btn.getAttribute('data-ans-jump'));
+          modal.classList.remove('show');
+          if (currentListeningAttempt) applyListeningReviewModeUi(currentListeningAttempt);
+          var input = document.getElementById('q' + qNum) ||
+                      document.querySelector('[data-q="' + qNum + '"]') ||
+                      document.querySelector('[data-question="' + qNum + '"]') ||
+                      document.querySelector('input[name="q' + qNum + '"]') ||
+                      document.querySelector('input[name="question-' + qNum + '"]');
+          if (input) {
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            input.focus();
+            input.style.outline = '3px solid #1468f3';
+          }
+        };
+      });
+    }
+
     document.getElementById('vxResultsCloseTopBtn')?.addEventListener('click', function() {
       modal.classList.remove('show');
     });
 
     if (modal) modal.classList.add('show');
   }
-
-  var currentListeningAttempt = null;
 
   function applyListeningReviewModeUi(attempt) {
     if (!attempt) return;
@@ -2206,7 +2872,15 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     if (trBtn) trBtn.style.display = 'inline-block';
     if (retBtn) retBtn.style.display = 'inline-block';
 
-    // Color-code Bottom Nav Pills only (1-40)
+    // Freeze all inputs for review
+    for (var q = 1; q <= total; q++) {
+      var inputs = document.querySelectorAll('#q' + q + ', [name="q' + q + '"], [name="question-' + q + '"], [name="question_' + q + '"], [data-q="' + q + '"], [data-question="' + q + '"]');
+      inputs.forEach(function(inp) {
+        inp.disabled = true;
+      });
+    }
+
+    // Color-code Bottom Nav Pills (1-40)
     for (var q = 1; q <= total; q++) {
       var isIncorrect = incorrectSet.has(q);
       var navBtn = document.querySelector('[data-q="' + q + '"]') || document.querySelector('.footer-nav button:nth-child(' + q + ')');
@@ -2220,6 +2894,84 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
         }
       }
     }
+
+    // Inline question feedback and input highlights
+    document.querySelectorAll('.vx-inline-feedback').forEach(function(el) { el.remove(); });
+    var answersMap = new Map();
+    var sourceAnswers = submittedListeningAnswers.length ? submittedListeningAnswers : (Array.isArray(attempt.answers) ? attempt.answers : []);
+    sourceAnswers.forEach(function(a) {
+      var k = String(a.key || '').toLowerCase().replace(/^q/, '');
+      var num = parseInt(k, 10);
+      if (Number.isFinite(num)) answersMap.set(num, String(a.value || '').trim());
+    });
+
+    for (var q = 1; q <= total; q++) {
+      var isIncorrect = incorrectSet.has(q);
+      var expected = answerKey['q' + q] || answerKey[q] || answerKey[String(q)];
+      var expectedDisplay = Array.isArray(expected) ? expected.join(' / ') : (expected !== undefined && expected !== null ? String(expected) : 'Not specified');
+      var userAns = answersMap.get(q) || '';
+
+      var ctrl = document.getElementById('q' + q) ||
+                 document.querySelector('input[name="q' + q + '"]') ||
+                 document.querySelector('input[name="question-' + q + '"]') ||
+                 document.querySelector('select[name="q' + q + '"]') ||
+                 document.querySelector('select[name="question-' + q + '"]') ||
+                 document.querySelector('[data-q="' + q + '"]') ||
+                 document.querySelector('[data-question="' + q + '"]');
+
+      if (ctrl) {
+        ctrl.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
+        var feedback = document.createElement('div');
+        feedback.className = 'vx-inline-feedback ' + (isIncorrect ? 'incorrect' : 'correct');
+        if (isIncorrect) {
+          feedback.innerHTML = '<strong>✕ Incorrect.</strong> Your Answer: <em>' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</em> · Official Correct Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
+        } else {
+          feedback.innerHTML = '<strong>✔ Correct!</strong> Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
+        }
+
+        var attachTarget = (ctrl.type === 'radio' || ctrl.type === 'checkbox')
+          ? (ctrl.closest('.form-group, .question-block, .radio-group, .question-options, fieldset') || ctrl.parentElement)
+          : ctrl;
+
+        if (attachTarget && attachTarget.nextSibling) {
+          attachTarget.parentNode.insertBefore(feedback, attachTarget.nextSibling);
+        } else if (attachTarget && attachTarget.parentNode) {
+          attachTarget.parentNode.appendChild(feedback);
+        }
+      }
+    }
+
+    // Show persistent sticky bottom review bar
+    var stickyBar = document.getElementById('vxListeningReviewStickyBar');
+    if (!stickyBar) {
+      stickyBar = document.createElement('div');
+      stickyBar.id = 'vxListeningReviewStickyBar';
+      stickyBar.className = 'vx-review-sticky-bar';
+      document.body.appendChild(stickyBar);
+    }
+    stickyBar.style.display = 'flex';
+    stickyBar.innerHTML = '<div class="vx-rsb-info">' +
+      '<span class="vx-rsb-badge">EXAM REVIEW MODE</span>' +
+      '<span class="vx-rsb-score">Score: <strong>' + attempt.correct + '/' + total + '</strong>' + bandText + '</span>' +
+      '<span class="vx-rsb-hint">Official answers are shown below each question.</span>' +
+    '</div>' +
+    '<div class="vx-rsb-actions">' +
+      '<button type="button" class="vx-rsb-btn primary" id="vxListeningRsbOpenModalBtn">Open Score Report</button>' +
+      '<button type="button" class="vx-rsb-btn secondary" id="vxListeningRsbTranscriptBtn">Audio Transcript</button>' +
+      '<button type="button" class="vx-rsb-btn secondary" id="vxListeningRsbRetakeBtn">Retake Test</button>' +
+    '</div>';
+
+    document.getElementById('vxListeningRsbOpenModalBtn')?.addEventListener('click', function() {
+      document.getElementById('vxResultsModal')?.classList.add('show');
+    });
+    document.getElementById('vxListeningRsbTranscriptBtn')?.addEventListener('click', function() {
+      toggleTranscriptPanel(true);
+    });
+    document.getElementById('vxListeningRsbRetakeBtn')?.addEventListener('click', function() {
+      var url = new URL(window.location.href);
+      url.searchParams.delete('review');
+      window.location.href = url.toString();
+    });
   }
 
   function evaluateListeningLocally(answers, durationSeconds) {
@@ -2228,6 +2980,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     var correct = 0;
     var incorrectQuestions = [];
     var answerMap = new Map();
+    submittedListeningAnswers = answers;
     answers.forEach(function(a) {
       var k = String(a.key || '').toLowerCase().replace(/^q/, '');
       var num = parseInt(k, 10);
@@ -2272,6 +3025,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     clearInterval(timerHandle);
     if (audioEl) audioEl.pause();
     var answers = collectAnswers();
+    submittedListeningAnswers = answers;
     var durationSeconds = Math.round((Date.now() - testStartedAt) / 1000);
 
     if (token) {
@@ -2453,6 +3207,425 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     window.location.href = url.toString();
   });
 
+  // =========================================================================
+  // Authentic IELTS CDI Highlight & Notes System
+  // =========================================================================
+  function initIeltsHighlightSystem() {
+    var selToolbar = document.getElementById('ieltsSelectionToolbar');
+    var ctxMenu = document.getElementById('ieltsContextMenu');
+    var noteModal = document.getElementById('ieltsNoteModal');
+    var noteSnippet = document.getElementById('ieltsNoteSnippet');
+    var noteText = document.getElementById('ieltsNoteText');
+    var noteSaveBtn = document.getElementById('ieltsNoteSaveBtn');
+    var noteCancelBtn = document.getElementById('ieltsNoteCancelBtn');
+    var noteDeleteBtn = document.getElementById('ieltsNoteDeleteBtn');
+    var noteCloseX = document.getElementById('ieltsNoteCloseX');
+    var currentSelectionRange = null;
+    var activeNoteSpan = null;
+    var lastRightClickedEl = null;
+
+    function showSelectionToolbar() {
+      var sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.rangeCount) {
+        hideSelectionToolbar();
+        return;
+      }
+      var text = sel.toString().trim();
+      if (!text || text.length < 1) {
+        hideSelectionToolbar();
+        return;
+      }
+      var range = sel.getRangeAt(0);
+      currentSelectionRange = range.cloneRange();
+      var rect = range.getBoundingClientRect();
+      if (!rect || (rect.width === 0 && rect.height === 0)) {
+        hideSelectionToolbar();
+        return;
+      }
+
+      var hasHl = false;
+      document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
+        try {
+          if (range.intersectsNode(el)) hasHl = true;
+        } catch(e) {}
+      });
+
+      var clearBtn = document.getElementById('ieltsClearBtn');
+      var clearAllBtn = document.getElementById('ieltsClearAllBtn');
+      if (clearBtn) clearBtn.style.display = hasHl ? 'inline-flex' : 'none';
+      if (clearAllBtn) clearAllBtn.style.display = hasHl ? 'inline-flex' : 'none';
+
+      if (selToolbar) {
+        selToolbar.style.display = 'flex';
+        var top = window.scrollY + rect.top - selToolbar.offsetHeight - 8;
+        var left = window.scrollX + rect.left + (rect.width / 2) - (selToolbar.offsetWidth / 2);
+        if (top < window.scrollY + 5) top = window.scrollY + rect.bottom + 8;
+        left = Math.max(8, Math.min(left, window.scrollX + document.documentElement.clientWidth - selToolbar.offsetWidth - 8));
+        selToolbar.style.top = top + 'px';
+        selToolbar.style.left = left + 'px';
+      }
+    }
+
+    function hideSelectionToolbar() {
+      if (selToolbar) selToolbar.style.display = 'none';
+    }
+
+    function showContextMenu(clientX, clientY, clickedHl, sel) {
+      if (!ctxMenu) return;
+      var text = sel ? sel.toString().trim() : '';
+      var hasText = text.length > 0;
+      var hasHl = Boolean(clickedHl);
+
+      if (!hasText && !hasHl) {
+        hideContextMenu();
+        return;
+      }
+
+      lastRightClickedEl = clickedHl;
+      if (hasText && sel && sel.rangeCount) {
+        currentSelectionRange = sel.getRangeAt(0).cloneRange();
+      }
+
+      var hlBtn = document.getElementById('ieltsCtxHlBtn');
+      var noteBtn = document.getElementById('ieltsCtxNoteBtn');
+      var divider = document.getElementById('ieltsCtxDivider');
+      var clearBtn = document.getElementById('ieltsCtxClearBtn');
+      var clearAllBtn = document.getElementById('ieltsCtxClearAllBtn');
+
+      if (hlBtn) hlBtn.style.display = hasText ? 'flex' : 'none';
+      if (noteBtn) noteBtn.style.display = hasText ? 'flex' : 'none';
+      if (divider) divider.style.display = (hasText && hasHl) ? 'block' : 'none';
+      if (clearBtn) clearBtn.style.display = hasHl ? 'flex' : 'none';
+      if (clearAllBtn) clearAllBtn.style.display = (hasHl || document.querySelector('.ielts-highlight, .ielts-note-highlight')) ? 'flex' : 'none';
+
+      ctxMenu.style.display = 'flex';
+      var w = ctxMenu.offsetWidth || 140;
+      var h = ctxMenu.offsetHeight || 100;
+      var left = clientX;
+      var top = clientY;
+
+      if (left + w > window.innerWidth - 8) left = window.innerWidth - w - 8;
+      if (top + h > window.innerHeight - 8) top = window.innerHeight - h - 8;
+      if (left < 8) left = 8;
+      if (top < 8) top = 8;
+
+      ctxMenu.style.left = left + 'px';
+      ctxMenu.style.top = top + 'px';
+      hideSelectionToolbar();
+    }
+
+    function hideContextMenu() {
+      if (ctxMenu) ctxMenu.style.display = 'none';
+      lastRightClickedEl = null;
+    }
+
+    function mergeAdjacentHighlights(rootEl) {
+      (rootEl || document.body).querySelectorAll('.ielts-highlight').forEach(function(span) {
+        var next = span.nextSibling;
+        while (next && next.nodeType === 1 && next.classList && next.classList.contains('ielts-highlight')) {
+          while (next.firstChild) span.appendChild(next.firstChild);
+          var toRemove = next;
+          next = next.nextSibling;
+          toRemove.remove();
+        }
+        span.normalize();
+      });
+    }
+
+    function applyHighlight() {
+      var range = currentSelectionRange;
+      if (!range || range.collapsed) {
+        var sel = window.getSelection();
+        if (sel && !sel.isCollapsed && sel.rangeCount) range = sel.getRangeAt(0);
+        else { hideSelectionToolbar(); hideContextMenu(); return; }
+      }
+
+      try {
+        if (range.startContainer === range.endContainer && range.startContainer.nodeType === Node.TEXT_NODE) {
+          var span = document.createElement('mark');
+          span.className = 'ielts-highlight';
+          range.surroundContents(span);
+        } else {
+          var common = range.commonAncestorContainer;
+          var walker = document.createTreeWalker(common, NodeFilter.SHOW_TEXT, null);
+          var textNodes = [];
+          var node;
+          while ((node = walker.nextNode())) {
+            var nodeRange = document.createRange();
+            nodeRange.selectNodeContents(node);
+            if (range.compareBoundaryPoints(Range.END_TO_START, nodeRange) < 0 &&
+                range.compareBoundaryPoints(Range.START_TO_END, nodeRange) > 0) {
+              textNodes.push(node);
+            }
+          }
+
+          if (textNodes.length > 0) {
+            textNodes.forEach(function(tn) {
+              if (tn.parentNode && tn.parentNode.classList && tn.parentNode.classList.contains('ielts-highlight')) return;
+              var sOff = (tn === range.startContainer) ? range.startOffset : 0;
+              var eOff = (tn === range.endContainer) ? range.endOffset : tn.nodeValue.length;
+              if (sOff >= eOff || tn.nodeValue.slice(sOff, eOff).trim() === '') return;
+
+              var targetNode = tn;
+              if (sOff > 0) {
+                targetNode = tn.splitText(sOff);
+                eOff -= sOff;
+              }
+              if (eOff < targetNode.nodeValue.length) {
+                targetNode.splitText(eOff);
+              }
+              var mark = document.createElement('mark');
+              mark.className = 'ielts-highlight';
+              targetNode.parentNode.insertBefore(mark, targetNode);
+              mark.appendChild(targetNode);
+            });
+          } else {
+            var frag = range.extractContents();
+            var fallback = document.createElement('mark');
+            fallback.className = 'ielts-highlight';
+            fallback.appendChild(frag);
+            range.insertNode(fallback);
+          }
+        }
+      } catch(e) {
+        console.warn('IELTS highlight error:', e);
+      }
+
+      mergeAdjacentHighlights(document.body);
+      var sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+      currentSelectionRange = null;
+      hideSelectionToolbar();
+      hideContextMenu();
+      saveHighlightsToStorage();
+    }
+
+    function openNoteDialog(range, existingSpan) {
+      activeNoteSpan = existingSpan || null;
+      currentSelectionRange = range ? range.cloneRange() : null;
+      var snippet = existingSpan ? existingSpan.textContent.trim() : (range ? range.toString().trim() : '');
+      if (noteSnippet) noteSnippet.textContent = '“' + (snippet.length > 80 ? snippet.slice(0, 80) + '…' : snippet) + '”';
+      if (noteText) noteText.value = existingSpan ? existingSpan.getAttribute('data-note') || '' : '';
+      if (noteDeleteBtn) noteDeleteBtn.style.display = existingSpan ? 'inline-flex' : 'none';
+      if (noteModal) noteModal.classList.add('show');
+      if (noteText) { setTimeout(function() { noteText.focus(); }, 60); }
+      hideSelectionToolbar();
+      hideContextMenu();
+    }
+
+    function closeNoteDialog() {
+      if (noteModal) noteModal.classList.remove('show');
+      activeNoteSpan = null;
+      currentSelectionRange = null;
+    }
+
+    function saveNoteAction() {
+      var text = (noteText ? noteText.value : '').trim();
+      if (!text) {
+        if (activeNoteSpan) deleteNoteAction();
+        else closeNoteDialog();
+        return;
+      }
+
+      if (activeNoteSpan) {
+        activeNoteSpan.setAttribute('data-note', text);
+        var existingTip = activeNoteSpan.querySelector('.ielts-note-tooltip');
+        if (existingTip) existingTip.textContent = text;
+        else {
+          var tip = document.createElement('span');
+          tip.className = 'ielts-note-tooltip';
+          tip.textContent = text;
+          activeNoteSpan.appendChild(tip);
+        }
+      } else if (currentSelectionRange) {
+        try {
+          var span = document.createElement('mark');
+          span.className = 'ielts-note-highlight';
+          span.setAttribute('data-note', text);
+          var tooltip = document.createElement('span');
+          tooltip.className = 'ielts-note-tooltip';
+          tooltip.textContent = text;
+
+          if (currentSelectionRange.startContainer === currentSelectionRange.endContainer && currentSelectionRange.startContainer.nodeType === Node.TEXT_NODE) {
+            currentSelectionRange.surroundContents(span);
+            span.appendChild(tooltip);
+          } else {
+            var frag = currentSelectionRange.extractContents();
+            span.appendChild(frag);
+            span.appendChild(tooltip);
+            currentSelectionRange.insertNode(span);
+          }
+        } catch(e) {
+          console.warn('IELTS note error:', e);
+        }
+      }
+
+      var sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+      closeNoteDialog();
+      saveHighlightsToStorage();
+    }
+
+    function deleteNoteAction() {
+      if (activeNoteSpan) {
+        var parent = activeNoteSpan.parentNode;
+        var tip = activeNoteSpan.querySelector('.ielts-note-tooltip');
+        if (tip) tip.remove();
+        if (parent) {
+          while (activeNoteSpan.firstChild) parent.insertBefore(activeNoteSpan.firstChild, activeNoteSpan);
+          activeNoteSpan.remove();
+          parent.normalize();
+        }
+      }
+      closeNoteDialog();
+      saveHighlightsToStorage();
+    }
+
+    function clearHighlight(targetEl) {
+      var elementsToClear = [];
+      if (targetEl) {
+        var hl = targetEl.closest('.ielts-highlight, .ielts-note-highlight');
+        if (hl) elementsToClear.push(hl);
+      } else if (currentSelectionRange) {
+        document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
+          var intersects = false;
+          try { intersects = currentSelectionRange.intersectsNode(el); } catch(e) {}
+          if (intersects) elementsToClear.push(el);
+        });
+      }
+
+      elementsToClear.forEach(function(el) {
+        var tip = el.querySelector('.ielts-note-tooltip');
+        if (tip) tip.remove();
+        var parent = el.parentNode;
+        if (parent) {
+          while (el.firstChild) parent.insertBefore(el.firstChild, el);
+          el.remove();
+          parent.normalize();
+        }
+      });
+
+      var sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+      currentSelectionRange = null;
+      hideSelectionToolbar();
+      hideContextMenu();
+      saveHighlightsToStorage();
+    }
+
+    function clearAllHighlights() {
+      document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
+        var tip = el.querySelector('.ielts-note-tooltip');
+        if (tip) tip.remove();
+        var parent = el.parentNode;
+        if (parent) {
+          while (el.firstChild) parent.insertBefore(el.firstChild, el);
+          el.remove();
+          parent.normalize();
+        }
+      });
+
+      var sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+      currentSelectionRange = null;
+      hideSelectionToolbar();
+      hideContextMenu();
+      saveHighlightsToStorage();
+    }
+
+    function saveHighlightsToStorage() {
+      try {
+        var list = [];
+        document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
+          list.push({
+            type: el.classList.contains('ielts-note-highlight') ? 'note' : 'highlight',
+            note: el.getAttribute('data-note') || '',
+            text: el.textContent.replace(el.querySelector('.ielts-note-tooltip')?.textContent || '', '').trim()
+          });
+        });
+        localStorage.setItem('vortex-listening-hl-' + material.id, JSON.stringify(list));
+      } catch(e) {}
+    }
+
+    // Right-Click Context Menu Listener
+    document.addEventListener('contextmenu', function(e) {
+      var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea') return;
+
+      var sel = window.getSelection();
+      var text = sel ? sel.toString().trim() : '';
+      var clickedHl = e.target.closest('.ielts-highlight, .ielts-note-highlight');
+
+      if (clickedHl || (text && text.length > 0)) {
+        e.preventDefault();
+        showContextMenu(e.clientX, e.clientY, clickedHl, sel);
+      } else {
+        e.preventDefault();
+        hideContextMenu();
+        hideSelectionToolbar();
+      }
+    });
+
+    // Selection mouse/touch listeners
+    document.addEventListener('mouseup', function(e) {
+      if (e.target.closest('#ieltsSelectionToolbar') || e.target.closest('#ieltsContextMenu') || e.target.closest('#ieltsNoteModal') || e.target.closest('.vx-listening-header-bar')) return;
+      setTimeout(showSelectionToolbar, 15);
+    });
+    document.addEventListener('touchend', function(e) {
+      if (e.target.closest('#ieltsSelectionToolbar') || e.target.closest('#ieltsContextMenu') || e.target.closest('#ieltsNoteModal') || e.target.closest('.vx-listening-header-bar')) return;
+      setTimeout(showSelectionToolbar, 15);
+    });
+    document.addEventListener('keyup', function(e) {
+      if (e.target.closest('#ieltsNoteModal')) return;
+      if (['Shift', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        setTimeout(showSelectionToolbar, 15);
+      }
+    });
+
+    // Click outside listeners
+    document.addEventListener('mousedown', function(e) {
+      if (!e.target.closest('#ieltsSelectionToolbar')) {
+        hideSelectionToolbar();
+      }
+      if (!e.target.closest('#ieltsContextMenu')) {
+        hideContextMenu();
+      }
+    });
+    window.addEventListener('scroll', function() {
+      hideSelectionToolbar();
+      hideContextMenu();
+    }, true);
+
+    // Clicking an existing note highlight opens note editor
+    document.addEventListener('click', function(e) {
+      var noteSpan = e.target.closest('.ielts-note-highlight');
+      if (noteSpan && !e.target.closest('#ieltsContextMenu')) {
+        e.preventDefault();
+        openNoteDialog(null, noteSpan);
+      }
+    });
+
+    // Buttons
+    document.getElementById('ieltsHlBtn')?.addEventListener('click', applyHighlight);
+    document.getElementById('ieltsCtxHlBtn')?.addEventListener('click', applyHighlight);
+    document.getElementById('ieltsNoteBtn')?.addEventListener('click', function() {
+      if (currentSelectionRange) openNoteDialog(currentSelectionRange, null);
+    });
+    document.getElementById('ieltsCtxNoteBtn')?.addEventListener('click', function() {
+      if (currentSelectionRange) openNoteDialog(currentSelectionRange, null);
+    });
+    document.getElementById('ieltsClearBtn')?.addEventListener('click', function() { clearHighlight(lastRightClickedEl); });
+    document.getElementById('ieltsCtxClearBtn')?.addEventListener('click', function() { clearHighlight(lastRightClickedEl); });
+    document.getElementById('ieltsClearAllBtn')?.addEventListener('click', clearAllHighlights);
+    document.getElementById('ieltsCtxClearAllBtn')?.addEventListener('click', clearAllHighlights);
+
+    if (noteSaveBtn) noteSaveBtn.addEventListener('click', saveNoteAction);
+    if (noteCancelBtn) noteCancelBtn.addEventListener('click', closeNoteDialog);
+    if (noteDeleteBtn) noteDeleteBtn.addEventListener('click', deleteNoteAction);
+    if (noteCloseX) noteCloseX.addEventListener('click', closeNoteDialog);
+  }
+
+  initIeltsHighlightSystem();
   initAudio();
   startTimer();
 })();

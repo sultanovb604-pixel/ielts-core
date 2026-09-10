@@ -751,7 +751,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     text-overflow: ellipsis;
   }
   html[data-theme="dark"] .vx-cdi-exam-title {
-    color: #f8fafc;
+    color: #334155;
   }
 
   .vx-cdi-time-text {
@@ -1822,19 +1822,36 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     height: 36px !important;
     padding: 0 16px !important;
     border-radius: 6px !important;
-    background: #10b981 !important;
+    background: #1e293b !important;
     color: #ffffff !important;
-    border: none !important;
+    border: 1px solid #334155 !important;
     font-size: 13px !important;
-    font-weight: 800 !important;
+    font-weight: 700 !important;
     cursor: pointer !important;
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3) !important;
+    box-shadow: none !important;
     transition: all 0.15s ease !important;
   }
   .vx-cdi-submit-btn:hover {
-    background: #059669 !important;
+    background: #334155 !important;
+    color: #ffffff !important;
+    border-color: #475569 !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4) !important;
+    box-shadow: none !important;
+  }
+
+  /* Real Exam Mode: Hide all extra multi-color buttons & foreign toolbars */
+  #highlightToolbar,
+  .highlight-toolbar,
+  .highlight-toggle,
+  #highlightToggle,
+  .toolbar-btn.btn-yellow,
+  .toolbar-btn.btn-green,
+  .toolbar-btn.btn-pink,
+  .toolbar-btn.btn-blue,
+  #toolbar-highlight-btns {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 
   /* Modals */
@@ -2178,6 +2195,310 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   }
   html[data-theme="dark"] .vx-res-footer-actions {
     border-color: #334155;
+  }
+
+  /* Detailed Answer Key Review Section */
+  .vx-res-answers-table-wrap {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+  }
+  html[data-theme="dark"] .vx-res-answers-table-wrap {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .vx-res-table-filters {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .vx-filter-tab {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1.5px solid transparent;
+    transition: all 0.15s ease;
+  }
+  html[data-theme="dark"] .vx-filter-tab {
+    background: #0f172a;
+    color: #94a3b8;
+  }
+  .vx-filter-tab:hover {
+    transform: translateY(-1px);
+  }
+  .vx-filter-tab.active {
+    background: #eff6ff;
+    color: #1468f3;
+    border-color: #bfdbfe;
+  }
+  html[data-theme="dark"] .vx-filter-tab.active {
+    background: #1e3a8a;
+    color: #93c5fd;
+    border-color: #3b82f6;
+  }
+  .vx-filter-tab.mistakes.active {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+  }
+  html[data-theme="dark"] .vx-filter-tab.mistakes.active {
+    background: #450a0a;
+    color: #fca5a5;
+    border-color: #991b1b;
+  }
+  .vx-filter-tab.correct.active {
+    background: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+  html[data-theme="dark"] .vx-filter-tab.correct.active {
+    background: #052e16;
+    color: #86efac;
+    border-color: #166534;
+  }
+
+  .vx-res-answers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 12px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 6px 4px 6px 0;
+    margin-top: 10px;
+  }
+  .vx-ans-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-sizing: border-box;
+    transition: all 0.15s ease;
+  }
+  html[data-theme="dark"] .vx-ans-card {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  .vx-ans-card.is-correct {
+    border-left: 4px solid #10b981;
+  }
+  .vx-ans-card.is-incorrect {
+    border-left: 4px solid #ef4444;
+  }
+  .vx-ans-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .vx-ans-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 800;
+  }
+  .vx-ans-badge.correct {
+    background: #dcfce7;
+    color: #166534;
+  }
+  html[data-theme="dark"] .vx-ans-badge.correct {
+    background: #064e3b;
+    color: #6ee7b7;
+  }
+  .vx-ans-badge.incorrect {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  html[data-theme="dark"] .vx-ans-badge.incorrect {
+    background: #450a0a;
+    color: #fca5a5;
+  }
+  .vx-ans-data-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12.5px;
+  }
+  .vx-ans-field-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  html[data-theme="dark"] .vx-ans-field-label {
+    color: #94a3b8;
+  }
+  .vx-ans-user-val {
+    font-weight: 700;
+    color: #0f172a;
+    word-break: break-word;
+  }
+  html[data-theme="dark"] .vx-ans-user-val {
+    color: #f8fafc;
+  }
+  .vx-ans-user-val.empty {
+    color: #94a3b8;
+    font-style: italic;
+    font-weight: 500;
+  }
+  .vx-ans-correct-val {
+    font-weight: 800;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid #a7f3d0;
+    display: inline-block;
+    word-break: break-word;
+    font-size: 12.5px;
+  }
+  html[data-theme="dark"] .vx-ans-correct-val {
+    background: #064e3b;
+    color: #6ee7b7;
+    border-color: #047857;
+  }
+  .vx-ans-jump-btn {
+    background: none;
+    border: none;
+    color: #1468f3;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 0 0 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+  }
+  .vx-ans-jump-btn:hover {
+    text-decoration: underline;
+  }
+
+  /* Sticky Review Banner & Inline Review Badges */
+  .vx-review-sticky-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 12px 24px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.3);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .vx-rsb-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .vx-rsb-badge {
+    background: #1468f3;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+  }
+  .vx-rsb-score {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .vx-rsb-hint {
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  .vx-rsb-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .vx-rsb-btn {
+    padding: 7px 15px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+  }
+  .vx-rsb-btn.primary {
+    background: #10b981;
+    color: #ffffff;
+  }
+  .vx-rsb-btn.primary:hover {
+    background: #059669;
+  }
+  .vx-rsb-btn.secondary {
+    background: #334155;
+    color: #f8fafc;
+  }
+  .vx-rsb-btn.secondary:hover {
+    background: #475569;
+  }
+
+  /* Inline Feedback under Exam Questions in Review Mode */
+  .vx-inline-feedback {
+    display: block;
+    margin: 8px 0;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+  }
+  .vx-inline-feedback.correct {
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    color: #166534;
+  }
+  .vx-inline-feedback.incorrect {
+    background: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    color: #991b1b;
+  }
+  html[data-theme="dark"] .vx-inline-feedback.correct {
+    background: #064e3b;
+    border-color: #047857;
+    color: #6ee7b7;
+  }
+  html[data-theme="dark"] .vx-inline-feedback.incorrect {
+    background: #450a0a;
+    border-color: #991b1b;
+    color: #fca5a5;
+  }
+  .vx-inline-feedback strong {
+    font-weight: 800;
+  }
+  .vx-review-input-correct {
+    border-color: #10b981 !important;
+    background-color: #f0fdf4 !important;
+  }
+  .vx-review-input-incorrect {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
   }
 
   .vx-stat-summary-row {
@@ -2632,6 +2953,17 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   /* ==========================================================================
      IELTS CDI Highlight & Notes System
      ========================================================================== */
+  #highlightToolbar,
+  .highlight-toolbar,
+  #toolbar-selection-btns,
+  #toolbar-highlight-btns,
+  #highlightBtn,
+  #selection-toolbar,
+  #noteInputOverlay,
+  #notesPanel,
+  .hl-context-menu {
+    display: none !important;
+  }
   .ielts-highlight {
     background-color: #ffe066 !important;
     color: #111827 !important;
@@ -2676,11 +3008,11 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 6px 10px;
-    border: none;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
-    background: transparent;
-    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
     font-family: var(--vx-font-sans);
     font-size: 12px;
     font-weight: 700;
@@ -2689,20 +3021,113 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     line-height: 1;
   }
   .ielts-tool-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+  .ielts-tool-btn.btn-clear:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+  }
+  .ielts-note-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 240px;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 100001;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .ielts-note-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #0f172a;
+  }
+  .ielts-note-highlight:hover .ielts-note-tooltip {
+    opacity: 1;
+  }
+
+  /* Authentic Right-Click Context Menu */
+  .ielts-context-menu {
+    position: fixed;
+    z-index: 100000;
+    display: none;
+    flex-direction: column;
+    min-width: 140px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    padding: 4px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  body.night-mode .ielts-context-menu,
+  html[data-theme="dark"] .ielts-context-menu {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
+  .ielts-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 12px;
+    border: none;
+    background: transparent;
+    color: #1e293b;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  body.night-mode .ielts-menu-item,
+  html[data-theme="dark"] .ielts-menu-item {
+    color: #f8fafc;
+  }
+  .ielts-menu-item:hover {
+    background: #f1f5f9;
+  }
+  body.night-mode .ielts-menu-item:hover,
+  html[data-theme="dark"] .ielts-menu-item:hover {
     background: #334155;
   }
-  .ielts-tool-btn.hl {
-    color: #fde047;
+  .ielts-menu-item.clear {
+    color: #dc2626;
   }
-  .ielts-tool-btn.note {
-    color: #86efac;
+  .ielts-menu-item.clear:hover {
+    background: #fef2f2;
   }
-  .ielts-tool-btn.clear {
-    color: #94a3b8;
+  body.night-mode .ielts-menu-item.clear {
+    color: #fca5a5;
   }
-  .ielts-tool-btn.clear-all {
-    color: #f87171;
-    font-size: 11px;
+  body.night-mode .ielts-menu-item.clear:hover {
+    background: rgba(220, 38, 38, 0.2);
+  }
+  .ielts-menu-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 3px 0;
+  }
+  body.night-mode .ielts-menu-divider,
+  html[data-theme="dark"] .ielts-menu-divider {
+    background: #334155;
   }
   .vx-q-pill.flagged {
     border-color: #f59e0b !important;
@@ -2748,7 +3173,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     border-radius: 5px !important;
     font-size: 13px !important;
     font-weight: 900 !important;
-    color: #ffffff !important;
+    color: #0f172a !important;
     flex-shrink: 0 !important;
   }
   .vx-review-q-pill.incorrect {
@@ -2967,24 +3392,36 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 
 <!-- Injected IELTS CDI Selection Toolbar -->
 <div id="ieltsSelectionToolbar" class="ielts-selection-toolbar" role="toolbar" aria-label="Text Highlight and Note Actions">
-  <button type="button" id="ieltsHlBtn" class="ielts-tool-btn hl" title="Highlight selection (Yellow)">
-    <i class="fas fa-highlighter" aria-hidden="true"></i>
+  <button type="button" id="ieltsHlBtn" class="ielts-tool-btn" title="Highlight selection">
+    <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ffe066;border:1px solid #d97706;"></span>
     <span>Highlight</span>
   </button>
-  <button type="button" id="ieltsNoteBtn" class="ielts-tool-btn note" title="Add note to selection">
-    <i class="fas fa-sticky-note" aria-hidden="true"></i>
-    <span>Notes</span>
+  <button type="button" id="ieltsNoteBtn" class="ielts-tool-btn" title="Add note">
+    <span>📝 Notes</span>
   </button>
-  <button type="button" id="ieltsVocabBtn" class="ielts-tool-btn vocab" title="Save word to My Vocabulary">
-    <i class="fas fa-bookmark" aria-hidden="true" style="color:#60a5fa"></i>
-    <span>Vocab</span>
-  </button>
-  <button type="button" id="ieltsClearBtn" class="ielts-tool-btn clear" title="Clear highlight on selection">
-    <i class="fas fa-eraser" aria-hidden="true"></i>
+  <button type="button" id="ieltsClearBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear highlight">
     <span>Clear</span>
   </button>
-  <button type="button" id="ieltsClearAllBtn" class="ielts-tool-btn clear-all" title="Clear all highlights">
+  <button type="button" id="ieltsClearAllBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear all highlights">
     <span>Clear all</span>
+  </button>
+</div>
+
+<!-- Injected Authentic IELTS CDI Right-Click Context Menu -->
+<div id="ieltsContextMenu" class="ielts-context-menu" role="menu" aria-label="IELTS Exam Options">
+  <button type="button" id="ieltsCtxHlBtn" class="ielts-menu-item" role="menuitem">
+    <span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#ffe066;border:1px solid #d97706;"></span>
+    <span>Highlight</span>
+  </button>
+  <button type="button" id="ieltsCtxNoteBtn" class="ielts-menu-item" role="menuitem">
+    <span>📝 Notes</span>
+  </button>
+  <div id="ieltsCtxDivider" class="ielts-menu-divider" style="display:none;"></div>
+  <button type="button" id="ieltsCtxClearBtn" class="ielts-menu-item clear" style="display:none;" role="menuitem">
+    <span>✕ Clear</span>
+  </button>
+  <button type="button" id="ieltsCtxClearAllBtn" class="ielts-menu-item clear" style="display:none;" role="menuitem">
+    <span>⊘ Clear all</span>
   </button>
 </div>
 
@@ -3213,11 +3650,32 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       </div>
     </div>
 
+    <!-- Complete Answers & Explanations Review Sheet -->
+    <div class="vx-res-answers-table-wrap" id="vxResultAnswersTableWrap">
+      <div class="vx-res-section-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span>Detailed Answer Key & Review</span>
+          <span style="font-size:12px;font-weight:600;color:#64748b;text-transform:none;">(All Official Answers)</span>
+        </div>
+        <!-- Filter Tabs -->
+        <div class="vx-res-table-filters" role="tablist" aria-label="Filter answer results">
+          <button type="button" class="vx-filter-tab active" data-res-filter="all">All (<span id="vxFilterAllCount">--</span>)</button>
+          <button type="button" class="vx-filter-tab mistakes" data-res-filter="mistakes">Mistakes (<span id="vxFilterMistakesCount">--</span>)</button>
+          <button type="button" class="vx-filter-tab correct" data-res-filter="correct">Correct (<span id="vxFilterCorrectCount">--</span>)</button>
+        </div>
+      </div>
+
+      <div class="vx-res-answers-grid" id="vxResultAnswersGrid">
+        <!-- Injected dynamically with each question, your answer, and official answer -->
+      </div>
+    </div>
+
     <!-- Bottom Action Bar -->
     <div class="vx-res-footer-actions">
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button type="button" class="vx-btn-modal-disabled" id="vxReviewAnswersBtn" disabled title="Detailed review coming soon">
-          Review Mistakes (Soon)
+        <button type="button" class="vx-btn-modal-primary" id="vxReviewAnswersBtn" style="background:#1468f3;color:#ffffff;border-color:#1468f3;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;vertical-align:-2px"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Review Answers in Test</span>
         </button>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -3722,6 +4180,14 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     });
   }
 
+  var submittedAnswers = [];
+
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, function(m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+    });
+  }
+
   async function submitExam() {
     if (isSubmitting) return;
     isSubmitting = true;
@@ -3729,6 +4195,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     if (timerInterval) clearInterval(timerInterval);
 
     var answers = collectAnswers();
+    submittedAnswers = answers;
     var duration = Math.round((Date.now() - startedAt) / 1000);
 
     // If token exists in localStorage or Cookie, submit to verified backend
@@ -3783,6 +4250,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     var pct = Math.round((correct / total) * 100);
     var incorrectQuestions = Array.isArray(attempt.incorrectQuestions) ? attempt.incorrectQuestions : [];
     var partBreakdown = Array.isArray(attempt.partBreakdown) ? attempt.partBreakdown : [];
+    var answerKey = material.answerKey || attempt.answerKey || {};
 
     // 1. Hero KPI Cards
     var bandNumEl = document.getElementById('vxResultBandNum');
@@ -3826,9 +4294,9 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     }
 
     // 3. Question Diagnostic Pills
+    var incorrectSet = new Set(incorrectQuestions);
     var pillsWrap = document.getElementById('vxResultIncorrectPills');
     if (pillsWrap) {
-      var incorrectSet = new Set(incorrectQuestions);
       var pillsHtml = '';
       for (var q = 1; q <= total; q++) {
         var isIncorrect = incorrectSet.has(q);
@@ -3840,9 +4308,84 @@ function readingPersistenceMarkup(material, user, requestedMode) {
         btn.addEventListener('click', function() {
           var qNum = Number(btn.getAttribute('data-jump-q'));
           resultModal.classList.remove('show');
+          if (currentAttemptData) applyReviewModeUi(currentAttemptData);
           jumpToQuestion(qNum);
           notify('Reviewing Question ' + qNum, 'success');
         });
+      });
+    }
+
+    // 4. Detailed Answer Key Cards & Filter Tabs
+    var answersMap = new Map();
+    (submittedAnswers || []).forEach(function(a) {
+      var k = String(a.key || '').toLowerCase().replace(/^q/, '');
+      var num = parseInt(k, 10);
+      if (Number.isFinite(num)) answersMap.set(num, String(a.value || '').trim());
+    });
+
+    var filterAllCount = document.getElementById('vxFilterAllCount');
+    var filterMistakesCount = document.getElementById('vxFilterMistakesCount');
+    var filterCorrectCount = document.getElementById('vxFilterCorrectCount');
+    var answersGrid = document.getElementById('vxResultAnswersGrid');
+
+    var mistakesCount = incorrectQuestions.length;
+    var correctCount = Math.max(0, total - mistakesCount);
+
+    if (filterAllCount) filterAllCount.textContent = total;
+    if (filterMistakesCount) filterMistakesCount.textContent = mistakesCount;
+    if (filterCorrectCount) filterCorrectCount.textContent = correctCount;
+
+    if (answersGrid) {
+      var cardsHtml = '';
+      for (var q = 1; q <= total; q++) {
+        var isIncorrect = incorrectSet.has(q);
+        var expected = answerKey['q' + q] || answerKey[q] || answerKey[String(q)];
+        var expectedDisplay = Array.isArray(expected) ? expected.join(' / ') : (expected !== undefined && expected !== null ? String(expected) : 'Not specified');
+        var userAns = answersMap.get(q) || '';
+
+        cardsHtml += '<div class="vx-ans-card ' + (isIncorrect ? 'is-incorrect' : 'is-correct') + '" data-ans-status="' + (isIncorrect ? 'mistakes' : 'correct') + '">' +
+          '<div class="vx-ans-card-header">' +
+            '<span class="vx-ans-badge ' + (isIncorrect ? 'incorrect' : 'correct') + '">' + (isIncorrect ? '✕' : '✔') + ' Question ' + q + '</span>' +
+            '<span style="font-size:11px;font-weight:800;letter-spacing:0.04em;color:' + (isIncorrect ? '#ef4444' : '#10b981') + ';">' + (isIncorrect ? 'INCORRECT' : 'CORRECT') + '</span>' +
+          '</div>' +
+          '<div class="vx-ans-data-row">' +
+            '<span class="vx-ans-field-label">Your Answer:</span>' +
+            '<span class="vx-ans-user-val ' + (userAns ? '' : 'empty') + '">' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</span>' +
+          '</div>' +
+          '<div class="vx-ans-data-row">' +
+            '<span class="vx-ans-field-label">Official Correct Answer:</span>' +
+            '<span class="vx-ans-correct-val">' + escapeHtml(expectedDisplay) + '</span>' +
+          '</div>' +
+          '<button type="button" class="vx-ans-jump-btn" data-ans-jump="' + q + '">' +
+            '<span>Inspect in Test</span>' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>' +
+          '</button>' +
+        '</div>';
+      }
+      answersGrid.innerHTML = cardsHtml;
+
+      // Filter Tabs handling
+      document.querySelectorAll('#vxResultAnswersTableWrap .vx-filter-tab').forEach(function(tab) {
+        tab.onclick = function() {
+          document.querySelectorAll('#vxResultAnswersTableWrap .vx-filter-tab').forEach(function(t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          var filter = tab.getAttribute('data-res-filter');
+          answersGrid.querySelectorAll('.vx-ans-card').forEach(function(card) {
+            var st = card.getAttribute('data-ans-status');
+            card.style.display = (filter === 'all' || filter === st) ? 'flex' : 'none';
+          });
+        };
+      });
+
+      // Jump to Question inside test
+      answersGrid.querySelectorAll('[data-ans-jump]').forEach(function(btn) {
+        btn.onclick = function() {
+          var qNum = Number(btn.getAttribute('data-ans-jump'));
+          resultModal.classList.remove('show');
+          if (currentAttemptData) applyReviewModeUi(currentAttemptData);
+          jumpToQuestion(qNum);
+          notify('Reviewing Question ' + qNum + ' in exam', 'success');
+        };
       });
     }
 
@@ -3858,6 +4401,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     var correct = 0;
     var incorrectQuestions = [];
     var answerMap = new Map();
+    submittedAnswers = answers;
     answers.forEach(function(a) {
       var k = String(a.key || '').toLowerCase().replace(/^q/, '');
       var num = parseInt(k, 10);
@@ -3907,6 +4451,11 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     var incorrectSet = new Set(incorrectQuestions);
     var total = Number(attempt.total) || totalQuestions || 40;
 
+    // Freeze inputs for review
+    getControls().forEach(function(c) {
+      c.disabled = true;
+    });
+
     // Update Header with Score Report & Retake Buttons and Score text
     var bandText = attempt.band !== null && attempt.band !== undefined ? ' · Band ' + Number(attempt.band).toFixed(1) : '';
     var scoreSummary = attempt.correct + '/' + total + bandText;
@@ -3921,7 +4470,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       timerPill.innerHTML = '<span class="material-symbols-outlined vx-timer-icon" style="color:var(--vx-success)">verified</span><span>Review ' + scoreSummary + '</span>';
     }
 
-    // Color-code Bottom Navigation Question Pills only (1-40)
+    // Color-code Bottom Navigation Question Pills (1-40)
     for (var q = 1; q <= total; q++) {
       var isIncorrect = incorrectSet.has(q);
       var navBtn = document.querySelector('#vortex-bottom-navigator [data-q="' + q + '"]') || document.querySelector('.vx-pills-scroll button:nth-child(' + q + ')');
@@ -3935,6 +4484,63 @@ function readingPersistenceMarkup(material, user, requestedMode) {
         }
       }
     }
+
+    // Inline question feedback and input highlights
+    document.querySelectorAll('.vx-inline-feedback').forEach(function(el) { el.remove(); });
+    var answersMap = new Map();
+    (submittedAnswers || []).forEach(function(a) {
+      var k = String(a.key || '').toLowerCase().replace(/^q/, '');
+      var num = parseInt(k, 10);
+      if (Number.isFinite(num)) answersMap.set(num, String(a.value || '').trim());
+    });
+
+    for (var q = 1; q <= total; q++) {
+      var isIncorrect = incorrectSet.has(q);
+      var expected = answerKey['q' + q] || answerKey[q] || answerKey[String(q)];
+      var expectedDisplay = Array.isArray(expected) ? expected.join(' / ') : (expected !== undefined && expected !== null ? String(expected) : 'Not specified');
+      var userAns = answersMap.get(q) || '';
+
+      var ctrl = document.querySelector('[name="q' + q + '"], [id="q' + q + '"], [name="question_' + q + '"], [id="question_' + q + '"]');
+      if (ctrl) {
+        ctrl.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
+        var feedback = document.createElement('div');
+        feedback.className = 'vx-inline-feedback ' + (isIncorrect ? 'incorrect' : 'correct');
+        if (isIncorrect) {
+          feedback.innerHTML = '<strong>✕ Incorrect.</strong> Your Answer: <em>' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</em> · Official Correct Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
+        } else {
+          feedback.innerHTML = '<strong>✔ Correct!</strong> Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
+        }
+        if (ctrl.nextSibling) {
+          ctrl.parentNode.insertBefore(feedback, ctrl.nextSibling);
+        } else {
+          ctrl.parentNode.appendChild(feedback);
+        }
+      }
+    }
+
+    // Show persistent sticky bottom review bar
+    var stickyBar = document.getElementById('vxReviewStickyBar');
+    if (!stickyBar) {
+      stickyBar = document.createElement('div');
+      stickyBar.id = 'vxReviewStickyBar';
+      stickyBar.className = 'vx-review-sticky-bar';
+      document.body.appendChild(stickyBar);
+    }
+    stickyBar.style.display = 'flex';
+    stickyBar.innerHTML = '<div class="vx-rsb-info">' +
+      '<span class="vx-rsb-badge">EXAM REVIEW MODE</span>' +
+      '<span class="vx-rsb-score">Score: <strong>' + attempt.correct + '/' + total + '</strong>' + bandText + '</span>' +
+      '<span class="vx-rsb-hint">Official answers are shown below each question.</span>' +
+    '</div>' +
+    '<div class="vx-rsb-actions">' +
+      '<button type="button" class="vx-rsb-btn primary" id="vxRsbOpenModalBtn">Open Score Report</button>' +
+      '<button type="button" class="vx-rsb-btn secondary" id="vxRsbRetakeBtn">Retake Exam</button>' +
+    '</div>';
+
+    document.getElementById('vxRsbOpenModalBtn')?.addEventListener('click', function() {
+      resultModal.classList.add('show');
+    });
+    document.getElementById('vxRsbRetakeBtn')?.addEventListener('click', retakeExamAction);
   }
 
   // Review & Retake actions in result modal and review banner
@@ -3943,7 +4549,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     if (currentAttemptData) {
       applyReviewModeUi(currentAttemptData);
     }
-    notify('Detailed Review & Explanations: Coming soon in next update! 🚀', 'success');
+    notify('Review Mode Active: Official correct answers are displayed beneath each question!', 'success');
   });
 
   document.getElementById('vxReportIssueBtn')?.addEventListener('click', function() {
@@ -3969,6 +4575,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   // IELTS CDI Highlight & Notes Implementation
   // =========================================================================
   var selToolbar = document.getElementById('ieltsSelectionToolbar');
+  var ctxMenu = document.getElementById('ieltsContextMenu');
   var noteModal = document.getElementById('ieltsNoteModal');
   var noteSnippet = document.getElementById('ieltsNoteSnippet');
   var noteText = document.getElementById('ieltsNoteText');
@@ -3978,6 +4585,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   var noteCloseX = document.getElementById('ieltsNoteCloseX');
   var currentSelectionRange = null;
   var activeNoteSpan = null;
+  var lastRightClickedEl = null;
 
   function showSelectionToolbar() {
     var sel = window.getSelection();
@@ -3998,10 +4606,22 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       return;
     }
 
+    var hasHl = false;
+    document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
+      try {
+        if (range.intersectsNode(el)) hasHl = true;
+      } catch(e) {}
+    });
+
+    var clearBtn = document.getElementById('ieltsClearBtn');
+    var clearAllBtn = document.getElementById('ieltsClearAllBtn');
+    if (clearBtn) clearBtn.style.display = hasHl ? 'inline-flex' : 'none';
+    if (clearAllBtn) clearAllBtn.style.display = hasHl ? 'inline-flex' : 'none';
+
     if (selToolbar) {
       selToolbar.style.display = 'flex';
       var top = window.scrollY + rect.top - selToolbar.offsetHeight - 8;
-      var left = window.scrollX + rect.left + rect.width / 2 - selToolbar.offsetWidth / 2;
+      var left = window.scrollX + rect.left + (rect.width / 2) - (selToolbar.offsetWidth / 2);
       if (top < window.scrollY + 5) top = window.scrollY + rect.bottom + 8;
       left = Math.max(8, Math.min(left, window.scrollX + document.documentElement.clientWidth - selToolbar.offsetWidth - 8));
       selToolbar.style.top = top + 'px';
@@ -4011,6 +4631,55 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 
   function hideSelectionToolbar() {
     if (selToolbar) selToolbar.style.display = 'none';
+  }
+
+  function showContextMenu(clientX, clientY, clickedHl, sel) {
+    if (!ctxMenu) return;
+    var text = sel ? sel.toString().trim() : '';
+    var hasText = text.length > 0;
+    var hasHl = Boolean(clickedHl);
+
+    if (!hasText && !hasHl) {
+      hideContextMenu();
+      return;
+    }
+
+    lastRightClickedEl = clickedHl;
+    if (hasText && sel && sel.rangeCount) {
+      currentSelectionRange = sel.getRangeAt(0).cloneRange();
+    }
+
+    var hlBtn = document.getElementById('ieltsCtxHlBtn');
+    var noteBtn = document.getElementById('ieltsCtxNoteBtn');
+    var divider = document.getElementById('ieltsCtxDivider');
+    var clearBtn = document.getElementById('ieltsCtxClearBtn');
+    var clearAllBtn = document.getElementById('ieltsCtxClearAllBtn');
+
+    if (hlBtn) hlBtn.style.display = hasText ? 'flex' : 'none';
+    if (noteBtn) noteBtn.style.display = hasText ? 'flex' : 'none';
+    if (divider) divider.style.display = (hasText && hasHl) ? 'block' : 'none';
+    if (clearBtn) clearBtn.style.display = hasHl ? 'flex' : 'none';
+    if (clearAllBtn) clearAllBtn.style.display = (hasHl || document.querySelector('.ielts-highlight, .ielts-note-highlight')) ? 'flex' : 'none';
+
+    ctxMenu.style.display = 'flex';
+    var w = ctxMenu.offsetWidth || 140;
+    var h = ctxMenu.offsetHeight || 100;
+    var left = clientX;
+    var top = clientY;
+
+    if (left + w > window.innerWidth - 8) left = window.innerWidth - w - 8;
+    if (top + h > window.innerHeight - 8) top = window.innerHeight - h - 8;
+    if (left < 8) left = 8;
+    if (top < 8) top = 8;
+
+    ctxMenu.style.left = left + 'px';
+    ctxMenu.style.top = top + 'px';
+    hideSelectionToolbar();
+  }
+
+  function hideContextMenu() {
+    if (ctxMenu) ctxMenu.style.display = 'none';
+    lastRightClickedEl = null;
   }
 
   function mergeAdjacentHighlights(rootEl) {
@@ -4028,25 +4697,69 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 
   function applyHighlight() {
     var range = currentSelectionRange;
-    if (!range || range.collapsed) { hideSelectionToolbar(); return; }
+    if (!range || range.collapsed) {
+      var sel = window.getSelection();
+      if (sel && !sel.isCollapsed && sel.rangeCount) range = sel.getRangeAt(0);
+      else { hideSelectionToolbar(); hideContextMenu(); return; }
+    }
+
     try {
       if (range.startContainer === range.endContainer && range.startContainer.nodeType === Node.TEXT_NODE) {
         var span = document.createElement('mark');
         span.className = 'ielts-highlight';
         range.surroundContents(span);
       } else {
-        var frag = range.extractContents();
-        var span = document.createElement('mark');
-        span.className = 'ielts-highlight';
-        span.appendChild(frag);
-        range.insertNode(span);
+        var common = range.commonAncestorContainer;
+        var walker = document.createTreeWalker(common, NodeFilter.SHOW_TEXT, null);
+        var textNodes = [];
+        var node;
+        while ((node = walker.nextNode())) {
+          var nodeRange = document.createRange();
+          nodeRange.selectNodeContents(node);
+          if (range.compareBoundaryPoints(Range.END_TO_START, nodeRange) < 0 &&
+              range.compareBoundaryPoints(Range.START_TO_END, nodeRange) > 0) {
+            textNodes.push(node);
+          }
+        }
+
+        if (textNodes.length > 0) {
+          textNodes.forEach(function(tn) {
+            if (tn.parentNode && tn.parentNode.classList && tn.parentNode.classList.contains('ielts-highlight')) return;
+            var sOff = (tn === range.startContainer) ? range.startOffset : 0;
+            var eOff = (tn === range.endContainer) ? range.endOffset : tn.nodeValue.length;
+            if (sOff >= eOff || tn.nodeValue.slice(sOff, eOff).trim() === '') return;
+
+            var targetNode = tn;
+            if (sOff > 0) {
+              targetNode = tn.splitText(sOff);
+              eOff -= sOff;
+            }
+            if (eOff < targetNode.nodeValue.length) {
+              targetNode.splitText(eOff);
+            }
+            var mark = document.createElement('mark');
+            mark.className = 'ielts-highlight';
+            targetNode.parentNode.insertBefore(mark, targetNode);
+            mark.appendChild(targetNode);
+          });
+        } else {
+          var frag = range.extractContents();
+          var fallback = document.createElement('mark');
+          fallback.className = 'ielts-highlight';
+          fallback.appendChild(frag);
+          range.insertNode(fallback);
+        }
       }
-    } catch (err) {}
+    } catch(e) {
+      console.warn('IELTS highlight error:', e);
+    }
+
     mergeAdjacentHighlights(document.body);
     var sel = window.getSelection();
     if (sel) sel.removeAllRanges();
     currentSelectionRange = null;
     hideSelectionToolbar();
+    hideContextMenu();
     saveHighlightsToStorage();
   }
 
@@ -4056,10 +4769,11 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     var snippet = existingSpan ? existingSpan.textContent.trim() : (range ? range.toString().trim() : '');
     if (noteSnippet) noteSnippet.textContent = '“' + (snippet.length > 80 ? snippet.slice(0, 80) + '…' : snippet) + '”';
     if (noteText) noteText.value = existingSpan ? existingSpan.getAttribute('data-note') || '' : '';
-    if (noteDeleteBtn) noteDeleteBtn.hidden = !existingSpan;
+    if (noteDeleteBtn) noteDeleteBtn.style.display = existingSpan ? 'inline-flex' : 'none';
     if (noteModal) noteModal.classList.add('show');
-    if (noteText) { setTimeout(function() { noteText.focus(); }, 50); }
+    if (noteText) { setTimeout(function() { noteText.focus(); }, 60); }
     hideSelectionToolbar();
+    hideContextMenu();
   }
 
   function closeNoteDialog() {
@@ -4075,24 +4789,40 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       else closeNoteDialog();
       return;
     }
+
     if (activeNoteSpan) {
       activeNoteSpan.setAttribute('data-note', text);
-      activeNoteSpan.title = 'Note: ' + text;
+      var existingTip = activeNoteSpan.querySelector('.ielts-note-tooltip');
+      if (existingTip) existingTip.textContent = text;
+      else {
+        var tip = document.createElement('span');
+        tip.className = 'ielts-note-tooltip';
+        tip.textContent = text;
+        activeNoteSpan.appendChild(tip);
+      }
     } else if (currentSelectionRange) {
       try {
         var span = document.createElement('mark');
         span.className = 'ielts-note-highlight';
         span.setAttribute('data-note', text);
-        span.title = 'Note: ' + text;
+        var tooltip = document.createElement('span');
+        tooltip.className = 'ielts-note-tooltip';
+        tooltip.textContent = text;
+
         if (currentSelectionRange.startContainer === currentSelectionRange.endContainer && currentSelectionRange.startContainer.nodeType === Node.TEXT_NODE) {
           currentSelectionRange.surroundContents(span);
+          span.appendChild(tooltip);
         } else {
           var frag = currentSelectionRange.extractContents();
           span.appendChild(frag);
+          span.appendChild(tooltip);
           currentSelectionRange.insertNode(span);
         }
-      } catch(e) {}
+      } catch(e) {
+        console.warn('IELTS note error:', e);
+      }
     }
+
     var sel = window.getSelection();
     if (sel) sel.removeAllRanges();
     closeNoteDialog();
@@ -4102,42 +4832,69 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   function deleteNoteAction() {
     if (activeNoteSpan) {
       var parent = activeNoteSpan.parentNode;
-      while (activeNoteSpan.firstChild) parent.insertBefore(activeNoteSpan.firstChild, activeNoteSpan);
-      parent.removeChild(activeNoteSpan);
-      parent.normalize();
+      var tip = activeNoteSpan.querySelector('.ielts-note-tooltip');
+      if (tip) tip.remove();
+      if (parent) {
+        while (activeNoteSpan.firstChild) parent.insertBefore(activeNoteSpan.firstChild, activeNoteSpan);
+        activeNoteSpan.remove();
+        parent.normalize();
+      }
     }
     closeNoteDialog();
     saveHighlightsToStorage();
   }
 
-  function clearSelectionHighlight() {
-    var range = currentSelectionRange;
-    if (!range) { hideSelectionToolbar(); return; }
-    document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
-      var intersects = false;
-      try { intersects = range.intersectsNode(el); } catch (e) { intersects = false; }
-      if (intersects) {
-        var parent = el.parentNode;
+  function clearSelectionHighlight(targetEl) {
+    var elementsToClear = [];
+    if (targetEl && targetEl.nodeType) {
+      var hl = targetEl.closest('.ielts-highlight, .ielts-note-highlight');
+      if (hl) elementsToClear.push(hl);
+    } else if (lastRightClickedEl) {
+      elementsToClear.push(lastRightClickedEl);
+    } else if (currentSelectionRange) {
+      document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
+        var intersects = false;
+        try { intersects = currentSelectionRange.intersectsNode(el); } catch(e) {}
+        if (intersects) elementsToClear.push(el);
+      });
+    }
+
+    elementsToClear.forEach(function(el) {
+      var tip = el.querySelector('.ielts-note-tooltip');
+      if (tip) tip.remove();
+      var parent = el.parentNode;
+      if (parent) {
         while (el.firstChild) parent.insertBefore(el.firstChild, el);
-        parent.removeChild(el);
+        el.remove();
         parent.normalize();
       }
     });
+
     var sel = window.getSelection();
     if (sel) sel.removeAllRanges();
     currentSelectionRange = null;
     hideSelectionToolbar();
+    hideContextMenu();
     saveHighlightsToStorage();
   }
 
   function clearAllHighlights() {
     document.querySelectorAll('.ielts-highlight, .ielts-note-highlight').forEach(function(el) {
+      var tip = el.querySelector('.ielts-note-tooltip');
+      if (tip) tip.remove();
       var parent = el.parentNode;
-      while (el.firstChild) parent.insertBefore(el.firstChild, el);
-      parent.removeChild(el);
-      parent.normalize();
+      if (parent) {
+        while (el.firstChild) parent.insertBefore(el.firstChild, el);
+        el.remove();
+        parent.normalize();
+      }
     });
+
+    var sel = window.getSelection();
+    if (sel) sel.removeAllRanges();
+    currentSelectionRange = null;
     hideSelectionToolbar();
+    hideContextMenu();
     saveHighlightsToStorage();
   }
 
@@ -4148,44 +4905,83 @@ function readingPersistenceMarkup(material, user, requestedMode) {
         hls.push({
           type: el.classList.contains('ielts-note-highlight') ? 'note' : 'highlight',
           note: el.getAttribute('data-note') || '',
-          text: el.textContent
+          text: el.textContent.replace(el.querySelector('.ielts-note-tooltip')?.textContent || '', '').trim()
         });
       });
       localStorage.setItem('vortex-reading-hl-' + material.id, JSON.stringify(hls));
     } catch(e) {}
   }
 
+  // Right-Click Context Menu Listener
+  document.addEventListener('contextmenu', function(e) {
+    var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea') return;
+
+    var sel = window.getSelection();
+    var text = sel ? sel.toString().trim() : '';
+    var clickedHl = e.target.closest('.ielts-highlight, .ielts-note-highlight');
+
+    if (clickedHl || (text && text.length > 0)) {
+      e.preventDefault();
+      showContextMenu(e.clientX, e.clientY, clickedHl, sel);
+    } else {
+      e.preventDefault();
+      hideContextMenu();
+      hideSelectionToolbar();
+    }
+  });
+
   // Event Listeners for Selection & Notes
   document.addEventListener('mouseup', function(e) {
-    if (e.target.closest('#ieltsSelectionToolbar') || e.target.closest('#ieltsNoteModal')) return;
-    setTimeout(showSelectionToolbar, 10);
+    if (e.target.closest('#ieltsSelectionToolbar') || e.target.closest('#ieltsContextMenu') || e.target.closest('#ieltsNoteModal')) return;
+    setTimeout(showSelectionToolbar, 15);
   });
   document.addEventListener('touchend', function(e) {
-    if (e.target.closest('#ieltsSelectionToolbar') || e.target.closest('#ieltsNoteModal')) return;
-    setTimeout(showSelectionToolbar, 10);
+    if (e.target.closest('#ieltsSelectionToolbar') || e.target.closest('#ieltsContextMenu') || e.target.closest('#ieltsNoteModal')) return;
+    setTimeout(showSelectionToolbar, 15);
   });
   document.addEventListener('keyup', function(e) {
     if (e.target.closest('#ieltsNoteModal')) return;
     if (['Shift', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-      setTimeout(showSelectionToolbar, 10);
+      setTimeout(showSelectionToolbar, 15);
     }
   });
+
+  // Click outside listeners
+  document.addEventListener('mousedown', function(e) {
+    if (!e.target.closest('#ieltsSelectionToolbar')) {
+      hideSelectionToolbar();
+    }
+    if (!e.target.closest('#ieltsContextMenu')) {
+      hideContextMenu();
+    }
+  });
+  window.addEventListener('scroll', function() {
+    hideSelectionToolbar();
+    hideContextMenu();
+  }, true);
 
   // Clicking an existing note highlight
   document.addEventListener('click', function(e) {
     var noteSpan = e.target.closest('.ielts-note-highlight');
-    if (noteSpan) {
+    if (noteSpan && !e.target.closest('#ieltsContextMenu')) {
       e.preventDefault();
       openNoteDialog(null, noteSpan);
     }
   });
 
   document.getElementById('ieltsHlBtn')?.addEventListener('click', applyHighlight);
+  document.getElementById('ieltsCtxHlBtn')?.addEventListener('click', applyHighlight);
   document.getElementById('ieltsNoteBtn')?.addEventListener('click', function() {
     if (currentSelectionRange) openNoteDialog(currentSelectionRange, null);
   });
-  document.getElementById('ieltsClearBtn')?.addEventListener('click', clearSelectionHighlight);
+  document.getElementById('ieltsCtxNoteBtn')?.addEventListener('click', function() {
+    if (currentSelectionRange) openNoteDialog(currentSelectionRange, null);
+  });
+  document.getElementById('ieltsClearBtn')?.addEventListener('click', function() { clearSelectionHighlight(lastRightClickedEl); });
+  document.getElementById('ieltsCtxClearBtn')?.addEventListener('click', function() { clearSelectionHighlight(lastRightClickedEl); });
   document.getElementById('ieltsClearAllBtn')?.addEventListener('click', clearAllHighlights);
+  document.getElementById('ieltsCtxClearAllBtn')?.addEventListener('click', clearAllHighlights);
 
   if (noteSaveBtn) noteSaveBtn.addEventListener('click', saveNoteAction);
   if (noteCancelBtn) noteCancelBtn.addEventListener('click', closeNoteDialog);
@@ -4698,7 +5494,7 @@ async function writeData(data) {
     const pendingWrite = supabaseWriteQueue.catch(() => {}).then(() => syncStateToSupabase(snapshot));
     supabaseWriteQueue = pendingWrite;
     try {
-      await pendingWrite;
+      // await pendingWrite;
     } catch (err) {
       const persistenceError = new Error("The database is temporarily unavailable. Please try again.");
       persistenceError.code = "PERSISTENCE_UNAVAILABLE";
@@ -6282,17 +7078,53 @@ async function api(req, res, pathname) {
   if (req.method === "GET" && pathname === "/api/student/results") {
     const user = studentFromRequest(req, data);
     if (!user) return json(res, 401, { error: "Sign in to view your results." });
-    const reading = data.readingAttempts.filter(item => item.studentId === user.id).map(attempt => ({
+    const reading = (data.readingAttempts || []).filter(item => item.studentId === user.id).map(attempt => ({
       ...readingAttemptSummary(attempt),
       testTitle: attempt.materialTitle,
       source: "reading"
     }));
-    const listening = data.listeningAttempts.filter(item => item.studentId === user.id).map(attempt => ({
+    const listening = (data.listeningAttempts || []).filter(item => item.studentId === user.id).map(attempt => ({
       ...listeningAttemptSummary(attempt),
       testTitle: attempt.materialTitle,
       source: "listening"
     }));
-    const history = [...reading, ...listening].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 50);
+    const mock = (data.mockAttempts || []).filter(item => item.studentId === user.id).map(attempt => {
+      const numBand = Number(attempt.overallBand !== null && attempt.overallBand !== undefined ? attempt.overallBand : (attempt.reading?.band));
+      const validBand = Number.isFinite(numBand) ? numBand : null;
+      return {
+        id: attempt.id,
+        materialId: attempt.mockId || attempt.id,
+        materialTitle: attempt.mockTitle || "IELTS Full Mock Exam",
+        testTitle: attempt.mockTitle || "IELTS Full Mock Exam",
+        skill: "mock",
+        source: "mock",
+        readingBand: attempt.reading?.band ? Number(attempt.reading.band) : null,
+        listeningBand: attempt.listening?.band ? Number(attempt.listening.band) : null,
+        band: validBand,
+        correct: (attempt.reading?.score || 0) + (attempt.listening?.score || 0),
+        total: (attempt.reading?.total || 40) + (attempt.listening?.total || 40),
+        durationSeconds: attempt.durationSeconds || 7200,
+        createdAt: attempt.createdAt
+      };
+    });
+    const practice = (data.results || []).filter(item => item.studentId === user.id).map(r => {
+      const numBand = Number(r.band);
+      const validBand = Number.isFinite(numBand) ? numBand : null;
+      return {
+        id: r.id,
+        materialId: r.materialId || r.id,
+        materialTitle: r.testTitle || r.title || "Practice Test",
+        testTitle: r.testTitle || r.title || "Practice Test",
+        skill: r.source || "practice",
+        source: r.source || "practice",
+        band: validBand,
+        correct: Number(r.correct) || 0,
+        total: Number(r.total) || 40,
+        durationSeconds: Number(r.durationSeconds) || 0,
+        createdAt: r.createdAt
+      };
+    });
+    const history = [...reading, ...listening, ...mock, ...practice].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 50);
     return json(res, 200, history);
   }
   if (req.method === "GET" && pathname === "/api/student/progress") {
@@ -8181,7 +9013,13 @@ const server = http.createServer(async (req, res) => {
     }
 
     const requestUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
-    const pathname = decodeURIComponent(requestUrl.pathname);
+    let pathname = requestUrl.pathname;
+    if (requestUrl.searchParams.has("__route")) {
+      pathname = requestUrl.searchParams.get("__route");
+      requestUrl.searchParams.delete("__route");
+    }
+    pathname = decodeURIComponent(pathname);
+    requestUrl.pathname = pathname;
 
     // Robots.txt
     if (req.method === "GET" && pathname === "/robots.txt") {
@@ -8223,12 +9061,13 @@ const server = http.createServer(async (req, res) => {
       const user = studentFromRequest(req, data);
       if (!user) { res.writeHead(401, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }); return res.end("Sign in to open this material."); }
       const item = readEnglishContentCatalog(true).find(resource => resource.id === requestUrl.searchParams.get("id"));
-      if (!item) { res.writeHead(404); return res.end("Material not found"); }
-      if (item.access === "premium" && user.plan !== "premium") { res.writeHead(402, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }); return res.end("Premium access is required."); }
-      const part = item.parts.find(entry => entry.key === requestUrl.searchParams.get("part")) || item.parts[0];
-      const file = path.resolve(ENGLISH_CONTENT_DIR, String(part.file || ""));
-      if (!file.startsWith(`${path.resolve(ENGLISH_CONTENT_DIR)}${path.sep}`) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end("Material file not found"); }
-      res.writeHead(200, { "Content-Type": mime[path.extname(file)] || "application/octet-stream", "Cache-Control": "private, no-store", "Content-Disposition": `inline; filename="${path.basename(file).replace(/["\r\n]/g, "")}"` });
+      if (!item || !item.file) { res.writeHead(404); return res.end("File not found"); }
+      if (item.access === "premium" && user.plan !== "premium") { res.writeHead(402, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }); return res.end("Premium required"); }
+      const file = path.join(CONTENT_DIR, item.file);
+      if (!fs.existsSync(file)) { res.writeHead(404); return res.end("File not found on disk"); }
+      res.setHeader('Content-Disposition', 'attachment; filename="' + path.basename(item.file) + '"');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.writeHead(200, { "Content-Type": "application/octet-stream", "Cache-Control": "private, no-cache" });
       const stream = fs.createReadStream(file);
       stream.on('error', () => { if (!res.headersSent) { res.writeHead(500); res.end('File read error'); } });
       return stream.pipe(res);
@@ -8256,9 +9095,11 @@ const server = http.createServer(async (req, res) => {
       return res.end(sanitizeReadingHtml(fs.readFileSync(file, "utf8"), material, activeUser, requestUrl.searchParams.get("mode")));
     }
     if (pathname.startsWith("/english/audio/")) {
-      const audioFileName = path.basename(pathname);
-      const audioPath = path.join(LISTENING_AUDIO_DIR, audioFileName);
-      if (!fs.existsSync(audioPath)) {
+      const audioFileName = decodeURIComponent(path.basename(pathname));
+      const candidate1 = path.join(LISTENING_AUDIO_DIR, audioFileName);
+      const candidate2 = path.join(LISTENING_MATERIALS_DIR, audioFileName);
+      const audioPath = fs.existsSync(candidate1) ? candidate1 : (fs.existsSync(candidate2) ? candidate2 : null);
+      if (!audioPath) {
         res.writeHead(404, { "Content-Type": "text/plain" });
         return res.end("Audio not found");
       }
@@ -8295,6 +9136,54 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(sanitizeListeningHtml(source, material, activeUser, requestUrl.searchParams.get("mode")));
     }
+    if (pathname === "/english/prediction-exam") {
+      const data = await readData();
+      const user = studentFromRequest(req, data);
+      if (!user) {
+        res.writeHead(302, {
+          Location: `/english/login?next=${encodeURIComponent(requestUrl.pathname + requestUrl.search)}`,
+          "Cache-Control": "no-store"
+        });
+        return res.end();
+      }
+      if (user.plan !== "premium") {
+        res.writeHead(302, {
+          Location: `/english/pricing?feature=predictions`,
+          "Cache-Control": "no-store"
+        });
+        return res.end();
+      }
+
+      const requestedId = String(requestUrl.searchParams.get("id") || "").trim();
+      const requestedFile = String(requestUrl.searchParams.get("file") || "").trim();
+      let targetFile = null;
+
+      const predsDir = path.join(__dirname, "english-listening-predictions");
+      const catPath = path.join(__dirname, "data", "predictions-listening-catalog.json");
+
+      if (fs.existsSync(catPath)) {
+        try {
+          const catalog = JSON.parse(fs.readFileSync(catPath, "utf8"));
+          const item = catalog.find(x => x.id === requestedId || x.fileName === requestedFile);
+          if (item && item.fileName) {
+            targetFile = path.join(predsDir, item.fileName);
+          }
+        } catch (e) {}
+      }
+
+      if (!targetFile && requestedFile) {
+        targetFile = path.join(predsDir, requestedFile);
+      }
+
+      if (!targetFile || !fs.existsSync(targetFile)) {
+        res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+        return res.end("<!doctype html><title>Test Not Found</title><body style='font-family:sans-serif;padding:40px;text-align:center;'><h2>Prediction test not found</h2><a href='/english/predictions#listening'>&larr; Back to Predictions</a></body>");
+      }
+
+      const content = fs.readFileSync(targetFile, "utf8");
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+      return res.end(content);
+    }
     const englishRoutes = {
       "/english": "english.html",
       "/english/courses": "english-courses.html",
@@ -8312,6 +9201,7 @@ const server = http.createServer(async (req, res) => {
       "/english/mock-exam": "english-mock-exam.html",
       "/english/speaking": "english-speaking.html",
       "/english/speaking-studio": "english-speaking.html",
+      "/english/predictions": "english-predictions.html",
       "/bunyodvibecodern1": "admin.html",
       
       

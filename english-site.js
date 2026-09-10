@@ -706,10 +706,13 @@
             </div>
             
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;margin-bottom:24px;">
-              <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center;background:#f8fafc;">
-                <div style="font-size:12px;font-weight:700;color:#64748b;">1 OY (1 MONTH)</div>
-                <div style="font-size:20px;font-weight:800;color:#0f172a;margin:6px 0;">30 000 UZS</div>
-                <small style="color:#64748b;">Boshlangʻich narx</small>
+              <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center;background:#f8fafc;position:relative;">
+                <span style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;">EARLY BIRD · 50%</span>
+                <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:2px;">1 OY (1 MONTH)</div>
+                <div style="font-size:19px;font-weight:800;color:#0f172a;margin:6px 0;">
+                  <del style="color:#94a3b8;font-size:13px;font-weight:600;margin-right:4px;">59 000</del>30 000 UZS
+                </div>
+                <small style="color:#059669;font-weight:700;">Dastlabki 10 ta oʻquvchi uchun</small>
               </div>
               <div style="border:2px solid #e11d48;border-radius:12px;padding:16px;text-align:center;background:#fff1f2;position:relative;">
                 <span style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#e11d48;color:#fff;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:10px;">ENG OMMABOP</span>
