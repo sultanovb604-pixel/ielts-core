@@ -326,6 +326,23 @@ body.member-sidebar-collapsed .member-sidebar {
 }
 
 @media (max-width: 900px) {
+  .dashboard-chart-grid,
+  .dashboard-priority-clean {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .activity-chart-wrapper {
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  #activityBarsGrid,
+  #activityDaysLabels {
+    gap: 4px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
   body.member-layout,
   body.member-layout.member-sidebar-collapsed {
     padding-left: 0 !important;
