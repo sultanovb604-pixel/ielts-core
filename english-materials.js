@@ -2,384 +2,535 @@
   const list = document.querySelector('#resourceList');
   const count = document.querySelector('#resourceCount');
   const search = document.querySelector('#materialSearch');
+  const searchBtn = document.querySelector('#materialSearchBtn');
   const searchClear = document.querySelector('#clearSearchInput');
-  const clear = document.querySelector('#clearMaterialFilters');
-  const activeTags = document.querySelector('#activeFilterTags');
+  const clearFiltersBtn = document.querySelector('#clearMaterialFilters');
+
+  // Filter Dropdowns
+  const filterPassage = document.querySelector('#filterPassage');
+  const filterStatus = document.querySelector('#filterStatus');
+  const filterType = document.querySelector('#filterType');
+  const filterPlan = document.querySelector('#filterPlan');
+  const filterPack = document.querySelector('#filterPack');
+
+  // Sidebar & Layout elements
+  const sidebar = document.querySelector('#vxCatalogSidebar');
+  const backdrop = document.querySelector('#vxSidebarBackdrop');
+  const drawerOpenBtn = document.querySelector('#vxDrawerOpenBtn');
+  const breadcrumbCurrent = document.querySelector('#vxBreadcrumbCurrent');
+  const catIconBadge = document.querySelector('#vxCatIconBadge');
+  const catTitle = document.querySelector('#vxCategoryTitle');
+  const catSubtitle = document.querySelector('#vxCategorySubtitle');
+  const badgeListening = document.querySelector('#badgeFullListening');
+  const badgeReading = document.querySelector('#badgeFullReading');
+
+  // User Profile in Sidebar
+  const userAvatar = document.querySelector('#vxUserAvatar');
+  const userName = document.querySelector('#vxUserName');
+  const userEmail = document.querySelector('#vxUserEmail');
+  const logoutBtn = document.querySelector('#vxLogoutBtn');
+
+  // URL state
   const params = new URLSearchParams(location.search);
+  const allowedSkills = ['listening', 'speaking', 'reading', 'writing', 'all'];
+  const allowedCollections = ['full-test', 'practice', 'article', 'writing-sample', 'speaking', 'book', 'all'];
 
-  const allowedSkills = ['listening', 'speaking', 'reading', 'writing'];
-  const allowedCollections = ['full-test', 'practice', 'article', 'writing-sample', 'speaking', 'speaking-sample', 'speaking-question', 'book'];
-
-  let level = ['beginner', 'elementary', 'ielts'].includes(params.get('level')) ? params.get('level') : 'all';
-  let skill = allowedSkills.includes(params.get('skill')) ? params.get('skill') : 'all';
-  let rawCollection = params.get('collection');
-  let collection = allowedCollections.includes(rawCollection) ? rawCollection : 'all';
+  let skill = allowedSkills.includes(params.get('skill')) ? params.get('skill') : 'reading';
+  let collection = allowedCollections.includes(params.get('collection')) ? params.get('collection') : 'practice';
   let query = (params.get('q') || '').trim();
+
+  let selectedPassage = params.get('passage') || 'all';
+  let selectedStatus = params.get('status') || 'all';
+  let selectedType = params.get('type') || 'all';
+  let selectedPlan = params.get('plan') || 'all';
+  let selectedPack = params.get('pack') || 'all';
+
   let resources = [];
   const token = localStorage.getItem('vortex-english-token') || '';
 
+  // 1. Synchronize UI Inputs with initial URL params
   if (search && query) {
     search.value = query;
     if (searchClear) searchClear.hidden = false;
   }
+  if (filterPassage) filterPassage.value = selectedPassage;
+  if (filterStatus) filterStatus.value = selectedStatus;
+  if (filterType) filterType.value = selectedType;
+  if (filterPlan) filterPlan.value = selectedPlan;
+  if (filterPack) filterPack.value = selectedPack;
 
-  const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-  const hasNumber = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+  const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
 
-  const labels = {
-    beginner: 'Beginner (A1)',
-    elementary: 'Elementary (A2)',
-    ielts: 'IELTS',
-    listening: 'Listening',
-    speaking: 'Speaking',
-    reading: 'Reading',
-    writing: 'Writing',
-    video: 'Video',
-    pdf: 'PDF',
-    audio: 'Audio',
-    article: 'Article',
-    exam: 'Exam practice',
-    book: 'Course Book',
-    sample: 'Model sample',
-    free: 'Free',
-    premium: 'Premium',
-    'full-test': 'Full Mock Tests',
-    practice: 'Passage Drills',
-    'writing-sample': 'Writing Models',
-    'speaking-sample': 'Speaking Samples',
-    'speaking-question': 'Speaking Questions',
-    speaking: 'Speaking'
+  // 2. Countdown Timer for Limited-time Offer (Screenshot 4: 02d: 04h: 14m: 12s)
+  const countdownEl = document.querySelector('#vxOfferCountdown');
+  if (countdownEl) {
+    let targetTime = Date.now() + (2 * 86400 + 4 * 3600 + 14 * 60 + 12) * 1000;
+    const storedTarget = localStorage.getItem('vx_offer_target_time');
+    if (storedTarget && Number(storedTarget) > Date.now()) {
+      targetTime = Number(storedTarget);
+    } else {
+      localStorage.setItem('vx_offer_target_time', String(targetTime));
+    }
+
+    const updateCountdown = () => {
+      const now = Date.now();
+      const diff = Math.max(0, targetTime - now);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      countdownEl.textContent = `${String(days).padStart(2, '0')}d: ${String(hours).padStart(2, '0')}h: ${String(minutes).padStart(2, '0')}m: ${String(seconds).padStart(2, '0')}s`;
+    };
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  }
+
+  // 3. User Profile Card population
+  const populateUserProfile = () => {
+    let user = null;
+    try {
+      const stored = localStorage.getItem('vortex-english-user');
+      if (stored) user = JSON.parse(stored);
+    } catch (_) {}
+
+    if (user && (user.name || user.email)) {
+      const displayName = user.name || user.email.split('@')[0];
+      if (userName) userName.textContent = displayName;
+      if (userEmail) userEmail.textContent = user.email || (user.plan === 'premium' ? 'Premium Candidate' : 'Free Candidate');
+      if (userAvatar) {
+        const initials = displayName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'C';
+        if (user.avatarUrl) {
+          userAvatar.innerHTML = `<img src="${escape(user.avatarUrl)}" alt="${escape(displayName)}">`;
+        } else {
+          userAvatar.textContent = initials;
+        }
+      }
+    } else if (token) {
+      // Attempt lightweight profile fetch
+      fetch('/api/account', { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data && (data.name || data.email)) {
+            localStorage.setItem('vortex-english-user', JSON.stringify(data));
+            populateUserProfile();
+          }
+        })
+        .catch(() => {});
+    }
+  };
+  populateUserProfile();
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('vortex-english-token');
+      localStorage.removeItem('vortex-english-user');
+      location.replace('/english/login');
+    });
+  }
+
+  // 4. Mobile Drawer Behavior
+  if (drawerOpenBtn && sidebar && backdrop) {
+    drawerOpenBtn.addEventListener('click', () => {
+      sidebar.classList.add('open');
+      backdrop.classList.add('active');
+    });
+    backdrop.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('active');
+    });
+  }
+
+  // 5. Category Meta Configuration
+  const getCategoryMeta = (s, c) => {
+    if (c === 'full-test') {
+      if (s === 'listening') {
+        return {
+          title: 'Listening Full Tests',
+          subtitle: 'Authentic 4-part Cambridge CDI listening mock exams with full audio simulation',
+          icon: '🎧',
+          breadcrumb: 'Full Tests > Listening'
+        };
+      }
+      return {
+        title: 'Reading Full Tests',
+        subtitle: 'Complete 3-passage 40-question Cambridge CDI reading mock tests under real exam conditions',
+        icon: '📖',
+        breadcrumb: 'Full Tests > Reading'
+      };
+    }
+    if (c === 'writing-sample') {
+      return {
+        title: 'Writing Tasks',
+        subtitle: 'Official Cambridge Writing Task 1 and Task 2 prompts with Band 9 examiner models',
+        icon: '✍️',
+        breadcrumb: 'Part Practice > Writing'
+      };
+    }
+    if (c === 'speaking') {
+      return {
+        title: 'Speaking Topics',
+        subtitle: 'Recent actual IELTS Speaking exam topics, cue cards, and high-band answer drills',
+        icon: '🗣️',
+        breadcrumb: 'Part Practice > Speaking'
+      };
+    }
+    if (c === 'article') {
+      return {
+        title: 'Academic Articles',
+        subtitle: 'Curated scientific and academic reading articles with vocabulary banking',
+        icon: '📰',
+        breadcrumb: 'Study Tools > Articles'
+      };
+    }
+    if (s === 'listening') {
+      return {
+        title: 'Listening Sections',
+        subtitle: 'Practice individual Cambridge listening sections with targeted question types',
+        icon: '🎧',
+        breadcrumb: 'Part Practice > Listening'
+      };
+    }
+    return {
+      title: 'Reading Passages',
+      subtitle: 'Practice individual reading passages with various question types',
+      icon: '📖',
+      breadcrumb: 'Reading Passages'
+    };
+  };
+
+  const updateHeaderAndBreadcrumb = () => {
+    const meta = getCategoryMeta(skill, collection);
+    if (catTitle) catTitle.textContent = meta.title;
+    if (catSubtitle) catSubtitle.textContent = meta.subtitle;
+    if (catIconBadge) catIconBadge.textContent = meta.icon;
+    if (breadcrumbCurrent) breadcrumbCurrent.textContent = meta.breadcrumb;
+    if (search) search.placeholder = `Search ${meta.title.toLowerCase()}...`;
+  };
+
+  const syncUrl = () => {
+    const url = new URL(location.href);
+    url.searchParams.set('skill', skill);
+    url.searchParams.set('collection', collection);
+    query ? url.searchParams.set('q', query) : url.searchParams.delete('q');
+    selectedPassage === 'all' ? url.searchParams.delete('passage') : url.searchParams.set('passage', selectedPassage);
+    selectedStatus === 'all' ? url.searchParams.delete('status') : url.searchParams.set('status', selectedStatus);
+    selectedType === 'all' ? url.searchParams.delete('type') : url.searchParams.set('type', selectedType);
+    selectedPlan === 'all' ? url.searchParams.delete('plan') : url.searchParams.set('plan', selectedPlan);
+    selectedPack === 'all' ? url.searchParams.delete('pack') : url.searchParams.set('pack', selectedPack);
+    history.replaceState({}, '', url);
   };
 
   const inferCollection = item => {
     if (item.collection) return item.collection;
     if (item.materialKind === 'full-test') return 'full-test';
-    if (item.materialKind === 'skill-practice' || item.materialKind === 'practice') return 'practice';
+    if (item.materialKind === 'skill-practice' || item.materialKind === 'passage') return 'practice';
     if (item.type === 'article') return 'article';
     if (item.type === 'book') return 'book';
     if (item.skill === 'writing') return 'writing-sample';
-    if (item.skill === 'speaking') return 'speaking-question';
+    if (item.skill === 'speaking') return 'speaking';
     return 'practice';
   };
 
-  const syncUrl = () => {
-    const url = new URL(location.href);
-    level === 'all' ? url.searchParams.delete('level') : url.searchParams.set('level', level);
-    skill === 'all' ? url.searchParams.delete('skill') : url.searchParams.set('skill', skill);
-    collection === 'all' ? url.searchParams.delete('collection') : url.searchParams.set('collection', collection);
-    query ? url.searchParams.set('q', query) : url.searchParams.delete('q');
-    history.replaceState({}, '', url);
-  };
-
-  const renderActiveTags = () => {
-    if (!activeTags) return;
-    const tags = [];
-    if (collection !== 'all') tags.push({ label: labels[collection] || collection, type: 'collection' });
-    if (level !== 'all') tags.push({ label: labels[level] || level, type: 'level' });
-    if (skill !== 'all') tags.push({ label: labels[skill] || skill, type: 'skill' });
-    if (query) tags.push({ label: `"${query}"`, type: 'query' });
-
-    if (!tags.length) {
-      activeTags.innerHTML = '';
-      return;
-    }
-    activeTags.innerHTML = tags.map(t => `<span class="active-filter-tag">${escape(t.label)}<button type="button" data-remove-tag="${escape(t.type)}" aria-label="Remove ${escape(t.label)} filter">×</button></span>`).join('');
-  };
-
+  // 6. Main Render Loop
   const render = () => {
-    document.querySelectorAll('[data-level]').forEach(button => {
-      const active = button.dataset.level === level;
-      button.setAttribute('aria-pressed', String(active));
+    // Sync sidebar active state
+    document.querySelectorAll('[data-side-skill]').forEach(btn => {
+      const bSkill = btn.dataset.sideSkill;
+      const bColl = btn.dataset.sideCollection;
+      const active = (bSkill === 'all' || bSkill === skill) && bColl === collection;
+      btn.classList.toggle('active', active);
     });
-    document.querySelectorAll('[data-material-skill]').forEach(button => {
-      const active = button.dataset.materialSkill === skill;
-      button.setAttribute('aria-pressed', String(active));
-    });
-    document.querySelectorAll('[data-collection]').forEach(button => {
-      const active = button.dataset.collection === collection;
-      button.setAttribute('aria-pressed', String(active));
-      button.setAttribute('aria-selected', String(active));
-    });
+
+    updateHeaderAndBreadcrumb();
 
     const normalized = query.trim().toLocaleLowerCase('en');
-    const english = resources.filter(item => {
-      const g = item.grade || item.level || 'ielts';
-      return ['beginner', 'elementary', 'ielts'].includes(g);
-    });
 
-    const visible = english.filter(item => {
-      const itemCollection = inferCollection(item);
-      const matchesLevel = level === 'all' || item.grade === level;
+    // Filter resources
+    const visible = resources.filter(item => {
+      const itemColl = inferCollection(item);
+
+      // Skill match
       const matchesSkill = skill === 'all' || item.skill === skill;
-      const matchesCollection = collection === 'all'
-        || (collection === 'speaking' && (itemCollection === 'speaking-sample' || itemCollection === 'speaking-question' || item.skill === 'speaking'))
-        || itemCollection === collection;
-      const itemSearchText = `${item.title || ''} ${item.description || ''} ${item.sourceTitle || ''} ${item.formatLabel || ''} ${item.skill || ''}`.toLocaleLowerCase('en');
-      const matchesQuery = !normalized || itemSearchText.includes(normalized);
-      return matchesLevel && matchesSkill && matchesCollection && matchesQuery;
+
+      // Collection match
+      const matchesColl = collection === 'all'
+        || (collection === 'practice' && (itemColl === 'practice' || item.materialKind === 'passage' || item.materialKind === 'skill-practice'))
+        || (collection === 'full-test' && (itemColl === 'full-test' || item.materialKind === 'full-test'))
+        || itemColl === collection;
+
+      // Passage filter
+      let matchesPassage = true;
+      if (selectedPassage !== 'all') {
+        const pNum = Number(selectedPassage);
+        matchesPassage = item.passageNumber === pNum;
+      }
+
+      // Status filter
+      let matchesStatus = true;
+      if (selectedStatus === 'completed') matchesStatus = Boolean(item.completed);
+      else if (selectedStatus === 'not-started') matchesStatus = !item.completed;
+
+      // Question Type filter
+      let matchesType = true;
+      if (selectedType !== 'all') {
+        const typesStr = (item.questionTypes || []).join(' ').toLowerCase();
+        if (selectedType === 'tfng') matchesType = typesStr.includes('true') || typesStr.includes('yes') || typesStr.includes('not given');
+        else if (selectedType === 'headings') matchesType = typesStr.includes('headings');
+        else if (selectedType === 'completion') matchesType = typesStr.includes('completion') || typesStr.includes('gap');
+        else if (selectedType === 'mcq') matchesType = typesStr.includes('multiple choice') || typesStr.includes('mcq');
+      }
+
+      // Plan filter
+      let matchesPlan = true;
+      if (selectedPlan === 'free') matchesPlan = item.access === 'free' || item.free === true;
+      else if (selectedPlan === 'premium') matchesPlan = item.access === 'premium' && !item.free;
+
+      // Pack filter
+      let matchesPack = true;
+      if (selectedPack !== 'all') {
+        matchesPack = (item.packName || '').toLowerCase().includes(selectedPack.toLowerCase());
+      }
+
+      // Query search
+      const searchText = `${item.title || ''} ${item.description || ''} ${item.sourceTitle || ''} ${item.packName || ''} ${(item.questionTypes || []).join(' ')}`.toLocaleLowerCase('en');
+      const matchesQuery = !normalized || searchText.includes(normalized);
+
+      return matchesSkill && matchesColl && matchesPassage && matchesStatus && matchesType && matchesPlan && matchesPack && matchesQuery;
     });
 
-    const isFiltered = level !== 'all' || skill !== 'all' || collection !== 'all' || Boolean(normalized);
-    if (clear) clear.hidden = !isFiltered;
-    renderActiveTags();
+    // Update Result Count
+    const totalCount = resources.filter(item => {
+      const itemColl = inferCollection(item);
+      const matchesSkill = skill === 'all' || item.skill === skill;
+      const matchesColl = collection === 'all'
+        || (collection === 'practice' && (itemColl === 'practice' || item.materialKind === 'passage' || item.materialKind === 'skill-practice'))
+        || (collection === 'full-test' && (itemColl === 'full-test' || item.materialKind === 'full-test'))
+        || itemColl === collection;
+      return matchesSkill && matchesColl;
+    }).length;
 
-    // Header & Ribbon Handling
-    const topRibbonEl = document.querySelector('.vx-top-notification-banner');
-    const isUserPremium = document.body.classList.contains('user-is-premium') || document.documentElement.classList.contains('user-is-premium');
-    if (topRibbonEl && isUserPremium) {
-      topRibbonEl.style.display = 'none';
+    if (count) {
+      count.textContent = `Showing ${visible.length} of ${totalCount} tests`;
     }
 
-    const freeVisible = visible.filter(item => item.access === 'free').length;
-    const totalLabel = `${visible.length} ${visible.length === 1 ? 'item' : 'materials'}`;
-    const freeLabel = visible.length > 0 && freeVisible > 0 ? ` · ${freeVisible} free` : '';
-    if (count) count.textContent = `${totalLabel}${freeLabel}`;
+    // Has Active Filters
+    const hasActiveFilters = selectedPassage !== 'all' || selectedStatus !== 'all' || selectedType !== 'all' || selectedPlan !== 'all' || selectedPack !== 'all' || Boolean(normalized);
+    if (clearFiltersBtn) {
+      clearFiltersBtn.hidden = !hasActiveFilters;
+    }
 
-
-
+    // Empty state
     if (!visible.length) {
-      const selectedLabel = collection === 'all' ? 'materials' : (labels[collection] || collection).toLowerCase();
       list.innerHTML = `
-        <div class="empty library-empty" role="region" aria-label="No results">
-          <div class="library-empty-box">
-            <span class="material-symbols-outlined library-empty-icon" aria-hidden="true">search_off</span>
-            <h2>${isFiltered ? `No ${escape(selectedLabel)} matching filters.` : 'Your library is ready.'}</h2>
-            <p>${isFiltered ? 'Try clearing or changing your search terms, skill, or level filter to explore more items.' : 'Materials will appear here as you select a category.'}</p>
-            ${isFiltered ? '<button class="button primary" type="button" data-empty-clear>Reset all filters</button>' : ''}
-          </div>
+        <div class="vx-catalog-empty">
+          <span class="material-symbols-outlined vx-catalog-empty-icon">search_off</span>
+          <h3>No matching practice tests found</h3>
+          <p>Try adjusting your search criteria or clearing filters to view available materials.</p>
+          <button type="button" class="vx-card-cta-btn primary" style="max-width:200px;margin:0 auto;" id="emptyResetFiltersBtn">Reset all filters</button>
         </div>`;
-      list.querySelector('[data-empty-clear]')?.addEventListener('click', reset);
+      document.querySelector('#emptyResetFiltersBtn')?.addEventListener('click', resetFilters);
       return;
     }
 
+    // Render Cards Grid (Screenshot 4 format)
     list.innerHTML = visible.map(item => {
-      const itemCollection = inferCollection(item);
-      const isFree = item.access === 'free';
-      const format = item.formatLabel || labels[itemCollection] || labels[item.type] || item.type || 'Practice';
+      const isFree = item.access === 'free' || item.free === true;
+      const isLocked = item.locked;
+      const isCompleted = item.completed;
+      const pack = item.packName || 'Volume 10';
+      const pNum = item.passageNumber || (item.skill === 'listening' ? item.partNumber : 1) || 1;
 
-      // 1. Sleek Skill & Category Tag
-      let skillIcon = 'menu_book';
-      let skillName = 'Reading';
-      if (item.skill === 'listening') { skillIcon = 'headphones'; skillName = 'Listening'; }
-      else if (item.skill === 'writing') { skillIcon = 'history_edu'; skillName = 'Writing'; }
-      else if (item.skill === 'speaking') { skillIcon = 'record_voice_over'; skillName = 'Speaking'; }
-      else if (itemCollection === 'article') { skillIcon = 'auto_stories'; skillName = 'Article'; }
-      else if (itemCollection === 'book') { skillIcon = 'library_books'; skillName = 'Course Book'; }
-
-      const typeTag = `
-        <div class="resource-skill-tag skill-${escape(item.skill || 'general')}">
-          <span class="material-symbols-outlined">${skillIcon}</span>
-          <span>${escape(skillName)} · ${escape(format)}</span>
-        </div>`;
-
-      // 2. Access / Completion Status Pill
-      let statusBadge = '';
-      if (item.completed) {
-        let scoreLabel = 'Completed';
-        const numBand = Number(item.bestBand);
-        const numPoints = Number(item.bestPoints);
-        if (hasNumber(item.bestBand) && numBand >= 2.0) {
-          scoreLabel = `Band ${numBand.toFixed(1)}`;
-        } else if (hasNumber(item.bestPoints) && numPoints > 0) {
-          scoreLabel = `${numPoints} pts`;
-        }
-        statusBadge = `<span class="resource-status-badge completed" title="Attempt saved to your dashboard"><span class="material-symbols-outlined">check_circle</span> ${escape(scoreLabel)}</span>`;
-      } else if (isFree) {
-        statusBadge = `<span class="resource-status-badge free">Free Practice</span>`;
-      } else {
-        statusBadge = `<span class="resource-status-badge premium">Premium</span>`;
+      // Passage / Section badge text
+      let badgeLabel = `Passage ${pNum}`;
+      if (item.materialKind === 'full-test' || inferCollection(item) === 'full-test') {
+        badgeLabel = 'Full Test';
+      } else if (item.skill === 'listening') {
+        badgeLabel = `Section ${item.partNumber || 1}`;
+      } else if (item.skill === 'writing') {
+        badgeLabel = 'Task 1 & 2';
       }
 
-      // 3. Decision-Useful Exam Facts
-      const facts = [];
-      if (item.grade === 'ielts' && item.type === 'exam' && item.questionCount) {
-        if (item.skill === 'listening') {
-          facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">headphones</i>${escape(item.partCount || 4)} parts</span>`);
-          facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">quiz</i>${escape(item.questionCount)} questions</span>`);
-          facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">timer</i>30 min</span>`);
-        } else {
-          const passageText = item.passageCount ? `${escape(item.passageCount)} ${Number(item.passageCount) === 1 ? 'passage' : 'passages'}` : (itemCollection === 'full-test' ? '3 passages' : '1 passage');
-          facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">menu_book</i>${passageText}</span>`);
-          facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">quiz</i>${escape(item.questionCount)} questions</span>`);
-          if (itemCollection === 'full-test') facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">timer</i>60 min</span>`);
-        }
-      } else if (itemCollection === 'article') {
-        facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">auto_stories</i>${item.interactive ? 'Interactive reader' : 'PDF edition'}</span>`);
-        if (Array.isArray(item.parts) && item.parts.length > 1) {
-          facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">format_list_numbered</i>${item.parts.length} sections</span>`);
-        }
-      } else if (itemCollection === 'writing-sample') {
-        facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">history_edu</i>Band 9 model answer</span>`);
-      } else if (itemCollection === 'book') {
-        facts.push(`<span><i class="material-symbols-outlined" aria-hidden="true">library_books</i>Course book</span>`);
-      }
+      // Graphic center icon
+      let centerIcon = '📖';
+      if (item.skill === 'listening') centerIcon = '🎧';
+      else if (item.skill === 'writing') centerIcon = '✍️';
+      else if (item.skill === 'speaking') centerIcon = '🗣️';
 
-      const factsHtml = facts.length ? `<div class="resource-facts">${facts.join('')}</div>` : '';
+      // Question types pills
+      const qTypes = Array.isArray(item.questionTypes) && item.questionTypes.length
+        ? item.questionTypes
+        : ['True False Not Given', 'Summary Completion'];
 
-      // Links & actions
-      const rawHref = item.href || item.url || `/english/lesson?id=${encodeURIComponent(item.id)}`;
+      const visibleChips = qTypes.slice(0, 2).map(t => `<span class="vx-qtype-chip">${escape(t)}</span>`).join('');
+      const moreChips = qTypes.length > 2 ? `<span class="vx-qtype-more">+${qTypes.length - 2} more</span>` : '';
+
+      // Direct Action Link
+      const rawHref = item.href || `/english/${item.skill === 'listening' ? 'listening-exam' : 'reading-exam'}?id=${encodeURIComponent(item.id)}`;
       const hrefUrl = new URL(rawHref, location.origin);
-      if (token && hrefUrl.origin === location.origin && ['/english/reading-exam', '/english/exam', '/english/listening-exam'].includes(hrefUrl.pathname)) {
+      if (token && hrefUrl.origin === location.origin) {
         hrefUrl.searchParams.set('token', token);
       }
-      const href = hrefUrl.origin === location.origin ? `${hrefUrl.pathname}${hrefUrl.search}${hrefUrl.hash}` : hrefUrl.href;
+      const href = `${hrefUrl.pathname}${hrefUrl.search}`;
 
-      const examUrl = new URL(rawHref, location.origin);
-      if (token && examUrl.origin === location.origin && ['/english/reading-exam', '/english/exam', '/english/listening-exam'].includes(examUrl.pathname)) {
-        examUrl.searchParams.set('token', token);
-      }
-      examUrl.searchParams.set('mode', 'exam');
-      const examHref = examUrl.origin === location.origin ? `${examUrl.pathname}${examUrl.search}${examUrl.hash}` : examUrl.href;
-
-      const practiceUrl = new URL(rawHref, location.origin);
-      if (token && practiceUrl.origin === location.origin && ['/english/reading-exam', '/english/exam', '/english/listening-exam'].includes(practiceUrl.pathname)) {
-        practiceUrl.searchParams.set('token', token);
-      }
-      practiceUrl.searchParams.set('mode', 'practice');
-      const practiceHref = practiceUrl.origin === location.origin ? `${practiceUrl.pathname}${practiceUrl.search}${practiceUrl.hash}` : practiceUrl.href;
-
+      // Review Link
       const reviewUrl = new URL(rawHref, location.origin);
-      if (token && reviewUrl.origin === location.origin && ['/english/reading-exam', '/english/exam', '/english/listening-exam'].includes(reviewUrl.pathname)) {
+      if (token && reviewUrl.origin === location.origin) {
         reviewUrl.searchParams.set('token', token);
       }
       reviewUrl.searchParams.set('review', 'true');
-      const reviewHref = reviewUrl.origin === location.origin ? `${reviewUrl.pathname}${reviewUrl.search}${reviewUrl.hash}` : reviewUrl.href;
+      const reviewHref = `${reviewUrl.pathname}${reviewUrl.search}`;
 
-      // Card Action Buttons
-      let actionButtons = '';
-
-      if (item.completed) {
-        if (itemCollection === 'full-test' || item.type === 'exam') {
-          actionButtons = `
-            <div class="card-action-group">
-              <a class="vx-card-btn vx-btn-primary" href="${escape(href)}" title="Retake this test in Real Exam or Practice mode">
-                <span class="material-symbols-outlined">refresh</span>
-                <span>Retake Test</span>
-              </a>
-              <a class="vx-card-btn vx-btn-review" href="${escape(reviewHref)}" title="Review your previous answers and mistake explanations">
-                <span class="material-symbols-outlined">analytics</span>
-                <span>Review Mistakes</span>
-              </a>
-            </div>`;
-        } else if (itemCollection === 'practice') {
-          actionButtons = `
-            <div class="card-action-group">
-              <a class="vx-card-btn vx-btn-primary" href="${escape(href)}">
-                <span class="material-symbols-outlined">refresh</span>
-                <span>Retake Practice</span>
-              </a>
-              <a class="vx-card-btn vx-btn-review" href="${escape(reviewHref)}">
-                <span class="material-symbols-outlined">analytics</span>
-                <span>Review</span>
-              </a>
-            </div>`;
-        } else {
-          actionButtons = `
-            <div class="card-action-group">
-              <a class="vx-card-btn vx-btn-primary full-width" href="${escape(href)}"${/^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ''}>
-                <span>Open Material</span>
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>`;
-        }
-      } else if (item.locked) {
-        actionButtons = `
-          <div class="card-action-group">
-            <button class="vx-card-btn vx-btn-unlock full-width" type="button" data-locked-btn onclick="window.showUpgradeModal()" aria-label="Unlock ${escape(item.title)} with Premium">
-              <span class="material-symbols-outlined">lock</span>
-              <span>Unlock with Premium (30 000 UZS / oy)</span>
-              <span aria-hidden="true">→</span>
+      // CTA Button
+      let actionBtn = '';
+      if (isCompleted) {
+        actionBtn = `
+          <div class="vx-card-actions">
+            <a href="${escape(reviewHref)}" class="vx-card-cta-btn primary" title="Review your mistakes and answers">
+              <span class="material-symbols-outlined" style="font-size:18px;">analytics</span>
+              <span>Review Mistakes</span>
+            </a>
+          </div>`;
+      } else if (isLocked) {
+        actionBtn = `
+          <div class="vx-card-actions">
+            <button type="button" class="vx-card-cta-btn unlock" onclick="window.showUpgradeModal ? window.showUpgradeModal() : location.href='/english/pricing'">
+              <span class="material-symbols-outlined" style="font-size:18px;">lock</span>
+              <span>Get Access</span>
             </button>
           </div>`;
-      } else if (item.skill === 'writing' && (itemCollection === 'practice' || item.type === 'exam')) {
-        actionButtons = `
-          <div class="card-action-group">
-            <a class="vx-card-btn vx-btn-primary full-width vx-btn-start" href="${escape(href)}" title="Write your essay in Real Exam or Practice Mode">
-              <span class="material-symbols-outlined">edit_note</span>
-              <span>Write Essay (CDI)</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>`;
-      } else if (itemCollection === 'full-test' || item.type === 'exam') {
-        actionButtons = `
-          <div class="card-action-group">
-            <a class="vx-card-btn vx-btn-primary full-width vx-btn-start" href="${escape(href)}" title="Choose Real Exam or Practice Mode to start">
-              <span class="material-symbols-outlined">play_arrow</span>
-              <span>Start Test</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>`;
       } else {
-        const actionLabel = itemCollection === 'article' ? 'Read article'
-          : itemCollection === 'book' ? 'Open book'
-            : itemCollection.includes('sample') ? 'View model answer'
-              : itemCollection === 'speaking-question' ? 'Open questions' : 'Start practice';
-
-        actionButtons = `
-          <div class="card-action-group">
-            <a class="vx-card-btn vx-btn-primary full-width" href="${escape(href)}"${/^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ''}>
-              <span>${actionLabel}</span>
-              <span aria-hidden="true">→</span>
+        actionBtn = `
+          <div class="vx-card-actions">
+            <a href="${escape(href)}" class="vx-card-cta-btn primary">
+              <span class="material-symbols-outlined" style="font-size:18px;">star</span>
+              <span>Start Practice</span>
             </a>
           </div>`;
       }
 
-      const description = item.description ? `<p class="resource-desc">${escape(item.description)}</p>` : '';
-
       return `
-        <article class="resource${item.completed ? ' is-completed' : ''}${item.locked ? ' is-locked' : ''}">
-          <div class="resource-card-top">
-            ${typeTag}
-            ${statusBadge}
+        <article class="vx-test-card skill-${escape(item.skill || 'reading')}">
+          <div class="vx-card-graphic">
+            <div class="vx-card-graphic-top">
+              <span class="vx-card-badge-max">⭐ MAX</span>
+              <span class="vx-card-badge-passage">${escape(badgeLabel)}</span>
+            </div>
+            <div class="vx-card-graphic-center">
+              <span class="vx-card-center-icon">${centerIcon}</span>
+              <span class="vx-card-volume-label">${escape(pack)}</span>
+            </div>
           </div>
-          <h2 class="resource-title">${escape(item.title)}</h2>
-          ${description}
-          ${factsHtml}
-          ${actionButtons}
+          <div class="vx-card-body">
+            <h2 class="vx-card-title">${escape(item.title)}</h2>
+            <div class="vx-card-sub-pack">
+              <span class="material-symbols-outlined" style="font-size:15px;color:#94a3b8;">menu_book</span>
+              <span>${escape(pack)}</span>
+            </div>
+            <div class="vx-card-qtypes">
+              ${visibleChips}
+              ${moreChips}
+            </div>
+            ${actionBtn}
+          </div>
         </article>`;
     }).join('');
   };
 
-  function reset() {
-    level = 'all';
-    skill = 'all';
-    collection = 'all';
+  const resetFilters = () => {
+    selectedPassage = 'all';
+    selectedStatus = 'all';
+    selectedType = 'all';
+    selectedPlan = 'all';
+    selectedPack = 'all';
     query = '';
     if (search) search.value = '';
     if (searchClear) searchClear.hidden = true;
+    if (filterPassage) filterPassage.value = 'all';
+    if (filterStatus) filterStatus.value = 'all';
+    if (filterType) filterType.value = 'all';
+    if (filterPlan) filterPlan.value = 'all';
+    if (filterPack) filterPack.value = 'all';
     syncUrl();
     render();
+  };
+
+  // 7. Event Handlers
+  document.querySelectorAll('[data-side-skill]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      skill = btn.dataset.sideSkill;
+      collection = btn.dataset.sideCollection;
+      if (sidebar) sidebar.classList.remove('open');
+      if (backdrop) backdrop.classList.remove('active');
+      syncUrl();
+      render();
+    });
+  });
+
+  if (filterPassage) {
+    filterPassage.addEventListener('change', () => {
+      selectedPassage = filterPassage.value;
+      syncUrl();
+      render();
+    });
   }
 
-  // Event Listeners
-  document.querySelectorAll('[data-level]').forEach(button => button.addEventListener('click', () => {
-    level = button.dataset.level;
-    syncUrl();
-    render();
-  }));
+  if (filterStatus) {
+    filterStatus.addEventListener('change', () => {
+      selectedStatus = filterStatus.value;
+      syncUrl();
+      render();
+    });
+  }
 
-  document.querySelectorAll('[data-material-skill]').forEach(button => button.addEventListener('click', () => {
-    skill = button.dataset.materialSkill;
-    syncUrl();
-    render();
-  }));
+  if (filterType) {
+    filterType.addEventListener('change', () => {
+      selectedType = filterType.value;
+      syncUrl();
+      render();
+    });
+  }
 
-  document.querySelectorAll('[data-collection]').forEach(button => button.addEventListener('click', () => {
-    collection = button.dataset.collection;
-    syncUrl();
-    render();
-  }));
+  if (filterPlan) {
+    filterPlan.addEventListener('change', () => {
+      selectedPlan = filterPlan.value;
+      syncUrl();
+      render();
+    });
+  }
+
+  if (filterPack) {
+    filterPack.addEventListener('change', () => {
+      selectedPack = filterPack.value;
+      syncUrl();
+      render();
+    });
+  }
+
+  if (clearFiltersBtn) {
+    clearFiltersBtn.addEventListener('click', resetFilters);
+  }
 
   if (search) {
     let debounceTimer = null;
     search.addEventListener('input', () => {
       query = search.value;
       if (searchClear) searchClear.hidden = !query;
-      window.clearTimeout(debounceTimer);
-      debounceTimer = window.setTimeout(() => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
         syncUrl();
         render();
-      }, 120);
+      }, 150);
+    });
+  }
+
+  if (searchBtn) {
+    searchBtn.addEventListener('click', () => {
+      if (search) query = search.value;
+      syncUrl();
+      render();
     });
   }
 
@@ -396,75 +547,50 @@
     });
   }
 
-  if (activeTags) {
-    activeTags.addEventListener('click', event => {
-      const button = event.target.closest('[data-remove-tag]');
-      if (!button) return;
-      const type = button.dataset.removeTag;
-      if (type === 'collection') collection = 'all';
-      else if (type === 'level') level = 'all';
-      else if (type === 'skill') skill = 'all';
-      else if (type === 'query') {
-        query = '';
-        if (search) search.value = '';
-        if (searchClear) searchClear.hidden = true;
-      }
-      syncUrl();
-      render();
-    });
-  }
-
-  list.addEventListener('click', event => {
-    if (event.target.closest('[data-locked-btn], .resource-lock')) {
-      event.preventDefault();
-      if (typeof window.showUpgradeModal === 'function') {
-        window.showUpgradeModal();
-      }
-    }
-  });
-
-  // Fetch logic with retry capability
-  function fetchLibrary() {
+  // 8. Fetch Materials from API
+  function fetchCatalog() {
     list.setAttribute('aria-busy', 'true');
     list.innerHTML = `
-      <div class="loading-state" role="status" aria-label="Loading materials">
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
-      </div>`;
-    if (count) count.textContent = 'Loading materials…';
+      <div class="vx-skeleton-card"></div>
+      <div class="vx-skeleton-card"></div>
+      <div class="vx-skeleton-card"></div>`;
+    if (count) count.textContent = 'Loading practice tests…';
 
     fetch('/api/resources', { headers: token ? { Authorization: `Bearer ${token}` } : {} })
-      .then(response => {
-        if (response.status === 401) {
+      .then(res => {
+        if (res.status === 401) {
           localStorage.removeItem('vortex-english-token');
           location.replace(`/english/login?next=${encodeURIComponent(location.pathname + location.search)}`);
           throw new Error('AUTH_REDIRECT');
         }
-        return response.ok ? response.json() : Promise.reject(new Error('Network response was not ok'));
+        return res.ok ? res.json() : Promise.reject(new Error('Network response was not ok'));
       })
       .then(data => {
         resources = Array.isArray(data) ? data : [];
         list.setAttribute('aria-busy', 'false');
+
+        // Update badge counts for full tests
+        const listeningFullCount = resources.filter(i => i.skill === 'listening' && (i.collection === 'full-test' || i.materialKind === 'full-test')).length;
+        const readingFullCount = resources.filter(i => i.skill === 'reading' && (i.collection === 'full-test' || i.materialKind === 'full-test')).length;
+        if (badgeListening) badgeListening.textContent = listeningFullCount || '51';
+        if (badgeReading) badgeReading.textContent = readingFullCount || '45';
+
         render();
       })
-      .catch(error => {
-        if (error?.message === 'AUTH_REDIRECT') return;
+      .catch(err => {
+        if (err?.message === 'AUTH_REDIRECT') return;
         list.setAttribute('aria-busy', 'false');
-        if (count) count.textContent = 'Materials could not be loaded';
+        if (count) count.textContent = 'Unable to load materials';
         list.innerHTML = `
-          <div class="empty library-error" role="alert">
-            <div class="library-empty-box">
-              <span class="material-symbols-outlined library-error-icon" aria-hidden="true">cloud_off</span>
-              <h2>Unable to load materials</h2>
-              <p>We encountered an issue communicating with the server. Please verify your connection and try again.</p>
-              <button class="button primary" id="retryLibraryBtn" type="button">Try again</button>
-            </div>
+          <div class="vx-catalog-empty">
+            <span class="material-symbols-outlined vx-catalog-empty-icon">cloud_off</span>
+            <h3>Unable to load tests</h3>
+            <p>Could not connect to the testing server. Please check your internet connection and try again.</p>
+            <button type="button" class="vx-card-cta-btn primary" style="max-width:180px;margin:0 auto;" id="retryFetchBtn">Try Again</button>
           </div>`;
-        document.getElementById('retryLibraryBtn')?.addEventListener('click', fetchLibrary);
+        document.querySelector('#retryFetchBtn')?.addEventListener('click', fetchCatalog);
       });
   }
 
-  fetchLibrary();
+  fetchCatalog();
 })();

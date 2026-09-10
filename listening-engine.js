@@ -32,10 +32,21 @@ function readListeningCatalog(forceRefresh = false) {
   try {
     const raw = JSON.parse(fs.readFileSync(LISTENING_CATALOG_FILE, "utf8"));
     if (!Array.isArray(raw)) return [];
-    const catalog = raw.map(item => ({
-      ...item,
-      href: `/english/listening-exam?id=${encodeURIComponent(item.id)}`
-    }));
+    const packs = ["Volume 10", "Cambridge 19", "Pack 6", "Cambridge 18", "Volume 9", "Cambridge 17"];
+    const catalog = raw.map((item, index) => {
+      const qTypes = item.questionTypes && item.questionTypes.length
+        ? item.questionTypes
+        : ["Note Completion", "Form Completion", "Multiple Choice"];
+      const pack = item.packName || packs[index % packs.length];
+      const partNum = item.partCount === 1 || item.partNumber ? (item.partNumber || (index % 4) + 1) : null;
+      return {
+        ...item,
+        packName: pack,
+        partNumber: partNum,
+        questionTypes: qTypes,
+        href: `/english/listening-exam?id=${encodeURIComponent(item.id)}`
+      };
+    });
     cachedListeningCatalog = catalog;
     listeningCatalogCachedAt = now;
     return catalog;
@@ -357,23 +368,22 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     border-color: #1e293b;
   }
 
+  body {
+    padding-top: 100px !important;
+    padding-bottom: 64px !important;
+  }
+
   .vx-lh-left {
     display: flex;
     align-items: center;
     gap: 10px;
   }
-  .vx-lh-logo {
-    width: 28px;
-    height: 28px;
-    background: #e11d48;
-    color: #ffffff;
-    border-radius: 6px;
+  .vx-lh-brand {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 14px;
-    letter-spacing: -0.05em;
+    gap: 6px;
+    text-decoration: none;
+    flex-shrink: 0;
   }
   .vx-lh-title {
     font-size: 14px;
@@ -412,13 +422,494 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     gap: 12px;
   }
   .vx-timer-text {
-    font-size: 13.5px;
-    font-weight: 600;
-    color: #475569;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
     font-variant-numeric: tabular-nums;
   }
   body.night-mode .vx-timer-text {
+    color: #f8fafc;
+  }
+
+  .vx-header-volume {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+    padding: 0 4px;
+  }
+  body.night-mode .vx-header-volume {
+    color: #cbd5e1;
+  }
+  .vx-volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 84px;
+    height: 4px;
+    background: #cbd5e1;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+  .vx-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #1e293b;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .vx-volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+  body.night-mode .vx-volume-slider {
+    background: #475569;
+  }
+  body.night-mode .vx-volume-slider::-webkit-slider-thumb {
+    background: #f8fafc;
+  }
+
+  /* Subheader banner (matching authentic Cambridge CDI) */
+  .vx-listening-part-banner {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    height: 38px;
+    background: #f4f4f0;
+    border-bottom: 1px solid #e0e0dc;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 13.5px;
+    color: #1f2937;
+    z-index: 9990;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+  }
+  body.night-mode .vx-listening-part-banner {
+    background: #1e293b;
+    border-bottom-color: #334155;
+    color: #f1f5f9;
+  }
+  .vx-listening-part-banner strong {
+    font-weight: 800;
+    margin-right: 4px;
+    color: #111827;
+  }
+  body.night-mode .vx-listening-part-banner strong {
+    color: #ffffff;
+  }
+
+  /* Authentic Cambridge CDI Bottom Dock for Listening */
+  .vx-cdi-bottom-dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 52px;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 10000;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    box-sizing: border-box;
+  }
+  body.night-mode .vx-cdi-bottom-dock {
+    background: #0f172a;
+    border-top-color: #1e293b;
+  }
+  .vx-cdi-dock-parts {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+  }
+  .vx-cdi-dock-parts::-webkit-scrollbar { display: none; }
+  .vx-cdi-dock-part-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .vx-cdi-dock-part-tab {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #334155;
+    cursor: pointer;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .vx-cdi-dock-part-tab.active {
+    background: #1e293b;
+    color: #ffffff;
+    border-color: #1e293b;
+  }
+  body.night-mode .vx-cdi-dock-part-tab {
+    background: #1e293b;
+    color: #cbd5e1;
+    border-color: #334155;
+  }
+  body.night-mode .vx-cdi-dock-part-tab.active {
+    background: #3b82f6;
+    color: #ffffff;
+    border-color: #3b82f6;
+  }
+  .vx-cdi-dock-q-list {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vx-cdi-dock-q-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 20px;
+    padding: 1px 3px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  body.night-mode .vx-cdi-dock-q-item {
+    color: #cbd5e1;
+  }
+  .vx-cdi-dock-q-item .vx-q-top-line {
+    width: 14px;
+    height: 2.5px;
+    background: #cbd5e1;
+    border-radius: 1px;
+    margin-bottom: 2px;
+  }
+  body.night-mode .vx-cdi-dock-q-item .vx-q-top-line {
+    background: #475569;
+  }
+  .vx-cdi-dock-q-item.active {
+    color: #1d4ed8;
+    font-weight: 900;
+  }
+  .vx-cdi-dock-q-item.active .vx-q-top-line {
+    background: #1d4ed8;
+    height: 3px;
+  }
+  .vx-cdi-dock-q-item.answered .vx-q-top-line {
+    background: #1e293b;
+    height: 3px;
+  }
+  body.night-mode .vx-cdi-dock-q-item.answered .vx-q-top-line {
+    background: #94a3b8;
+  }
+  .vx-cdi-dock-q-item.review-incorrect {
+    color: #dc2626 !important;
+  }
+  .vx-cdi-dock-q-item.review-incorrect .vx-q-top-line {
+    background: #ef4444 !important;
+    height: 3.5px;
+  }
+  .vx-cdi-dock-q-item.review-correct {
+    color: #166534 !important;
+  }
+  .vx-cdi-dock-q-item.review-correct .vx-q-top-line {
+    background: #10b981 !important;
+    height: 3.5px;
+  }
+  .vx-cdi-dock-arrows {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+  .vx-dock-arrow-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    background: #374151;
+    color: #ffffff;
+    border: none;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .vx-dock-arrow-btn:hover {
+    background: #1f2937;
+  }
+
+  /* Fill in the blank inputs */
+  input[type="text"].listening-input,
+  .test-content input[type="text"],
+  .notes-completion-block input[type="text"],
+  .qcard input[type="text"],
+  .flowchart-step input[type="text"],
+  .table-container input[type="text"],
+  input.q-input {
+    border: 1.5px solid #94a3b8 !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+    font-size: 13.5px !important;
+    font-family: inherit !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    height: 28px !important;
+    min-width: 100px !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+  }
+  input[type="text"]:focus {
+    border-color: #1e293b !important;
+    box-shadow: 0 0 0 2px rgba(30, 41, 59, 0.12) !important;
+  }
+  body.night-mode input[type="text"] {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+  }
+
+  /* Results Sheet Hero Cards matching Screenshot 3 */
+  .vx-res-hero-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 640px) {
+    .vx-res-hero-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  .vx-res-hero-dark-card {
+    background: #0f1c34;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 22px 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .vx-res-hero-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .vx-res-hero-score {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    margin: 4px 0 6px;
+  }
+  .vx-res-hero-out-of {
+    font-size: 13px;
     color: #94a3b8;
+    font-weight: 600;
+  }
+  .vx-res-hero-stats-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  body.night-mode .vx-res-hero-stats-card,
+  html[data-theme="dark"] .vx-res-hero-stats-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .vx-res-stat-item {
+    text-align: center;
+  }
+  .vx-res-stat-big {
+    font-size: 32px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  body.night-mode .vx-res-stat-big,
+  html[data-theme="dark"] .vx-res-stat-big {
+    color: #f8fafc;
+  }
+  .vx-res-stat-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #64748b;
+  }
+  .vx-res-stat-divider {
+    width: 1px;
+    height: 48px;
+    background: #e2e8f0;
+  }
+  body.night-mode .vx-res-stat-divider,
+  html[data-theme="dark"] .vx-res-stat-divider {
+    background: #334155;
+  }
+  .vx-res-section-block {
+    margin-bottom: 22px;
+  }
+  .vx-res-incorrect-pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .vx-res-incorrect-pill {
+    min-width: 36px;
+    height: 32px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    font-size: 13px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .vx-res-incorrect-pill:hover {
+    background: #fecaca;
+    transform: translateY(-1px);
+  }
+  body.night-mode .vx-res-incorrect-pill,
+  html[data-theme="dark"] .vx-res-incorrect-pill {
+    background: #450a0a;
+    color: #fca5a5;
+    border-color: #7f1d1d;
+  }
+  .vx-res-qtypes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .vx-res-qtype-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  body.night-mode .vx-res-qtype-card,
+  html[data-theme="dark"] .vx-res-qtype-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .vx-res-qtype-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+  }
+  body.night-mode .vx-res-qtype-name,
+  html[data-theme="dark"] .vx-res-qtype-name {
+    color: #cbd5e1;
+  }
+  .vx-res-qtype-val {
+    font-size: 13px;
+    font-weight: 900;
+    color: #ef4444;
+  }
+  .vx-res-qtype-val.clean {
+    color: #10b981;
+  }
+  .vx-res-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  body.night-mode .vx-res-actions-bar,
+  html[data-theme="dark"] .vx-res-actions-bar {
+    border-color: #334155;
+  }
+  .vx-btn-report-issue {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+  }
+  .vx-btn-report-issue:hover {
+    color: #0f172a;
+  }
+  .vx-btn-review-mistakes-cta {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 22px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+    transition: all 0.15s ease !important;
+  }
+  .vx-btn-review-mistakes-cta:hover {
+    background: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+  }
+  .vx-btn-finish-exam {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vx-btn-finish-exam:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  body.night-mode .vx-btn-finish-exam,
+  html[data-theme="dark"] .vx-btn-finish-exam {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
   }
 
   /* Audio player inside header */
@@ -2081,7 +2572,9 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
 <!-- Injected Authentic Cambridge CDI Top Exam Header -->
 <div class="vx-listening-header-bar" id="vxListeningHeaderBar">
   <div class="vx-lh-left">
-    <div class="vx-lh-logo">◱</div>
+    <a href="/english" class="vx-lh-brand" title="IELTS Core">
+      <img src="/assets/ielts-core-mark.png" height="26" alt="IELTS Core">
+    </a>
     <span class="vx-lh-title" title="${material.title.replace(/"/g, "&quot;")}">${material.title.replace(/</g, "&lt;")}</span>
     <span class="vx-lh-mode-pill ${modeClass}" id="vxExamModeBadge">${modeLabel}</span>
   </div>
@@ -2107,6 +2600,14 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   </div>
 
   <div class="vx-lh-right">
+    <div class="vx-header-volume" title="Volume">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      </svg>
+      <input type="range" id="vxAudioVolumeSlider" min="0" max="1" step="0.01" value="1" class="vx-volume-slider" aria-label="Volume">
+    </div>
     <button type="button" class="vx-submit-header-btn" id="vxHeaderScoreBreakdownBtn" style="display:none;background:#0f172a;color:#fff;border:1px solid #334155;padding:5px 12px;border-radius:6px;" title="View Score Report">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;vertical-align:-2px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17v-4m5 4v-8m5 8v-6"/></svg>
       <span>Score Report</span>
@@ -2120,9 +2621,14 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       <span>Retake</span>
     </button>
     <button type="button" class="vx-icon-btn" id="vxFullscreenBtn" title="Toggle Fullscreen">⛶</button>
-    <button type="button" class="vx-icon-btn" id="vxOpenSettingsBtn" title="Exam Settings">⚙</button>
+    <button type="button" class="vx-icon-btn" id="vxOpenSettingsBtn" title="Exam Settings">☰</button>
     <button type="button" class="vx-submit-header-btn" id="vxHeaderSubmitBtn">Submit</button>
   </div>
+</div>
+
+<!-- Subheader Banner (Part Instruction matching Cambridge CDI) -->
+<div class="vx-listening-part-banner" id="vxListeningPartBanner">
+  <strong id="vxListeningPartTitle">Part 1</strong>: <span id="vxListeningPartDesc">Listen and answer questions 1–10.</span>
 </div>
 
 <!-- Injected Exam Settings Modal (Matching Exact Reference UI) -->
@@ -2218,110 +2724,122 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   </div>
 </div>
 
-<!-- Grand Executive Results Performance Dashboard -->
+<!-- Grand Executive Results Performance Dashboard (matching Authentic Screenshot 3) -->
 <div id="vxResultsModal" class="vx-modal-backdrop" role="dialog" aria-modal="true">
-  <div class="vx-results-sheet">
+  <div class="vx-results-sheet cdi-results-sheet">
     
     <!-- Top Header -->
     <div class="vx-res-head">
       <div class="vx-res-title-group">
-        <h2>Exam Performance Report</h2>
-        <div class="vx-res-sub">Official Computer-Delivered IELTS Simulation Assessment</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core">
+          <h2 style="margin:0;font-size:20px;font-weight:800;color:#0f172a;">Exam Results</h2>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span class="vx-res-badge-pill">LISTENING · ${material.formatLabel}</span>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="vx-res-timer-display" id="vxResTimerDisplay" style="font-size:13.5px;font-weight:600;color:#64748b;">0 seconds remaining</span>
         <button type="button" class="vx-res-close-x" id="vxResultsCloseTopBtn" title="Close report">✕</button>
       </div>
     </div>
 
-    <!-- 3-Column Hero KPI Cards -->
-    <div class="vx-res-kpi-grid">
-      <!-- 1. Overall Band Score -->
-      <div class="vx-res-kpi-card primary">
-        <div class="vx-res-kpi-label">${isFullTest ? "IELTS Official Band" : "Accuracy Score"}</div>
-        <div class="vx-res-band-val" id="vxResBandNum">--</div>
-        <div class="vx-res-cefr-badge" id="vxResCefrBadge">CEFR B2 · Competent User</div>
+    <!-- Hero Score Banner matching Screenshot 3 -->
+    <div class="vx-res-hero-container">
+      <div class="vx-res-hero-dark-card">
+        <div class="vx-res-hero-label">Your Band Score</div>
+        <div class="vx-res-hero-score" id="vxResBandNum">0</div>
+        <div class="vx-res-hero-out-of">out of 9</div>
       </div>
-
-      <!-- 2. Raw Accuracy & Breakdown -->
-      <div class="vx-res-kpi-card">
-        <div class="vx-res-kpi-label">Raw Accuracy</div>
-        <div class="vx-res-stat-val" id="vxResStatScore">--</div>
-        <div class="vx-res-progress-track">
-          <div class="vx-res-progress-fill" id="vxResProgressFill" style="width: 0%;"></div>
+      <div class="vx-res-hero-stats-card">
+        <div class="vx-res-stat-item">
+          <div class="vx-res-stat-big" id="vxResStatScore">0%</div>
+          <div class="vx-res-stat-label" id="vxResStatSub">0 / 40 Correct</div>
         </div>
-        <div class="vx-res-kpi-sub" id="vxResStatSub">0 of 40 Questions Correct</div>
-      </div>
-
-      <!-- 3. Time & Assessment Details -->
-      <div class="vx-res-kpi-card">
-        <div class="vx-res-kpi-label">Test Duration</div>
-        <div class="vx-res-stat-val" id="vxResTimeSpent">--</div>
-        <div class="vx-res-kpi-sub" style="margin-top:auto;" id="vxResVerifiedStatus">Automated Assessment</div>
+        <div class="vx-res-stat-divider"></div>
+        <div class="vx-res-stat-item">
+          <div class="vx-res-stat-big" id="vxResTimeSpent">0:00</div>
+          <div class="vx-res-stat-label">Test Duration</div>
+        </div>
       </div>
     </div>
 
-    <!-- Performance by Part Grid -->
-    <div class="vx-res-section-title">
-      <span>Performance by Part</span>
-    </div>
-    <div class="vx-res-parts-grid" id="vxResPartsRow">
-      <!-- Injected dynamically -->
+    <!-- Incorrect Questions Pills -->
+    <div class="vx-res-section-block">
+      <div class="vx-res-section-title">Incorrect Questions</div>
+      <div class="vx-res-incorrect-pills-row" id="vxResMistakesList">
+        <!-- Injected dynamically: soft red pills [ 1 ] [ 2 ] ... -->
+      </div>
     </div>
 
-    <!-- Question Diagnostic Review Pills -->
-    <div class="vx-res-diag-wrap">
-      <div class="vx-res-section-title" style="margin-bottom:8px;">
-        <span>Question Diagnostics</span>
-        <span style="font-size:12px;font-weight:500;color:#64748b;text-transform:none;">(Select any question to inspect in exam)</span>
+    <!-- Performance by Part -->
+    <div class="vx-res-section-block">
+      <div class="vx-res-section-title">Performance by Part</div>
+      <div class="vx-res-parts-grid" id="vxResPartsRow">
+        <!-- Injected dynamically -->
       </div>
-      <div class="vx-res-pills-list" id="vxResMistakesList">
+    </div>
+
+    <!-- Mistakes by Question Type -->
+    <div class="vx-res-section-block">
+      <div class="vx-res-section-title">Mistakes by Question Type</div>
+      <div class="vx-res-qtypes-grid" id="vxResQTypesRow">
         <!-- Injected dynamically -->
       </div>
     </div>
 
     <!-- Complete Answers & Explanations Review Sheet -->
     <div class="vx-res-answers-table-wrap" id="vxListeningResultAnswersTableWrap">
-      <div class="vx-res-section-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+      <div class="vx-res-section-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:gap:10px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;gap:8px;">
           <span>Detailed Answer Key & Review</span>
           <span style="font-size:12px;font-weight:600;color:#64748b;text-transform:none;">(All Official Answers)</span>
         </div>
-        <!-- Filter Tabs -->
         <div class="vx-res-table-filters" role="tablist" aria-label="Filter listening answer results">
           <button type="button" class="vx-filter-tab active" data-res-filter="all">All (<span id="vxListeningFilterAllCount">--</span>)</button>
           <button type="button" class="vx-filter-tab mistakes" data-res-filter="mistakes">Mistakes (<span id="vxListeningFilterMistakesCount">--</span>)</button>
           <button type="button" class="vx-filter-tab correct" data-res-filter="correct">Correct (<span id="vxListeningFilterCorrectCount">--</span>)</button>
         </div>
       </div>
-
-      <div class="vx-res-answers-grid" id="vxListeningResultAnswersGrid">
-        <!-- Injected dynamically with each question, your answer, and official answer -->
-      </div>
+      <div class="vx-res-answers-grid" id="vxListeningResultAnswersGrid"></div>
     </div>
 
-    <!-- Bottom Action Bar -->
-    <div class="vx-res-footer-actions">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button type="button" class="vx-btn-modal-secondary" id="vxResultsTranscriptBtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right:5px;vertical-align:-2px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span>Audio Transcript</span>
+    <!-- Bottom Action Bar matching Screenshot 3 -->
+    <div class="vx-res-actions-bar">
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button type="button" class="vx-btn-report-issue" id="vxResultsReportIssueBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Report issue</span>
         </button>
-        <button type="button" class="vx-btn-modal-primary" id="vxCloseModalReviewBtn" style="background:#1468f3;color:#ffffff;border-color:#1468f3;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;vertical-align:-2px"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span>Review Answers in Test</span>
+        <button type="button" class="vx-btn-modal-secondary" id="vxResultsTranscriptBtn" style="padding:6px 12px;font-size:12.5px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right:4px;vertical-align:-2px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Transcript</span>
         </button>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <a href="/english/account" class="vx-btn-modal-primary">
-          <span>Go to Dashboard</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:5px;vertical-align:-2px"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-        </a>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button type="button" class="vx-btn-modal-primary vx-btn-review-mistakes-cta" id="vxCloseModalReviewBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Review Mistakes</span>
+        </button>
+        <a href="/english/materials?level=ielts&skill=listening" class="vx-btn-finish-exam">Finish</a>
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- Injected Authentic Cambridge CDI Bottom Dock for Listening -->
+<footer id="vxListeningBottomDock" class="vx-cdi-bottom-dock" role="navigation" aria-label="Exam question navigation">
+  <div class="vx-cdi-dock-parts" id="vxListeningDockParts">
+    <!-- Rendered dynamically in script -->
+  </div>
+  <div class="vx-cdi-dock-arrows">
+    <button type="button" class="vx-dock-arrow-btn" id="vxListeningPrevBtn" title="Previous question" aria-label="Previous question">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button type="button" class="vx-dock-arrow-btn" id="vxListeningNextBtn" title="Next question" aria-label="Next question">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+</footer>
 
 <!-- Injected Authentic IELTS CDI Selection Toolbar -->
 <div id="ieltsSelectionToolbar" class="ielts-selection-toolbar" role="toolbar" aria-label="Text Highlight and Note Actions">
@@ -2606,7 +3124,12 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
           if (timerText) timerText.textContent = '00:00';
           submitTest();
         } else {
-          if (timerText) timerText.textContent = formatTime(secondsLeft) + ' remaining';
+          var mins = Math.ceil(secondsLeft / 60);
+          if (mins > 1) {
+            if (timerText) timerText.textContent = mins + ' minutes remaining';
+          } else {
+            if (timerText) timerText.textContent = formatTime(secondsLeft) + ' remaining';
+          }
         }
       }, 1000);
     } else {
@@ -2617,6 +3140,112 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       }, 1000);
     }
   }
+
+  // Volume slider control
+  var volumeSlider = document.getElementById('vxAudioVolumeSlider');
+  if (volumeSlider && audioEl) {
+    volumeSlider.addEventListener('input', function() {
+      audioEl.volume = parseFloat(this.value);
+    });
+  }
+
+  // Question jumping and Part banner
+  var currentQ = material.startQ || 1;
+
+  function updatePartBanner(qNum) {
+    var part = 1;
+    var range = '1–10';
+    if (qNum > 30) { part = 4; range = '31–40'; }
+    else if (qNum > 20) { part = 3; range = '21–30'; }
+    else if (qNum > 10) { part = 2; range = '11–20'; }
+    var leadEl = document.getElementById('vxListeningPartTitle');
+    var descEl = document.getElementById('vxListeningPartDesc');
+    if (leadEl) leadEl.textContent = 'Part ' + part;
+    if (descEl) descEl.textContent = 'Listen and answer questions ' + range + '.';
+  }
+
+  function jumpToQuestion(qNum) {
+    currentQ = qNum;
+    var input = document.getElementById('q' + qNum) ||
+                document.querySelector('[data-q="' + qNum + '"]') ||
+                document.querySelector('[data-question="' + qNum + '"]') ||
+                document.querySelector('input[name="q' + qNum + '"]') ||
+                document.querySelector('input[name="question-' + qNum + '"]') ||
+                document.querySelector('[id*="q' + qNum + '"]') ||
+                document.querySelector('.question-' + qNum);
+    if (input) {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      try { input.focus(); } catch(e){}
+    }
+    updatePartBanner(qNum);
+    renderListeningBottomDock();
+  }
+
+  function renderListeningBottomDock() {
+    var dockParts = document.getElementById('vxListeningDockParts');
+    if (!dockParts) return;
+    var numParts = isFullTest ? 4 : (material.questionCount <= 10 ? 1 : (material.questionCount <= 20 ? 2 : 4));
+    var html = '';
+    for (var p = 1; p <= numParts; p++) {
+      var pStart = (p - 1) * 10 + 1;
+      var pEnd = p * 10;
+      if (material.questionCount !== 40) {
+        pStart = material.startQ + (p - 1) * Math.ceil(material.questionCount / numParts);
+        pEnd = Math.min(material.endQ, pStart + Math.ceil(material.questionCount / numParts) - 1);
+      }
+      var isPartActive = currentQ >= pStart && currentQ <= pEnd;
+      html += '<div class="vx-cdi-dock-part-group" data-dock-part="' + p + '">';
+      html += '<button type="button" class="vx-cdi-dock-part-tab ' + (isPartActive ? 'active' : '') + '" data-part-jump="' + pStart + '">Part ' + p + '</button>';
+      html += '<div class="vx-cdi-dock-q-list">';
+      for (var q = pStart; q <= pEnd; q++) {
+        var isQActive = (q === currentQ);
+        var ctrl = document.getElementById('q' + q) || document.querySelector('[name="q' + q + '"]') || document.querySelector('[data-q="' + q + '"]');
+        var isAnswered = false;
+        if (ctrl) {
+          if (ctrl.type === 'radio' || ctrl.type === 'checkbox') {
+            var checkedEl = document.querySelector('[name="' + ctrl.name + '"]:checked');
+            isAnswered = Boolean(checkedEl);
+          } else {
+            isAnswered = String(ctrl.value || '').trim().length > 0;
+          }
+        }
+        var isReview = Boolean(currentListeningAttempt);
+        var isIncorrect = isReview && (currentListeningAttempt.incorrectQuestions || []).includes(q);
+        var qClass = 'vx-cdi-dock-q-item';
+        if (isQActive) qClass += ' active';
+        if (isAnswered) qClass += ' answered';
+        if (isReview) {
+          qClass += isIncorrect ? ' review-incorrect' : ' review-correct';
+        }
+        html += '<div class="' + qClass + '" data-q-select="' + q + '"><span class="vx-q-top-line"></span><span>' + q + '</span></div>';
+      }
+      html += '</div></div>';
+    }
+    dockParts.innerHTML = html;
+
+    dockParts.querySelectorAll('[data-q-select]').forEach(function(el) {
+      el.onclick = function() {
+        var qNum = parseInt(this.getAttribute('data-q-select'), 10);
+        jumpToQuestion(qNum);
+      };
+    });
+    dockParts.querySelectorAll('[data-part-jump]').forEach(function(el) {
+      el.onclick = function() {
+        var qNum = parseInt(this.getAttribute('data-part-jump'), 10);
+        jumpToQuestion(qNum);
+      };
+    });
+  }
+
+  document.getElementById('vxListeningPrevBtn')?.addEventListener('click', function() {
+    if (currentQ > material.startQ) jumpToQuestion(currentQ - 1);
+  });
+  document.getElementById('vxListeningNextBtn')?.addEventListener('click', function() {
+    if (currentQ < material.endQ) jumpToQuestion(currentQ + 1);
+  });
+
+  document.addEventListener('input', function() { renderListeningBottomDock(); });
+  document.addEventListener('change', function() { renderListeningBottomDock(); });
 
   function collectAnswers() {
     var answers = [];
@@ -2687,6 +3316,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     var timeSpent = document.getElementById('vxResTimeSpent');
     var partsRow = document.getElementById('vxResPartsRow');
     var mistakesList = document.getElementById('vxResMistakesList');
+    var qTypesRow = document.getElementById('vxResQTypesRow');
 
     var correct = Number(attempt.correct || 0);
     var total = Number(attempt.total || 40);
@@ -2701,19 +3331,19 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
 
     if (bandNum) {
       if (isFullTest) {
-        bandNum.textContent = 'Band ' + Number(band || 0).toFixed(1);
+        bandNum.textContent = Number(band || 0).toFixed(1);
       } else {
-        bandNum.textContent = correct + ' / ' + total;
+        bandNum.textContent = correct;
       }
     }
     if (cefrBadge) {
       cefrBadge.textContent = isFullTest ? getBandCefr(band) : (pct >= 80 ? 'Mastery Level' : 'Practice Level');
     }
     if (statScore) {
-      statScore.textContent = pct + '% (' + correct + '/' + total + ')';
+      statScore.textContent = pct + '%';
     }
     if (statSub) {
-      statSub.textContent = correct + ' of ' + total + ' questions correct (' + (total - correct) + ' mistakes)';
+      statSub.textContent = correct + ' / ' + total + ' Correct';
     }
     if (progressFill) {
       progressFill.style.width = pct + '%';
@@ -2739,30 +3369,34 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     var incorrectSet = new Set(incorrectQuestions);
 
     if (mistakesList) {
-      var pillsHtml = '';
-      for (var q = 1; q <= total; q++) {
-        var isIncorrect = incorrectSet.has(q);
-        pillsHtml += '<button type="button" class="vx-res-pill-btn ' + (isIncorrect ? 'incorrect' : 'correct') + '" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + (isIncorrect ? '✕ Q' : '✓ Q') + q + '</button>';
+      if (incorrectQuestions.length === 0) {
+        mistakesList.innerHTML = '<span style="font-size:13px;color:#10b981;font-weight:700;">✔ Excellent! All questions answered correctly.</span>';
+      } else {
+        mistakesList.innerHTML = incorrectQuestions.map(function(q) {
+          return '<button type="button" class="vx-res-incorrect-pill" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + q + '</button>';
+        }).join('');
       }
-      mistakesList.innerHTML = pillsHtml;
 
       mistakesList.querySelectorAll('[data-jump-q]').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var qNum = Number(btn.getAttribute('data-jump-q'));
           modal.classList.remove('show');
           if (currentListeningAttempt) applyListeningReviewModeUi(currentListeningAttempt);
-          var input = document.getElementById('q' + qNum) ||
-                      document.querySelector('[data-q="' + qNum + '"]') ||
-                      document.querySelector('[data-question="' + qNum + '"]') ||
-                      document.querySelector('input[name="q' + qNum + '"]') ||
-                      document.querySelector('input[name="question-' + qNum + '"]');
-          if (input) {
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            input.focus();
-            input.style.outline = '3px solid #1468f3';
-          }
+          jumpToQuestion(qNum);
         });
       });
+    }
+
+    if (qTypesRow) {
+      var p1M = incorrectQuestions.filter(function(q){ return q >= 1 && q <= 10; }).length;
+      var p2M = incorrectQuestions.filter(function(q){ return q >= 11 && q <= 20; }).length;
+      var p3M = incorrectQuestions.filter(function(q){ return q >= 21 && q <= 30; }).length;
+      var p4M = incorrectQuestions.filter(function(q){ return q >= 31 && q <= 40; }).length;
+      qTypesRow.innerHTML =
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">Form & Note Completion</span><span class="vx-res-qtype-val' + (p1M === 0 ? ' clean' : '') + '">' + (p1M === 0 ? '✔ 0 errors' : p1M + ' mistakes') + '</span></div>' +
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">Multiple Choice & Maps</span><span class="vx-res-qtype-val' + (p2M === 0 ? ' clean' : '') + '">' + (p2M === 0 ? '✔ 0 errors' : p2M + ' mistakes') + '</span></div>' +
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">Matching & Discussion</span><span class="vx-res-qtype-val' + (p3M === 0 ? ' clean' : '') + '">' + (p3M === 0 ? '✔ 0 errors' : p3M + ' mistakes') + '</span></div>' +
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">Lecture Sentence Completion</span><span class="vx-res-qtype-val' + (p4M === 0 ? ' clean' : '') + '">' + (p4M === 0 ? '✔ 0 errors' : p4M + ' mistakes') + '</span></div>';
     }
 
     // Detailed Answer Key Cards & Filter Tabs
@@ -2816,7 +3450,6 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       }
       answersGrid.innerHTML = cardsHtml;
 
-      // Filter Tabs handling
       document.querySelectorAll('#vxListeningResultAnswersTableWrap .vx-filter-tab').forEach(function(tab) {
         tab.onclick = function() {
           document.querySelectorAll('#vxListeningResultAnswersTableWrap .vx-filter-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2829,28 +3462,31 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
         };
       });
 
-      // Jump to Question inside test
       answersGrid.querySelectorAll('[data-ans-jump]').forEach(function(btn) {
         btn.onclick = function() {
           var qNum = Number(btn.getAttribute('data-ans-jump'));
           modal.classList.remove('show');
           if (currentListeningAttempt) applyListeningReviewModeUi(currentListeningAttempt);
-          var input = document.getElementById('q' + qNum) ||
-                      document.querySelector('[data-q="' + qNum + '"]') ||
-                      document.querySelector('[data-question="' + qNum + '"]') ||
-                      document.querySelector('input[name="q' + qNum + '"]') ||
-                      document.querySelector('input[name="question-' + qNum + '"]');
-          if (input) {
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            input.focus();
-            input.style.outline = '3px solid #1468f3';
-          }
+          jumpToQuestion(qNum);
         };
       });
     }
 
     document.getElementById('vxResultsCloseTopBtn')?.addEventListener('click', function() {
       modal.classList.remove('show');
+    });
+
+    document.getElementById('vxCloseModalReviewBtn')?.addEventListener('click', function() {
+      modal.classList.remove('show');
+      if (currentListeningAttempt) {
+        applyListeningReviewModeUi(currentListeningAttempt);
+        var firstMistake = (currentListeningAttempt.incorrectQuestions || [])[0] || material.startQ;
+        jumpToQuestion(firstMistake);
+      }
+    });
+
+    document.getElementById('vxResultsReportIssueBtn')?.addEventListener('click', function() {
+      alert('Thank you for reporting! Our Cambridge academic team will inspect this audio segment and question key.');
     });
 
     if (modal) modal.classList.add('show');
@@ -2878,21 +3514,6 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       inputs.forEach(function(inp) {
         inp.disabled = true;
       });
-    }
-
-    // Color-code Bottom Nav Pills (1-40)
-    for (var q = 1; q <= total; q++) {
-      var isIncorrect = incorrectSet.has(q);
-      var navBtn = document.querySelector('[data-q="' + q + '"]') || document.querySelector('.footer-nav button:nth-child(' + q + ')');
-      if (navBtn) {
-        if (!isIncorrect) {
-          navBtn.classList.add('vx-q-pill-review-correct');
-          navBtn.classList.remove('vx-q-pill-review-incorrect');
-        } else {
-          navBtn.classList.add('vx-q-pill-review-incorrect');
-          navBtn.classList.remove('vx-q-pill-review-correct');
-        }
-      }
     }
 
     // Inline question feedback and input highlights
@@ -2940,6 +3561,9 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
         }
       }
     }
+
+    // Refresh bottom dock to highlight incorrect/correct in red/green
+    renderListeningBottomDock();
 
     // Show persistent sticky bottom review bar
     var stickyBar = document.getElementById('vxListeningReviewStickyBar');

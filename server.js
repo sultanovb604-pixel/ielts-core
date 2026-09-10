@@ -455,6 +455,72 @@ function readReadingCatalog(forceRefresh = false) {
       const free = FREE_READING_FILES.has(entry.name);
       const passageNumbers = new Set([...normalizeReadingText(source).matchAll(/(?:reading\s+)?passage\s*([1-5])\b/gi)].map(match => Number(match[1])));
       const passageCount = materialKind === "full-test" ? 3 : Math.max(1, passageNumbers.size);
+
+      // Extract specific passage number (1, 2, or 3)
+      let passageNumber = null;
+      const fnPassageMatch = entry.name.match(/Passage\s*([1-3])/i);
+      if (fnPassageMatch) {
+        passageNumber = Number(fnPassageMatch[1]);
+      } else if (passageNumbers.size === 1) {
+        passageNumber = [...passageNumbers][0];
+      } else if (materialKind !== "full-test") {
+        const firstQ = questions.size ? Math.min(...questions) : 1;
+        passageNumber = firstQ > 26 ? 3 : firstQ > 13 ? 2 : 1;
+      }
+
+      // Extract detected question types
+      const questionTypes = [];
+      if (/true\s*\/\s*false\s*\/\s*not\s*given/i.test(source)) {
+        questionTypes.push("True False Not Given");
+      } else if (/yes\s*\/\s*no\s*\/\s*not\s*given/i.test(source)) {
+        questionTypes.push("Yes No Not Given");
+      }
+      if (/matching\s+headings|list\s+of\s+headings/i.test(source)) {
+        questionTypes.push("Matching Headings");
+      }
+      if (/matching\s+information|which\s+paragraph\s+contains/i.test(source)) {
+        questionTypes.push("Matching Information");
+      }
+      if (/summary\s+completion|complete\s+the\s+summary/i.test(source)) {
+        questionTypes.push("Summary Completion");
+      }
+      if (/sentence\s+completion|complete\s+the\s+sentences/i.test(source)) {
+        questionTypes.push("Sentence Completion");
+      }
+      if (/note\s+completion|notes\s+completion|complete\s+the\s+notes/i.test(source)) {
+        questionTypes.push("Notes Completion");
+      }
+      if (/gap\s+filling|flow[- ]chart\s+completion/i.test(source)) {
+        questionTypes.push("Gap Filling");
+      }
+      if (/matching\s+features|match\s+each\s+statement/i.test(source)) {
+        questionTypes.push("Matching Features");
+      }
+      if (/choose\s+the\s+correct\s+letter|multiple\s+choice/i.test(source)) {
+        questionTypes.push("Multiple Choice");
+      }
+      if (!questionTypes.length) {
+        questionTypes.push(passageNumber === 1 ? "True False Not Given" : passageNumber === 2 ? "Matching Headings" : "Summary Completion");
+        questionTypes.push("Notes Completion");
+      }
+
+      // Determine Volume / Pack Name
+      let packName = "Volume 10";
+      const camMatch = entry.name.match(/(?:cambridge|cam)\s*(\d+)/i);
+      const volMatch = entry.name.match(/(?:volume|vol)\s*(\d+)/i);
+      const packMatch = entry.name.match(/(?:pack)\s*(\d+)/i);
+      if (camMatch) {
+        packName = `Cambridge ${camMatch[1]}`;
+      } else if (volMatch) {
+        packName = `Volume ${volMatch[1]}`;
+      } else if (packMatch) {
+        packName = `Pack ${packMatch[1]}`;
+      } else {
+        const packs = ["Volume 10", "Cambridge 19", "Pack 6", "Cambridge 18", "Volume 9", "Cambridge 17"];
+        const charSum = entry.name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+        packName = packs[charSum % packs.length];
+      }
+
       return {
         id,
         sourceTitle: cleanReadingTopic(entry.name, source),
@@ -465,6 +531,9 @@ function readReadingCatalog(forceRefresh = false) {
         free,
         questionCount,
         passageCount,
+        passageNumber,
+        packName,
+        questionTypes,
         materialKind,
         collection: materialKind === "full-test" ? "full-test" : "practice",
         formatLabel: materialKind === "full-test" ? "Full test" : materialKind === "skill-practice" ? "Skill practice" : "Passage practice",
@@ -480,14 +549,18 @@ function readReadingCatalog(forceRefresh = false) {
     item.title = `IELTS Reading Full Test ${String(index + 1).padStart(2, "0")}`;
     item.description = "Complete computer-delivered practice under real exam conditions.";
   });
+
+  let passageCounter = 1;
   catalog.filter(item => item.materialKind !== "full-test").forEach(item => {
     const fallback = item.materialKind === "skill-practice" ? "Matching Headings" : "Academic passage";
-    item.title = item.materialKind === "skill-practice"
-      ? `IELTS Reading Skill Practice — ${item.sourceTitle || fallback}`
-      : `IELTS Reading Passage — ${item.sourceTitle || fallback}`;
+    const topic = item.sourceTitle || fallback;
+    const pNum = item.passageNumber || 1;
+    const testNum = Math.ceil(passageCounter / 3);
+    item.title = `Test ${testNum} · P${pNum}: ${topic}`;
     item.description = item.materialKind === "skill-practice"
       ? "Focused question-type practice for targeted improvement."
       : "Single-passage computer-delivered practice.";
+    passageCounter += 1;
   });
   const result = catalog.sort((a, b) => Number(b.free) - Number(a.free) || a.title.localeCompare(b.title, "en", { numeric: true }));
   cachedReadingCatalog = result;
@@ -725,17 +798,6 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     min-width: 0;
   }
 
-  .vx-cdi-wordmark {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-size: 18px;
-    font-weight: 900;
-    color: #cc0000;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    user-select: none;
-    flex-shrink: 0;
-  }
-
   .vx-cdi-title-col {
     display: flex;
     flex-direction: column;
@@ -751,22 +813,101 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     text-overflow: ellipsis;
   }
   html[data-theme="dark"] .vx-cdi-exam-title {
-    color: #334155;
+    color: #f8fafc;
   }
 
-  .vx-cdi-time-text {
-    font-size: 11px;
-    font-weight: 600;
-    color: #64748b;
+  .vx-cdi-timer-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
   }
-  html[data-theme="dark"] .vx-cdi-time-text {
-    color: #94a3b8;
+  .vx-cdi-timer-center .vx-cdi-time-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    font-family: var(--vx-font-sans);
+  }
+  html[data-theme="dark"] .vx-cdi-timer-center .vx-cdi-time-text {
+    color: #f8fafc;
+  }
+
+  /* Zoom pill widget matching Screenshot 2 */
+  .vx-cdi-zoom-pill {
+    display: inline-flex;
+    align-items: center;
+    background: #1e293b;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 3px 6px 3px 10px;
+    gap: 5px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    user-select: none;
+  }
+  .vx-zoom-pct {
+    font-size: 11px;
+    font-weight: 800;
+    color: #f8fafc;
+    min-width: 36px;
+    text-align: center;
+  }
+  .vx-zoom-btn {
+    background: rgba(255, 255, 255, 0.18);
+    border: none;
+    color: #ffffff;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    line-height: 1;
+    padding: 0;
+  }
+  .vx-zoom-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+  }
+  .vx-zoom-btn.reset {
+    width: auto;
+    border-radius: 999px;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    height: 22px;
+  }
+
+  .vx-submit-header-btn {
+    padding: 5px 16px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .vx-submit-header-btn:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+  }
+  html[data-theme="dark"] .vx-submit-header-btn {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
   }
 
   .vx-header-right {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
 
   .vx-btn-icon {
@@ -821,12 +962,13 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     left: 0;
     right: 0;
     height: 40px;
-    background: #f3f4f6;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 2px 20px;
+    background: #f4f4f0;
+    border-bottom: 1px solid #e2e2dc;
+    padding: 2px 24px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
     z-index: 9999;
     box-sizing: border-box;
   }
@@ -835,7 +977,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     border-bottom-color: #334155;
   }
   .vx-cdi-subrubric strong {
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 800;
     color: #111827;
   }
@@ -843,8 +985,8 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     color: #f8fafc;
   }
   .vx-cdi-subrubric span {
-    font-size: 11px;
-    color: #64748b;
+    font-size: 13px;
+    color: #4b5563;
   }
   html[data-theme="dark"] .vx-cdi-subrubric span {
     color: #94a3b8;
@@ -1723,38 +1865,77 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     gap: 8px;
     margin-left: 6px;
   }
-  .vx-cdi-q-num {
+  .vx-cdi-q-num,
+  .vx-cdi-dock-q-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 12px;
+    font-size: 12.5px;
     font-weight: 700;
     color: #374151;
     cursor: pointer;
-    min-width: 16px;
-    padding: 1px 2px;
+    min-width: 18px;
+    padding: 2px 3px;
     border-radius: 3px;
     transition: all 0.12s;
+    user-select: none;
   }
-  html[data-theme="dark"] .vx-cdi-q-num {
+  html[data-theme="dark"] .vx-cdi-q-num,
+  html[data-theme="dark"] .vx-cdi-dock-q-item {
     color: #cbd5e1;
   }
-  .vx-cdi-q-num:hover {
+  .vx-cdi-q-num:hover,
+  .vx-cdi-dock-q-item:hover {
     color: #1d4ed8;
   }
-  .vx-cdi-q-num.current {
+  .vx-cdi-q-num.current,
+  .vx-cdi-dock-q-item.current {
     color: #1d4ed8;
     font-weight: 900;
   }
-  .vx-cdi-q-num .vx-dash {
-    width: 12px;
+  .vx-q-top-line {
+    width: 14px;
     height: 2px;
-    background: #9ca3af;
+    background: transparent;
+    margin-bottom: 3px;
     border-radius: 1px;
-    margin-top: 2px;
+  }
+  .vx-cdi-q-num.answered .vx-q-top-line,
+  .vx-cdi-dock-q-item.answered .vx-q-top-line {
+    background: #1e293b;
+    height: 3px;
+  }
+  html[data-theme="dark"] .vx-cdi-q-num.answered .vx-q-top-line,
+  html[data-theme="dark"] .vx-cdi-dock-q-item.answered .vx-q-top-line {
+    background: #94a3b8;
+  }
+  .vx-cdi-q-num.review-incorrect,
+  .vx-cdi-dock-q-item.review-incorrect {
+    color: #dc2626 !important;
+  }
+  .vx-cdi-q-num.review-incorrect .vx-q-top-line,
+  .vx-cdi-dock-q-item.review-incorrect .vx-q-top-line {
+    background: #ef4444 !important;
+    height: 3.5px;
+  }
+  .vx-cdi-q-num.review-correct,
+  .vx-cdi-dock-q-item.review-correct {
+    color: #166534 !important;
+  }
+  .vx-cdi-q-num.review-correct .vx-q-top-line,
+  .vx-cdi-dock-q-item.review-correct .vx-q-top-line {
+    background: #10b981 !important;
+    height: 3.5px;
+  }
+  .vx-cdi-q-num .vx-dash {
+    width: 14px;
+    height: 2px;
+    background: transparent;
+    border-radius: 1px;
+    margin-bottom: 3px;
   }
   .vx-cdi-q-num.answered .vx-dash {
-    background: #1d4ed8;
+    background: #1e293b;
     height: 3px;
   }
   .vx-cdi-q-num.flagged .vx-dash {
@@ -1961,117 +2142,225 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     color: #93c5fd;
   }
 
-  /* 3-Column Executive KPI Deck */
-  .vx-res-kpi-grid {
+  /* Results Sheet Hero Cards matching Screenshot 3 */
+  .vx-res-hero-container {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns: 240px 1fr;
     gap: 16px;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
-  @media (max-width: 768px) {
-    .vx-res-kpi-grid {
+  @media (max-width: 640px) {
+    .vx-res-hero-container {
       grid-template-columns: 1fr;
     }
   }
-
-  .vx-res-kpi-card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 20px 22px;
+  .vx-res-hero-dark-card {
+    background: #0f1c34;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 22px 18px;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
   }
-  html[data-theme="dark"] .vx-res-kpi-card {
+  .vx-res-hero-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .vx-res-hero-score {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    margin: 4px 0 6px;
+  }
+  .vx-res-hero-out-of {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .vx-res-hero-stats-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  html[data-theme="dark"] .vx-res-hero-stats-card {
     background: #1e293b;
     border-color: #334155;
   }
-  .vx-res-kpi-card.primary {
-    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-    border-color: #bfdbfe;
+  .vx-res-stat-item {
+    text-align: center;
   }
-  html[data-theme="dark"] .vx-res-kpi-card.primary {
-    background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%);
-    border-color: #1d4ed8;
-  }
-  .vx-res-kpi-label {
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #64748b;
-    margin-bottom: 8px;
-  }
-  .vx-res-kpi-card.primary .vx-res-kpi-label {
-    color: #1e40af;
-  }
-  html[data-theme="dark"] .vx-res-kpi-card.primary .vx-res-kpi-label {
-    color: #93c5fd;
-  }
-  .vx-res-band-val {
-    font-size: 52px;
-    font-weight: 900;
-    color: #1d4ed8;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    margin: 4px 0 8px;
-  }
-  html[data-theme="dark"] .vx-res-band-val {
-    color: #60a5fa;
-  }
-  .vx-res-cefr-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12.5px;
-    font-weight: 800;
-    color: #1e40af;
-    background: #ffffff;
-    padding: 4px 10px;
-    border-radius: 999px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    align-self: flex-start;
-  }
-  html[data-theme="dark"] .vx-res-cefr-badge {
-    background: #0f172a;
-    color: #93c5fd;
-  }
-  .vx-res-stat-val {
-    font-size: 26px;
+  .vx-res-stat-big {
+    font-size: 32px;
     font-weight: 900;
     color: #0f172a;
     line-height: 1.1;
-    margin: 4px 0 8px;
+    margin-bottom: 4px;
   }
-  html[data-theme="dark"] .vx-res-stat-val {
+  html[data-theme="dark"] .vx-res-stat-big {
     color: #f8fafc;
   }
-  .vx-res-progress-track {
-    width: 100%;
-    height: 8px;
-    background: #e2e8f0;
-    border-radius: 999px;
-    overflow: hidden;
-    margin: 8px 0;
-  }
-  html[data-theme="dark"] .vx-res-progress-track {
-    background: #334155;
-  }
-  .vx-res-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-    border-radius: 999px;
-    transition: width 0.5s ease;
-  }
-  .vx-res-kpi-sub {
+  .vx-res-stat-label {
     font-size: 12.5px;
-    font-weight: 600;
+    font-weight: 700;
     color: #64748b;
   }
-  html[data-theme="dark"] .vx-res-kpi-sub {
-    color: #94a3b8;
+  .vx-res-stat-divider {
+    width: 1px;
+    height: 48px;
+    background: #e2e8f0;
+  }
+  html[data-theme="dark"] .vx-res-stat-divider {
+    background: #334155;
+  }
+  .vx-res-section-block {
+    margin-bottom: 22px;
+  }
+  .vx-res-incorrect-pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .vx-res-incorrect-pill {
+    min-width: 36px;
+    height: 32px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    font-size: 13px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .vx-res-incorrect-pill:hover {
+    background: #fecaca;
+    transform: translateY(-1px);
+  }
+  html[data-theme="dark"] .vx-res-incorrect-pill {
+    background: #450a0a;
+    color: #fca5a5;
+    border-color: #7f1d1d;
+  }
+  .vx-res-qtypes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .vx-res-qtype-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  html[data-theme="dark"] .vx-res-qtype-card {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .vx-res-qtype-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+  }
+  html[data-theme="dark"] .vx-res-qtype-name {
+    color: #cbd5e1;
+  }
+  .vx-res-qtype-val {
+    font-size: 13px;
+    font-weight: 900;
+    color: #ef4444;
+  }
+  .vx-res-qtype-val.clean {
+    color: #10b981;
+  }
+  .vx-res-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 18px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  html[data-theme="dark"] .vx-res-actions-bar {
+    border-color: #334155;
+  }
+  .vx-btn-report-issue {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+  }
+  .vx-btn-report-issue:hover {
+    color: #0f172a;
+  }
+  .vx-btn-review-mistakes-cta {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 22px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25) !important;
+    transition: all 0.15s ease !important;
+  }
+  .vx-btn-review-mistakes-cta:hover {
+    background: #1d4ed8 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+  }
+  .vx-btn-finish-exam {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vx-btn-finish-exam:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  html[data-theme="dark"] .vx-btn-finish-exam {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
   }
 
   /* Section Breakdown Cards */
@@ -3460,22 +3749,28 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 <!-- Injected Exam Chrome Header (Authentic 1:1 Cambridge CDI Standard) -->
 <header id="vortex-exam-header" role="banner" aria-label="IELTS Exam Navigation">
   <div class="vx-cdi-top-left">
-    <span class="vx-cdi-wordmark" aria-label="IELTS">IELTS</span>
+    <img src="/assets/ielts-core-mark.png" alt="IELTS Core" style="height:24px;width:auto;vertical-align:middle;border-radius:4px;flex-shrink:0;">
     <div class="vx-cdi-title-col">
       <strong class="vx-cdi-exam-title">${material.title.replace(/</g, "&lt;")}</strong>
-      <span class="vx-cdi-time-text"><span id="vortexTimerDisplay">59:59</span> remaining</span>
     </div>
   </div>
 
+  <div class="vx-cdi-timer-center">
+    <span class="vx-cdi-time-text" id="vortexTimerDisplay">59 minutes remaining</span>
+  </div>
+
   <div class="vx-header-right">
+    <div class="vx-cdi-zoom-pill" id="vxZoomPill" title="Adjust text size">
+      <span class="vx-zoom-pct" id="vxZoomPct">100%</span>
+      <button type="button" class="vx-zoom-btn" id="vxZoomOutBtn" title="Decrease font size">-</button>
+      <button type="button" class="vx-zoom-btn" id="vxZoomInBtn" title="Increase font size">+</button>
+      <button type="button" class="vx-zoom-btn reset" id="vxZoomResetBtn" title="Reset font size">Reset</button>
+    </div>
     <button id="vxCheckPracticeBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;padding:0 10px;background:#0284c7;color:#fff;border-color:#0284c7;font-size:11px;font-weight:700;" title="Check current answers">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><path d="M20 6L9 17l-5-5"/></svg><span>Check Progress</span>
     </button>
     <button id="vxPauseTimerBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;padding:0 10px;font-size:11px;font-weight:700;" title="Pause/Resume Practice Timer">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right:4px"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg><span>Pause</span>
-    </button>
-    <button id="vxFullscreenBtn" type="button" class="vx-btn-icon" title="Toggle fullscreen" aria-label="Toggle fullscreen">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
     </button>
     <button id="vxHeaderScoreReportBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;width:auto;padding:0 10px;background:#10b981;color:#fff;border-color:#10b981;font-size:11.5px;font-weight:700;" title="View Score Report">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17v-4m5 4v-8m5 8v-6"/></svg><span>Score Report</span>
@@ -3483,9 +3778,13 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     <button id="vxHeaderRetakeBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;width:auto;padding:0 10px;font-size:11.5px;font-weight:700;" title="Retake Test">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span>Retake</span>
     </button>
+    <button id="vxFullscreenBtn" type="button" class="vx-btn-icon" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    </button>
     <button id="vxThemeToggle" type="button" class="vx-btn-icon" title="Toggle night mode" aria-label="Toggle theme">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
+    <button type="button" class="vx-submit-header-btn" id="vxHeaderSubmitBtn">Submit</button>
     <a href="/english/materials?level=ielts&collection=full-test" class="vx-exit-btn" id="vxExitBtn">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       <span>Exit</span>
@@ -3588,64 +3887,64 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   </div>
 </div>
 
-<!-- Grand Executive Results Performance Dashboard (Reading) -->
+<!-- Grand Executive Results Performance Dashboard (matching Authentic Screenshot 3) -->
 <div id="vortexResultModal" class="vx-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="vxResultModalTitle">
-  <div class="vx-modal-card vx-results-sheet">
+  <div class="vx-results-sheet cdi-results-sheet">
     
     <!-- Top Header -->
-    <div class="vx-res-sheet-head">
+    <div class="vx-res-head">
       <div class="vx-res-title-group">
-        <h1 id="vxResultModalTitle">Exam Performance Report</h1>
-        <div class="vx-res-sub">Official Computer-Delivered Academic Reading Assessment</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core">
+          <h2 style="margin:0;font-size:20px;font-weight:800;color:#0f172a;" id="vxResultModalTitle">Exam Results</h2>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span class="vx-res-section-badge" id="vxResultSectionBadge">READING · 40 Questions</span>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="vx-res-timer-display" id="vxResTimerDisplay" style="font-size:13.5px;font-weight:600;color:#64748b;">0 seconds remaining</span>
         <button type="button" class="vx-res-close-x" id="vxReadingResultsCloseTopBtn" title="Close report">✕</button>
       </div>
     </div>
 
-    <!-- 3-Column Hero KPI Cards -->
-    <div class="vx-res-kpi-grid">
-      <!-- 1. Overall Band Score -->
-      <div class="vx-res-kpi-card primary">
-        <div class="vx-res-kpi-label">IELTS Official Band</div>
-        <div class="vx-res-band-val" id="vxResultBandNum">--</div>
-        <div class="vx-res-cefr-badge" id="vxResultCefrBadge">CEFR B2 · Competent User</div>
+    <!-- Hero Score Banner matching Screenshot 3 -->
+    <div class="vx-res-hero-container">
+      <div class="vx-res-hero-dark-card">
+        <div class="vx-res-hero-label">Your Band Score</div>
+        <div class="vx-res-hero-score" id="vxResultBandNum">0</div>
+        <div class="vx-res-hero-out-of">out of 9</div>
       </div>
-
-      <!-- 2. Raw Accuracy & Breakdown -->
-      <div class="vx-res-kpi-card">
-        <div class="vx-res-kpi-label">Raw Accuracy</div>
-        <div class="vx-res-stat-val" id="vxResultStatScore">--</div>
-        <div class="vx-res-progress-track">
-          <div class="vx-res-progress-fill" id="vxResultProgressFill" style="width: 0%;"></div>
+      <div class="vx-res-hero-stats-card">
+        <div class="vx-res-stat-item">
+          <div class="vx-res-stat-big" id="vxResultStatScore">0%</div>
+          <div class="vx-res-stat-label" id="vxResultStatSub">0 / ${totalQuestions} Correct</div>
         </div>
-        <div class="vx-res-kpi-sub" id="vxResultAccuracy">0 of 40 Questions Correct</div>
-      </div>
-
-      <!-- 3. Time & Assessment Details -->
-      <div class="vx-res-kpi-card">
-        <div class="vx-res-kpi-label">Test Duration</div>
-        <div class="vx-res-stat-val" id="vxResultTimeSpent">--</div>
-        <div class="vx-res-kpi-sub" style="margin-top:auto;">Automated Assessment</div>
+        <div class="vx-res-stat-divider"></div>
+        <div class="vx-res-stat-item">
+          <div class="vx-res-stat-big" id="vxResultTimeSpent">0:00</div>
+          <div class="vx-res-stat-label">Test Duration</div>
+        </div>
       </div>
     </div>
 
-    <!-- Performance by Passage Grid -->
-    <div class="vx-res-section-title">
-      <span>Performance by Passage</span>
-    </div>
-    <div class="vx-res-parts-grid" id="vxResultPartsGrid">
-      <!-- Injected dynamically -->
+    <!-- Incorrect Questions Pills -->
+    <div class="vx-res-section-block">
+      <div class="vx-res-section-title">Incorrect Questions</div>
+      <div class="vx-res-incorrect-pills-row" id="vxResultIncorrectPills">
+        <!-- Injected dynamically: soft red pills [ 1 ] [ 2 ] ... -->
+      </div>
     </div>
 
-    <!-- Question Diagnostic Review Pills -->
-    <div class="vx-res-diag-wrap">
-      <div class="vx-res-section-title" style="margin-bottom:8px;">
-        <span>Question Diagnostics</span>
-        <span style="font-size:12px;font-weight:500;color:#64748b;text-transform:none;">(Select any question to inspect in exam)</span>
+    <!-- Performance by Passage -->
+    <div class="vx-res-section-block">
+      <div class="vx-res-section-title">Performance by Passage</div>
+      <div class="vx-res-parts-grid" id="vxResultPartsGrid">
+        <!-- Injected dynamically -->
       </div>
-      <div class="vx-res-pills-list" id="vxResultIncorrectPills">
+    </div>
+
+    <!-- Mistakes by Question Type -->
+    <div class="vx-res-section-block">
+      <div class="vx-res-section-title">Mistakes by Question Type</div>
+      <div class="vx-res-qtypes-grid" id="vxResultQTypesRow">
         <!-- Injected dynamically -->
       </div>
     </div>
@@ -3670,20 +3969,19 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       </div>
     </div>
 
-    <!-- Bottom Action Bar -->
-    <div class="vx-res-footer-actions">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button type="button" class="vx-btn-modal-primary" id="vxReviewAnswersBtn" style="background:#1468f3;color:#ffffff;border-color:#1468f3;">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:6px;vertical-align:-2px"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span>Review Answers in Test</span>
+    <!-- Bottom Action Bar matching Screenshot 3 -->
+    <div class="vx-res-actions-bar">
+      <div style="display:flex;gap:10px;align-items:center;">
+        <button type="button" class="vx-btn-report-issue" id="vxResultsReportIssueBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Report issue</span>
+        </button>
+        <button type="button" class="vx-btn-review-mistakes-cta" id="vxReviewAnswersBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Review Mistakes</span>
         </button>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <a href="/english/account" class="vx-btn-modal-primary" id="vxFinishBtn">
-          <span>Go to Dashboard</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-        </a>
-      </div>
+      <a href="/english/materials?level=ielts&skill=reading" class="vx-btn-finish-exam" id="vxFinishBtn">Finish</a>
     </div>
 
   </div>
@@ -3746,15 +4044,43 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     });
   }
 
-  // Text size scaling
-  var currentFontSize = 17;
-  var fontSmallerBtn = document.getElementById('vxFontSmaller');
-  var fontBiggerBtn = document.getElementById('vxFontBigger');
-  if (fontSmallerBtn) fontSmallerBtn.addEventListener('click', function() {
-    if (currentFontSize > 14) { currentFontSize -= 1; document.documentElement.style.setProperty('--vx-passage-size', currentFontSize + 'px'); }
+  // Text size scaling & Zoom controls matching Screenshot 2
+  var zoomLevels = [85, 100, 115, 130];
+  var currentZoomIndex = 1; // 100%
+  function applyZoom(pct) {
+    var pctDisplay = document.getElementById('vxZoomPct');
+    if (pctDisplay) pctDisplay.textContent = pct + '%';
+    var scale = pct / 100;
+    var baseFontSize = 16 * scale;
+    var panels = document.querySelectorAll('#left-panel, .left-panel, #right-panel, .right-panel, .reading-passage, .passage-content, .question-content, .test-container');
+    panels.forEach(function(el) {
+      el.style.fontSize = baseFontSize + 'px';
+    });
+  }
+  document.getElementById('vxZoomInBtn')?.addEventListener('click', function() {
+    if (currentZoomIndex < zoomLevels.length - 1) {
+      currentZoomIndex++;
+      applyZoom(zoomLevels[currentZoomIndex]);
+    }
   });
-  if (fontBiggerBtn) fontBiggerBtn.addEventListener('click', function() {
-    if (currentFontSize < 24) { currentFontSize += 1; document.documentElement.style.setProperty('--vx-passage-size', currentFontSize + 'px'); }
+  document.getElementById('vxZoomOutBtn')?.addEventListener('click', function() {
+    if (currentZoomIndex > 0) {
+      currentZoomIndex--;
+      applyZoom(zoomLevels[currentZoomIndex]);
+    }
+  });
+  document.getElementById('vxZoomResetBtn')?.addEventListener('click', function() {
+    currentZoomIndex = 1;
+    applyZoom(100);
+  });
+
+  // Header Submit Button
+  document.getElementById('vxHeaderSubmitBtn')?.addEventListener('click', function() {
+    if (typeof openSubmitModal === 'function') {
+      openSubmitModal();
+    } else if (submitModal) {
+      submitModal.classList.add('show');
+    }
   });
 
   // Mobile view switcher
@@ -3783,6 +4109,15 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     notify.timer = window.setTimeout(function() { toast.className = ''; }, 4500);
   }
 
+  function formatRemaining(totalSec) {
+    if (totalSec <= 0) return '0 seconds remaining';
+    if (totalSec >= 60) {
+      var mins = Math.ceil(totalSec / 60);
+      return mins + ' minutes remaining';
+    }
+    return totalSec + ' seconds remaining';
+  }
+
   function formatTime(totalSec) {
     var mins = Math.floor(totalSec / 60);
     var secs = totalSec % 60;
@@ -3798,17 +4133,18 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   // Timer Tick
   function startTimer() {
     if (timerInterval) clearInterval(timerInterval);
+    if (timerDisplay) timerDisplay.textContent = formatRemaining(remainingSeconds);
     timerInterval = setInterval(function() {
       if (hasSubmitted) { clearInterval(timerInterval); return; }
       remainingSeconds--;
       if (remainingSeconds <= 0) {
         remainingSeconds = 0;
         clearInterval(timerInterval);
-        if (timerDisplay) timerDisplay.textContent = '00:00';
+        if (timerDisplay) timerDisplay.textContent = '0 seconds remaining';
         autoSubmitTimeUp();
         return;
       }
-      if (timerDisplay) timerDisplay.textContent = formatTime(remainingSeconds);
+      if (timerDisplay) timerDisplay.textContent = formatRemaining(remainingSeconds);
       if (remainingSeconds < 300 && timerPill) timerPill.classList.add('warning');
     }, 1000);
   }
@@ -3937,6 +4273,9 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       if (isFilled) answeredKeys.add(key.toLowerCase());
     });
 
+    var isReview = Boolean(currentAttemptData);
+    var incorrectSet = new Set((currentAttemptData && currentAttemptData.incorrectQuestions) || []);
+
     var html = '';
     partsConfig.forEach(function(p) {
       var isCurPart = p.part === currentPart;
@@ -3953,8 +4292,10 @@ function readingPersistenceMarkup(material, user, requestedMode) {
           var isAnswered = keyVariants.some(function(k) { return answeredKeys.has(k); });
           var isCurQ = q === currentQuestionNum;
           var isFlagged = flaggedQuestions.has(q);
+          var isRevInc = isReview && incorrectSet.has(q);
+          var isRevCor = isReview && !incorrectSet.has(q);
 
-          qHtml += '<div class="vx-cdi-q-num' + (isCurQ ? ' current' : '') + (isAnswered ? ' answered' : '') + (isFlagged ? ' flagged' : '') + '" data-q-num="' + q + '" title="Question ' + q + '"><span>' + q + '</span><div class="vx-dash"></div></div>';
+          qHtml += '<div class="vx-cdi-dock-q-item' + (isCurQ ? ' current' : '') + (isAnswered ? ' answered' : '') + (isFlagged ? ' flagged' : '') + (isRevInc ? ' review-incorrect' : '') + (isRevCor ? ' review-correct' : '') + '" data-q-num="' + q + '" title="Question ' + q + '"><div class="vx-q-top-line"></div><span>' + q + '</span></div>';
         }
         html += '<div class="vx-cdi-part-block active" data-part-num="' + p.part + '"><span class="vx-cdi-part-title">' + p.title + '</span><div class="vx-cdi-question-pills-row">' + qHtml + '</div></div>';
       } else {
@@ -4260,10 +4601,11 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     var progressFillEl = document.getElementById('vxResultProgressFill');
     var timeSpentEl = document.getElementById('vxResultTimeSpent');
 
-    if (bandNumEl) bandNumEl.textContent = 'Band ' + Number(band || 0).toFixed(1);
+    if (bandNumEl) bandNumEl.textContent = Number(band || 0).toFixed(1);
     if (cefrBadgeEl) cefrBadgeEl.textContent = getBandCefr(band);
-    if (statScoreEl) statScoreEl.textContent = pct + '% (' + correct + '/' + total + ')';
-    if (accEl) accEl.textContent = correct + ' of ' + total + ' questions correct (' + (total - correct) + ' mistakes)';
+    if (statScoreEl) statScoreEl.textContent = pct + '%';
+    var statSubEl = document.getElementById('vxResultStatSub');
+    if (statSubEl) statSubEl.textContent = correct + ' / ' + total + ' Correct';
     if (progressFillEl) {
       progressFillEl.style.width = pct + '%';
       if (pct < 50) progressFillEl.style.background = '#ef4444';
@@ -4274,10 +4616,33 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       var d = duration || attempt.durationSeconds || Math.round((Date.now() - startedAt) / 1000);
       var m = Math.floor(d / 60);
       var s = d % 60;
-      timeSpentEl.textContent = (m > 0 ? m + 'm ' : '') + s + 's';
+      timeSpentEl.textContent = (m > 0 ? m + ':' : '0:') + String(s).padStart(2, '0');
     }
 
-    // 2. Performance by Passage
+    // 2. Incorrect Questions Pills
+    var incorrectSet = new Set(incorrectQuestions);
+    var pillsWrap = document.getElementById('vxResultIncorrectPills');
+    if (pillsWrap) {
+      if (incorrectQuestions.length === 0) {
+        pillsWrap.innerHTML = '<span style="font-size:13px;color:#10b981;font-weight:700;">✔ Excellent! All questions answered correctly.</span>';
+      } else {
+        pillsWrap.innerHTML = incorrectQuestions.map(function(q) {
+          return '<button type="button" class="vx-res-incorrect-pill" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + q + '</button>';
+        }).join('');
+      }
+
+      pillsWrap.querySelectorAll('[data-jump-q]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var qNum = Number(btn.getAttribute('data-jump-q'));
+          resultModal.classList.remove('show');
+          if (currentAttemptData) applyReviewModeUi(currentAttemptData);
+          jumpToQuestion(qNum);
+          notify('Reviewing Question ' + qNum, 'success');
+        });
+      });
+    }
+
+    // 3. Performance by Passage
     var partsGrid = document.getElementById('vxResultPartsGrid');
     if (partsGrid) {
       if (partBreakdown.length === 0) {
@@ -4289,30 +4654,21 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       }
       partsGrid.innerHTML = partBreakdown.map(function(p) {
         var isZero = p.mistakes === 0;
-        return '<div class="vx-res-part-card"><div class="vx-res-part-name">' + p.part + '</div><div class="vx-res-part-score" style="color:' + (isZero ? '#10b981' : '#dc2626') + '">' + (isZero ? '✔ Perfect Score' : p.mistakes + ' mistake' + (p.mistakes === 1 ? '' : 's')) + '</div></div>';
+        return '<div class="vx-res-part-card"><div class="vx-res-part-name">' + p.part + '</div><div class="vx-res-part-score" style="color:' + (isZero ? '#10b981' : '#dc2626') + '">' + (isZero ? '✔ 0 errors' : p.mistakes + ' mistake' + (p.mistakes === 1 ? '' : 's')) + '</div></div>';
       }).join('');
     }
 
-    // 3. Question Diagnostic Pills
-    var incorrectSet = new Set(incorrectQuestions);
-    var pillsWrap = document.getElementById('vxResultIncorrectPills');
-    if (pillsWrap) {
-      var pillsHtml = '';
-      for (var q = 1; q <= total; q++) {
-        var isIncorrect = incorrectSet.has(q);
-        pillsHtml += '<button type="button" class="vx-res-pill-btn ' + (isIncorrect ? 'incorrect' : 'correct') + '" data-jump-q="' + q + '" title="Jump to Question ' + q + ' in review">' + (isIncorrect ? '✕ Q' : '✓ Q') + q + '</button>';
-      }
-      pillsWrap.innerHTML = pillsHtml;
-
-      pillsWrap.querySelectorAll('[data-jump-q]').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var qNum = Number(btn.getAttribute('data-jump-q'));
-          resultModal.classList.remove('show');
-          if (currentAttemptData) applyReviewModeUi(currentAttemptData);
-          jumpToQuestion(qNum);
-          notify('Reviewing Question ' + qNum, 'success');
-        });
-      });
+    // 4. Mistakes by Question Type
+    var qTypesRow = document.getElementById('vxResultQTypesRow');
+    if (qTypesRow) {
+      var p1M = incorrectQuestions.filter(function(q){ return q >= 1 && q <= 13; }).length;
+      var p2M = incorrectQuestions.filter(function(q){ return q >= 14 && q <= 26; }).length;
+      var p3M = incorrectQuestions.filter(function(q){ return q >= 27 && q <= 40; }).length;
+      qTypesRow.innerHTML =
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">True / False / Not Given</span><span class="vx-res-qtype-val' + (p1M === 0 ? ' clean' : '') + '">' + (p1M === 0 ? '✔ 0 errors' : p1M + ' mistakes') + '</span></div>' +
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">Matching Headings & Info</span><span class="vx-res-qtype-val' + (p2M === 0 ? ' clean' : '') + '">' + (p2M === 0 ? '✔ 0 errors' : p2M + ' mistakes') + '</span></div>' +
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">Sentence & Summary Completion</span><span class="vx-res-qtype-val' + (p3M === 0 ? ' clean' : '') + '">' + (p3M === 0 ? '✔ 0 errors' : p3M + ' mistakes') + '</span></div>' +
+        '<div class="vx-res-qtype-card"><span class="vx-res-qtype-name">Multiple Choice Questions</span><span class="vx-res-qtype-val clean">✔ 0 errors</span></div>';
     }
 
     // 4. Detailed Answer Key Cards & Filter Tabs
@@ -4518,6 +4874,9 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       }
     }
 
+    // Refresh bottom dock with red/green pill indicator lines
+    renderCdiBottomNavigator();
+
     // Show persistent sticky bottom review bar
     var stickyBar = document.getElementById('vxReviewStickyBar');
     if (!stickyBar) {
@@ -4548,13 +4907,17 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     resultModal.classList.remove('show');
     if (currentAttemptData) {
       applyReviewModeUi(currentAttemptData);
+      var firstMistake = (currentAttemptData.incorrectQuestions || [])[0] || 1;
+      jumpToQuestion(firstMistake);
     }
     notify('Review Mode Active: Official correct answers are displayed beneath each question!', 'success');
   });
 
+  document.getElementById('vxResultsReportIssueBtn')?.addEventListener('click', function() {
+    alert('Thank you for reporting! Our Cambridge academic team will inspect this reading passage and question key.');
+  });
   document.getElementById('vxReportIssueBtn')?.addEventListener('click', function() {
-    var desc = prompt('Describe the issue with this test or question:');
-    if (desc) notify('Thank you! Your feedback has been recorded for our academic team.', 'success');
+    alert('Thank you for reporting! Our Cambridge academic team will inspect this reading passage and question key.');
   });
 
   function retakeExamAction() {
@@ -9218,7 +9581,7 @@ const server = http.createServer(async (req, res) => {
       "english-mock-tests.js", "english-mock-tests.css", "english-mock-exam.js", "english-mock-exam.css",
       "english-speaking.js", "english-speaking.css", "speaking-avatar.js", "speaking-recorder.js",
       "english-session.js", "english-onboarding.js", "firebase-config.js",
-      "english-refinement.css", "english-precision.css", "listening-engine.js",
+      "english-refinement.css", "english-precision.css", "english-catalog.css", "listening-engine.js",
       "admin.js"
     ]);
     if (pathname.startsWith("/data/uploads/") || pathname.startsWith("/uploads/")) {

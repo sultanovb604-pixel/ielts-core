@@ -3,145 +3,234 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="IELTS Core practice and learning library">
-  <title>Library | IELTS Core</title>
+  <meta name="description" content="IELTS Core official Cambridge computer-delivered practice tests, passage drills, and study library">
+  <title>Practice & Test Library | IELTS Core</title>
   <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
   <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
   <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
+  <link rel="stylesheet" href="/english-catalog.css?v=20260910">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
 </head>
-<body class="app-body materials-page premium-product-page">
-  <header class="app-header">
-    <a class="app-brand" href="/english" aria-label="IELTS Core home">
-      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
-      <span>IELTS CORE</span>
-    </a>
-    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
-    <nav class="app-nav" aria-label="Main navigation">
-      <a href="/english">Home</a>
-      <a href="/english/practice">Practice</a>
-      <a href="/english/mock-tests">Mock Exams</a>
-      <a href="/english/courses">Courses</a>
-      <a href="/english/materials" aria-current="page">Materials</a>
-      <a href="/english/pricing">Pricing</a>
-      <a href="/english/account">Dashboard</a>
-    </nav>
-    <div class="app-actions">
-      <a class="plain-link" href="/english/login">Sign in</a>
-      <a class="button primary" href="/english/signup">Start free</a>
-    </div>
-  </header>
-
-  <!-- Top Notification Ribbon -->
+<body class="materials-page">
+  <!-- Top Red Announcement Banner with Ticking Countdown -->
   <div class="vx-top-notification-banner" role="region" aria-label="Announcement">
     <div class="vx-top-notification-content">
-      <span class="material-symbols-outlined icon-gift">redeem</span>
-      <span><strong>IELTS Core Premium:</strong> Unlock all authentic Cambridge CDI tests, audio simulations & Band 9 diagnostic analytics.</span>
-      <a href="/english/pricing" class="vx-top-notification-btn" onclick="if(typeof window.showUpgradeModal==='function'){window.showUpgradeModal();return false;}">Upgrade Now →</a>
+      <span class="vx-top-fire">🔥</span>
+      <span class="vx-top-text">Limited-time offer: get up to 50% off Cambridge CDI Mock Packs · <span id="vxOfferCountdown" class="vx-offer-countdown">02d: 04h: 14m: 12s</span> · <a href="/english/pricing" class="vx-top-claim-link">Claim offer →</a></span>
     </div>
   </div>
 
-  <main class="page materials-shell">
-    <!-- Breadcrumb Bar -->
-    <nav class="vx-breadcrumb-bar" id="vxBreadcrumbBar" aria-label="Breadcrumb">
-      <a href="/english/account"><span class="material-symbols-outlined">home</span> Home</a>
-      <span class="sep">/</span>
-      <span class="current" id="vxBreadcrumbCurrent">Materials Library</span>
-    </nav>
+  <!-- Mobile Drawer Backdrop -->
+  <div class="vx-sidebar-backdrop" id="vxSidebarBackdrop"></div>
 
-    <!-- Page Header -->
-    <header class="library-header-compact">
-      <h1 class="library-title" id="vxMaterialsTitle">IELTS Practice Materials</h1>
-      <p class="library-subtitle" id="vxMaterialsSubtitle">Official Cambridge computer-delivered practice tests, passage drills, model essays, and study resources.</p>
-    </header>
+  <!-- Main 2-Column Layout -->
+  <div class="vx-catalog-shell">
+    <!-- Left Navigation Sidebar -->
+    <aside class="vx-catalog-sidebar" id="vxCatalogSidebar" aria-label="Catalog navigation">
+      <a class="vx-sidebar-brand" href="/english" aria-label="IELTS Core Home">
+        <img src="/assets/ielts-core-mark.png" alt="IELTS Core" class="vx-sidebar-logo">
+        <span class="vx-sidebar-brand-title">IELTS CORE</span>
+      </a>
 
-    <nav class="library-tabs" role="tablist" aria-label="Material category">
-      <button class="library-tab" role="tab" data-collection="all" aria-pressed="true" aria-selected="true">
-        <span class="material-symbols-outlined tab-icon">dashboard</span>
-        <span>All materials</span>
-      </button>
-      <button class="library-tab" role="tab" data-collection="full-test" aria-pressed="false" aria-selected="false">
-        <span class="material-symbols-outlined tab-icon">bolt</span>
-        <span>Full Mock Tests</span>
-      </button>
-      <button class="library-tab" role="tab" data-collection="practice" aria-pressed="false" aria-selected="false">
-        <span class="material-symbols-outlined tab-icon">menu_book</span>
-        <span>Passage drills</span>
-      </button>
-      <button class="library-tab" role="tab" data-collection="article" aria-pressed="false" aria-selected="false">
-        <span class="material-symbols-outlined tab-icon">auto_stories</span>
-        <span>Articles</span>
-      </button>
-      <button class="library-tab" role="tab" data-collection="writing-sample" aria-pressed="false" aria-selected="false">
-        <span class="material-symbols-outlined tab-icon">history_edu</span>
-        <span>Writing models</span>
-      </button>
-      <button class="library-tab" role="tab" data-collection="speaking" aria-pressed="false" aria-selected="false">
-        <span class="material-symbols-outlined tab-icon">record_voice_over</span>
-        <span>Speaking</span>
-      </button>
-      <button class="library-tab" role="tab" data-collection="book" aria-pressed="false" aria-selected="false">
-        <span class="material-symbols-outlined tab-icon">library_books</span>
-        <span>Books</span>
-      </button>
-    </nav>
+      <nav class="vx-sidebar-nav">
+        <!-- FULL TESTS -->
+        <div class="vx-sidebar-section-title">Full Tests</div>
+        <button type="button" class="vx-sidebar-item" data-side-skill="listening" data-side-collection="full-test">
+          <span class="vx-sidebar-icon">🎧</span>
+          <span>Listening</span>
+          <span class="vx-sidebar-badge" id="badgeFullListening">51</span>
+        </button>
+        <button type="button" class="vx-sidebar-item" data-side-skill="reading" data-side-collection="full-test">
+          <span class="vx-sidebar-icon">📖</span>
+          <span>Reading</span>
+          <span class="vx-sidebar-badge" id="badgeFullReading">45</span>
+        </button>
+        <a href="/english/writing-editor" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">✍️</span>
+          <span>Writing</span>
+        </a>
+        <a href="/english/speaking" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">🗣️</span>
+          <span>Speaking</span>
+        </a>
 
-    <div class="materials-toolbar" role="region" aria-label="Search and filter materials">
-      <div class="search-field">
-        <div class="search-input-wrap">
-          <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
-          <input id="materialSearch" type="search" placeholder="Search by test number, topic, or question type…" autocomplete="off" aria-label="Search materials by title or topic">
-          <button id="clearSearchInput" type="button" class="search-clear-btn" aria-label="Clear search text" hidden>×</button>
+        <!-- PART PRACTICE -->
+        <div class="vx-sidebar-section-title">Part Practice</div>
+        <button type="button" class="vx-sidebar-item" data-side-skill="listening" data-side-collection="practice">
+          <span class="vx-sidebar-icon">🎧</span>
+          <span>Listening Sections</span>
+        </button>
+        <button type="button" class="vx-sidebar-item active" data-side-skill="reading" data-side-collection="practice">
+          <span class="vx-sidebar-icon">📖</span>
+          <span>Reading Passages</span>
+        </button>
+        <button type="button" class="vx-sidebar-item" data-side-skill="writing" data-side-collection="writing-sample">
+          <span class="vx-sidebar-icon">✍️</span>
+          <span>Writing Tasks</span>
+        </button>
+        <button type="button" class="vx-sidebar-item" data-side-skill="speaking" data-side-collection="speaking">
+          <span class="vx-sidebar-icon">🗣️</span>
+          <span>Speaking Topics</span>
+        </button>
+
+        <!-- COLLECTIONS -->
+        <div class="vx-sidebar-section-title">Collections</div>
+        <a href="/english/mock-tests" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">⚡</span>
+          <span>Predictions</span>
+          <span class="vx-sidebar-lock-icon">🔒</span>
+        </a>
+        <a href="/english/mock-tests" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">📋</span>
+          <span>Mock Tests</span>
+        </a>
+
+        <!-- STUDY TOOLS -->
+        <div class="vx-sidebar-section-title">Study Tools</div>
+        <a href="/english/account" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">📊</span>
+          <span>Performance</span>
+        </a>
+        <a href="/english/courses" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">🎓</span>
+          <span>Courses</span>
+        </a>
+        <a href="/english/vocabulary" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">📚</span>
+          <span>Vocabularies</span>
+        </a>
+        <button type="button" class="vx-sidebar-item" data-side-skill="all" data-side-collection="article">
+          <span class="vx-sidebar-icon">📰</span>
+          <span>Articles</span>
+        </button>
+
+        <div class="vx-sidebar-divider"></div>
+
+        <!-- UTILITIES -->
+        <a href="/english/pricing" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">💳</span>
+          <span>Pricing</span>
+        </a>
+        <a href="https://t.me/ieltscore" target="_blank" rel="noopener" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">✈️</span>
+          <span>Telegram Channel</span>
+        </a>
+        <a href="https://t.me/bunyod_sultanov" target="_blank" rel="noopener" class="vx-sidebar-item">
+          <span class="vx-sidebar-icon">💬</span>
+          <span>Support</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar User Profile Card -->
+      <div class="vx-sidebar-user-card" id="vxSidebarUserCard">
+        <div class="vx-user-avatar" id="vxUserAvatar">B</div>
+        <div class="vx-user-info">
+          <span class="vx-user-name" id="vxUserName">Candidate</span>
+          <span class="vx-user-email" id="vxUserEmail">Free Candidate</span>
+        </div>
+        <button type="button" class="vx-user-logout-btn" id="vxLogoutBtn" title="Sign out" aria-label="Sign out">
+          <span class="material-symbols-outlined" style="font-size:18px;">logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="vx-catalog-main">
+      <!-- Mobile Bar -->
+      <div class="vx-catalog-mobile-bar">
+        <button type="button" class="vx-mobile-drawer-toggle" id="vxDrawerOpenBtn">
+          <span class="material-symbols-outlined">menu</span>
+          <span>Menu</span>
+        </button>
+        <a href="/english"><img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core"></a>
+      </div>
+
+      <!-- Breadcrumb Navigation -->
+      <nav class="vx-catalog-breadcrumb" aria-label="Breadcrumb">
+        <a href="/english"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:text-bottom;">home</span> Home</a>
+        <span class="sep">&gt;</span>
+        <span class="current" id="vxBreadcrumbCurrent">Reading Passages</span>
+      </nav>
+
+      <!-- Category Header Banner -->
+      <div class="vx-cat-header-wrap">
+        <div class="vx-cat-icon-badge" id="vxCatIconBadge">📖</div>
+        <div class="vx-cat-title-block">
+          <h1 class="vx-cat-title" id="vxCategoryTitle">Reading Passages</h1>
+          <p class="vx-cat-subtitle" id="vxCategorySubtitle">Practice individual reading passages with various question types</p>
         </div>
       </div>
 
-      <div class="toolbar-controls-wrap">
-        <div class="toolbar-group">
-          <div class="filter-row skill-chips" role="group" aria-label="Skill filters">
-            <button class="filter skill-filter-btn" data-material-skill="all" aria-pressed="true">All Skills</button>
-            <button class="filter skill-filter-btn" data-material-skill="reading" aria-pressed="false">Reading</button>
-            <button class="filter skill-filter-btn" data-material-skill="listening" aria-pressed="false">Listening</button>
-            <button class="filter skill-filter-btn" data-material-skill="writing" aria-pressed="false">Writing</button>
-            <button class="filter skill-filter-btn" data-material-skill="speaking" aria-pressed="false">Speaking</button>
-          </div>
+      <!-- Search Row -->
+      <div class="vx-search-row">
+        <div class="vx-search-input-wrap">
+          <span class="material-symbols-outlined vx-search-icon">search</span>
+          <input type="search" class="vx-search-input" id="materialSearch" placeholder="Search reading passages..." autocomplete="off">
+          <button type="button" class="vx-search-clear" id="clearSearchInput" hidden aria-label="Clear search">×</button>
         </div>
-
-        <div class="toolbar-group level-group">
-          <div class="filter-row level-chips" role="group" aria-label="Level filters">
-            <button class="filter level-filter-btn" data-level="all" aria-pressed="true">All Levels</button>
-            <button class="filter level-filter-btn" data-level="ielts" aria-pressed="false">IELTS</button>
-            <button class="filter level-filter-btn" data-level="elementary" aria-pressed="false">Elementary</button>
-            <button class="filter level-filter-btn" data-level="beginner" aria-pressed="false">Beginner</button>
-          </div>
-        </div>
+        <button type="button" class="vx-search-btn" id="materialSearchBtn">
+          <span class="material-symbols-outlined" style="font-size:18px;">search</span>
+          <span>Search</span>
+        </button>
       </div>
-    </div>
 
-    <div class="result-summary">
-      <div class="result-count-wrap">
-        <span id="resourceCount" aria-live="polite">Loading materials…</span>
-        <span id="activeFilterTags" class="active-filter-tags"></span>
+      <!-- 5 Filter Dropdowns Row -->
+      <div class="vx-filters-row">
+        <select id="filterPassage" class="vx-filter-select" aria-label="Filter by passage">
+          <option value="all">All Passages</option>
+          <option value="1">Passage 1</option>
+          <option value="2">Passage 2</option>
+          <option value="3">Passage 3</option>
+        </select>
+        <select id="filterStatus" class="vx-filter-select" aria-label="Filter by completion status">
+          <option value="all">All Status</option>
+          <option value="completed">Completed</option>
+          <option value="not-started">Not Started</option>
+        </select>
+        <select id="filterType" class="vx-filter-select" aria-label="Filter by question type">
+          <option value="all">All Types</option>
+          <option value="tfng">True / False / Not Given</option>
+          <option value="headings">Matching Headings</option>
+          <option value="completion">Completion / Gap Fill</option>
+          <option value="mcq">Multiple Choice</option>
+        </select>
+        <select id="filterPlan" class="vx-filter-select" aria-label="Filter by plan">
+          <option value="all">All Plans</option>
+          <option value="free">Free Practice</option>
+          <option value="premium">Premium</option>
+        </select>
+        <select id="filterPack" class="vx-filter-select" aria-label="Filter by book or pack">
+          <option value="all">All Packs</option>
+          <option value="Volume 10">Volume 10</option>
+          <option value="Cambridge 19">Cambridge 19</option>
+          <option value="Cambridge 18">Cambridge 18</option>
+          <option value="Cambridge 17">Cambridge 17</option>
+          <option value="Cambridge 16">Cambridge 16</option>
+          <option value="Pack 6">Pack 6</option>
+        </select>
       </div>
-      <button class="plain-link reset-filters-btn" id="clearMaterialFilters" type="button" hidden>Reset all filters</button>
-    </div>
 
-    <section class="resource-list" id="resourceList" aria-live="polite" aria-busy="true">
-      <div class="loading-state" role="status" aria-label="Loading materials">
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
-        <div class="loading-card"><span></span><span></span><span></span><span></span></div>
+      <!-- Results Count Bar -->
+      <div class="vx-results-count-bar">
+        <span id="resourceCount">Loading tests...</span>
+        <button type="button" class="vx-reset-link" id="clearMaterialFilters" hidden>Reset all filters</button>
       </div>
-    </section>
-  </main>
 
-  <footer class="app-footer">IELTS Core · Practice organised by level and skill.</footer>
+      <!-- 3-Column Responsive Cards Grid -->
+      <section class="vx-cards-grid" id="resourceList" aria-live="polite" aria-busy="true">
+        <div class="vx-skeleton-card"></div>
+        <div class="vx-skeleton-card"></div>
+        <div class="vx-skeleton-card"></div>
+      </section>
+    </main>
+  </div>
+
   <script src="/english-site.js?v=20260822_500"></script>
-  <script src="/english-materials.js?v=20260822_500"></script>
+  <script src="/english-materials.js?v=20260910"></script>
 </body>
 </html>
-
