@@ -9184,6 +9184,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(content);
     }
+    if (pathname === "/english/predictions") {
+      res.writeHead(302, { "Location": "/english/mock-tests" });
+      return res.end();
+    }
     const englishRoutes = {
       "/english": "english.html",
       "/english/courses": "english-courses.html",
@@ -9201,7 +9205,7 @@ const server = http.createServer(async (req, res) => {
       "/english/mock-exam": "english-mock-exam.html",
       "/english/speaking": "english-speaking.html",
       "/english/speaking-studio": "english-speaking.html",
-      "/english/predictions": "english-predictions.html",
+      "/english/predictions": "english-mock-tests.html",
       "/bunyodvibecodern1": "admin.html",
       
       
@@ -9213,6 +9217,8 @@ const server = http.createServer(async (req, res) => {
       "english-writing-editor.js", "english-writing-editor.css", "english-product-v4.css",
       "english-mock-tests.js", "english-mock-tests.css", "english-mock-exam.js", "english-mock-exam.css",
       "english-speaking.js", "english-speaking.css", "speaking-avatar.js", "speaking-recorder.js",
+      "english-session.js", "english-onboarding.js", "firebase-config.js",
+      "english-refinement.css", "english-precision.css", "listening-engine.js",
       "admin.js"
     ]);
     if (pathname.startsWith("/data/uploads/") || pathname.startsWith("/uploads/")) {

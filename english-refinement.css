@@ -133,3 +133,26 @@
   .refined-public .promo-box-form input { width:100%; flex-basis:100%; }
 }
 @media(prefers-reduced-motion:reduce) { .refined-public *, .refined-public *::before, .refined-public *::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+
+/* Global App Preloader (Yuklanmoqda...) */
+.app-preloader { position:fixed!important; inset:0!important; top:0!important; left:0!important; width:100vw!important; height:100vh!important; z-index:9999999!important; background:#ffffff!important; display:flex!important; align-items:center!important; justify-content:center!important; opacity:1; visibility:visible; transition:opacity .35s cubic-bezier(.4,0,.2,1),visibility .35s ease; pointer-events:all; }
+[data-theme="dark"] .app-preloader { background:#0b0f19!important; }
+.app-preloader.fade-out { opacity:0!important; visibility:hidden!important; pointer-events:none!important; }
+.app-preloader-inner { display:flex!important; flex-direction:column!important; align-items:center!important; justify-content:center!important; text-align:center!important; padding:24px!important; max-width:320px!important; }
+.app-preloader-brand { margin-bottom:16px!important; display:flex!important; align-items:center!important; justify-content:center!important; }
+.app-preloader-logo { width:52px!important; height:52px!important; max-width:52px!important; max-height:52px!important; object-fit:contain!important; display:block!important; animation:preloaderLogoPulse 1.8s ease-in-out infinite!important; }
+.app-preloader-title { font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important; font-size:15px!important; font-weight:600!important; color:#1e293b!important; letter-spacing:-.01em!important; margin:0 0 4px 0!important; display:flex!important; align-items:center!important; justify-content:center!important; gap:2px!important; line-height:1.4!important; }
+[data-theme="dark"] .app-preloader-title { color:#f1f5f9!important; }
+.app-preloader-dots { display:inline-flex!important; margin-left:2px!important; }
+.app-preloader-dots span { display:inline-block!important; animation:preloaderDotJump 1.4s infinite ease-in-out both!important; }
+.app-preloader-dots span:nth-child(1) { animation-delay:0s!important; }
+.app-preloader-dots span:nth-child(2) { animation-delay:.2s!important; }
+.app-preloader-dots span:nth-child(3) { animation-delay:.4s!important; }
+@keyframes preloaderDotJump { 0%,80%,100% { opacity:.25; transform:translateY(0); } 40% { opacity:1; transform:translateY(-3px); } }
+@keyframes preloaderLogoPulse { 0%,100% { transform:scale(1); opacity:.92; } 50% { transform:scale(1.06); opacity:1; } }
+.app-preloader-subtitle { font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif!important; font-size:11px!important; font-weight:700!important; letter-spacing:.14em!important; text-transform:uppercase!important; color:#64748b!important; margin:0 0 18px 0!important; line-height:1!important; }
+[data-theme="dark"] .app-preloader-subtitle { color:#94a3b8!important; }
+.app-preloader-bar { width:140px!important; height:3px!important; background:rgba(20,104,243,.12)!important; border-radius:999px!important; overflow:hidden!important; position:relative!important; margin:0 auto!important; }
+[data-theme="dark"] .app-preloader-bar { background:rgba(255,255,255,.1)!important; }
+.app-preloader-bar-fill { width:45%!important; height:100%!important; background:linear-gradient(90deg,#1468f3,#38bdf8)!important; border-radius:999px!important; position:absolute!important; top:0!important; left:0!important; animation:preloaderBarSlide 1.2s cubic-bezier(.4,0,.2,1) infinite!important; }
+@keyframes preloaderBarSlide { 0% { left:-45%; } 100% { left:100%; } }

@@ -42,8 +42,8 @@
   };
   window.hideAppPreloader = hideAppPreloader;
 
-  // Maximum safety timeout
-  setTimeout(dismissPreloader, 3500);
+  // Maximum safety timeout (1200ms max so page never feels blocked)
+  setTimeout(dismissPreloader, 1200);
 
   const token = localStorage.getItem('vortex-english-token');
   const isDataPage = ['/english/materials', '/english/account'].includes(location.pathname);
@@ -195,8 +195,8 @@
       {
         title: 'FULL TESTS & MOCKS',
         links: [
-          { label: 'Exam Predictions', icon: 'auto_awesome', href: '/english/predictions', active: activePath === '/english/predictions', badge: 'NEW' },
-          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: activePath === '/english/mock-tests' || activePath === '/english/mock-exam', badge: 'SOON' },
+          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: activePath === '/english/mock-tests' || activePath === '/english/mock-exam', badge: 'LIVE' },
+          { label: 'Exam Predictions', icon: 'auto_awesome', href: '/english/mock-tests', active: activePath === '/english/predictions', badge: 'HOT' },
           { label: 'AI Speaking Assessment', icon: 'record_voice_over', href: '/english/speaking', active: activePath === '/english/speaking' || activePath === '/english/speaking-studio' },
           { label: 'Listening Tests', icon: 'headphones', href: '/english/materials?level=ielts&skill=listening&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'listening' && activeCollection === 'full-test' },
           { label: 'Reading Tests', icon: 'menu_book', href: '/english/materials?level=ielts&skill=reading&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'reading' && activeCollection === 'full-test' },
