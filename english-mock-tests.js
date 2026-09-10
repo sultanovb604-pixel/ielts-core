@@ -98,7 +98,7 @@
           <div class="card-action-group">
             <button type="button" class="vx-card-btn vx-btn-unlock full-width" onclick="window.showUpgradeModal ? window.showUpgradeModal() : location.href='/english/pricing'">
               <span class="material-symbols-outlined">lock</span>
-              <span>Unlock with Premium (30 000 UZS / oy)</span>
+              <span>Unlock with Premium (30 000 UZS / month)</span>
               <span aria-hidden="true">&rarr;</span>
             </button>
           </div>`;
@@ -133,7 +133,7 @@
               ${statusBadge}
             </div>
             <h2 class="mock-card-title">${escapeHtml(item.title)}</h2>
-            <p class="mock-card-sub">${escapeHtml(item.subtitle || 'Official Computer-Delivered Simulation')}</p>
+            <p class="mock-card-sub">${escapeHtml(item.subtitle || 'Computer-delivered practice simulation')}</p>
 
             <div class="mock-sections-list">
               <div class="mock-section-row">
@@ -172,7 +172,7 @@
           <div>
             <span class="eyebrow" style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:var(--v4-blue);text-transform:uppercase;">EXAM INITIATION</span>
             <h2>${escapeHtml(title)}</h2>
-            <p style="margin:0;font-size:13px;color:var(--v4-muted);">Authentic Cambridge Computer-Delivered IELTS Simulation</p>
+            <p style="margin:0;font-size:13px;color:var(--v4-muted);">Computer-delivered IELTS practice simulation</p>
           </div>
           <button type="button" class="test-launch-close" onclick="document.getElementById('mockPreFlightModal').classList.remove('show')">&times;</button>
         </div>
@@ -182,7 +182,7 @@
             <span class="material-symbols-outlined" style="font-size:24px;color:#1468f3;flex-shrink:0;">headphones</span>
             <div>
               <strong>Headphones & Sound Check:</strong>
-              <p style="margin:2px 0 0;color:#64748b;">The Listening section will play authentic audio automatically. Please adjust your computer volume to a comfortable level.</p>
+              <p style="margin:2px 0 0;color:#64748b;">The Listening section will play test audio automatically. Please adjust your computer volume to a comfortable level.</p>
             </div>
           </div>
 

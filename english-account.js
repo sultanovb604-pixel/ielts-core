@@ -83,7 +83,6 @@
     }
 
     renderScoreTrend(chartResults);
-    renderOutcomeChart(chartResults, chartProgress);
   };
 
   const prepareCanvas = canvas => {
@@ -109,7 +108,7 @@
 
     const streak = progress?.streak || 0;
     if (streakBadge) {
-      streakBadge.textContent = `🔥 ${streak} Kunlik Streak`;
+      streakBadge.textContent = `${streak}-day streak`;
       streakBadge.style.color = streak > 0 ? '#c2410c' : '#64748b';
       streakBadge.style.background = streak > 0 ? '#fff7ed' : '#f1f5f9';
       streakBadge.style.borderColor = streak > 0 ? '#ffedd5' : '#e2e8f0';
@@ -123,7 +122,7 @@
           return { date: d.toISOString().slice(0, 10), count: 0 };
         });
 
-    const dayNames = ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let todayMinutes = 0;
     const maxCount = Math.max(1, ...activityList.map(a => Number(a.count) || 0));
 
@@ -133,12 +132,12 @@
     let totalSecs = todayAttempts.reduce((s, r) => s + (Number(r.durationSeconds) || 0), 0); if(totalSecs>0 && totalSecs<60){ todayMinutes=1; } else { todayMinutes=Math.round(totalSecs/60); }
 
     if (timeBadge) {
-      timeBadge.textContent = `${todayMinutes} min bugun`;
+      timeBadge.textContent = `${todayMinutes} min today`;
     }
 
     if (goalEl) {
       const completedThisWeek = progress?.completedThisWeek || todayAttempts.length || 0;
-      goalEl.textContent = `Haftalik reja: ${completedThisWeek}/5 test`;
+      goalEl.textContent = `Weekly goal: ${completedThisWeek}/5 tests`;
     }
 
     barsGrid.innerHTML = activityList.map((item, idx) => {
@@ -149,11 +148,11 @@
       const bgStyle = count > 0 
         ? (isToday ? 'background:linear-gradient(180deg, #1468f3, #2563eb);' : 'background:#2563eb;') 
         : '';
-      const tooltipText = `${count} ta test topshirildi (${item.date})`;
+      const tooltipText = `${count} tests completed (${item.date})`;
 
       return `
         <div class="activity-bar-col" title="${tooltipText}">
-          <div class="activity-bar-tooltip">${count > 0 ? `${count} test` : 'Dam olish'}</div>
+            <div class="activity-bar-tooltip">${count > 0 ? `${count} test${count === 1 ? '' : 's'}` : 'Rest day'}</div>
           <div class="activity-bar-fill ${count === 0 ? 'empty-bar' : ''}" style="height:${heightPct}%;${bgStyle}"></div>
         </div>
       `;
@@ -163,13 +162,13 @@
       const dateObj = new Date(item.date + 'T00:00:00Z');
       const dayName = dayNames[dateObj.getUTCDay()];
       const isToday = item.date === todayStr;
-      return `<span style="${isToday ? 'color:#2563eb;font-weight:900;' : ''}">${isToday ? 'Bugun' : dayName}</span>`;
+      return `<span style="${isToday ? 'color:#2563eb;font-weight:900;' : ''}">${isToday ? 'Today' : dayName}</span>`;
     }).join('');
   };
 
   const renderSkillMatrix = (data, progress) => {
     const getCefr = (band) => {
-      if (!band || band < 2.0) return { label: 'Boshlangʻich', cls: 'tag-focus' };
+        if (!band || band < 2.0) return { label: 'No score yet', cls: 'tag-focus' };
       if (band >= 8.5) return { label: 'C2 Proficient (8.5+)', cls: 'tag-mastered' };
       if (band >= 7.5) return { label: 'C1 Advanced (7.5–8.0)', cls: 'tag-good' };
       if (band >= 6.5) return { label: 'B2 Vantage (6.5–7.0)', cls: 'tag-good' };
@@ -189,7 +188,7 @@
       rCefr.textContent = cefr.label;
       rCefr.className = `diag-status-tag ${cefr.cls}`;
     }
-    if (rCountEl) rCountEl.textContent = `${rCount} ta test topshirildi`;
+    if (rCountEl) rCountEl.textContent = `${rCount} test${rCount === 1 ? '' : 's'} completed`;
 
     // 2. Listening
     const lBand = data?.listening?.averageBand || data?.listening?.bestBand || (progress?.bestListeningBand ? Number(progress.bestListeningBand) : null);
@@ -203,7 +202,7 @@
       lCefr.textContent = cefr.label;
       lCefr.className = `diag-status-tag ${cefr.cls}`;
     }
-    if (lCountEl) lCountEl.textContent = `${lCount} ta test topshirildi`;
+    if (lCountEl) lCountEl.textContent = `${lCount} test${lCount === 1 ? '' : 's'} completed`;
 
     // 3. Writing
     const wBand = data?.writing?.averageBand || data?.writing?.bestBand || null;
@@ -217,7 +216,7 @@
       wCefr.textContent = cefr.label;
       wCefr.className = `diag-status-tag ${cefr.cls}`;
     }
-    if (wCountEl) wCountEl.textContent = `${wCount} ta esse yozildi`;
+    if (wCountEl) wCountEl.textContent = `${wCount} essays submitted`;
 
     // 4. Speaking
     const sBand = data?.speaking?.estimatedBand || null;
@@ -230,7 +229,7 @@
       sCefr.textContent = cefr.label;
       sCefr.className = `diag-status-tag ${cefr.cls}`;
     }
-    if (sCountEl) sCountEl.textContent = 'Examiner Room';
+    if (sCountEl) sCountEl.textContent = 'Speaking practice';
   };
 
   const renderScoreTrend = results => {
@@ -253,7 +252,7 @@
     empty.hidden = points.length > 0;
     canvas.hidden = points.length === 0;
     if (!points.length) {
-      insight.textContent = 'Kamida 1 ta test yechib natija grafigini ko`ring';
+      insight.textContent = 'Complete 1 test to see your trend';
       return;
     }
 
@@ -339,7 +338,7 @@
     });
 
     const delta = points.length > 1 ? points.at(-1) - points.at(-2) : null;
-    insight.textContent = delta === null ? 'Ilk natija saqlandi' : delta === 0 ? 'Barqaror natija' : `${delta > 0 ? '+' : ''}${delta.toFixed(1)} band oʻsish`;
+    insight.textContent = delta === null ? 'First result saved' : delta === 0 ? 'Steady result' : `${delta > 0 ? '+' : ''}${delta.toFixed(1)} band change`;
     insight.classList.toggle('positive', delta > 0);
     insight.classList.toggle('negative', delta < 0);
     canvas.setAttribute('aria-label', `Recent bands: ${points.map(value => value.toFixed(1)).join(', ')}`);
@@ -462,7 +461,7 @@
     const focusTitle = document.querySelector('#focusTitle');
     const focusCopy = document.querySelector('#focusCopy');
     if (focusTitle && focusCopy) {
-      focusTitle.textContent = learningLabels[user.learning] || 'Target: Band 7.5+ Target';
+      focusTitle.textContent = learningLabels[user.learning] || 'Target band: 7.5+';
       focusCopy.textContent = user.learning || user.goal
         ? `${goalLabels[user.goal] || 'Your current priority'} · Change this focus whenever your plans change.`
         : 'Track your Reading and Listening accuracy towards your target IELTS Band.';
@@ -927,7 +926,7 @@
         saveTgBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">check</span><span>Saqlash va qo\'llash</span>';
       } else {
         saveTgBtn.style.background = 'linear-gradient(135deg, #d97706, #b45309)';
-        saveTgBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">workspace_premium</span><span>Premiumga o\'tish va saqlash</span>';
+        saveTgBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">workspace_premium</span><span>Upgrade to save</span>';
       }
     }
 
@@ -974,7 +973,7 @@
   saveTgBtn?.addEventListener('click', async () => {
     if (!currentUser) return;
     if (currentUser.plan !== 'premium') {
-      showToast("Telegram nishonlarini saqlash uchun Premium tarifiga yo'naltirilmoqda…", "info");
+      showToast('Opening Premium options to save profile badges…', 'info');
       setTimeout(() => { window.location.href = '/english/pricing'; }, 800);
       return;
     }
@@ -996,7 +995,7 @@
       if (tgModal) tgModal.style.display = 'none';
       showToast('Profilingiz dizayni muvaffaqiyatli saqlandi.', 'success');
     } catch (err) {
-      showToast('Dizaynni saqlashda xatolik: ' + err.message, 'error');
+      showToast('Could not save profile design: ' + err.message, 'error');
     } finally {
       saveTgBtn.disabled = false;
       saveTgBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">check</span><span>Saqlash va qo\'llash</span>';
@@ -1103,7 +1102,7 @@
           if (assignBadge) assignBadge.textContent = '0 Tasks';
           if (sectionBadge) sectionBadge.textContent = '0 Tasks';
           if (tabBadge) tabBadge.style.display = 'none';
-          const emptyHtml = '<p style="padding:28px;text-align:center;color:#64748b;font-size:14px;">Hozircha ustozingiz tomonidan yuborilgan yangi vazifalar yo\'q.</p>';
+          const emptyHtml = '<p style="padding:28px;text-align:center;color:#64748b;font-size:14px;">No new assignments from your teacher yet.</p>';
           if (assignList) assignList.innerHTML = emptyHtml;
           if (dedicatedList) dedicatedList.innerHTML = emptyHtml;
           return;
@@ -1145,7 +1144,7 @@
         if (!filtered.length) {
           const emptyFiltered = `<div style="padding:32px 16px;text-align:center;color:#64748b;">
             <span class="material-symbols-outlined" style="font-size:32px;color:#94a3b8;display:block;margin-bottom:6px;">filter_list_off</span>
-            <strong style="color:#0f172a;font-size:14px;">Tanlangan filtr bo'yicha vazifalar topilmadi</strong>
+            <strong style="color:#0f172a;font-size:14px;">No assignments match this filter</strong>
           </div>`;
           if (dedicatedList) dedicatedList.innerHTML = emptyFiltered;
           return;
@@ -1376,8 +1375,8 @@
           const stat = document.getElementById(`diagStatus${key}`);
           if (fill) { fill.style.width = '0%'; fill.className = 'diag-fill'; }
           if (pct) pct.textContent = '—';
-          if (mist) mist.innerHTML = '<span style="color:#94a3b8;font-size:12px;">Hali test ishlanmagan</span>';
-          if (stat) { stat.textContent = 'Maʼlumot yoʻq'; stat.className = 'diag-status-tag tag-mid'; }
+          if (mist) mist.innerHTML = '<span style="color:#94a3b8;font-size:12px;">No test completed yet</span>';
+          if (stat) { stat.textContent = 'No data yet'; stat.className = 'diag-status-tag tag-mid'; }
         });
         const speedFill = document.getElementById('diagFillSpeed');
         const speedPct = document.getElementById('diagPctSpeed');
@@ -1385,8 +1384,8 @@
         const speedStat = document.getElementById('diagStatusSpeed');
         if (speedFill) speedFill.style.width = '0%';
         if (speedPct) speedPct.textContent = '—';
-        if (speedMist) speedMist.innerHTML = '<span style="color:#94a3b8;font-size:12px;">Test topshirilmagan</span>';
-        if (speedStat) { speedStat.textContent = 'Maʼlumot yoʻq'; speedStat.className = 'diag-status-tag tag-mid'; }
+        if (speedMist) speedMist.innerHTML = '<span style="color:#94a3b8;font-size:12px;">No test completed yet</span>';
+        if (speedStat) { speedStat.textContent = 'No data yet'; speedStat.className = 'diag-status-tag tag-mid'; }
       }
 
       // Print Diagnostic Report Button (use .onclick to avoid duplicates on reload)

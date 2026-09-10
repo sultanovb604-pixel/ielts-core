@@ -1,0 +1,485 @@
+/* IELTS Core member workspace polish — shared visual system for authenticated pages. */
+:root {
+  --core-ink: #0b1428;
+  --core-text: #334155;
+  --core-muted: #64748b;
+  --core-blue: #1468f3;
+  --core-blue-dark: #0b54d1;
+  --core-blue-soft: #edf5ff;
+  --core-canvas: #f6f8fc;
+  --core-surface: #ffffff;
+  --core-line: #dfe7f2;
+  --core-shadow: 0 16px 44px rgba(15, 35, 70, 0.07);
+}
+
+body.member-layout {
+  padding-left: 248px !important;
+  background: var(--core-canvas) !important;
+  color: var(--core-text);
+}
+
+body.member-layout.member-sidebar-collapsed {
+  padding-left: 76px !important;
+}
+
+.member-sidebar {
+  width: 248px !important;
+  border-right-color: var(--core-line) !important;
+  box-shadow: 8px 0 32px rgba(15, 35, 70, 0.04) !important;
+}
+
+body.member-sidebar-collapsed .member-sidebar {
+  width: 76px !important;
+}
+
+.member-sidebar-nav {
+  gap: 16px !important;
+  padding: 16px 12px !important;
+}
+
+.member-sidebar-nav a {
+  min-height: 40px !important;
+  padding: 8px 11px !important;
+  border-radius: 10px !important;
+  color: #42526a !important;
+  font-size: 13.5px !important;
+}
+
+.member-sidebar-nav a:hover {
+  color: var(--core-ink) !important;
+  background: #f2f6fc !important;
+}
+
+.member-sidebar-nav a[aria-current="page"] {
+  color: #0c4ebe !important;
+  border-color: #cfe0fb !important;
+  background: var(--core-blue-soft) !important;
+  box-shadow: inset 3px 0 0 var(--core-blue) !important;
+}
+
+.member-sidebar-nav a[aria-current="page"] .member-nav-icon {
+  color: var(--core-blue) !important;
+}
+
+.member-nav-section-title {
+  color: #748399 !important;
+}
+
+.member-nav-badge {
+  background: #eaf3ff !important;
+  color: #0b5ed7 !important;
+}
+
+.member-sidebar-pro-card {
+  border-color: rgba(72, 133, 255, 0.35) !important;
+  background: linear-gradient(145deg, #0b1830, #132c52) !important;
+  box-shadow: 0 12px 28px rgba(8, 24, 48, 0.18) !important;
+}
+
+.pro-star-badge,
+.pro-price-pill {
+  color: #dbeafe !important;
+}
+
+.pro-star-badge {
+  background: rgba(59, 130, 246, 0.18) !important;
+}
+
+.pro-desc {
+  color: #c7d3e3 !important;
+}
+
+.pro-action-link {
+  color: #74b1ff !important;
+}
+
+.member-sidebar-profile,
+.member-sidebar-collapse-btn,
+.member-theme-btn {
+  border-color: var(--core-line) !important;
+}
+
+.member-mobile-bar {
+  box-shadow: 0 8px 24px rgba(15, 35, 70, 0.06);
+}
+
+.member-layout .page,
+.member-layout .vx-catalog-main {
+  max-width: 1320px;
+}
+
+.member-layout .card,
+.member-layout .practice-skill-card,
+.member-layout .course-path-card,
+.member-layout .vocabulary-controls,
+.member-layout .vocabulary-list,
+.member-layout .mock-card {
+  border-color: var(--core-line) !important;
+  box-shadow: 0 8px 28px rgba(15, 35, 70, 0.045) !important;
+}
+
+.member-layout :where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid rgba(20, 104, 243, 0.26) !important;
+  outline-offset: 2px !important;
+}
+
+/* The global member navigation is the single navigation shell. */
+.materials-page.member-layout .vx-top-notification-banner,
+.materials-page.member-layout .vx-catalog-sidebar,
+.materials-page.member-layout .vx-catalog-mobile-bar,
+.materials-page.member-layout .vx-sidebar-backdrop {
+  display: none !important;
+}
+
+.materials-page.member-layout .vx-catalog-shell {
+  display: block;
+  min-height: 100vh;
+}
+
+.materials-page.member-layout .vx-catalog-main {
+  width: min(100% - 56px, 1320px);
+  padding: 34px 0 72px !important;
+}
+
+.materials-page .vx-cat-icon-badge {
+  color: var(--core-blue) !important;
+  border-color: #d6e5fb !important;
+  background: var(--core-blue-soft) !important;
+}
+
+.materials-page .vx-cat-title {
+  color: var(--core-ink) !important;
+  font-family: "Plus Jakarta Sans", "DM Sans", sans-serif;
+  font-size: clamp(28px, 3vw, 40px) !important;
+  letter-spacing: -0.035em !important;
+}
+
+.materials-page .vx-cat-subtitle {
+  color: var(--core-muted) !important;
+  font-size: 15px !important;
+}
+
+.materials-page .vx-search-input,
+.materials-page .vx-filter-select {
+  border-color: var(--core-line) !important;
+  border-radius: 11px !important;
+  color: var(--core-text) !important;
+  background-color: var(--core-surface) !important;
+}
+
+.materials-page .vx-search-input:focus,
+.materials-page .vx-filter-select:focus {
+  border-color: var(--core-blue) !important;
+  box-shadow: 0 0 0 3px rgba(20, 104, 243, 0.13) !important;
+}
+
+.materials-page .vx-search-btn {
+  border-radius: 11px !important;
+  background: var(--core-ink) !important;
+}
+
+.materials-page .vx-results-count-bar .vx-reset-link {
+  color: var(--core-blue) !important;
+}
+
+.materials-page .vx-cards-grid {
+  gap: 20px !important;
+}
+
+.materials-page .vx-test-card {
+  border-color: var(--core-line) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 28px rgba(15, 35, 70, 0.055) !important;
+}
+
+.materials-page .vx-card-graphic,
+.materials-page .vx-test-card.skill-listening .vx-card-graphic,
+.materials-page .vx-test-card.skill-writing .vx-card-graphic,
+.materials-page .vx-test-card.skill-speaking .vx-card-graphic {
+  height: 126px !important;
+  background: linear-gradient(135deg, #0b1830 0%, #12376d 58%, #1468f3 100%) !important;
+}
+
+.materials-page .vx-card-badge-max {
+  color: #16458c !important;
+  background: #dbeafe !important;
+  box-shadow: none !important;
+}
+
+.materials-page .vx-card-badge-passage {
+  background: rgba(255, 255, 255, 0.14) !important;
+}
+
+.materials-page .vx-card-center-icon {
+  color: #ffffff;
+  font-size: 31px !important;
+  filter: none !important;
+}
+
+.materials-page .vx-card-cta-btn.primary,
+.materials-page .vx-card-cta-btn.unlock {
+  background: var(--core-blue) !important;
+  box-shadow: 0 8px 20px rgba(20, 104, 243, 0.2) !important;
+}
+
+.materials-page .vx-card-cta-btn.primary:hover,
+.materials-page .vx-card-cta-btn.unlock:hover {
+  background: var(--core-blue-dark) !important;
+}
+
+/* Dashboard density and responsive behavior. */
+.product-dashboard {
+  padding-top: 32px !important;
+}
+
+.dashboard-user-bar {
+  border-radius: 18px !important;
+  box-shadow: var(--core-shadow) !important;
+}
+
+.product-dashboard .account-nav {
+  border: 1px solid var(--core-line) !important;
+  border-radius: 14px !important;
+  background: #eef3fa !important;
+}
+
+.product-dashboard .account-nav button[aria-selected="true"] {
+  color: #0c55cc !important;
+  background: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(15, 35, 70, 0.08) !important;
+}
+
+.product-dashboard .dashboard-stat-grid .stat {
+  min-height: 116px !important;
+  border-color: var(--core-line) !important;
+  background: #ffffff !important;
+}
+
+#premiumBanner > div:first-child > span:first-child {
+  color: #bfdbfe !important;
+  background: rgba(59, 130, 246, 0.2) !important;
+}
+
+#premiumBanner #accountUpgradeBtn {
+  border-color: var(--core-blue) !important;
+  background: var(--core-blue) !important;
+}
+
+.activity-chart-wrapper {
+  overflow: visible !important;
+}
+
+#activityBarsGrid,
+#activityDaysLabels {
+  min-width: 0 !important;
+}
+
+/* Speaking and mock hubs keep the same restrained navy/blue hierarchy. */
+.speaking-shell,
+.mock-shell {
+  padding-top: 32px;
+}
+
+.speaking-mode-bar,
+.stage-pill {
+  border-color: var(--core-line) !important;
+  box-shadow: 0 5px 18px rgba(15, 35, 70, 0.04);
+}
+
+.speaking-mode-btn.active,
+.stage-pill.active {
+  border-color: var(--core-blue) !important;
+  background: var(--core-blue) !important;
+  box-shadow: 0 7px 18px rgba(20, 104, 243, 0.2) !important;
+}
+
+.zoom-conference-stage {
+  border-color: #20334f !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 60px rgba(7, 20, 40, 0.2) !important;
+}
+
+.speaking-shell .zoom-live-tag {
+  color: #93c5fd !important;
+  border-color: rgba(59, 130, 246, 0.42) !important;
+  background: rgba(37, 99, 235, 0.18) !important;
+}
+
+.speaking-shell .zoom-live-tag .live-blink-dot {
+  background: #60a5fa !important;
+  animation: none !important;
+}
+
+.zoom-video-screen {
+  min-height: 440px !important;
+  max-height: 560px !important;
+}
+
+.mock-hero-card {
+  background: linear-gradient(135deg, #0b1830 0%, #13386d 65%, #1468f3 100%) !important;
+  box-shadow: 0 18px 48px rgba(13, 45, 94, 0.16) !important;
+}
+
+.mock-card,
+.mock-attempt-card {
+  border-radius: 18px !important;
+}
+
+@media (max-width: 900px) {
+  body.member-layout,
+  body.member-layout.member-sidebar-collapsed {
+    padding-left: 0 !important;
+  }
+
+  .member-layout .page,
+  .materials-page.member-layout .vx-catalog-main {
+    width: min(100% - 32px, 720px) !important;
+    padding-top: 24px !important;
+  }
+
+  .product-dashboard .account-nav {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px !important;
+    overflow: visible !important;
+    padding: 7px !important;
+  }
+
+  .product-dashboard .account-nav button {
+    min-width: 0 !important;
+    justify-content: flex-start !important;
+    white-space: normal !important;
+  }
+
+  .zoom-video-screen {
+    min-height: 390px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .member-layout .page,
+  .materials-page.member-layout .vx-catalog-main {
+    width: min(100% - 24px, 520px) !important;
+    padding-top: 20px !important;
+  }
+
+  .member-mobile-bar {
+    padding: 10px 12px !important;
+  }
+
+  .materials-page .vx-cat-header-wrap {
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .materials-page .vx-cat-title {
+    font-size: 28px !important;
+  }
+
+  .materials-page .vx-search-row {
+    grid-template-columns: minmax(0, 1fr) 46px !important;
+    gap: 8px !important;
+  }
+
+  .materials-page .vx-search-btn {
+    width: 46px !important;
+    padding: 0 !important;
+    justify-content: center !important;
+  }
+
+  .materials-page .vx-search-btn span:not(.material-symbols-outlined) {
+    display: none !important;
+  }
+
+  .materials-page .vx-filters-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px !important;
+  }
+
+  .materials-page .vx-filter-select {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .materials-page .vx-card-graphic {
+    height: 112px !important;
+  }
+
+  .product-dashboard {
+    padding-top: 18px !important;
+  }
+
+  .dashboard-user-bar {
+    padding: 16px !important;
+  }
+
+  .dashboard-user-actions {
+    gap: 8px !important;
+  }
+
+  .product-dashboard .dashboard-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .product-dashboard .dashboard-stat-grid .stat {
+    min-height: 122px !important;
+    padding: 14px !important;
+  }
+
+  .chart-card-head,
+  .outcome-legend {
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .chart-benchmark-legend,
+  .outcome-legend {
+    flex-direction: column !important;
+  }
+
+  .speaking-mode-bar,
+  .speaking-stage-indicator {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+  }
+
+  .speaking-mode-btn,
+  .stage-pill {
+    flex: 0 0 auto;
+  }
+
+  .zoom-video-screen {
+    min-height: 320px !important;
+  }
+}
+
+html[data-theme="dark"] body.member-layout {
+  --core-ink: #f4f7fb;
+  --core-text: #cbd5e1;
+  --core-muted: #93a4ba;
+  --core-canvas: #07101f;
+  --core-surface: #0b1728;
+  --core-line: #1e3049;
+}
+
+html[data-theme="dark"] .materials-page .vx-search-input,
+html[data-theme="dark"] .materials-page .vx-filter-select,
+html[data-theme="dark"] .materials-page .vx-test-card,
+html[data-theme="dark"] .product-dashboard .dashboard-stat-grid .stat {
+  color: var(--core-text) !important;
+  border-color: var(--core-line) !important;
+  background-color: var(--core-surface) !important;
+}
+
+html[data-theme="dark"] .product-dashboard .account-nav {
+  border-color: var(--core-line) !important;
+  background: #0d1b2f !important;
+}
+
+html[data-theme="dark"] .product-dashboard .account-nav button[aria-selected="true"] {
+  color: #8bbcff !important;
+  background: #142744 !important;
+}

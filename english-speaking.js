@@ -224,15 +224,15 @@
         }
       });
     } else {
-      // Real Cambridge Exam Mode
+      // Exam-style practice mode
       stageIndicator.style.display = 'flex';
       if (avatar.slideOverlay) avatar.slideOverlay.style.display = 'none';
       practiceFeedbackBox.style.display = 'none';
       
       avatar.showStartOverlay({
-        title: 'Join Official Video Assessment',
-        desc: 'The <strong>Virtual AI Examiner</strong> is waiting in the secure virtual room.<br/>Click to start the live video interview.',
-        btnLabel: 'Start Examination',
+        title: 'Start Speaking Practice',
+        desc: 'Your <strong>AI practice assistant</strong> is ready.<br/>Start when you are comfortable.',
+        btnLabel: 'Start Practice',
         onStart: () => {
           beginExamInterview();
         }
@@ -604,7 +604,7 @@
     if (avatar) avatar.hideCandidateLiveSpeech();
 
     const bandStr = Number(evaluation.overallBand).toFixed(1);
-    const spokenVerdict = `That concludes the speaking examination. Based on your performance across all criteria, your estimated score is Band ${bandStr}. Please review your official score breakdown on the screen.`;
+    const spokenVerdict = `That concludes the speaking practice. Based on this automated assessment, your estimated score is Band ${bandStr}. Please review the practice feedback on the screen.`;
 
     avatar.speakText(spokenVerdict);
 

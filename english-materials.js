@@ -149,31 +149,31 @@
       if (s === 'listening') {
         return {
           title: 'Listening Full Tests',
-          subtitle: 'Authentic 4-part Cambridge CDI listening mock exams with full audio simulation',
-          icon: '🎧',
+          subtitle: 'Four-part computer-delivered listening practice with a complete audio simulation',
+          icon: 'headphones',
           breadcrumb: 'Full Tests > Listening'
         };
       }
       return {
         title: 'Reading Full Tests',
-        subtitle: 'Complete 3-passage 40-question Cambridge CDI reading mock tests under real exam conditions',
-        icon: '📖',
+        subtitle: 'Complete three-passage, 40-question reading practice in a timed workspace',
+        icon: 'menu_book',
         breadcrumb: 'Full Tests > Reading'
       };
     }
     if (c === 'writing-sample') {
       return {
         title: 'Writing Tasks',
-        subtitle: 'Official Cambridge Writing Task 1 and Task 2 prompts with Band 9 examiner models',
-        icon: '✍️',
+        subtitle: 'Writing Task 1 and Task 2 prompts with high-band model responses',
+        icon: 'edit_note',
         breadcrumb: 'Part Practice > Writing'
       };
     }
     if (c === 'speaking') {
       return {
         title: 'Speaking Topics',
-        subtitle: 'Recent actual IELTS Speaking exam topics, cue cards, and high-band answer drills',
-        icon: '🗣️',
+        subtitle: 'Speaking topics, cue cards, and high-band answer drills for focused practice',
+        icon: 'record_voice_over',
         breadcrumb: 'Part Practice > Speaking'
       };
     }
@@ -181,22 +181,22 @@
       return {
         title: 'Academic Articles',
         subtitle: 'Curated scientific and academic reading articles with vocabulary banking',
-        icon: '📰',
+        icon: 'article',
         breadcrumb: 'Study Tools > Articles'
       };
     }
     if (s === 'listening') {
       return {
         title: 'Listening Sections',
-        subtitle: 'Practice individual Cambridge listening sections with targeted question types',
-        icon: '🎧',
+        subtitle: 'Practice individual listening sections with targeted question types',
+        icon: 'hearing',
         breadcrumb: 'Part Practice > Listening'
       };
     }
     return {
       title: 'Reading Passages',
       subtitle: 'Practice individual reading passages with various question types',
-      icon: '📖',
+      icon: 'menu_book',
       breadcrumb: 'Reading Passages'
     };
   };
@@ -354,10 +354,10 @@
       }
 
       // Graphic center icon
-      let centerIcon = '📖';
-      if (item.skill === 'listening') centerIcon = '🎧';
-      else if (item.skill === 'writing') centerIcon = '✍️';
-      else if (item.skill === 'speaking') centerIcon = '🗣️';
+      let centerIcon = 'menu_book';
+      if (item.skill === 'listening') centerIcon = 'headphones';
+      else if (item.skill === 'writing') centerIcon = 'edit_note';
+      else if (item.skill === 'speaking') centerIcon = 'record_voice_over';
 
       // Question types pills
       const qTypes = Array.isArray(item.questionTypes) && item.questionTypes.length
@@ -415,11 +415,11 @@
         <article class="vx-test-card skill-${escape(item.skill || 'reading')}">
           <div class="vx-card-graphic">
             <div class="vx-card-graphic-top">
-              <span class="vx-card-badge-max">⭐ MAX</span>
+              <span class="vx-card-badge-max"><span class="material-symbols-outlined" aria-hidden="true">star</span> MAX</span>
               <span class="vx-card-badge-passage">${escape(badgeLabel)}</span>
             </div>
             <div class="vx-card-graphic-center">
-              <span class="vx-card-center-icon">${centerIcon}</span>
+            <span class="material-symbols-outlined vx-card-center-icon" aria-hidden="true">${centerIcon}</span>
               <span class="vx-card-volume-label">${escape(pack)}</span>
             </div>
           </div>

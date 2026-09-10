@@ -31,11 +31,11 @@
           <div class="zoom-top-bar">
             <div class="zoom-live-tag">
               <span class="live-blink-dot"></span>
-              <span>REC · LIVE</span>
+              <span>PRACTICE READY</span>
             </div>
             <div class="zoom-center-info">
-              <span class="zoom-room-title">IELTS Online Official Video Call Examination</span>
-              <span class="zoom-room-sub">Room #842 · Cambridge CDI Assessment Session</span>
+              <span class="zoom-room-title">IELTS Core Speaking Practice</span>
+              <span class="zoom-room-sub">Independent AI-guided practice session</span>
             </div>
             <div class="zoom-right-badges">
               <button type="button" class="zoom-badge-btn gemini-btn" id="openGeminiModalBtn" title="Google Gemini Real AI Engine">
@@ -46,8 +46,8 @@
                 <span class="material-symbols-outlined" style="font-size:14px;">style</span>
                 <span id="avatarStyleLabel">Style: Cartoon</span>
               </button>
-              <span class="zoom-badge-pill">1080p 60fps</span>
-              <span class="zoom-badge-pill secure"><span class="material-symbols-outlined" style="font-size:14px;">lock</span> Encrypted</span>
+              <span class="zoom-badge-pill">HD preview</span>
+              <span class="zoom-badge-pill secure"><span class="material-symbols-outlined" style="font-size:14px;">mic</span> Audio ready</span>
             </div>
           </div>
 
@@ -370,7 +370,7 @@
             <!-- Examiner Name Tag Overlay -->
             <div class="zoom-examiner-tag">
               <span class="material-symbols-outlined" id="examinerSpeakerIcon" style="font-size:16px;color:#38bdf8;">volume_up</span>
-              <span class="examiner-name">Virtual AI Examiner (IELTS Core)</span>
+              <span class="examiner-name">IELTS Core Practice Assistant</span>
             </div>
 
             <!-- Picture-in-Picture Candidate Self Webcam -->
@@ -440,10 +440,10 @@
                   </button>
                 </div>
                 <h3 class="start-title" id="startOverlayTitle">Join Official Video Examination</h3>
-                <p class="start-desc" id="startOverlayDesc">The Virtual AI Examiner is waiting in the secure virtual room.<br/>Click to start the live automated assessment.</p>
+                <p class="start-desc" id="startOverlayDesc">Your AI practice assistant is ready.<br/>Start when you are comfortable.</p>
                 <button type="button" class="start-action-btn" id="startActionBtn">
                   <span class="material-symbols-outlined">play_circle</span>
-                  <span id="startActionBtnLabel">Start Examination</span>
+                  <span id="startActionBtnLabel">Start Practice</span>
                 </button>
               </div>
             </div>
@@ -711,17 +711,17 @@
       if (this.examinerNameTag) {
         this.examinerNameTag.textContent = this.currentPersona === 'practice' 
           ? 'Virtual AI Partner (IELTS Core)' 
-          : 'Virtual AI Examiner (IELTS Core)';
+          : 'IELTS Core Practice Assistant';
       }
       if (this.roomTitleEl) {
         this.roomTitleEl.textContent = this.currentPersona === 'practice'
           ? 'Casual English AI Voice Lounge · Free Topic Chat'
-          : 'IELTS Online Official Video Call Examination';
+          : 'IELTS Core Speaking Practice';
       }
       if (this.roomSubEl) {
         this.roomSubEl.textContent = this.currentPersona === 'practice'
           ? 'Real-Time Spoken Conversation Powered by Gemini AI'
-          : 'Room #842 · Cambridge CDI Assessment Session';
+          : 'Independent AI-guided practice session';
       }
       if (this.ccBadgeEl) {
         this.ccBadgeEl.textContent = this.currentPersona === 'practice' ? 'AI PARTNER' : 'EXAMINER';

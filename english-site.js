@@ -259,7 +259,7 @@
       </nav>
       <div class="member-sidebar-footer">
         ${user.plan !== 'premium' ? `
-          <div class="member-sidebar-pro-card" id="sidebarUpgradeBtn" role="button" tabindex="0" title="Upgrade to IELTS Core Premium (30 000 UZS/oy)">
+          <div class="member-sidebar-pro-card" id="sidebarUpgradeBtn" role="button" tabindex="0" title="Upgrade to IELTS Core Premium (30 000 UZS/month)">
             <div class="pro-card-collapsed-badge">
               <span class="material-symbols-outlined pro-icon" aria-hidden="true">diamond</span>
               <span class="pro-tag">PRO</span>
@@ -267,9 +267,9 @@
             <div class="pro-card-expanded-content">
               <div class="pro-header-row">
                 <span class="pro-star-badge">PREMIUM</span>
-                <span class="pro-price-pill">30k / oy</span>
+                <span class="pro-price-pill">30k / month</span>
               </div>
-              <p class="pro-desc">Authentic CDI testlar va toʻliq tahlillarni ochish</p>
+              <p class="pro-desc">Full practice library and detailed progress insights</p>
               <div class="pro-action-link">
                 <span>Faollashtirish</span>
                 <span aria-hidden="true">→</span>
@@ -459,13 +459,13 @@
               <label class="test-mode-card ${isPremium ? 'selected' : 'locked'}" id="cardModeReal" style="${!isPremium ? 'opacity: 0.6; cursor: not-allowed; border-color: var(--v4-border);' : ''}">
                 <span class="test-mode-badge real">
                   <span class="material-symbols-outlined" aria-hidden="true" style="font-size:14px">verified</span>
-                  <span>100% Real Exam Interface</span>
+                  <span>Timed Exam Interface</span>
                 </span>
                 <div class="test-mode-card-title-row">
                   <input type="radio" name="testExamMode" value="real" class="test-mode-radio" ${isPremium ? 'checked' : ''} ${realModeDisabled}>
                   <h3>Real Exam Mode ${realModeLock}</h3>
                 </div>
-                <p class="test-mode-desc">Practice in an exact copy of the real computer-based exam interface with official split pane, timed countdown, and CDI highlight & notes.${!isPremium ? ' <b>Premium Only.</b>' : ''}</p>
+                <p class="test-mode-desc">Practice with a split-pane layout, timed countdown, highlighting, and notes.${!isPremium ? ' <b>Premium only.</b>' : ''}</p>
               </label>
 
               <!-- Mode 2: Practice Mode -->
@@ -608,13 +608,13 @@
               <label class="test-mode-card selected" id="cardModeReal">
                 <span class="test-mode-badge real">
                   <span class="material-symbols-outlined" aria-hidden="true" style="font-size:14px">verified</span>
-                  <span>100% Real Exam Interface</span>
+                  <span>Timed Exam Interface</span>
                 </span>
                 <div class="test-mode-card-title-row">
                   <input type="radio" name="testExamMode" value="real" class="test-mode-radio" checked>
                   <h3>Real Exam Mode</h3>
                 </div>
-                <p class="test-mode-desc">Practice in an exact copy of the real computer-based exam interface with official split pane, timed countdown, and CDI highlight & notes.</p>
+                <p class="test-mode-desc">Practice with a split-pane layout, timed countdown, highlighting, and notes.</p>
               </label>
 
               <label class="test-mode-card" id="cardModePractice">
@@ -702,28 +702,28 @@
             <div style="text-align:center;margin-bottom:24px;">
               <span style="display:inline-block;padding:4px 12px;border-radius:20px;background:#fef3c7;color:#d97706;font-weight:800;font-size:12px;margin-bottom:8px;">★ IELTS CORE PREMIUM</span>
               <h2 style="font-size:24px;font-weight:800;color:#0f172a;margin:0 0 8px 0;">Unlock Unlimited IELTS Prep</h2>
-              <p style="font-size:14px;color:#64748b;margin:0;">Get full access to all 40+ computer-delivered tests, verified explanations, and advanced Band score diagnostics.</p>
+              <p style="font-size:14px;color:#64748b;margin:0;">Get full access to 40+ computer-delivered practice tests, answer explanations, and detailed score diagnostics.</p>
             </div>
             
             <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;margin-bottom:24px;">
               <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center;background:#f8fafc;position:relative;">
                 <span style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;">EARLY BIRD · 50%</span>
-                <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:2px;">1 OY (1 MONTH)</div>
+                <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:2px;">1 MONTH</div>
                 <div style="font-size:19px;font-weight:800;color:#0f172a;margin:6px 0;">
                   <del style="color:#94a3b8;font-size:13px;font-weight:600;margin-right:4px;">59 000</del>30 000 UZS
                 </div>
-                <small style="color:#059669;font-weight:700;">Dastlabki 10 ta oʻquvchi uchun</small>
+                <small style="color:#059669;font-weight:700;">For the first 10 students</small>
               </div>
-              <div style="border:2px solid #e11d48;border-radius:12px;padding:16px;text-align:center;background:#fff1f2;position:relative;">
-                <span style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#e11d48;color:#fff;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:10px;">ENG OMMABOP</span>
-                <div style="font-size:12px;font-weight:700;color:#e11d48;">3 OY (3 MONTHS)</div>
+              <div style="border:2px solid #2563eb;border-radius:12px;padding:16px;text-align:center;background:#eff6ff;position:relative;">
+                <span style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:10px;">MOST POPULAR</span>
+                <div style="font-size:12px;font-weight:700;color:#2563eb;">3 MONTHS</div>
                 <div style="font-size:20px;font-weight:800;color:#0f172a;margin:6px 0;">75 000 UZS</div>
-                <small style="color:#e11d48;font-weight:700;">25 000 / oy</small>
+                <small style="color:#2563eb;font-weight:700;">25 000 / month</small>
               </div>
               <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center;background:#f8fafc;">
-                <div style="font-size:12px;font-weight:700;color:#64748b;">6 OY (6 MONTHS)</div>
+                <div style="font-size:12px;font-weight:700;color:#64748b;">6 MONTHS</div>
                 <div style="font-size:20px;font-weight:800;color:#0f172a;margin:6px 0;">135 000 UZS</div>
-                <small style="color:#64748b;">Eng foydali</small>
+                <small style="color:#64748b;">Best value</small>
               </div>
             </div>
 
@@ -737,7 +737,7 @@
             </div>
 
             <div style="text-align:center;">
-              <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#e11d48;color:#fff;border-radius:10px;font-weight:700;text-decoration:none;font-size:14.5px;">
+              <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#2563eb;color:#fff;border-radius:10px;font-weight:700;text-decoration:none;font-size:14.5px;">
                 <span>Get Instant Access via Telegram (@ieltscoreadmin)</span>
                 <span>→</span>
               </a>
