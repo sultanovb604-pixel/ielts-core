@@ -31,6 +31,7 @@ Local design QA: passed for the selected homepage scope. No open P0/P1/P2 findin
 3. Existing mobile navigation specificity exposed a hidden Dashboard link to guests: scoped hidden rule corrected and menu retested; the guest menu now excludes Dashboard.
 4. Existing bottom CTA had dark heading and no horizontal inner padding: corrected contrast, padding and button width; verified in footer screenshot.
 5. Discarded intermediate captures taken after automatic viewport/scroll changes; final comparison is at top of the page in matching desktop state.
+6. The first Vercel candidate exposed a deployment-only issue: the unchanged server's public JavaScript allowlist blocked the new external demo file. Moved the same demo logic inline into `english.html`, matching the existing page pattern, and removed the unused external file. Server allowlist and CSP were not weakened. Local click/keyboard/timer tests passed after this correction; the first candidate was not promoted.
 
 ## Functional checks
 
@@ -41,10 +42,12 @@ Local design QA: passed for the selected homepage scope. No open P0/P1/P2 findin
 - Mobile menu opens/closes; primary CTA navigates to the existing signup form.
 - Demo progress and score are explicitly illustrative, not real student outcomes.
 - Console captured no warnings/errors in the local homepage checks.
-- `node --check english-precision.js`, existing `npm run check`, and `git diff --check` passed.
+- Inline scripts compile through `vm.Script`; click/keyboard/timer transitions pass `../check-precision-inline.cjs`. Existing `npm run check` also passed after the inline correction.
 
 ## Boundaries
 
+Production follow-through (2026-09-10): fixed candidate `dpl_J8TrXt8aF5RMiNy4LHEJonWoGNVi` passed authenticated candidate-browser smoke checks and was promoted to `ieltscore.org`. Public homepage, signup/login, practice, materials, predictions, pricing and new assets returned 200; guest auth returned the expected 401. The live Listening demo worked and the fresh browser console contained no warnings/errors. The post-deploy error-log scan returned no logs. Health reported healthy with database status connecting, so successful database access and registration remain unverified by this pass. See `PRECISION_DEPLOYMENT_20260909.md` for source preservation, rollback and observability details.
+
 Story: visitor opens the redesigned homepage, explores the interactive sample, then follows the existing practice/signup route. Demo interactions are client-only; no database writes, credentials or server configuration changed. Successful Google signup, real exam submission and load testing were not repeated in this design-only pass.
 
-Deployment must preserve all current production source references and replace only `english.html`, adding `english-precision.css`, `english-precision.js`, and `assets/precision-hero-backdrop.png`. Never deploy this checkout wholesale: its backend baseline is older than production. See the deployment handoff for final status.
+Deployment must preserve all current production source references and replace only `english.html`, adding `english-precision.css` and `assets/precision-hero-backdrop.png`. Never deploy this checkout wholesale: its backend baseline is older than production. See the deployment handoff for final status.
