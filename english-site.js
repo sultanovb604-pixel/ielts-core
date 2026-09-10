@@ -277,11 +277,11 @@
             </div>
           </div>
         ` : ''}
-          <div style="display:flex; align-items:center; gap:6px;">
-            <button type="button" id="sidebarThemeToggleBtn" title="Toggle dark mode" aria-label="Toggle dark mode" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:inherit; cursor:pointer; padding:8px; border-radius:10px; display:flex; align-items:center; justify-content:center; transition:0.2s;">
-              <span class="material-symbols-outlined" style="font-size:20px;">light_mode</span>
+          <div class="member-sidebar-footer-row">
+            <button type="button" class="member-sidebar-theme-btn" id="sidebarThemeToggleBtn" title="Toggle dark mode" aria-label="Toggle dark mode">
+              <span class="material-symbols-outlined" aria-hidden="true">${root.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
             </button>
-            <a class="member-sidebar-profile" href="/english/account" aria-label="Open student dashboard" style="flex:1; margin-top:0;">
+            <a class="member-sidebar-profile" href="/english/account" aria-label="Open student dashboard">
               <span class="member-avatar">${avatarContent}</span>
               <span class="member-profile-info">
                 <strong>${safe(user.name || 'Student')}</strong>
@@ -342,6 +342,8 @@
         localStorage.setItem('vortex-english-theme', root.dataset.theme);
         const icon = themeBtn.querySelector('.material-symbols-outlined');
         if (icon) icon.textContent = root.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode';
+        const stIcon = sidebar.querySelector('#sidebarThemeToggleBtn .material-symbols-outlined');
+        if (stIcon) stIcon.textContent = root.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode';
       });
     }
 
@@ -368,7 +370,8 @@
       if (stBtn) {
         const updateStBtn = () => {
           const isDark = document.documentElement.dataset.theme === 'dark';
-          stBtn.querySelector('span').textContent = isDark ? 'light_mode' : 'dark_mode';
+          const iconSpan = stBtn.querySelector('.material-symbols-outlined');
+          if (iconSpan) iconSpan.textContent = isDark ? 'light_mode' : 'dark_mode';
         };
         updateStBtn();
         stBtn.addEventListener('click', (e) => {
@@ -377,6 +380,8 @@
           root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
           localStorage.setItem('vortex-english-theme', root.dataset.theme);
           updateStBtn();
+          const mIcon = mobileBar.querySelector('[data-member-theme-toggle] .material-symbols-outlined');
+          if (mIcon) mIcon.textContent = root.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode';
         });
       }
 
