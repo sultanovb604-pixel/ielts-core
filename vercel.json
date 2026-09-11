@@ -9,12 +9,23 @@
   },
   "redirects": [
     {
+      "source": "/((?!maintenance|assets|favicon).*$)",
+      "destination": "/maintenance.html",
+      "permanent": false
+    },
+    {
       "source": "/english/predictions",
       "destination": "/english/mock-tests",
       "permanent": false
     }
   ],
   "headers": [
+    {
+      "source": "/maintenance.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [

@@ -9394,6 +9394,14 @@ const server = http.createServer(async (req, res) => {
       return res.end(xml);
     }
 
+    if (pathname === "/maintenance" || pathname === "/maintenance.html") {
+      const maintFile = path.join(__dirname, "maintenance.html");
+      if (fs.existsSync(maintFile)) {
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
+        return res.end(fs.readFileSync(maintFile, "utf8"));
+      }
+    }
+
     if (pathname === "/") {
       res.writeHead(302, { Location: "/english", "Cache-Control": "no-store" });
       return res.end();
