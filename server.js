@@ -9364,6 +9364,31 @@ const server = http.createServer(async (req, res) => {
     pathname = decodeURIComponent(pathname);
     requestUrl.pathname = pathname;
 
+    // Global Maintenance Mode check
+    const isAsset = pathname.startsWith("/assets/") || 
+                    pathname.startsWith("/vendor/") || 
+                    pathname === "/favicon.ico" || 
+                    pathname.startsWith("/favicon") ||
+                    pathname.endsWith(".png") ||
+                    pathname.endsWith(".svg") ||
+                    pathname.endsWith(".jpg") ||
+                    pathname.endsWith(".css") ||
+                    pathname.endsWith(".js") ||
+                    pathname.endsWith(".woff2") ||
+                    pathname === "/robots.txt";
+
+    if (!isAsset && requestUrl.searchParams.get("bypass") !== "vortex2026") {
+      const maintFile = path.join(__dirname, "maintenance.html");
+      if (fs.existsSync(maintFile)) {
+        res.writeHead(200, {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+          "Retry-After": "300"
+        });
+        return res.end(fs.readFileSync(maintFile, "utf8"));
+      }
+    }
+
     // Robots.txt
     if (req.method === "GET" && pathname === "/robots.txt") {
       res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" });
