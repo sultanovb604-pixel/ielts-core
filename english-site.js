@@ -177,49 +177,43 @@
     const activePath = location.pathname;
     const isTeacher = Boolean(user && user.role === 'teacher');
 
-    const candidateLinks = isTeacher ? [
-      { label: 'Home (Materials)', icon: 'home', href: '/english/materials', active: activePath === '/english/materials' && !activeCollection && !activeSkill },
-      { label: 'Teacher Workspace', icon: 'school', href: '/english/teacher', active: activePath === '/english/teacher' },
-      { label: 'Student View', icon: 'dashboard', href: '/english/account', active: activePath === '/english/account' && !params.get('tab') }
+    const isMaterials = activePath === '/english/materials';
+    const isDashboard = activePath === '/english/account' && !params.get('tab');
+    const isAssignments = activePath === '/english/account' && params.get('tab') === 'homework';
+    const isMockTests = activePath === '/english/mock-tests' || activePath === '/english/mock-exam' || activePath === '/english/predictions';
+    const isSpeaking = activePath === '/english/speaking' || activePath === '/english/speaking-studio';
+    const isWriting = activePath === '/english/writing-editor';
+    const isSkillTraining = activePath === '/english/practice';
+    const isVocabulary = activePath === '/english/vocabulary';
+
+    const overviewLinks = isTeacher ? [
+      { label: 'Dashboard', icon: 'dashboard', href: '/english/account', active: isDashboard },
+      { label: 'Practice library', icon: 'menu_book', href: '/english/materials', active: isMaterials },
+      { label: 'Teacher Workspace', icon: 'school', href: '/english/teacher', active: activePath === '/english/teacher' }
     ] : [
-      { label: 'Home (Materials)', icon: 'home', href: '/english/materials', active: activePath === '/english/materials' && !activeCollection && !activeSkill },
-      { label: 'Dashboard & Progress', icon: 'dashboard', href: '/english/account', active: activePath === '/english/account' && !params.get('tab') },
-      { label: 'Homework & Tasks', icon: 'assignment', href: '/english/account?tab=homework', active: activePath === '/english/account' && params.get('tab') === 'homework' }
+      { label: 'Dashboard', icon: 'dashboard', href: '/english/account', active: isDashboard },
+      { label: 'Practice library', icon: 'menu_book', href: '/english/materials', active: isMaterials },
+      { label: 'Assignments', icon: 'assignment', href: '/english/account?tab=homework', active: isAssignments }
     ];
 
     const sections = [
       {
-        title: isTeacher ? 'INSTRUCTOR' : 'WORKSPACE',
-        links: candidateLinks
+        title: isTeacher ? 'INSTRUCTOR' : 'OVERVIEW',
+        links: overviewLinks
       },
       {
-        title: 'FULL TESTS & MOCKS',
+        title: 'PRACTICE',
         links: [
-          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: activePath === '/english/mock-tests' || activePath === '/english/mock-exam', badge: 'LIVE' },
-          { label: 'Exam Predictions', icon: 'auto_awesome', href: '/english/mock-tests', active: activePath === '/english/predictions', badge: 'HOT' },
-          { label: 'AI Speaking Assessment', icon: 'record_voice_over', href: '/english/speaking', active: activePath === '/english/speaking' || activePath === '/english/speaking-studio' },
-          { label: 'Listening Tests', icon: 'headphones', href: '/english/materials?level=ielts&skill=listening&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'listening' && activeCollection === 'full-test' },
-          { label: 'Reading Tests', icon: 'menu_book', href: '/english/materials?level=ielts&skill=reading&collection=full-test', active: activePath === '/english/materials' && activeSkill === 'reading' && activeCollection === 'full-test' },
-          { label: 'Random Writing Mock', icon: 'shuffle', href: '/english/writing-editor?mode=random', active: activePath === '/english/writing-editor' }
+          { label: 'Full mock tests', icon: 'quiz', href: '/english/mock-tests', active: isMockTests },
+          { label: 'Speaking practice', icon: 'record_voice_over', href: '/english/speaking', active: isSpeaking },
+          { label: 'Writing practice', icon: 'edit', href: '/english/writing-editor', active: isWriting }
         ]
       },
       {
-        title: 'PART PRACTICE',
+        title: 'LEARN',
         links: [
-          { label: 'Reading Passages', icon: 'auto_stories', href: '/english/materials?level=ielts&skill=reading&collection=practice', active: activePath === '/english/materials' && activeSkill === 'reading' && activeCollection === 'practice' },
-          { label: 'Listening Sections', icon: 'hearing', href: '/english/materials?level=ielts&skill=listening&collection=practice', active: activePath === '/english/materials' && activeSkill === 'listening' && activeCollection === 'practice' },
-          { label: 'Writing Models', icon: 'history_edu', href: '/english/materials?level=ielts&skill=writing&collection=writing-sample', active: activePath === '/english/materials' && activeSkill === 'writing' && activeCollection === 'writing-sample' },
-          { label: 'Speaking Topics', icon: 'chat', href: '/english/materials?level=ielts&skill=speaking&collection=speaking', active: activePath === '/english/materials' && activeSkill === 'speaking' && activeCollection === 'speaking' }
-        ]
-      },
-      {
-        title: 'STUDY TOOLS',
-        links: [
-          { label: 'Articles & Reader', icon: 'article', href: '/english/materials?collection=article', active: activePath === '/english/materials' && activeCollection === 'article' },
-          { label: 'Vocabulary Builder', icon: 'bookmarks', href: '/english/vocabulary', active: activePath === '/english/vocabulary' },
-          { label: 'Skill Training Hub', icon: 'tune', href: '/english/practice', active: activePath === '/english/practice' },
-          { label: 'Course Books', icon: 'library_books', href: '/english/materials?collection=book', active: activePath === '/english/materials' && activeCollection === 'book' },
-          { label: 'Curriculum Courses', icon: 'school', href: '/english/courses', active: activePath === '/english/courses' }
+          { label: 'Skill training', icon: 'track_changes', href: '/english/practice', active: isSkillTraining },
+          { label: 'Vocabulary', icon: 'bookmarks', href: '/english/vocabulary', active: isVocabulary }
         ]
       }
     ];
@@ -248,7 +242,6 @@
         <a class="member-sidebar-brand" href="/english/materials" aria-label="IELTS Core materials">
           <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
           <span class="member-brand-text">IELTS CORE</span>
-          <span class="app-brand-badge">BETA</span>
         </a>
         <button class="member-sidebar-collapse-btn" type="button" id="sidebarCollapseBtn" title="Toggle sidebar width" aria-label="Collapse sidebar">
           <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>

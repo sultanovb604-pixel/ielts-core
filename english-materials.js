@@ -306,6 +306,12 @@
       count.textContent = `Showing ${visible.length} of ${totalCount} tests`;
     }
 
+    // Update active filter select styles
+    if (filterPassage) filterPassage.classList.toggle('is-active-filter', selectedPassage !== 'all');
+    if (filterStatus) filterStatus.classList.toggle('is-active-filter', selectedStatus !== 'all');
+    if (filterType) filterType.classList.toggle('is-active-filter', selectedType !== 'all');
+    if (filterPlan) filterPlan.classList.toggle('is-active-filter', selectedPlan !== 'all');
+
     // Has Active Filters
     const hasActiveFilters = selectedPassage !== 'all' || selectedStatus !== 'all' || selectedType !== 'all' || selectedPlan !== 'all' || Boolean(normalized);
     if (clearFiltersBtn) {
@@ -392,7 +398,7 @@
         actionBtn = `
           <div class="vx-card-actions">
             <a href="${escape(reviewHref)}" class="vx-card-cta-btn primary" title="Review your mistakes and answers">
-              <span class="material-symbols-outlined" style="font-size:18px;">analytics</span>
+              <span class="material-symbols-outlined" style="font-size:18px;">equalizer</span>
               <span>Review Mistakes</span>
             </a>
           </div>`;

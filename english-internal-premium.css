@@ -433,25 +433,43 @@ body.member-sidebar-collapsed .member-sidebar {
 
 .materials-page .vx-search-input,
 .materials-page .vx-filter-select {
-  border-color: var(--core-line) !important;
-  border-radius: 11px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
   color: var(--core-text) !important;
   background-color: var(--core-surface) !important;
+  height: 40px !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
 }
 
-.materials-page .vx-search-input:focus,
+.materials-page .vx-filter-select.is-active-filter,
 .materials-page .vx-filter-select:focus {
-  border-color: var(--core-blue) !important;
-  box-shadow: 0 0 0 3px rgba(20, 104, 243, 0.13) !important;
+  border: 2px solid #2563eb !important;
+  background-color: #f0f7ff !important;
+  color: #1d4ed8 !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.materials-page .vx-search-input:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14) !important;
 }
 
 .materials-page .vx-search-btn {
-  border-radius: 11px !important;
+  border-radius: 8px !important;
   background: var(--core-ink) !important;
 }
 
 .materials-page .vx-results-count-bar .vx-reset-link {
-  color: var(--core-blue) !important;
+  color: #2563eb !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+.materials-page .vx-results-count-bar .vx-reset-link:hover {
+  text-decoration: underline !important;
 }
 
 .materials-page .vx-cards-grid {
@@ -459,44 +477,86 @@ body.member-sidebar-collapsed .member-sidebar {
 }
 
 .materials-page .vx-test-card {
-  border-color: var(--core-line) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 8px 28px rgba(15, 35, 70, 0.055) !important;
+  border-color: #e2e8f0 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
 }
 
 .materials-page .vx-card-graphic,
 .materials-page .vx-test-card.skill-listening .vx-card-graphic,
 .materials-page .vx-test-card.skill-writing .vx-card-graphic,
 .materials-page .vx-test-card.skill-speaking .vx-card-graphic {
-  height: 126px !important;
-  background: linear-gradient(135deg, #0b1830 0%, #12376d 58%, #1468f3 100%) !important;
+  height: 130px !important;
+  background: linear-gradient(180deg, #0d3b85 0%, #1752b0 100%) !important;
+  padding: 12px 14px !important;
 }
 
 .materials-page .vx-card-badge-max {
-  color: #16458c !important;
-  background: #dbeafe !important;
-  box-shadow: none !important;
+  color: #1e3a8a !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08) !important;
+  font-weight: 800 !important;
+  font-size: 11px !important;
+  border-radius: 6px !important;
+  padding: 2.5px 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.materials-page .vx-card-badge-max .material-symbols-outlined {
+  font-size: 13px !important;
+  color: #1e3a8a !important;
 }
 
 .materials-page .vx-card-badge-passage {
-  background: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  border-radius: 6px !important;
+  padding: 2.5px 8px !important;
 }
 
 .materials-page .vx-card-center-icon {
-  color: #ffffff;
-  font-size: 31px !important;
+  color: #ffffff !important;
+  font-size: 32px !important;
   filter: none !important;
+}
+
+.materials-page .vx-card-volume-label {
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  margin-top: 4px !important;
+  text-shadow: none !important;
 }
 
 .materials-page .vx-card-cta-btn.primary,
 .materials-page .vx-card-cta-btn.unlock {
-  background: var(--core-blue) !important;
-  box-shadow: 0 8px 20px rgba(20, 104, 243, 0.2) !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 10px 16px !important;
+  box-shadow: none !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  width: 100% !important;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease !important;
 }
 
 .materials-page .vx-card-cta-btn.primary:hover,
 .materials-page .vx-card-cta-btn.unlock:hover {
-  background: var(--core-blue-dark) !important;
+  background: #1d4ed8 !important;
 }
 
 /* Dashboard density and responsive behavior. */
