@@ -23,11 +23,22 @@ body.member-layout.member-sidebar-collapsed {
 }
 
 .member-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
   width: 260px !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  flex-direction: column !important;
   background: #ffffff !important;
   border-right: 1px solid #e2e8f0 !important;
   box-shadow: 2px 0 16px rgba(15, 23, 42, 0.03) !important;
   font-family: "Plus Jakarta Sans", "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif !important;
+  overflow: hidden !important;
+  padding: 0 !important;
 }
 
 body.member-sidebar-collapsed .member-sidebar {
@@ -42,6 +53,7 @@ body.member-sidebar-collapsed .member-sidebar {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
+  flex-shrink: 0 !important;
 }
 
 .member-sidebar-brand {
@@ -106,27 +118,34 @@ body.member-sidebar-collapsed .member-sidebar {
 
 /* Sidebar Nav Scroll Container */
 .member-sidebar-nav {
-  flex: 1 !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
   overflow-y: auto !important;
-  padding: 16px 12px !important;
+  overflow-x: hidden !important;
+  padding: 12px 10px 48px !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 16px !important;
-  scrollbar-width: none !important;
+  gap: 10px !important;
+  scrollbar-width: thin !important;
 }
 
 .member-sidebar-nav::-webkit-scrollbar {
-  display: none !important;
+  width: 4px !important;
+}
+
+.member-sidebar-nav::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+  border-radius: 4px !important;
 }
 
 .member-nav-group {
   display: flex !important;
   flex-direction: column !important;
-  gap: 3px !important;
+  gap: 2px !important;
 }
 
 .member-nav-section-title {
-  padding: 4px 10px 6px !important;
+  padding: 4px 10px 4px !important;
   font-size: 11px !important;
   font-weight: 800 !important;
   letter-spacing: 0.06em !important;
@@ -138,12 +157,12 @@ body.member-sidebar-collapsed .member-sidebar {
 .member-sidebar-nav a {
   display: flex !important;
   align-items: center !important;
-  gap: 12px !important;
-  min-height: 42px !important;
-  padding: 8px 12px !important;
-  border-radius: 12px !important;
+  gap: 10px !important;
+  min-height: 38px !important;
+  padding: 6px 10px !important;
+  border-radius: 10px !important;
   color: #334155 !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   font-weight: 500 !important;
   text-decoration: none !important;
   border: 1px solid transparent !important;
@@ -259,13 +278,13 @@ body.member-sidebar-collapsed .member-sidebar {
 
 /* Theme Toggle Button (Moon / Sun) */
 .member-sidebar-theme-btn {
-  width: 38px !important;
-  height: 38px !important;
-  flex: 0 0 38px !important;
-  border-radius: 10px !important;
-  border: 1px solid transparent !important;
-  background: transparent !important;
-  color: #94a3b8 !important;
+  width: 34px !important;
+  height: 34px !important;
+  flex: 0 0 34px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+  background: #f8fafc !important;
+  color: #64748b !important;
   display: grid !important;
   place-items: center !important;
   cursor: pointer !important;
@@ -276,11 +295,11 @@ body.member-sidebar-collapsed .member-sidebar {
 .member-sidebar-theme-btn:hover {
   color: #0f172a !important;
   background: #f1f5f9 !important;
-  border-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
 }
 
 .member-sidebar-theme-btn .material-symbols-outlined {
-  font-size: 20px !important;
+  font-size: 18px !important;
 }
 
 /* Profile Card */
@@ -289,9 +308,9 @@ body.member-sidebar-collapsed .member-sidebar {
   min-width: 0 !important;
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  padding: 6px 12px 6px 8px !important;
-  border-radius: 14px !important;
+  gap: 8px !important;
+  padding: 5px 8px !important;
+  border-radius: 10px !important;
   border: 1px solid #e2e8f0 !important;
   background: #ffffff !important;
   text-decoration: none !important;
@@ -306,16 +325,16 @@ body.member-sidebar-collapsed .member-sidebar {
 }
 
 .member-avatar {
-  width: 36px !important;
-  height: 36px !important;
-  flex: 0 0 36px !important;
-  border-radius: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  flex: 0 0 32px !important;
+  border-radius: 7px !important;
   overflow: hidden !important;
   background: #1e293b !important;
   color: #ffffff !important;
   display: grid !important;
   place-items: center !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
 }
 
@@ -323,19 +342,18 @@ body.member-sidebar-collapsed .member-sidebar {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  border-radius: 8px !important;
+  border-radius: 7px !important;
 }
 
 .member-profile-info {
   display: flex !important;
   flex-direction: column !important;
-  min-width: 0 !important;
   flex: 1 !important;
-  gap: 1px !important;
+  min-width: 0 !important;
 }
 
 .member-profile-info strong {
-  font-size: 13.5px !important;
+  font-size: 12.5px !important;
   font-weight: 700 !important;
   color: #0f172a !important;
   overflow: hidden !important;
@@ -459,7 +477,15 @@ body.member-sidebar-collapsed .member-sidebar {
 
 .materials-page .vx-search-btn {
   border-radius: 8px !important;
-  background: var(--core-ink) !important;
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border: none !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.materials-page .vx-search-btn:hover {
+  background: #1d4ed8 !important;
 }
 
 .materials-page .vx-results-count-bar .vx-reset-link {
@@ -488,9 +514,9 @@ body.member-sidebar-collapsed .member-sidebar {
 .materials-page .vx-test-card.skill-listening .vx-card-graphic,
 .materials-page .vx-test-card.skill-writing .vx-card-graphic,
 .materials-page .vx-test-card.skill-speaking .vx-card-graphic {
-  height: 130px !important;
+  height: 120px !important;
   background: linear-gradient(180deg, #0d3b85 0%, #1752b0 100%) !important;
-  padding: 12px 14px !important;
+  padding: 10px 14px !important;
 }
 
 .materials-page .vx-card-badge-max {
@@ -522,17 +548,44 @@ body.member-sidebar-collapsed .member-sidebar {
 
 .materials-page .vx-card-center-icon {
   color: #ffffff !important;
-  font-size: 32px !important;
+  font-size: 30px !important;
   filter: none !important;
 }
 
 .materials-page .vx-card-volume-label {
   color: #ffffff !important;
-  font-size: 13.5px !important;
+  font-size: 13px !important;
   font-weight: 600 !important;
   letter-spacing: 0.01em !important;
-  margin-top: 4px !important;
+  margin-top: 3px !important;
   text-shadow: none !important;
+}
+
+.materials-page .vx-card-title {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  line-height: 1.35 !important;
+  margin: 0 0 6px 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  min-height: 38px !important;
+}
+
+.materials-page .vx-completed-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #059669 !important;
+  background: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+  border-radius: 6px !important;
+  padding: 1px 6px !important;
+  margin-left: 8px !important;
 }
 
 .materials-page .vx-card-cta-btn.primary,
@@ -552,6 +605,35 @@ body.member-sidebar-collapsed .member-sidebar {
   width: 100% !important;
   text-decoration: none !important;
   transition: background-color 0.15s ease !important;
+}
+
+.materials-page .vx-card-cta-btn.primary:hover,
+.materials-page .vx-card-cta-btn.unlock:hover {
+  background: #1d4ed8 !important;
+}
+
+.materials-page .vx-card-cta-btn.review {
+  background: #f8fafc !important;
+  color: #1e293b !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  padding: 9px 16px !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  width: 100% !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.materials-page .vx-card-cta-btn.review:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+  border-color: #94a3b8 !important;
 }
 
 .materials-page .vx-card-cta-btn.primary:hover,

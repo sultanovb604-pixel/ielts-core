@@ -242,6 +242,7 @@
         <a class="member-sidebar-brand" href="/english/materials" aria-label="IELTS Core materials">
           <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
           <span class="member-brand-text">IELTS CORE</span>
+          <span class="app-brand-badge">BETA</span>
         </a>
         <button class="member-sidebar-collapse-btn" type="button" id="sidebarCollapseBtn" title="Toggle sidebar width" aria-label="Collapse sidebar">
           <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>

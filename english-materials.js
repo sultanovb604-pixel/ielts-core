@@ -392,12 +392,19 @@
       reviewUrl.searchParams.set('review', 'true');
       const reviewHref = `${reviewUrl.pathname}${reviewUrl.search}`;
 
+      // Clean display title: remove redundant "IELTS Reading Passage — " or "IELTS Listening Test — " prefix
+      let displayTitle = (item.title || '')
+        .replace(/^IELTS\s+(?:Reading|Listening)\s+(?:Passage|Section|Skill Practice|Practice|Test)\s*[—–-]\s*/i, '')
+        .replace(/^IELTS\s+(?:Reading|Listening)\s*[—–-]\s*/i, '')
+        .trim();
+      if (!displayTitle) displayTitle = item.title;
+
       // CTA Button
       let actionBtn = '';
       if (isCompleted) {
         actionBtn = `
           <div class="vx-card-actions">
-            <a href="${escape(reviewHref)}" class="vx-card-cta-btn primary" title="Review your mistakes and answers">
+            <a href="${escape(reviewHref)}" class="vx-card-cta-btn review" title="Review your mistakes and answers">
               <span class="material-symbols-outlined" style="font-size:18px;">equalizer</span>
               <span>Review Mistakes</span>
             </a>
@@ -433,10 +440,11 @@
             </div>
           </div>
           <div class="vx-card-body">
-            <h2 class="vx-card-title">${escape(item.title)}</h2>
+            <h2 class="vx-card-title">${escape(displayTitle)}</h2>
             <div class="vx-card-sub-pack">
               <span class="material-symbols-outlined" style="font-size:15px;color:#94a3b8;">quiz</span>
               <span>${escape(metaSubtitle)}</span>
+              ${isCompleted ? '<span class="vx-completed-badge"><span class="material-symbols-outlined" style="font-size:12px;">check_circle</span> Completed</span>' : ''}
             </div>
             <div class="vx-card-qtypes">
               ${visibleChips}
