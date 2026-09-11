@@ -9561,7 +9561,7 @@ const server = http.createServer(async (req, res) => {
       "english-mock-tests.js", "english-mock-tests.css", "english-mock-exam.js", "english-mock-exam.css",
       "english-speaking.js", "english-speaking.css", "speaking-avatar.js", "speaking-recorder.js",
       "english-session.js", "english-onboarding.js", "firebase-config.js",
-      "english-refinement.css", "english-precision.css", "english-catalog.css", "listening-engine.js",
+      "english-refinement.css", "english-precision.css", "english-catalog.css", "english-internal-premium.css", "listening-engine.js",
       "admin.js"
     ]);
     if (pathname.startsWith("/data/uploads/") || pathname.startsWith("/uploads/")) {
