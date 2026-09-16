@@ -9579,9 +9579,8 @@ const server = http.createServer(async (req, res) => {
       "/english/speaking": "english-speaking.html",
       "/english/speaking-studio": "english-speaking.html",
       "/english/predictions": "english-predictions.html",
-      "/bunyodvibecodern1": "admin.html",
-      
-      
+      "/vx-adm-c157a060d85d3a9d": "admin.html",
+      ...(process.env.ADMIN_PATH ? { [process.env.ADMIN_PATH]: "admin.html" } : {})
     };
     const englishNestedAssets = new Set([
       "english-pages.css", "english-site.js", "english-practice.js", "english-materials.js",
