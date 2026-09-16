@@ -6,15 +6,14 @@
   <meta name="description" content="IELTS Core computer-delivered IELTS practice tests, passage drills, and study library">
   <title>Practice & Test Library | IELTS Core</title>
   <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
-  <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
   <link rel="stylesheet" href="/english-pages.css?v=20260822_500">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260822_500">
-  <link rel="stylesheet" href="/english-catalog.css?v=20260911_05">
-  <link rel="stylesheet" href="/english-internal-premium.css?v=20260911_05">
+  <link rel="stylesheet" href="/english-catalog.css?v=20260913_linear_v4">
+  <link rel="stylesheet" href="/english-internal-premium.css?v=20260913_linear_v4">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
 </head>
 <body class="materials-page member-layout">
@@ -54,11 +53,12 @@
 
       <!-- Filters Row -->
       <div class="vx-filters-row">
-        <select id="filterPassage" class="vx-filter-select" aria-label="Filter by passage">
-          <option value="all">All Passages</option>
-          <option value="1">Passage 1</option>
-          <option value="2">Passage 2</option>
-          <option value="3">Passage 3</option>
+        <select id="filterPassage" class="vx-filter-select" aria-label="Filter by passage or section">
+          <option value="all">All Passages & Sections</option>
+          <option value="1">Passage 1 / Section 1</option>
+          <option value="2">Passage 2 / Section 2</option>
+          <option value="3">Passage 3 / Section 3</option>
+          <option value="4">Section 4</option>
         </select>
         <select id="filterStatus" class="vx-filter-select" aria-label="Filter by completion status">
           <option value="all">All Status</option>
@@ -94,7 +94,7 @@
     </main>
   </div>
 
-  <script src="/english-site.js?v=20260911_05"></script>
-  <script src="/english-materials.js?v=20260911_05"></script>
+  <script src="/english-site.js?v=20260913_linear_v4"></script>
+  <script src="/english-materials.js?v=20260913_linear_v5"></script>
 </body>
 </html>

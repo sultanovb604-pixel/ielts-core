@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS CDI Listening Practice - Part 4: Crocodile Migration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --primary-color: #1e6de6;
+            --secondary-bg: #f8f9fa;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --highlight-color: #ffe066;
+            --highlight-text-color: #333333;
+            
+            --font-size: 16px;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --track-color: #dddddd;
+            --accent-color: #4a6cf7;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --border-color: #444444;
+            --primary-color: #4a90e2;
+            --secondary-bg: #2d2d2d;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --highlight-color: #ffd700;
+            --highlight-text-color: #000000;
+            
+            --input-bg: #2d2d2d;
+            --input-text: #ffffff;
+            --track-color: #4a4a4a;
+            --accent-color: #6d8bff;
+        }
+
+        .font-small {
+            --font-size: 14px;
+        }
+        .font-medium {
+            --font-size: 16px;
+        }
+        .font-large {
+            --font-size: 18px;
+        }
+        .font-xlarge {
+            --font-size: 20px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.4;
+            font-size: var(--font-size);
+            padding-bottom: 90px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        
+
+        .highlight {
+            background-color: var(--highlight-color);
+            color: var(--highlight-text-color) !important;
+            font-weight: 600;
+            padding: 1px 3px;
+            border-radius: 2px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        [data-theme="dark"] .highlight {
+            background-color: var(--highlight-color);
+            color: #000000 !important;
+            text-shadow: none;
+        }
+
+        .comment-highlight {
+            background-color: #90EE90;
+            position: relative;
+            cursor: help;
+            color: #000000 !important;
+        }
+
+        [data-theme="dark"] .comment-highlight {
+            background-color: #006400;
+            color: #ffffff !important;
+        }
+
+        .comment-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .comment-highlight:hover .comment-tooltip {
+            opacity: 1;
+        }
+
+        .header {
+            background-color: var(--bg-color);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .ielts-logo {
+            height: 55px;
+            width: auto;
+            display: block;
+        }
+
+        
+
+        
+
+        .test-info {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .font-size-container {
+            position: relative;
+        }
+
+        .font-size-btn,
+        .dark-mode-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .font-size-btn:hover,
+        .dark-mode-btn:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        .font-size-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px 0;
+            min-width: 120px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .font-size-options.show {
+            display: block;
+        }
+
+        .font-size-options div {
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+        }
+
+        .font-size-options div:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        .sun-icon,
+        .moon-icon {
+            position: absolute;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .sun-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .moon-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        [data-theme="dark"] .sun-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        [data-theme="dark"] .moon-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ========= AUDIO PLAYER ========= */
+        .audio-player-container {
+            position: fixed;
+            top: 65px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            max-width: 90%;
+            height: 40px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 99;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .player-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+        }
+
+        .player-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        #volume-btn svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        #progress-bar {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            background: var(--track-color);
+            outline: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        #progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+        }
+
+        #progress-bar::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: none;
+            cursor: pointer;
+        }
+
+        #current-time,
+        #total-duration {
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.8;
+            min-width: 35px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .controls-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #new-volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 60px;
+            height: 3px;
+            background: var(--track-color);
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        #new-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-color);
+            cursor: pointer;
+        }
+
+        #new-volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-color);
+            border: none;
+            cursor: pointer;
+        }
+
+        .speed-container {
+            position: relative;
+        }
+
+        #speed-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        #speed-options {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1200;
+        }
+
+        #speed-options div {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-color);
+        }
+
+        #speed-options div:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        #speed-options div.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 115px;
+            display: flex;
+            background: var(--bg-color);
+            padding-bottom: 100px;
+            transition: background-color 0.3s;
+        }
+
+        .main-container.results-mode {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .left-panel {
+            width: 100%;
+            padding: 20px;
+            transition: width 0.4s ease;
+        }
+
+        .main-container.results-mode .left-panel {
+            width: 75%;
+            overflow-y: auto;
+            height: calc(100vh - 195px);
+        }
+
+        .right-panel {
+            display: none;
+            width: 50%;
+            padding: 20px;
+            position: relative;
+            border-left: 1px solid var(--border-color);
+            overflow-y: auto;
+            height: calc(100vh - 195px);
+        }
+
+        #transcription-container h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #transcription-text {
+            white-space: pre-wrap;
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .main-container.results-mode .right-panel {
+            display: block;
+            width: 25%;
+            border-left: 1px solid var(--border-color);
+            border-top: none;
+            height: calc(100vh - 195px);
+            overflow-y: auto;
+        }
+
+        .correct-inline {
+            color: var(--correct-color);
+            font-weight: 700;
+            margin-left: 10px;
+            display: inline-block;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .correct-inline::before {
+            content: "→ ";
+            font-weight: 700;
+        }
+
+        .centered-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .answer-input {
+            border: 1px solid #9aa3ad;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            padding: 4px 8px;
+            font-size: 16px;
+            text-align: left;
+            margin-right: 4px;
+            width: 160px;
+            max-width: 200px;
+            min-width: 120px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            height: 28px;
+            min-height: 28px;
+            line-height: 1.2;
+            vertical-align: middle;
+            font-weight: 600;
+            position: relative;
+            z-index: 10;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        [data-theme="dark"] .answer-input {
+            background-color: var(--input-bg);
+            color: #ffffff;
+            border-color: #666;
+        }
+
+        .answer-input::placeholder {
+            color: #999;
+            font-weight: bold;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #2c6bed;
+            border-width: 2px;
+        }
+
+        .answer-input.correct {
+            border-color: var(--correct-color);
+            background-color: #e9f7ef;
+        }
+
+        .answer-input.incorrect {
+            border-color: var(--incorrect-color);
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .subheading {
+            font-weight: bold;
+            font-size: 17px;
+            margin: 25px 0 12px 0;
+        }
+
+        .question {
+            margin-bottom: 40px;
+        }
+
+        .question-prompt {
+            margin-bottom: 20px;
+        }
+
+        .question ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .question ul li {
+            margin-bottom: 12px;
+            line-height: 2.0;
+        }
+
+        .part-header {
+            background-color: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .part-header p {
+            margin: 0;
+        }
+
+        .questions-container {
+            width: 60%;
+        }
+
+        .main-container.results-mode .questions-container {
+            width: 80%;
+        }
+
+        .nav-arrows {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            z-index: 101;
+        }
+
+        .nav-arrow {
+            width: 50px;
+            height: 50px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .nav-arrow:hover {
+            background: #555;
+        }
+
+        .nav-arrow:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nav-row {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            height: 80px;
+            z-index: 100;
+            transition: background-color 0.3s, border-color 0.3s;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .footer__questionWrapper__1tZ46 {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .footer__questionNo__3WNct {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .footer__questionNo__3WNct:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        .section-prefix {
+            font-size: 16px;
+        }
+
+        .sectionNr {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .attemptedCount {
+            font-size: 14px;
+            color: #666;
+            margin-left: 5px;
+            font-weight: 400;
+        }
+
+        .footer__subquestionWrapper__9GgoP {
+            display: none;
+            gap: 2px;
+            margin-left: 10px;
+        }
+
+        .footer__questionWrapper__1tZ46.selected .footer__subquestionWrapper__9GgoP {
+            display: flex;
+        }
+
+        .subQuestion {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            border-radius: 2px;
+        }
+
+        .subQuestion.answered {
+            background-color: var(--secondary-bg);
+            border-color: var(--border-color);
+        }
+
+        .subQuestion.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+
+        .subQuestion.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+
+        .subQuestion.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .footer__deliverButton__3FM07 {
+            margin-left: auto;
+            margin-right: 20px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+            min-width: 170px;
+            justify-content: center;
+        }
+
+        .footer__deliverButton__3FM07:hover {
+            background-color: #e0e0e0;
+            border-color: #bbb;
+        }
+
+        .footer__deliverButton__3FM07.success {
+            background-color: var(--correct-color);
+            color: #fff;
+            border-color: var(--correct-color);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .context-menu {
+            position: absolute;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+            min-width: 140px;
+        }
+
+        .context-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 16px;
+            border-bottom: 1px solid var(--secondary-bg);
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .context-menu-item:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        .context-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            padding: 25px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            color: var(--text-color);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            line-height: 1;
+        }
+
+        #score-summary {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #result-details table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        #result-details th,
+        #result-details td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        #result-details th {
+            background-color: var(--secondary-bg);
+            font-weight: 600;
+        }
+
+        .result-correct {
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+
+        .result-incorrect {
+            color: var(--incorrect-color);
+            font-weight: bold;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @keyframes flash {
+            0% { background-color: #e6f4ff; }
+            100% { background-color: transparent; }
+        }
+
+        .question.flash {
+            animation: flash 1s ease-out;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column; }
+            .right-panel, .main-container.results-mode .right-panel { display: none; }
+            .left-panel, .main-container.results-mode .left-panel { width: 100%; padding: 20px 10px; height: auto; }
+            .questions-container { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-left">
+            <img src="https://i.pinimg.com/736x/88/93/a8/8893a81fed78f6989142a13e3605c45e.jpg" alt="IELTS Logo" class="ielts-logo">
+            
+        </div>
+
+        <div class="test-info">
+            <span>Part 4</span>
+            <span>Questions 31–40</span>
+        </div>
+
+        <div class="header-icons">
+            <div class="font-size-container">
+                <button class="font-size-btn" id="font-size-toggle" title="Adjust Font Size">A</button>
+                <div id="font-size-options" class="font-size-options">
+                    <div data-size="small">Small</div>
+                    <div data-size="medium">Medium</div>
+                    <div data-size="large">Large</div>
+                    <div data-size="xlarge">Extra Large</div>
+                </div>
+            </div>
+            <button class="dark-mode-btn" id="dark-mode-toggle" title="Toggle Dark Mode">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= AUDIO PLAYER ================= -->
+    <div class="audio-player-container">
+        <button id="play-pause-btn" class="player-btn" aria-label="Play / Pause">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+        </button>
+        <div class="progress-container">
+            <span id="current-time">0:00</span>
+            <input type="range" id="progress-bar" value="0" step="1" min="0" max="100" aria-label="Seek">
+            <span id="total-duration">0:00</span>
+        </div>
+        <div class="controls-container">
+            <div style="display:flex;align-items:center;">
+                <button id="volume-btn" class="player-btn" aria-label="Toggle mute">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                </button>
+                <input type="range" id="new-volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+            </div>
+            <div class="speed-container">
+                <button id="speed-btn" class="player-btn">1x</button>
+                <div id="speed-options" class="hidden">
+                    <div data-speed="0.5">0.5x</div>
+                    <div data-speed="0.75">0.75x</div>
+                    <div data-speed="1" class="active">1x</div>
+                    <div data-speed="1.25">1.25x</div>
+                    <div data-speed="1.5">1.5x</div>
+                    <div data-speed="2">2x</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="global-audio-player" preload="metadata"
+           src="https://raw.githubusercontent.com/foziljon155-glitch/dvdsvs/0731688d5a038f38d0f327589824656dc878a1b5/0806%20(1)(3).MP3"></audio>
+
+    <div class="main-container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <div id="part-4" class="question-part">
+                <div class="part-header">
+                    <p><strong>Part 4</strong></p>
+                    <p>Listen and answer questions 31–40.</p>
+                </div>
+                <div class="questions-container">
+                    <div class="question">
+                        <div class="question-prompt">
+                            <p><strong>Questions 31–40</strong></p>
+                            <p>Complete the notes below.</p>
+                            <p>Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.</p>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <p class="centered-title"><strong>Research on Crocodile Migration</strong></p>
+                            <p class="subheading"><strong>Research methods:</strong></p>
+                            <ul>
+                                <li>This research is world-leading because <input type="text" id="q31" class="answer-input" placeholder="31" autocomplete="off"> is used in the study.</li>
+                                <li>In previous studies, the tests were done with <input type="text" id="q32" class="answer-input" placeholder="32" autocomplete="off">.</li>
+                                <li>Problem of the old device: always losing <input type="text" id="q33" class="answer-input" placeholder="33" autocomplete="off">.</li>
+                                <li>The crocodiles are not easily captured, as they are cautious and try to avoid being followed by <input type="text" id="q34" class="answer-input" placeholder="34" autocomplete="off">.</li>
+                                <li>A tracking device is attached to the <input type="text" id="q35" class="answer-input" placeholder="35" autocomplete="off"> of the crocodile.</li>
+                            </ul>
+                            <p class="subheading"><strong>Relocation of crocodiles:</strong></p>
+                            <ul>
+                                <li>Scientists relocate the crocodiles by using a <input type="text" id="q36" class="answer-input" placeholder="36" autocomplete="off">.</li>
+                                <li>Relocated crocodiles follow the most <input type="text" id="q37" class="answer-input" placeholder="37" autocomplete="off"> route home.</li>
+                                <li>Crocodiles can find their way because they have the ability to <input type="text" id="q38" class="answer-input" placeholder="38" autocomplete="off">.</li>
+                            </ul>
+                            <p class="subheading"><strong>Conclusions:</strong></p>
+                            <ul>
+                                <li>The crocodiles find their direction by using their senses to the <input type="text" id="q39" class="answer-input" placeholder="39" autocomplete="off">.</li>
+                                <li>Crocodiles have the same migration system as <input type="text" id="q40" class="answer-input" placeholder="40" autocomplete="off">.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div id="transcription-container">
+                <h2>Transcription</h2>
+                <div id="transcription-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Transcription Data -->
+    <div id="transcription-data" style="display:none;">
+        <div data-part="4">
+            <strong>SECTION 4</strong><br><br>
+            Around 10 years ago, Australia Zoo, the University of Queensland and Queensland Parks and Wildlife undertook a project to monitor the movements and behaviour of the crocodiles in Lakefield National Park. The aim of the study was to provide better
+            information on how adult crocodiles there interact within a river system, enabling people to have better decisions on how to manage crocodile populations. This project can lead the world in crocodile management because of the use of <span class="highlight">satellite</span>,
+            which enables scientists to stably receive accurate information being sent back to them on the computer. Even though the crocodiles can travel very long distances, scientists can still know where they are and study their habits. The study is going
+            to help scientists gain further knowledge on crocodile behaviour, which can help make informed decisions on the management plans for crocodiles, not only in Australia, but around the world.<br><br>
+            Crocodile tracking isn't a new idea in Australia. Crocodile studies have been previously conducted by <span class="highlight">radio</span>. A miniature electronic device was implanted under the skin of these animals and they were released back
+            into the river. These tags enabled scientists to track the movements of these particular crocodiles over the next 10 years.<br><br>
+            Of course, there are some unexpected challenges. The data transmitted from each receiver is recorded by some devices employed in the receiving stations. However, some devices are too old that they always lose <span class="highlight">signals</span>            due to a variety of reasons. So they can't track those animals which they have been studying for months. In order to study the crocodiles, they must first be captured so that the device can be put on them. But this is a very difficult task because
+            they are alert and afraid of being followed by <span class="highlight">humans</span>. So it might take the team several hours to capture one.<br><br>
+            The tracking device has signal transmitters inside and it's waterproof. It is attached to the <span class="highlight">head</span> of the crocodile, so the crocodile cannot remove the device with its feet or tail.<br><br>
+            The research has begun to reveal the movements of crocodiles. Data showed that crocodiles tend to be more active at night time. The GPS sometimes shows that in some areas the crocodiles are overpopulated. So scientists at the park have to use a
+            <span class="highlight">helicopter</span> to relocate the crocodiles in order to control their population in the area. A crocodile would be taken many kilometers away from its original place. However, scientists found that the relocation methods
+            were ineffective because the relocated crocodiles will return to their original location following the most <span class="highlight">direct</span> route within one week. The tracking data shows that the crocodiles swim right back to where they came
+            from when moved. Crocodiles sometimes travel hundreds of kilometres from Indonesia to Australia in order to reproduce. It is interesting to see that they can always find their way and they will not get lost in the ocean.<br><br>
+            Scientists realised the crocodiles are able to <span class="highlight">navigate</span>. This is an important ability for them when they have to migrate for very long distances. We may wonder if human beings can learn from the crocodiles and find
+            our way without using technology. However, through lots of research and experiments, scientists conclude that crocodiles can tell directions by using their senses to the <span class="highlight">sun</span> so that they know where they're going.
+            This is an ability which human beings don't possess.<br><br>
+            Another finding is that, like the migration of <span class="highlight">birds</span> who can travel thousands and thousands of kilometres, crocodiles have the same system to help them travel. The research is still going on in Northern Australia.
+            Scientists are working hard to gather more information about this amazing creature.
+        </div>
+    </div>
+
+    <!-- Hidden Answer Key -->
+    <div id="answer-key" style="display:none;">
+        <p><strong>Part 4:</strong></p>
+        <p>31. satellite<br>32. radio<br>33. signals<br>34. human/humans/human beings<br>35. head<br>36. helicopter<br>37. direct<br>38. navigate<br>39. sun<br>40. birds</p>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow" onclick="previousPart()" id="prevBtn">‹</button>
+        <button class="nav-arrow" onclick="nextPart()" id="nextBtn">›</button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-row perScorableItem" aria-label="Questions">
+        <div class="footer__questionWrapper__1tZ46 selected multiple" role="tablist">
+            <button role="tab" class="footer__questionNo__3WNct" onclick="switchToPart(4)">
+                <span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">4</span><span class="attemptedCount" aria-hidden="true">0 of 10</span></span>
+            </button>
+            <div class="footer__subquestionWrapper__9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(31)">31</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(32)">32</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(33)">33</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(34)">34</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(35)">35</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(36)">36</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(37)">37</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(38)">38</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(39)">39</button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(40)">40</button>
+            </div>
+        </div>
+        <button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton__3FM07">
+            <span>Check Answers</span>
+        </button>
+    </nav>
+
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <div class="context-menu-item" onclick="highlightText()">🔆 Highlight</div>
+        <div class="context-menu-item" onclick="addComment()">💬 Comment</div>
+        <div class="context-menu-item" id="clear-item" onclick="clearHighlight()" style="display:none;">🗑 Clear</div>
+        <div class="context-menu-item" onclick="clearAllHighlights()">🧹 Clear All</div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Results</h2>
+                <button id="modal-close-button" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="score-summary"></p>
+                <div id="result-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ──────────────────────────────────────
+        // STATE
+        // ──────────────────────────────────────
+        let currentQuestion = 31;
+        let selectedRange = null;
+        let contextElement = null;
+
+        const body = document.body;
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const fontSizeToggle = document.getElementById('font-size-toggle');
+        const fontSizeOptions = document.getElementById('font-size-options');
+        const MIN_Q = 31;
+        const MAX_Q = 40;
+
+        const correctAnswers = {
+            q31: 'satellite', q32: 'radio', q33: 'signals', q34: ['human', 'humans', 'human beings'],
+            q35: 'head', q36: 'helicopter', q37: 'direct', q38: 'navigate', q39: 'sun', q40: 'birds'
+        };
+
+        function initDarkMode() { body.setAttribute('data-theme', localStorage.getItem('theme') || 'light'); }
+        function toggleDarkMode() {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+        function changeFontSize(size) {
+            body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+            body.classList.add(`font-${size}`);
+            localStorage.setItem('fontSize', size);
+            fontSizeOptions.classList.remove('show');
+        }
+        function initFontSize() { changeFontSize(localStorage.getItem('fontSize') || 'medium'); }
+
+        function switchToPart(partNumber) {
+            if (partNumber !== 4) return;
+            document.getElementById('part-4').classList.remove('hidden');
+            if (document.querySelector('.main-container.results-mode')) {
+                const src = document.querySelector('#transcription-data [data-part="4"]');
+                const tgt = document.getElementById('transcription-text');
+                if (src && tgt) tgt.innerHTML = src.innerHTML;
+            }
+            updateNavigation();
+        }
+
+        function goToQuestion(q) {
+            q = Math.max(MIN_Q, Math.min(MAX_Q, q));
+            currentQuestion = q;
+            document.querySelectorAll('.subQuestion').forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+            if (btn) btn.classList.add('active');
+            const input = document.getElementById(`q${q}`);
+            if (input) {
+                const container = input.closest('li') || input.closest('.question');
+                if (container) {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    container.classList.add('flash');
+                    setTimeout(() => container.classList.remove('flash'), 1000);
+                }
+            }
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentQuestion === MIN_Q;
+            document.getElementById('nextBtn').disabled = currentQuestion === MAX_Q;
+            updateAnsweredIndicators();
+        }
+
+        function nextPart() { if (currentQuestion < MAX_Q) goToQuestion(currentQuestion + 1); }
+        function previousPart() { if (currentQuestion > MIN_Q) goToQuestion(currentQuestion - 1); }
+
+        function updateAnsweredIndicators() {
+            for (let q = MIN_Q; q <= MAX_Q; q++) {
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+                if (!btn || btn.classList.contains('correct') || btn.classList.contains('incorrect')) continue;
+                const input = document.getElementById(`q${q}`);
+                btn.classList.toggle('answered', input && input.value.trim() !== '');
+            }
+            let count = 0;
+            for (let q = MIN_Q; q <= MAX_Q; q++) {
+                const input = document.getElementById(`q${q}`);
+                if (input && input.value.trim() !== '') count++;
+            }
+            const disp = document.querySelector('.attemptedCount');
+            if (disp) disp.textContent = `${count} of 10`;
+        }
+
+        function highlightText() {
+            if (!selectedRange || selectedRange.collapsed) { closeContextMenu(); return; }
+            try {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                selectedRange.surroundContents(span);
+            } catch (e) { document.execCommand('backColor', false, 'yellow'); }
+            window.getSelection().removeAllRanges();
+            closeContextMenu();
+        }
+        function addComment() {
+            const text = prompt('Enter your comment:');
+            if (!text || !selectedRange || selectedRange.collapsed) { closeContextMenu(); return; }
+            try {
+                const span = document.createElement('span');
+                span.className = 'comment-highlight';
+                const tooltip = document.createElement('span');
+                tooltip.className = 'comment-tooltip';
+                tooltip.textContent = text;
+                span.appendChild(tooltip);
+                selectedRange.surroundContents(span);
+            } catch (e) {}
+            window.getSelection().removeAllRanges();
+            closeContextMenu();
+        }
+        function clearHighlight() {
+            if (!contextElement) { closeContextMenu(); return; }
+            const parent = contextElement.parentNode;
+            while (contextElement.firstChild) {
+                if (!contextElement.firstChild.classList?.contains('comment-tooltip')) parent.insertBefore(contextElement.firstChild, contextElement);
+                else contextElement.removeChild(contextElement.firstChild);
+            }
+            parent.removeChild(contextElement);
+            parent.normalize();
+            closeContextMenu();
+        }
+        function clearAllHighlights() {
+            document.querySelectorAll('.highlight, .comment-highlight').forEach(el => {
+                const parent = el.parentNode;
+                const frag = document.createDocumentFragment();
+                while (el.firstChild) {
+                    if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) el.removeChild(el.firstChild);
+                    else frag.appendChild(el.firstChild);
+                }
+                parent.replaceChild(frag, el);
+            });
+            closeContextMenu();
+        }
+        function closeContextMenu() {
+            document.getElementById('contextMenu').style.display = 'none';
+            contextElement = null;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            const results = [];
+            document.querySelectorAll('.correct, .incorrect, .correct-inline').forEach(el => {
+                if (el.classList.contains('correct-inline')) el.remove();
+                else el.classList.remove('correct', 'incorrect');
+            });
+            for (let q = MIN_Q; q <= MAX_Q; q++) {
+                const key = `q${q}`;
+                const input = document.getElementById(key);
+                const user = input ? input.value.trim() : '';
+                const correct = correctAnswers[key];
+                const accepted = Array.isArray(correct) ? correct : [String(correct)];
+                const isCorrect = accepted.some(a => a.toLowerCase() === user.toLowerCase());
+                if (isCorrect) score++;
+                if (input) {
+                    input.classList.remove('correct', 'incorrect');
+                    input.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (!isCorrect) {
+                        const span = document.createElement('span');
+                        span.className = 'correct-inline';
+                        span.textContent = accepted[0];
+                        input.insertAdjacentElement('afterend', span);
+                    }
+                }
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+                if (btn) { btn.classList.remove('answered'); btn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+                results.push({ question: q, userAnswer: user || 'No Answer', correctAnswer: accepted.join(' / '), isCorrect });
+            }
+            const band = score >= 10 ? 9 : score >= 9 ? 8.5 : score >= 8 ? 8 : score >= 7 ? 7.5 : score >= 6 ? 7 : score >= 5 ? 6.5 : 5;
+            document.querySelectorAll('.answer-input').forEach(inp => inp.disabled = true);
+            document.querySelector('.main-container').classList.add('results-mode');
+            switchToPart(4);
+            const modal = document.getElementById('result-modal');
+            document.getElementById('score-summary').textContent = `You scored ${score} out of 10 (approx. Band ${band}).`;
+            let html = '<table><thead><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>';
+            results.forEach(r => {
+                html += `<tr><td>${r.question}</td><td>${r.userAnswer}</td><td>${r.correctAnswer}</td><td class="${r.isCorrect ? 'result-correct' : 'result-incorrect'}">${r.isCorrect ? '✔ Correct' : '✖ Incorrect'}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('result-details').innerHTML = html;
+            modal.style.display = 'flex';
+            const delBtn = document.getElementById('deliver-button');
+            delBtn.classList.add('success');
+            delBtn.innerHTML = '<span>My Results</span>';
+            const newBtn = delBtn.cloneNode(true);
+            delBtn.parentNode.replaceChild(newBtn, delBtn);
+            newBtn.addEventListener('click', () => modal.style.display = 'flex');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            initFontSize();
+            switchToPart(4);
+            goToQuestion(31);
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            fontSizeToggle.addEventListener('click', () => fontSizeOptions.classList.toggle('show'));
+            document.addEventListener('click', (e) => { if (!e.target.closest('.font-size-container')) fontSizeOptions.classList.remove('show'); });
+            document.querySelectorAll('.font-size-options div').forEach(opt => opt.addEventListener('click', () => changeFontSize(opt.getAttribute('data-size'))));
+            document.getElementById('deliver-button').addEventListener('click', checkAnswers);
+            document.getElementById('modal-close-button').addEventListener('click', () => document.getElementById('result-modal').style.display = 'none');
+            document.querySelectorAll('.answer-input').forEach(input => input.addEventListener('input', updateAnsweredIndicators));
+            document.body.addEventListener('contextmenu', function(e) {
+                const sel = window.getSelection().toString();
+                if (!sel) return;
+                e.preventDefault();
+                const menu = document.getElementById('contextMenu');
+                menu.style.left = e.pageX + 'px';
+                menu.style.top = e.pageY + 'px';
+                menu.style.display = 'block';
+                contextElement = e.target.closest('.highlight, .comment-highlight');
+                document.getElementById('clear-item').style.display = contextElement ? 'block' : 'none';
+            });
+            document.body.addEventListener('click', function(e) { if (!e.target.closest('.context-menu')) document.getElementById('contextMenu').style.display = 'none'; });
+            document.addEventListener('selectionchange', () => {
+                const sel = window.getSelection();
+                if (sel && sel.rangeCount > 0 && !sel.isCollapsed) selectedRange = sel.getRangeAt(0);
+            });
+            updateAnsweredIndicators();
+        });
+    </script>
+
+    <!-- ================= AUDIO PLAYER SCRIPT ================= -->
+    <script>
+        (function() {
+            const audio = document.getElementById('global-audio-player');
+            const playBtn = document.getElementById('play-pause-btn');
+            const progress = document.getElementById('progress-bar');
+            const currentLabel = document.getElementById('current-time');
+            const totalLabel = document.getElementById('total-duration');
+            const volumeSlider = document.getElementById('new-volume-slider');
+            const volumeBtn = document.getElementById('volume-btn');
+            const speedBtn = document.getElementById('speed-btn');
+            const speedOptions = document.getElementById('speed-options');
+            let isDragging = false;
+
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return m + ':' + (s < 10 ? '0' : '') + s;
+            }
+            function togglePlay() { if (audio.paused) { audio.play().catch(() => {}); } else { audio.pause(); } }
+            function updatePlayIcon() {
+                playBtn.innerHTML = audio.paused ?
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' :
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+            }
+            function updateVolumeIcon(val) {
+                const v = val !== undefined ? val : audio.volume;
+                const icon = volumeBtn.querySelector('svg');
+                if (v === 0) icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+                else if (v < 0.5) icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                else icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+            }
+            function setVolume(val) {
+                const v = Math.min(1, Math.max(0, parseFloat(val)));
+                audio.volume = v;
+                volumeSlider.value = v;
+                updateVolumeIcon(v);
+            }
+            function toggleMute() {
+                if (audio.volume > 0) { audio.dataset.prevVolume = audio.volume; setVolume(0); }
+                else { setVolume(parseFloat(audio.dataset.prevVolume) || 0.8); }
+            }
+            function setSpeed(val) {
+                const speed = parseFloat(val);
+                if (isNaN(speed)) return;
+                audio.playbackRate = speed;
+                speedBtn.textContent = speed + 'x';
+                speedOptions.querySelectorAll('div').forEach(el => el.classList.toggle('active', parseFloat(el.dataset.speed) === speed));
+                speedOptions.classList.add('hidden');
+            }
+
+            playBtn.addEventListener('click', togglePlay);
+            audio.addEventListener('play', updatePlayIcon);
+            audio.addEventListener('pause', updatePlayIcon);
+            audio.addEventListener('ended', () => { updatePlayIcon(); progress.value = 0; currentLabel.textContent = formatTime(0); });
+            audio.addEventListener('loadedmetadata', () => {
+                progress.max = audio.duration;
+                totalLabel.textContent = formatTime(audio.duration);
+                currentLabel.textContent = formatTime(audio.currentTime);
+            });
+            audio.addEventListener('timeupdate', () => {
+                if (isDragging) return;
+                progress.value = audio.currentTime;
+                currentLabel.textContent = formatTime(audio.currentTime);
+            });
+            progress.addEventListener('mousedown', () => { isDragging = true; });
+            progress.addEventListener('mouseup', () => { isDragging = false; });
+            progress.addEventListener('touchstart', () => { isDragging = true; });
+            progress.addEventListener('touchend', () => { isDragging = false; });
+            progress.addEventListener('input', () => {
+                audio.currentTime = progress.value;
+                currentLabel.textContent = formatTime(progress.value);
+            });
+            volumeSlider.addEventListener('input', (e) => { const v = parseFloat(e.target.value); audio.volume = v; updateVolumeIcon(v); });
+            volumeBtn.addEventListener('click', toggleMute);
+            speedBtn.addEventListener('click', (e) => { e.stopPropagation(); speedOptions.classList.toggle('hidden'); });
+            speedOptions.addEventListener('click', (e) => { if (e.target.dataset.speed) setSpeed(e.target.dataset.speed); });
+            document.addEventListener('click', () => speedOptions.classList.add('hidden'));
+            document.addEventListener('keydown', (e) => {
+                if (e.code !== 'Space') return;
+                const tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+                if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
+                e.preventDefault();
+                togglePlay();
+            });
+            setVolume(1);
+            updatePlayIcon();
+            audio.addEventListener('error', () => { console.warn('Audio failed to load.'); totalLabel.textContent = '-:--'; });
+        })();
+    </script>
+</body>
+</html>

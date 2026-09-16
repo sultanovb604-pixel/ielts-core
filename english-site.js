@@ -171,68 +171,81 @@
 
   const mountMemberSidebar = user => {
     if (document.querySelector('.member-sidebar')) return;
+    const excludedPages = ['/english', '/english/', '/english/login', '/english/signup', '/english/pricing'];
+    if (excludedPages.includes(location.pathname)) return;
+
     const params = new URLSearchParams(location.search);
     const activeCollection = params.get('collection');
     const activeSkill = params.get('skill');
     const activePath = location.pathname;
     const isTeacher = Boolean(user && user.role === 'teacher');
+    const isGuest = !user;
 
     const isMaterials = activePath === '/english/materials';
     const isDashboard = activePath === '/english/account' && !params.get('tab');
     const isAssignments = activePath === '/english/account' && params.get('tab') === 'homework';
-    const isMockTests = activePath === '/english/mock-tests' || activePath === '/english/mock-exam' || activePath === '/english/predictions';
+    const isMockTests = activePath === '/english/mock-tests' || activePath === '/english/mock-exam';
+    const isPredictions = activePath === '/english/predictions' || activePath === '/english/prediction-exam';
     const isSpeaking = activePath === '/english/speaking' || activePath === '/english/speaking-studio';
-    const isWriting = activePath === '/english/writing-editor';
-    const isSkillTraining = activePath === '/english/practice';
+    const isWriting = (isMaterials && activeSkill === 'writing') || activePath === '/english/writing-editor' || (activePath === '/english/practice' && activeSkill === 'writing');
+    const isArticles = isMaterials && activeCollection === 'article';
     const isVocabulary = activePath === '/english/vocabulary';
+    const isSkillTraining = activePath === '/english/practice' && !activeSkill;
+    const isListening = (isMaterials && activeSkill === 'listening') || activePath === '/english/listening-exam';
+    const isReading = (isMaterials && (activeSkill === 'reading' || (!activeSkill && !activeCollection))) || activePath === '/english/reading-exam';
+    const isAllLibrary = isMaterials && activeSkill === 'all';
 
     const overviewLinks = isTeacher ? [
       { label: 'Dashboard', icon: 'dashboard', href: '/english/account', active: isDashboard },
-      { label: 'Practice library', icon: 'menu_book', href: '/english/materials', active: isMaterials },
+      { label: 'All Test Library', icon: 'local_library', href: '/english/materials?skill=all', active: isAllLibrary },
       { label: 'Teacher Workspace', icon: 'school', href: '/english/teacher', active: activePath === '/english/teacher' }
     ] : [
       { label: 'Dashboard', icon: 'dashboard', href: '/english/account', active: isDashboard },
-      { label: 'Practice library', icon: 'menu_book', href: '/english/materials', active: isMaterials },
+      { label: 'All Test Library', icon: 'local_library', href: '/english/materials?skill=all', active: isAllLibrary },
       { label: 'Assignments', icon: 'assignment', href: '/english/account?tab=homework', active: isAssignments }
     ];
 
     const sections = [
       {
-        title: isTeacher ? 'INSTRUCTOR' : 'OVERVIEW',
+        title: isTeacher ? 'Instructor' : 'Overview',
         links: overviewLinks
       },
       {
-        title: 'PRACTICE',
+        title: 'IELTS Skills',
         links: [
-          { label: 'Full mock tests', icon: 'quiz', href: '/english/mock-tests', active: isMockTests },
-          { label: 'Speaking practice', icon: 'record_voice_over', href: '/english/speaking', active: isSpeaking },
-          { label: 'Writing practice', icon: 'edit', href: '/english/writing-editor', active: isWriting }
+          { label: 'Listening', icon: 'headphones', href: '/english/materials?skill=listening', active: isListening },
+          { label: 'Reading', icon: 'menu_book', href: '/english/materials?skill=reading', active: isReading },
+          { label: 'Writing', icon: 'edit', href: '/english/materials?skill=writing', active: isWriting },
+          { label: 'Speaking', icon: 'mic', href: '/english/speaking', active: isSpeaking },
+          { label: 'Full Mock Exams', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, isPremium: true }
         ]
       },
       {
-        title: 'LEARN',
+        title: 'Study Tools',
         links: [
-          { label: 'Skill training', icon: 'track_changes', href: '/english/practice', active: isSkillTraining },
-          { label: 'Vocabulary', icon: 'bookmarks', href: '/english/vocabulary', active: isVocabulary }
+          { label: 'Predictions', icon: 'layers', href: '/english/predictions', active: isPredictions, isPremium: true },
+          { label: 'Skill Drills', icon: 'track_changes', href: '/english/practice', active: isSkillTraining },
+          { label: 'Academic Articles', icon: 'article', href: '/english/materials?collection=article', active: isArticles },
+          { label: 'Vocabulary Bank', icon: 'bookmarks', href: '/english/vocabulary', active: isVocabulary, isPremium: true }
         ]
       }
     ];
 
+    const crownSvg = `<svg class="member-crown-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="Premium feature"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
+
     const navMarkup = sections.map(sec => {
       const linksHtml = sec.links.map(l => {
-        const badgeHtml = l.badge ? `<span class="member-nav-badge">${safe(l.badge)}</span>` : '';
-        return `<a href="${l.href}"${l.active ? ' aria-current="page"' : ''} title="${safe(l.label)}">
-          <span class="material-symbols-outlined member-nav-icon" aria-hidden="true">${l.icon}</span>
-          <span class="member-nav-label">${safe(l.label)}</span>
-          ${badgeHtml}
-        </a>`;
+        const rightBadge = l.isPremium ? crownSvg : (l.badge ? `<span class="member-nav-badge">${safe(l.badge)}</span>` : '');
+        return `<a href="${l.href}"${l.active ? ' aria-current="page"' : ''} title="${safe(l.label)}"><span class="material-symbols-outlined member-nav-icon" aria-hidden="true">${l.icon}</span><span class="member-nav-label">${safe(l.label)}</span>${rightBadge}</a>`;
       }).join('');
       return `<div class="member-nav-group"><span class="member-nav-section-title">${safe(sec.title)}</span>${linksHtml}</div>`;
     }).join('');
 
-    const planLabel = user.plan === 'premium' ? 'Premium Member' : 'Free Account';
-    const avatarUrl = /^https:\/\//.test(String(user.avatarUrl || '')) ? String(user.avatarUrl) : '';
-    const avatarContent = avatarUrl ? `<img src="${safe(avatarUrl)}" alt="">` : safe(String(user.name || 'V').trim().charAt(0).toUpperCase());
+    const planLabel = isGuest ? 'Guest Access' : (user?.plan === 'premium' ? 'Premium Member' : 'Free Account');
+    const userName = isGuest ? 'Guest Student' : safe(String(user?.name || user?.username || 'Student').trim());
+    const userSubtitle = !isGuest ? (user?.email ? safe(String(user.email).trim()) : (user?.username ? `@${safe(user.username)}` : planLabel)) : 'Sign in to save scores';
+    const avatarUrl = !isGuest && /^https:\/\//.test(String(user?.avatarUrl || '')) ? String(user?.avatarUrl) : '';
+    const avatarContent = avatarUrl ? `<img src="${safe(avatarUrl)}" alt="">` : (isGuest ? '<span class="material-symbols-outlined" style="font-size:18px;">person</span>' : safe(userName.charAt(0).toUpperCase()));
 
     const sidebar = document.createElement('aside');
     sidebar.className = 'member-sidebar';
@@ -252,38 +265,19 @@
         ${navMarkup}
       </nav>
       <div class="member-sidebar-footer">
-        ${user.plan !== 'premium' ? `
-          <div class="member-sidebar-pro-card" id="sidebarUpgradeBtn" role="button" tabindex="0" title="Upgrade to IELTS Core Premium (30 000 UZS/month)">
-            <div class="pro-card-collapsed-badge">
-              <span class="material-symbols-outlined pro-icon" aria-hidden="true">diamond</span>
-              <span class="pro-tag">PRO</span>
-            </div>
-            <div class="pro-card-expanded-content">
-              <div class="pro-header-row">
-                <span class="pro-star-badge">PREMIUM</span>
-                <span class="pro-price-pill">30k / month</span>
-              </div>
-              <p class="pro-desc">Full practice library and detailed progress insights</p>
-              <div class="pro-action-link">
-                <span>Faollashtirish</span>
-                <span aria-hidden="true">→</span>
-              </div>
-            </div>
-          </div>
-        ` : ''}
-          <div class="member-sidebar-footer-row">
-            <button type="button" class="member-sidebar-theme-btn" id="sidebarThemeToggleBtn" title="Toggle dark mode" aria-label="Toggle dark mode">
-              <span class="material-symbols-outlined" aria-hidden="true">${root.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
-            </button>
-            <a class="member-sidebar-profile" href="/english/account" aria-label="Open student dashboard">
-              <span class="member-avatar">${avatarContent}</span>
-              <span class="member-profile-info">
-                <strong>${safe(user.name || 'Student')}</strong>
-                <small class="${user.plan === 'premium' ? 'plan-premium' : 'plan-free'}">${planLabel}</small>
-              </span>
-              <span class="material-symbols-outlined member-profile-arrow" aria-hidden="true">chevron_right</span>
-            </a>
-          </div>
+        <div class="member-sidebar-footer-row">
+          <button type="button" class="member-sidebar-theme-btn" id="sidebarThemeToggleBtn" title="Toggle dark mode" aria-label="Toggle dark mode">
+            <span class="material-symbols-outlined" aria-hidden="true">${root.dataset.theme === 'dark' ? 'light_mode' : 'dark_mode'}</span>
+          </button>
+          <a class="member-sidebar-profile${isGuest ? ' is-guest-profile' : ''}" href="${isGuest ? '/english/login' : '/english/account'}" aria-label="${isGuest ? 'Sign in to save scores' : 'Open student dashboard'}">
+            <span class="member-avatar">${avatarContent}</span>
+            <span class="member-profile-info">
+              <strong>${userName}</strong>
+              <small class="${isGuest ? 'plan-guest' : (user?.plan === 'premium' ? 'plan-premium' : 'plan-free')}">${userSubtitle}</small>
+            </span>
+            <span class="material-symbols-outlined member-profile-arrow" aria-hidden="true">unfold_more</span>
+          </a>
+        </div>
       </div>
     `;
 
@@ -316,18 +310,39 @@
     const toggle = mobileBar.querySelector('.member-sidebar-toggle');
     const closeMobile = () => {
       document.body.classList.remove('member-sidebar-open');
+      document.documentElement.style.overflow = '';
       toggle.setAttribute('aria-expanded', 'false');
+    };
+    const openMobile = () => {
+      document.body.classList.add('member-sidebar-open');
+      document.documentElement.style.overflow = 'hidden';
+      toggle.setAttribute('aria-expanded', 'true');
     };
 
     toggle.addEventListener('click', () => {
-      const open = document.body.classList.toggle('member-sidebar-open');
-      toggle.setAttribute('aria-expanded', String(open));
+      if (document.body.classList.contains('member-sidebar-open')) {
+        closeMobile();
+      } else {
+        openMobile();
+      }
     });
 
     overlay.addEventListener('click', closeMobile);
     sidebar.addEventListener('click', event => {
       if (event.target.closest('a')) closeMobile();
     });
+
+    window.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && document.body.classList.contains('member-sidebar-open')) {
+        closeMobile();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900 && document.body.classList.contains('member-sidebar-open')) {
+        closeMobile();
+      }
+    }, { passive: true });
 
     const themeBtn = mobileBar.querySelector('[data-member-theme-toggle]');
     if (themeBtn) {
@@ -358,6 +373,14 @@
 
       sidebar.querySelector('#sidebarUpgradeBtn')?.addEventListener('click', () => {
         if (typeof window.showUpgradeModal === 'function') window.showUpgradeModal();
+      });
+
+      sidebar.querySelectorAll('.member-crown-icon').forEach(crown => {
+        crown.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (typeof window.showUpgradeModal === 'function') window.showUpgradeModal();
+        });
       });
 
       const stBtn = sidebar.querySelector('#sidebarThemeToggleBtn');
@@ -560,134 +583,6 @@
     mountTestLaunchModal();
   };
 
-  if (!token) {
-    // Mount pre-flight modal for guest users too
-    const guestLaunchModal = () => {
-      const modal = document.createElement('div');
-      modal.className = 'test-launch-modal';
-      modal.id = 'testLaunchModal';
-      modal.setAttribute('role', 'dialog');
-      modal.setAttribute('aria-modal', 'true');
-      modal.setAttribute('aria-labelledby', 'testLaunchTitle');
-
-      modal.innerHTML = `
-        <div class="test-launch-card">
-          <div class="test-launch-header">
-            <div>
-              <span class="eyebrow" style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:var(--v4-blue);text-transform:uppercase;">TEST INITIATION</span>
-              <h2 id="testLaunchTitle">IELTS Reading Full Test</h2>
-              <p style="margin:0;font-size:13px;color:var(--v4-muted);">Review exam guidelines and choose your preferred practice mode.</p>
-            </div>
-            <button type="button" class="test-launch-close" id="testLaunchClose" aria-label="Close dialog">&times;</button>
-          </div>
-
-          <div class="test-launch-section">
-            <span class="test-launch-section-title">INSTRUCTIONS</span>
-            <ul class="test-launch-list">
-              <li>Practice first without dictionaries or external assistance.</li>
-              <li>After completing the exam, review your mistakes in the verified answer key.</li>
-              <li>You can use answer location and explanations to understand why each answer is correct.</li>
-              <li>You can use the vocabulary section to save and master new words.</li>
-            </ul>
-          </div>
-
-          <div class="test-launch-section test-launch-note">
-            <span class="test-launch-section-title" style="color:#d97706;">NOTE & FAIR PRACTICE</span>
-            <ul class="test-launch-list">
-              <li>We strongly recommend completing the exam without ChatGPT or other third-party tools.</li>
-              <li>If you use a study tool, copy only the specific sentence or short excerpt you need.</li>
-              <li>Do not copy entire transcripts or question sets, or take repeated screenshots of test content.</li>
-              <li>Normal note-taking and copying a small excerpt for review are allowed.</li>
-            </ul>
-          </div>
-
-          <div class="test-launch-section">
-            <span class="test-launch-section-title">CHOOSE EXAM MODE</span>
-            <div class="test-mode-grid">
-              <label class="test-mode-card selected" id="cardModeReal">
-                <span class="test-mode-badge real">
-                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size:14px">verified</span>
-                  <span>Timed Exam Interface</span>
-                </span>
-                <div class="test-mode-card-title-row">
-                  <input type="radio" name="testExamMode" value="real" class="test-mode-radio" checked>
-                  <h3>Real Exam Mode</h3>
-                </div>
-                <p class="test-mode-desc">Practice with a split-pane layout, timed countdown, highlighting, and notes.</p>
-              </label>
-
-              <label class="test-mode-card" id="cardModePractice">
-                <span class="test-mode-badge practice">
-                  <span class="material-symbols-outlined" aria-hidden="true" style="font-size:14px">tune</span>
-                  <span>Daily Practice Interface</span>
-                </span>
-                <div class="test-mode-card-title-row">
-                  <input type="radio" name="testExamMode" value="practice" class="test-mode-radio">
-                  <h3>Practice Mode</h3>
-                </div>
-                <p class="test-mode-desc">Practice in the comfortable daily practice interface — easier to navigate, built for daily drills with flexible section checking.</p>
-              </label>
-            </div>
-          </div>
-
-          <div class="test-launch-actions">
-            <button type="button" id="startTestFinalBtn" class="test-launch-start-btn">
-              <span>Start Test</span>
-              <span aria-hidden="true">→</span>
-            </button>
-          </div>
-        </div>
-      `;
-
-      document.body.appendChild(modal);
-
-      let currentTargetUrl = '';
-
-      const closeDialog = () => modal.classList.remove('show');
-      modal.querySelector('#testLaunchClose')?.addEventListener('click', closeDialog);
-      modal.addEventListener('click', e => { if (e.target === modal) closeDialog(); });
-
-      const realCard = modal.querySelector('#cardModeReal');
-      const practiceCard = modal.querySelector('#cardModePractice');
-      const realRadio = modal.querySelector('input[value="real"]');
-      const practiceRadio = modal.querySelector('input[value="practice"]');
-
-      realCard?.addEventListener('click', () => {
-        realRadio.checked = true;
-        realCard.classList.add('selected');
-        practiceCard.classList.remove('selected');
-      });
-
-      practiceCard?.addEventListener('click', () => {
-        practiceRadio.checked = true;
-        practiceCard.classList.add('selected');
-        realCard.classList.remove('selected');
-      });
-
-      modal.querySelector('#startTestFinalBtn')?.addEventListener('click', () => {
-        if (!currentTargetUrl) return;
-        const selectedMode = practiceRadio?.checked ? 'practice' : 'real';
-        const url = new URL(currentTargetUrl, location.origin);
-        url.searchParams.set('mode', selectedMode);
-        location.assign(url.href);
-      });
-
-      document.addEventListener('click', e => {
-        const link = e.target.closest('a[href*="/english/reading-exam"], a[href*="/english/exam"], a[href*="/english/listening-exam"]');
-        if (!link || link.href.includes('review=true') || e.ctrlKey || e.metaKey) return;
-        e.preventDefault();
-        currentTargetUrl = link.href;
-        const card = link.closest('.resource, .course-card, .next-step-card, article');
-        const title = card ? card.querySelector('h2, h3, .resource-title')?.textContent?.trim() : 'IELTS Full Test';
-        const titleEl = modal.querySelector('#testLaunchTitle');
-        if (titleEl && title) titleEl.textContent = title;
-        modal.classList.add('show');
-      });
-    };
-    guestLaunchModal();
-    return;
-  }
-
   // Global Premium Upgrade Modal
   window.showUpgradeModal = function() {
     let modal = document.querySelector('#ieltsUpgradeModal');
@@ -799,16 +694,20 @@
     modal.style.display = 'block';
   };
 
-  fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
-    .then(response => response.ok ? response.json() : Promise.reject())
-    .then(data => {
-      const publicLanding = location.pathname === '/english' || location.pathname === '/english/';
-      if (publicLanding) {
-        location.replace('/english/materials');
-        return;
-      }
+  if (!token) {
+    mountMemberSidebar(null);
+    hideAppPreloader();
+  } else {
+    fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+      .then(response => response.ok ? response.json() : Promise.reject())
+      .then(data => {
+        const publicLanding = location.pathname === '/english' || location.pathname === '/english/';
+        if (publicLanding) {
+          location.replace('/english/materials');
+          return;
+        }
         mountMemberSidebar(data.user);
-        if (data.user.plan === 'premium') {
+        if (data.user?.plan === 'premium') {
           document.body.classList.add('user-is-premium');
           document.documentElement.classList.add('user-is-premium');
           document.querySelectorAll('.vx-top-notification-banner, #vxHeroBanner, .vx-hero-banner-card, .upgrade-banner, .member-sidebar-pro-card').forEach(el => {
@@ -830,7 +729,7 @@
             const account = document.createElement('a');
             account.className = 'plain-link'; account.href = '/english/account'; account.textContent = ((data.user?.name || data.user?.username || 'Account').trim()).split(' ')[0] || 'Account';
             actions.append(account);
-            if (data.user.role === 'teacher') {
+            if (data.user?.role === 'teacher') {
               const teacherLink = document.createElement('a');
               teacherLink.className = 'button secondary'; teacherLink.href = '/english/teacher'; teacherLink.textContent = 'Teacher Desk';
               teacherLink.style.marginLeft = '8px';
@@ -838,7 +737,7 @@
             }
             if (location.pathname !== '/english/account' && location.pathname !== '/english/teacher') {
               const continueLink = document.createElement('a');
-              continueLink.className = 'button primary'; continueLink.href = data.user.role === 'teacher' ? '/english/teacher' : '/english/account'; continueLink.textContent = data.user.role === 'teacher' ? 'Workspace' : 'My progress';
+              continueLink.className = 'button primary'; continueLink.href = data.user?.role === 'teacher' ? '/english/teacher' : '/english/account'; continueLink.textContent = data.user?.role === 'teacher' ? 'Workspace' : 'My progress';
               actions.append(continueLink);
             }
           }
@@ -848,6 +747,8 @@
       .catch(() => {
         localStorage.removeItem('vortex-english-token');
         localStorage.removeItem('vortex-english-student');
+        mountMemberSidebar(null);
         hideAppPreloader();
       });
+  }
 })();

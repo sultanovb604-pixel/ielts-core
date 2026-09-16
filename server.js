@@ -241,7 +241,7 @@ function readingQuestionNumbers(source) {
       for (let number = start; number <= end; number += 1) questions.add(number);
     }
   }
-  const fieldPattern = /(?:id|name|data-question)=["'](?:q(?:uestion)?[_-]?|question-)?(\d{1,2})["']/gi;
+  const fieldPattern = /(?:id|name|data-question|data-q)=["'](?:q(?:uestion)?[_-]?|question-)?(\d{1,2})["']/gi;
   for (const match of normalized.matchAll(fieldPattern)) questions.add(Number(match[1]));
   return questions;
 }
@@ -458,14 +458,21 @@ function readReadingCatalog(forceRefresh = false) {
 
       // Extract specific passage number (1, 2, or 3)
       let passageNumber = null;
-      const fnPassageMatch = entry.name.match(/Passage\s*([1-3])/i);
-      if (fnPassageMatch) {
-        passageNumber = Number(fnPassageMatch[1]);
-      } else if (passageNumbers.size === 1) {
-        passageNumber = [...passageNumbers][0];
-      } else if (materialKind !== "full-test") {
-        const firstQ = questions.size ? Math.min(...questions) : 1;
-        passageNumber = firstQ > 26 ? 3 : firstQ > 13 ? 2 : 1;
+      if (materialKind !== "full-test") {
+        const fnPassageMatch = entry.name.match(/Passage\s*([1-3])/i);
+        if (fnPassageMatch) {
+          passageNumber = Number(fnPassageMatch[1]);
+        } else if (passageNumbers.size === 1) {
+          passageNumber = [...passageNumbers][0];
+        } else if (questions.size > 0) {
+          const minQ = Math.min(...questions);
+          const maxQ = Math.max(...questions);
+          if (minQ >= 27 || (minQ > 20 && maxQ >= 35)) passageNumber = 3;
+          else if (minQ >= 14 || (minQ > 10 && maxQ >= 25)) passageNumber = 2;
+          else passageNumber = 1;
+        } else {
+          passageNumber = 1;
+        }
       }
 
       // Extract detected question types
@@ -518,7 +525,7 @@ function readReadingCatalog(forceRefresh = false) {
         questionTypes,
         materialKind,
         collection: materialKind === "full-test" ? "full-test" : "practice",
-        formatLabel: materialKind === "full-test" ? "Full test" : materialKind === "skill-practice" ? "Skill practice" : "Passage practice",
+        formatLabel: materialKind === "full-test" ? "Full test" : `Passage ${passageNumber || 1}`,
         href: free ? `/english/reading-exam?id=${encodeURIComponent(id)}` : "",
         fileName: entry.name
       };
@@ -682,8 +689,8 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   /* Global Exam Shell Resets & Polish */
   body {
     margin: 0 !important;
-    padding-top: 88px !important;
-    padding-bottom: 52px !important;
+    padding-top: 104px !important;
+    padding-bottom: 50px !important;
     font-family: var(--vx-font-sans) !important;
     color: var(--vx-ink) !important;
     background-color: var(--vx-canvas) !important;
@@ -716,12 +723,12 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   .main-container,
   .test-wrapper {
     position: fixed !important;
-    top: 88px !important;
-    bottom: 52px !important;
+    top: 104px !important;
+    bottom: 50px !important;
     left: 0 !important;
     right: 0 !important;
     width: 100vw !important;
-    height: calc(100vh - 140px) !important;
+    height: calc(100vh - 154px) !important;
     margin: 0 !important;
     padding: 0 !important;
     display: flex !important;
@@ -815,140 +822,79 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     color: #f8fafc;
   }
 
-  /* Zoom pill widget matching Screenshot 2 */
-  .vx-cdi-zoom-pill {
-    display: inline-flex;
-    align-items: center;
-    background: #1e293b;
-    color: #ffffff;
-    border-radius: 999px;
-    padding: 3px 6px 3px 10px;
-    gap: 5px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    user-select: none;
-  }
-  .vx-zoom-pct {
-    font-size: 11px;
-    font-weight: 800;
-    color: #f8fafc;
-    min-width: 36px;
-    text-align: center;
-  }
-  .vx-zoom-btn {
-    background: rgba(255, 255, 255, 0.18);
-    border: none;
-    color: #ffffff;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    font-size: 13px;
-    font-weight: 900;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.15s ease;
-    line-height: 1;
-    padding: 0;
-  }
-  .vx-zoom-btn:hover {
-    background: rgba(255, 255, 255, 0.35);
-  }
-  .vx-zoom-btn.reset {
-    width: auto;
-    border-radius: 999px;
-    padding: 0 8px;
-    font-size: 11px;
-    font-weight: 700;
-    height: 22px;
-  }
-
-  .vx-submit-header-btn {
-    padding: 5px 16px;
-    border-radius: 6px;
-    border: 1px solid #cbd5e1;
-    background: #ffffff;
-    color: #0f172a;
-    font-size: 12.5px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .vx-submit-header-btn:hover {
-    background: #f8fafc;
-    border-color: #94a3b8;
-  }
-  html[data-theme="dark"] .vx-submit-header-btn {
-    background: #1e293b;
-    border-color: #334155;
-    color: #f8fafc;
-  }
-
+  /* Authentic Cambridge CDI Header Right Controls */
   .vx-header-right {
     display: flex;
     align-items: center;
     gap: 8px;
   }
 
-  .vx-btn-icon {
+  .vx-cdi-hdr-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #111827;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    min-height: 32px;
+    cursor: pointer;
+    transition: all 0.15s ease;
     padding: 0;
-    border: 1px solid var(--vx-line);
-    border-radius: 6px;
-    background: var(--vx-paper);
-    color: var(--vx-ink);
-    font-size: 12px;
-    font-weight: 700;
+  }
+  .vx-cdi-hdr-btn:hover {
+    background: #f3f4f6;
+    border-color: #94a3b8;
+  }
+  html[data-theme="dark"] .vx-cdi-hdr-btn {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+  html[data-theme="dark"] .vx-cdi-hdr-btn:hover {
+    background: #334155;
+  }
+
+  .vx-cdi-submit-btn {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 5px 16px;
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
     cursor: pointer;
+    font-family: inherit;
     transition: all 0.15s ease;
   }
-
-  .vx-btn-icon:hover {
-    border-color: var(--vx-blue);
-    color: var(--vx-blue);
+  .vx-cdi-submit-btn:hover {
+    background: #f3f4f6;
+    border-color: #94a3b8;
+  }
+  html[data-theme="dark"] .vx-cdi-submit-btn {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+  html[data-theme="dark"] .vx-cdi-submit-btn:hover {
+    background: #334155;
   }
 
-  .vx-exit-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    min-height: 32px;
-    padding: 0 12px;
-    border: 1px solid var(--vx-line);
-    border-radius: 6px;
-    background: var(--vx-paper);
-    color: var(--vx-muted);
-    font-size: 11.5px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .vx-exit-btn:hover {
-    border-color: #ef4444;
-    color: #ef4444;
-  }
-
-  /* Sub-header Rubric Banner */
+  /* Sub-header Rubric Banner - 2-line Stacked matching Screenshot 1-3 */
   .vx-cdi-subrubric {
     position: fixed;
     top: 48px;
     left: 0;
     right: 0;
-    height: 40px;
-    background: #f4f4f0;
-    border-bottom: 1px solid #e2e2dc;
-    padding: 2px 24px;
+    height: 56px;
+    background: #f2f4f7;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 24px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
     z-index: 9999;
     box-sizing: border-box;
   }
@@ -956,19 +902,23 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     background: #1e293b;
     border-bottom-color: #334155;
   }
-  .vx-cdi-subrubric strong {
-    font-size: 13px;
-    font-weight: 800;
+  .vx-cdi-subrubric .vx-cdi-part-title {
+    font-size: 14px;
+    font-weight: 700;
     color: #111827;
+    margin: 0;
+    line-height: 1.3;
   }
-  html[data-theme="dark"] .vx-cdi-subrubric strong {
+  html[data-theme="dark"] .vx-cdi-subrubric .vx-cdi-part-title {
     color: #f8fafc;
   }
-  .vx-cdi-subrubric span {
+  .vx-cdi-subrubric .vx-cdi-part-instruction {
     font-size: 13px;
-    color: #4b5563;
+    color: #374151;
+    margin: 0;
+    line-height: 1.3;
   }
-  html[data-theme="dark"] .vx-cdi-subrubric span {
+  html[data-theme="dark"] .vx-cdi-subrubric .vx-cdi-part-instruction {
     color: #94a3b8;
   }
 
@@ -1121,6 +1071,41 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     border-right-color: #334155 !important;
   }
 
+  /* Center Passage Titles & Subtitles matching Screenshots 1-3 */
+  .passage-panel h2:first-of-type,
+  .passage-container h2:first-of-type,
+  .reading-passage h2:first-of-type,
+  .reading-passage > h2,
+  .passage-content > h2,
+  .passage-heading,
+  .passage-title,
+  #passage-title,
+  .test-title-passage {
+    text-align: center !important;
+    font-size: 21px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    margin: 18px 0 10px 0 !important;
+    border-bottom: none !important;
+  }
+  html[data-theme="dark"] .passage-panel h2:first-of-type,
+  html[data-theme="dark"] .passage-container h2:first-of-type,
+  html[data-theme="dark"] .reading-passage h2:first-of-type {
+    color: #f8fafc !important;
+  }
+  .passage-subtitle,
+  .reading-passage p.subtitle,
+  .reading-passage em:first-child,
+  .passage-content em:first-child,
+  .passage-content p:first-of-type em {
+    display: block !important;
+    text-align: center !important;
+    font-style: italic !important;
+    color: #4b5563 !important;
+    font-size: 13.5px !important;
+    margin: 0 auto 20px auto !important;
+  }
+
   /* Right Pane (Questions) - 1:1 Cambridge CDI Standard */
   .panels-container > .questions-panel,
   .panels-container > #right-panel,
@@ -1255,9 +1240,9 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     box-sizing: border-box !important;
     overflow-wrap: break-word !important;
     word-break: normal !important;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
     font-size: 14.5px !important;
-    line-height: 1.6 !important;
+    line-height: 1.48 !important;
     color: #111827 !important;
   }
 
@@ -1272,6 +1257,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     margin-top: 0 !important;
     margin-bottom: 8px !important;
     line-height: 1.3 !important;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
   }
   html[data-theme="dark"] .reading-passage h2,
   html[data-theme="dark"] .passage-content h2,
@@ -1282,26 +1268,49 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   .reading-passage p,
   .passage-content p,
   .passage-paragraph {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+    font-size: 14.5px !important;
+    line-height: 1.48 !important;
+    color: #111827 !important;
     margin-top: 0 !important;
-    margin-bottom: 16px !important;
-    line-height: 1.6 !important;
+    margin-bottom: 12px !important;
     text-align: left !important;
   }
+  html[data-theme="dark"] .reading-passage p,
+  html[data-theme="dark"] .passage-content p,
+  html[data-theme="dark"] .passage-paragraph {
+    color: #f1f5f9 !important;
+  }
 
-  /* Compact Paragraph Letter Labels (A, B, C...) */
-  .reading-passage strong,
-  .passage-content strong,
+  .reading-passage p:has(.passage-label),
+  .passage-content p:has(.passage-label) {
+    margin-top: 16px !important;
+  }
+  .reading-passage p:has(.passage-label):first-of-type,
+  .passage-content p:has(.passage-label):first-of-type,
+  .reading-passage p:first-of-type,
+  .passage-content p:first-of-type {
+    margin-top: 0 !important;
+  }
+
+  /* Compact Authentic Section / Paragraph Letter Labels (A, B, C...) */
   .passage-label,
-  .section-label {
+  .section-label,
+  .para-label,
+  .reading-passage strong.passage-label,
+  .passage-content strong.passage-label {
     display: inline !important;
     font-weight: 800 !important;
+    font-size: 14.5px !important;
     color: #111827 !important;
-    margin-right: 6px !important;
+    margin-right: 8px !important;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
   }
-  html[data-theme="dark"] .reading-passage strong,
-  html[data-theme="dark"] .passage-content strong,
   html[data-theme="dark"] .passage-label,
-  html[data-theme="dark"] .section-label {
+  html[data-theme="dark"] .section-label,
+  html[data-theme="dark"] .para-label,
+  html[data-theme="dark"] .reading-passage strong.passage-label,
+  html[data-theme="dark"] .passage-content strong.passage-label {
     color: #f8fafc !important;
   }
 
@@ -1775,7 +1784,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 52px;
+    height: 50px;
     z-index: 10000;
     display: flex;
     align-items: center;
@@ -1785,7 +1794,6 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     border-top: 1px solid #e5e7eb;
     font-family: var(--vx-font-sans);
     box-sizing: border-box;
-    gap: 12px;
   }
 
   html[data-theme="dark"] #vortex-bottom-navigator {
@@ -1796,11 +1804,11 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   .vx-cdi-bottom-parts {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 18px;
     overflow-x: auto;
     scrollbar-width: none;
     flex: 1;
-    min-width: 0;
+    height: 100%;
   }
   .vx-cdi-bottom-parts::-webkit-scrollbar {
     display: none;
@@ -1809,195 +1817,158 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   .vx-cdi-part-block {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    position: relative;
+    height: 100%;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
+    user-select: none;
+    padding: 0 6px;
     transition: all 0.15s ease;
   }
-  .vx-cdi-part-block:hover {
-    background: #f3f4f6;
+  .vx-cdi-part-block.active {
+    cursor: default;
   }
-  html[data-theme="dark"] .vx-cdi-part-block:hover {
-    background: #1e293b;
+  .vx-cdi-part-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #111827;
   }
-  .vx-cdi-part-title {
-    font-size: 13px;
-    font-weight: 800;
-    color: #111827;
-  }
-  html[data-theme="dark"] .vx-cdi-part-title {
-    color: #f8fafc;
-  }
-  .vx-cdi-part-count {
-    font-size: 11px;
-    color: #9ca3af;
-    font-weight: 600;
+  html[data-theme="dark"] .vx-cdi-part-indicator {
+    background: #60a5fa;
   }
   .vx-cdi-part-block.active .vx-cdi-part-title {
-    color: #1d4ed8;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #111827;
+    margin-right: 14px;
+  }
+  html[data-theme="dark"] .vx-cdi-part-block.active .vx-cdi-part-title {
+    color: #f8fafc;
+  }
+  .vx-cdi-part-block.inactive {
+    padding: 4px 12px;
+    height: auto;
+    border-radius: 4px;
+    gap: 6px;
+  }
+  .vx-cdi-part-block.inactive:hover {
+    background: #f3f4f6;
+  }
+  html[data-theme="dark"] .vx-cdi-part-block.inactive:hover {
+    background: #1e293b;
+  }
+  .vx-cdi-part-block.inactive .vx-cdi-part-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+  html[data-theme="dark"] .vx-cdi-part-block.inactive .vx-cdi-part-title {
+    color: #cbd5e1;
+  }
+  .vx-cdi-part-count {
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+  }
+  html[data-theme="dark"] .vx-cdi-part-count {
+    color: #94a3b8;
   }
 
   .vx-cdi-question-pills-row {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-left: 6px;
   }
-  .vx-cdi-q-num,
-  .vx-cdi-dock-q-item {
-    display: flex;
+  .vx-cdi-q-item {
+    display: inline-flex;
     flex-direction: column;
     align-items: center;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #374151;
-    cursor: pointer;
+    justify-content: center;
     min-width: 18px;
     padding: 2px 3px;
-    border-radius: 3px;
-    transition: all 0.12s;
+    cursor: pointer;
     user-select: none;
+    transition: all 0.12s;
   }
-  html[data-theme="dark"] .vx-cdi-q-num,
-  html[data-theme="dark"] .vx-cdi-dock-q-item {
-    color: #cbd5e1;
+  .vx-cdi-q-item .vx-cdi-q-num {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111827;
+    line-height: 1.2;
   }
-  .vx-cdi-q-num:hover,
-  .vx-cdi-dock-q-item:hover {
-    color: #1d4ed8;
+  html[data-theme="dark"] .vx-cdi-q-item .vx-cdi-q-num {
+    color: #e2e8f0;
   }
-  .vx-cdi-q-num.current,
-  .vx-cdi-dock-q-item.current {
-    color: #1d4ed8;
-    font-weight: 900;
+  .vx-cdi-q-item.current .vx-cdi-q-num {
+    color: #2563eb;
+    font-weight: 800;
   }
-  .vx-q-top-line {
+  .vx-cdi-q-underline {
     width: 14px;
     height: 2px;
     background: transparent;
-    margin-bottom: 3px;
+    margin-top: 2px;
     border-radius: 1px;
   }
-  .vx-cdi-q-num.answered .vx-q-top-line,
-  .vx-cdi-dock-q-item.answered .vx-q-top-line {
-    background: #1e293b;
-    height: 3px;
+  .vx-cdi-q-item.answered .vx-cdi-q-underline {
+    background: #111827;
+    height: 2.5px;
   }
-  html[data-theme="dark"] .vx-cdi-q-num.answered .vx-q-top-line,
-  html[data-theme="dark"] .vx-cdi-dock-q-item.answered .vx-q-top-line {
-    background: #94a3b8;
+  html[data-theme="dark"] .vx-cdi-q-item.answered .vx-cdi-q-underline {
+    background: #e2e8f0;
   }
-  .vx-cdi-q-num.review-incorrect,
-  .vx-cdi-dock-q-item.review-incorrect {
+  .vx-cdi-q-item.current .vx-cdi-q-underline {
+    background: #2563eb;
+    height: 2.5px;
+  }
+  .vx-cdi-q-item.review-incorrect .vx-cdi-q-num {
     color: #dc2626 !important;
   }
-  .vx-cdi-q-num.review-incorrect .vx-q-top-line,
-  .vx-cdi-dock-q-item.review-incorrect .vx-q-top-line {
+  .vx-cdi-q-item.review-incorrect .vx-cdi-q-underline {
     background: #ef4444 !important;
-    height: 3.5px;
+    height: 2.5px;
   }
-  .vx-cdi-q-num.review-correct,
-  .vx-cdi-dock-q-item.review-correct {
+  .vx-cdi-q-item.review-correct .vx-cdi-q-num {
     color: #166534 !important;
   }
-  .vx-cdi-q-num.review-correct .vx-q-top-line,
-  .vx-cdi-dock-q-item.review-correct .vx-q-top-line {
+  .vx-cdi-q-item.review-correct .vx-cdi-q-underline {
     background: #10b981 !important;
-    height: 3.5px;
-  }
-  .vx-cdi-q-num .vx-dash {
-    width: 14px;
-    height: 2px;
-    background: transparent;
-    border-radius: 1px;
-    margin-bottom: 3px;
-  }
-  .vx-cdi-q-num.answered .vx-dash {
-    background: #1e293b;
-    height: 3px;
-  }
-  .vx-cdi-q-num.flagged .vx-dash {
-    background: #f59e0b;
-    height: 3px;
+    height: 2.5px;
   }
 
-  /* Right navigation buttons */
+  /* Far Right Arrow Buttons */
   .vx-cdi-bottom-right {
     display: flex;
     align-items: center;
     gap: 6px;
     flex-shrink: 0;
   }
-  .vx-cdi-nav-arrow-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 6px;
-    background: #374151;
-    color: #ffffff;
-    border: none;
-    display: grid;
-    place-items: center;
+  .vx-cdi-arrow-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #111827;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: all 0.15s ease;
-    font-size: 14px;
   }
-  .vx-cdi-nav-arrow-btn:hover {
-    background: #1f2937;
+  .vx-cdi-arrow-btn:hover {
+    background: #f3f4f6;
+    border-color: #94a3b8;
   }
-  .vx-cdi-flag-btn {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    height: 36px !important;
-    padding: 0 12px !important;
-    border-radius: 6px !important;
-    background: #f3f4f6 !important;
-    color: #4b5563 !important;
-    border: 1px solid #d1d5db !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    transition: all 0.15s ease !important;
+  html[data-theme="dark"] .vx-cdi-arrow-btn {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
   }
-  .vx-cdi-flag-btn:hover {
-    background: #e5e7eb !important;
-    color: #111827 !important;
-  }
-  .vx-cdi-flag-btn.active {
-    background: #fef3c7 !important;
-    border-color: #f59e0b !important;
-    color: #b45309 !important;
-  }
-  html[data-theme="dark"] .vx-cdi-flag-btn {
-    background: #1e293b !important;
-    color: #cbd5e1 !important;
-    border-color: #334155 !important;
-  }
-
-  .vx-cdi-submit-btn {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    height: 36px !important;
-    padding: 0 16px !important;
-    border-radius: 6px !important;
-    background: #1e293b !important;
-    color: #ffffff !important;
-    border: 1px solid #334155 !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    box-shadow: none !important;
-    transition: all 0.15s ease !important;
-  }
-  .vx-cdi-submit-btn:hover {
-    background: #334155 !important;
-    color: #ffffff !important;
-    border-color: #475569 !important;
-    transform: translateY(-1px) !important;
-    box-shadow: none !important;
+  html[data-theme="dark"] .vx-cdi-arrow-btn:hover {
+    background: #334155;
   }
 
   /* Real Exam Mode: Hide all extra multi-color buttons & foreign toolbars */
@@ -3659,20 +3630,19 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   }
 </style>
 
-<!-- Injected IELTS CDI Selection Toolbar -->
+<!-- Injected Authentic Cambridge CDI Selection Toolbar -->
 <div id="ieltsSelectionToolbar" class="ielts-selection-toolbar" role="toolbar" aria-label="Text Highlight and Note Actions">
+  <button type="button" id="ieltsNoteBtn" class="ielts-tool-btn" title="Add note">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Note</span>
+  </button>
   <button type="button" id="ieltsHlBtn" class="ielts-tool-btn" title="Highlight selection">
-    <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ffe066;border:1px solid #d97706;"></span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/></svg>
     <span>Highlight</span>
   </button>
-  <button type="button" id="ieltsNoteBtn" class="ielts-tool-btn" title="Add note">
-    <span>📝 Notes</span>
-  </button>
   <button type="button" id="ieltsClearBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear highlight">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     <span>Clear</span>
-  </button>
-  <button type="button" id="ieltsClearAllBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear all highlights">
-    <span>Clear all</span>
   </button>
 </div>
 
@@ -3740,42 +3710,55 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   </div>
 
   <div class="vx-header-right">
-    <div class="vx-cdi-zoom-pill" id="vxZoomPill" title="Adjust text size">
-      <span class="vx-zoom-pct" id="vxZoomPct">100%</span>
-      <button type="button" class="vx-zoom-btn" id="vxZoomOutBtn" title="Decrease font size">-</button>
-      <button type="button" class="vx-zoom-btn" id="vxZoomInBtn" title="Increase font size">+</button>
-      <button type="button" class="vx-zoom-btn reset" id="vxZoomResetBtn" title="Reset font size">Reset</button>
-    </div>
-    <button id="vxCheckPracticeBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;padding:0 10px;background:#0284c7;color:#fff;border-color:#0284c7;font-size:11px;font-weight:700;" title="Check current answers">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><path d="M20 6L9 17l-5-5"/></svg><span>Check Progress</span>
+    <button id="vxFullscreenBtn" type="button" class="vx-cdi-hdr-btn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
     </button>
-    <button id="vxPauseTimerBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;padding:0 10px;font-size:11px;font-weight:700;" title="Pause/Resume Practice Timer">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-right:4px"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg><span>Pause</span>
+    <button id="vxMenuBtn" type="button" class="vx-cdi-hdr-btn" title="Settings & Appearance" aria-label="Settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <button id="vxHeaderScoreReportBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;width:auto;padding:0 10px;background:#10b981;color:#fff;border-color:#10b981;font-size:11.5px;font-weight:700;" title="View Score Report">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17v-4m5 4v-8m5 8v-6"/></svg><span>Score Report</span>
-    </button>
-    <button id="vxHeaderRetakeBtn" type="button" class="vx-btn-icon" style="display:none;min-height:30px;width:auto;padding:0 10px;font-size:11.5px;font-weight:700;" title="Retake Test">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg><span>Retake</span>
-    </button>
-    <button id="vxFullscreenBtn" type="button" class="vx-btn-icon" title="Toggle fullscreen" aria-label="Toggle fullscreen">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-    </button>
-    <button id="vxThemeToggle" type="button" class="vx-btn-icon" title="Toggle night mode" aria-label="Toggle theme">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-    <button type="button" class="vx-submit-header-btn" id="vxHeaderSubmitBtn">Submit</button>
-    <a href="/english/materials?level=ielts&collection=full-test" class="vx-exit-btn" id="vxExitBtn">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      <span>Exit</span>
-    </a>
+    <button type="button" class="vx-cdi-submit-btn" id="vxHeaderSubmitBtn">Submit</button>
   </div>
 </header>
 
 <!-- Injected Sub-Rubric Banner -->
 <div class="vx-cdi-subrubric" id="vxCdiSubrubric" role="region" aria-label="Part instruction">
-  <strong id="vxCurrentPartTitle">Part 1</strong>
-  <span id="vxCurrentPartDesc">Read the text and answer questions 1–13.</span>
+  <div class="vx-cdi-part-title" id="vxCurrentPartTitle">Part 1</div>
+  <div class="vx-cdi-part-instruction" id="vxCurrentPartDesc">Read the text and answer questions 1–40.</div>
+</div>
+
+<!-- Injected Authentic Cambridge CDI Settings Modal -->
+<div id="vortexSettingsModal" class="vx-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="vxSettingsModalTitle">
+  <div class="vx-modal-card" style="max-width:380px;padding:24px;border-radius:12px;text-align:left;background:#ffffff;box-shadow:0 20px 50px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid #e5e7eb;padding-bottom:12px;">
+      <h3 id="vxSettingsModalTitle" style="margin:0;font-size:16px;font-weight:700;color:#111827;">Exam Settings</h3>
+      <button type="button" id="vxSettingsCloseBtn" style="border:none;background:none;font-size:20px;cursor:pointer;color:#6b7280;line-height:1;">&times;</button>
+    </div>
+
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:8px;">Text Size</label>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="vxTextSizeGroup">
+        <button type="button" class="vx-cdi-submit-btn vx-size-opt active" data-zoom="100">Standard</button>
+        <button type="button" class="vx-cdi-submit-btn vx-size-opt" data-zoom="115">Large</button>
+        <button type="button" class="vx-cdi-submit-btn vx-size-opt" data-zoom="130">Extra Large</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:8px;">Colors / Contrast</label>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;" id="vxThemeGroup">
+        <button type="button" class="vx-cdi-submit-btn vx-theme-opt active" data-theme-val="light">Standard (Light)</button>
+        <button type="button" class="vx-cdi-submit-btn vx-theme-opt" data-theme-val="dark">Inverted (Dark)</button>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:16px;display:flex;justify-content:space-between;align-items:center;">
+      <a href="/english/materials?level=ielts&skill=reading" style="color:#dc2626;text-decoration:none;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Leave Exam
+      </a>
+      <button type="button" id="vxSettingsDoneBtn" class="vx-cdi-submit-btn" style="background:#111827;color:#fff;border-color:#111827;">Done</button>
+    </div>
+  </div>
 </div>
 
 <!-- Injected Mobile Viewport Switcher -->
@@ -3789,25 +3772,17 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 </nav>
 
 <!-- Injected 1:1 Cambridge CDI Bottom Navigator -->
-<footer id="vortex-bottom-navigator" role="navigation" aria-label="Questions overview and submission">
+<footer id="vortex-bottom-navigator" role="navigation" aria-label="Questions overview and navigation">
   <div class="vx-cdi-bottom-parts" id="vxCdiPartsWrap">
     <!-- Rendered dynamically in script -->
   </div>
 
   <div class="vx-cdi-bottom-right">
-    <button id="vxReviewToggleBtn" type="button" class="vx-cdi-flag-btn" title="Review (Flag current question)" aria-label="Review question">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-      <span>Review</span>
-    </button>
-    <button id="vxPrevQBtn" type="button" class="vx-cdi-nav-arrow-btn" title="Previous question" aria-label="Previous question">
+    <button id="vxPrevQBtn" type="button" class="vx-cdi-arrow-btn" title="Previous question" aria-label="Previous question">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <button id="vxNextQBtn" type="button" class="vx-cdi-nav-arrow-btn" title="Next question" aria-label="Next question">
+    <button id="vxNextQBtn" type="button" class="vx-cdi-arrow-btn" title="Next question" aria-label="Next question">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
-    <button id="vxSubmitPromptBtn" type="button" class="vx-cdi-submit-btn" title="Submit exam" aria-label="Submit exam">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Submit</span>
     </button>
   </div>
 </footer>
@@ -4013,45 +3988,52 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     if (subtitle) subtitle.innerHTML = '<span style="color:#0284c7;font-weight:700;">[PRACTICE MODE]</span> · Focused Practice & Drill';
   }
 
-  var themeToggle = document.getElementById('vxThemeToggle');
-  if (themeToggle) {
-    themeToggle.addEventListener('click', function() {
-      var nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      root.dataset.theme = nextTheme;
-      localStorage.setItem('vortex-english-theme', nextTheme);
-      var themeIcon = themeToggle.querySelector('i');
-      if (themeIcon) themeIcon.className = nextTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    });
-  }
+  // Authentic Cambridge CDI Settings Modal Handlers
+  var settingsModal = document.getElementById('vortexSettingsModal');
+  document.getElementById('vxMenuBtn')?.addEventListener('click', function() {
+    if (settingsModal) settingsModal.classList.add('show');
+  });
+  document.getElementById('vxSettingsCloseBtn')?.addEventListener('click', function() {
+    if (settingsModal) settingsModal.classList.remove('show');
+  });
+  document.getElementById('vxSettingsDoneBtn')?.addEventListener('click', function() {
+    if (settingsModal) settingsModal.classList.remove('show');
+  });
 
-  // Text size scaling & Zoom controls matching Screenshot 2
-  var zoomLevels = [85, 100, 115, 130];
-  var currentZoomIndex = 1; // 100%
+  // Text size options
   function applyZoom(pct) {
-    var pctDisplay = document.getElementById('vxZoomPct');
-    if (pctDisplay) pctDisplay.textContent = pct + '%';
     var scale = pct / 100;
     var baseFontSize = 16 * scale;
     var panels = document.querySelectorAll('#left-panel, .left-panel, #right-panel, .right-panel, .reading-passage, .passage-content, .question-content, .test-container');
     panels.forEach(function(el) {
       el.style.fontSize = baseFontSize + 'px';
     });
+    document.querySelectorAll('#vxTextSizeGroup .vx-size-opt').forEach(function(btn) {
+      var match = Number(btn.getAttribute('data-zoom')) === pct;
+      btn.classList.toggle('active', match);
+    });
   }
-  document.getElementById('vxZoomInBtn')?.addEventListener('click', function() {
-    if (currentZoomIndex < zoomLevels.length - 1) {
-      currentZoomIndex++;
-      applyZoom(zoomLevels[currentZoomIndex]);
-    }
+  document.querySelectorAll('#vxTextSizeGroup .vx-size-opt').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var pct = Number(this.getAttribute('data-zoom')) || 100;
+      applyZoom(pct);
+    });
   });
-  document.getElementById('vxZoomOutBtn')?.addEventListener('click', function() {
-    if (currentZoomIndex > 0) {
-      currentZoomIndex--;
-      applyZoom(zoomLevels[currentZoomIndex]);
-    }
-  });
-  document.getElementById('vxZoomResetBtn')?.addEventListener('click', function() {
-    currentZoomIndex = 1;
-    applyZoom(100);
+
+  // Contrast / Theme options
+  function applyExamTheme(theme) {
+    root.dataset.theme = theme;
+    localStorage.setItem('vortex-english-theme', theme);
+    document.querySelectorAll('#vxThemeGroup .vx-theme-opt').forEach(function(btn) {
+      var match = btn.getAttribute('data-theme-val') === theme;
+      btn.classList.toggle('active', match);
+    });
+  }
+  document.querySelectorAll('#vxThemeGroup .vx-theme-opt').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var t = this.getAttribute('data-theme-val') || 'light';
+      applyExamTheme(t);
+    });
   });
 
   // Header Submit Button
@@ -4171,9 +4153,9 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   var flaggedQuestions = new Set();
 
   var partsConfig = totalQuestions === 40 ? [
-    { part: 1, start: 1, end: 13, count: 13, title: 'Part 1', desc: 'Read the text and answer questions 1–13.' },
-    { part: 2, start: 14, end: 26, count: 13, title: 'Part 2', desc: 'Read the text and answer questions 14–26.' },
-    { part: 3, start: 27, end: 40, count: 14, title: 'Part 3', desc: 'Read the text and answer questions 27–40.' }
+    { part: 1, start: 1, end: 13, count: 13, title: 'Part 1', desc: 'Read the text and answer questions 1–40.' },
+    { part: 2, start: 14, end: 26, count: 13, title: 'Part 2', desc: 'Read the text and answer questions 1–40.' },
+    { part: 3, start: 27, end: 40, count: 14, title: 'Part 3', desc: 'Read the text and answer questions 1–40.' }
   ] : [
     { part: 1, start: 1, end: totalQuestions, count: totalQuestions, title: 'Part 1', desc: 'Read the text and answer questions 1–' + totalQuestions + '.' }
   ];
@@ -4271,25 +4253,41 @@ function readingPersistenceMarkup(material, user, requestedMode) {
           var keyVariants = ['q' + q, 'question_' + q, 'question-' + q, String(q)];
           var isAnswered = keyVariants.some(function(k) { return answeredKeys.has(k); });
           var isCurQ = q === currentQuestionNum;
-          var isFlagged = flaggedQuestions.has(q);
           var isRevInc = isReview && incorrectSet.has(q);
           var isRevCor = isReview && !incorrectSet.has(q);
 
-          qHtml += '<div class="vx-cdi-dock-q-item' + (isCurQ ? ' current' : '') + (isAnswered ? ' answered' : '') + (isFlagged ? ' flagged' : '') + (isRevInc ? ' review-incorrect' : '') + (isRevCor ? ' review-correct' : '') + '" data-q-num="' + q + '" title="Question ' + q + '"><div class="vx-q-top-line"></div><span>' + q + '</span></div>';
+          var itemClass = 'vx-cdi-q-item';
+          if (isCurQ) itemClass += ' current';
+          if (isAnswered) itemClass += ' answered';
+          if (isRevInc) itemClass += ' review-incorrect';
+          if (isRevCor) itemClass += ' review-correct';
+
+          qHtml += '<div class="' + itemClass + '" data-q-num="' + q + '" title="Question ' + q + '">' +
+            '<span class="vx-cdi-q-num">' + q + '</span>' +
+            '<span class="vx-cdi-q-underline"></span>' +
+          '</div>';
         }
-        html += '<div class="vx-cdi-part-block active" data-part-num="' + p.part + '"><span class="vx-cdi-part-title">' + p.title + '</span><div class="vx-cdi-question-pills-row">' + qHtml + '</div></div>';
+        html += '<div class="vx-cdi-part-block active" data-part-num="' + p.part + '">' +
+          '<div class="vx-cdi-part-indicator"></div>' +
+          '<span class="vx-cdi-part-title">' + p.title + '</span>' +
+          '<div class="vx-cdi-question-pills-row">' + qHtml + '</div>' +
+        '</div>';
       } else {
-        html += '<div class="vx-cdi-part-block" data-part-num="' + p.part + '"><span class="vx-cdi-part-title">' + p.title + '</span> <span class="vx-cdi-part-count">' + partAnswered + '/' + p.count + '</span></div>';
+        html += '<div class="vx-cdi-part-block inactive" data-part-num="' + p.part + '">' +
+          '<span class="vx-cdi-part-title">' + p.title + '</span>' +
+          '<span class="vx-cdi-part-count">' + partAnswered + '/' + p.count + '</span>' +
+        '</div>';
       }
     });
 
     wrap.innerHTML = html;
 
-    wrap.querySelectorAll('[data-part-num]').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        if (e.target.closest('[data-q-num]')) return;
+    wrap.querySelectorAll('.vx-cdi-part-block.inactive').forEach(function(el) {
+      el.addEventListener('click', function() {
         var pNum = Number(el.getAttribute('data-part-num'));
         switchCdiPart(pNum);
+        var pCfg = partsConfig.find(function(p) { return p.part === pNum; });
+        if (pCfg) jumpToQuestion(pCfg.start);
       });
     });
 
@@ -5646,6 +5644,10 @@ function sanitizeReadingHtml(source, material, user, requestedMode) {
     .replace(/For More Authentic tests you need to buy Premium Service/gi, "")
     .replace(/Full Exam Materials|IELTS CDI Materials/gi, "")
     .replace(/telegram-link|brand-link/gi, "removed-link")
+    // Merge stand-alone passage section letters (e.g. <p><strong>A</strong></p>, <h3>A</h3>, <div class="para-label">A</div>) into succeeding paragraph
+    .replace(/<p[^>]*>\s*<(?:strong|b)[^>]*>\s*([A-Z])\.?\s*<\/(?:strong|b)>\s*<\/p>\s*<p([^>]*)>/gi, '<p$2><strong class="passage-label">$1</strong> ')
+    .replace(/<h[2-6][^>]*>\s*(?:<(?:strong|b)[^>]*>)?\s*([A-Z])\.?\s*(?:<\/(?:strong|b)>)?\s*<\/h[2-6]>\s*<p([^>]*)>/gi, '<p$2><strong class="passage-label">$1</strong> ')
+    .replace(/<(?:div|p)\b[^>]*class=["'][^"']*(?:para-label|passage-label|section-label)[^"']*["'][^>]*>\s*(?:<(?:strong|b|span)[^>]*>)?\s*([A-Z])\.?\s*(?:<\/(?:strong|b|span)>)?\s*<\/(?:div|p)>\s*<p([^>]*)>/gi, '<p$2><strong class="passage-label">$1</strong> ')
     .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gi, (match, css) => {
       const sanitizedCss = css
         .replace(/body::(?:before|after)\s*\{[\s\S]*?\}/gi, "")
@@ -6874,7 +6876,6 @@ async function api(req, res, pathname) {
   await hydrateRequestUserFromSupabase(req, data);
   if (req.method === "GET" && pathname === "/api/resources") {
     const user = studentFromRequest(req, data);
-    if (!user) return json(res, 401, { error: "Sign in to open the learning library." });
     const catalog = readReadingCatalog().map(item => {
       const locked = item.access === "premium" && user?.plan !== "premium";
       const accessible = { ...item, locked, href: locked ? "" : `/english/reading-exam?id=${encodeURIComponent(item.id)}` };
@@ -7481,6 +7482,17 @@ async function api(req, res, pathname) {
   }
 
   // --- MOCK EXAM SYSTEM ENDPOINTS ---
+  if (req.method === "GET" && pathname === "/api/predictions-catalog") {
+    const catPath = path.join(__dirname, "data", "predictions-listening-catalog.json");
+    if (!fs.existsSync(catPath)) return json(res, 200, []);
+    try {
+      const catalog = JSON.parse(fs.readFileSync(catPath, "utf8"));
+      return json(res, 200, catalog);
+    } catch(e) {
+      return json(res, 500, { error: "Failed to read predictions catalog" });
+    }
+  }
+
   if (req.method === "GET" && pathname === "/api/mock-catalog") {
     const user = studentFromRequest(req, data);
     const isPremium = user?.plan === "premium";
@@ -9377,17 +9389,6 @@ const server = http.createServer(async (req, res) => {
                     pathname.endsWith(".woff2") ||
                     pathname === "/robots.txt";
 
-    if (!isAsset && requestUrl.searchParams.get("bypass") !== "vortex2026") {
-      const maintFile = path.join(__dirname, "maintenance.html");
-      if (fs.existsSync(maintFile)) {
-        res.writeHead(200, {
-          "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-store, no-cache, must-revalidate",
-          "Retry-After": "300"
-        });
-        return res.end(fs.readFileSync(maintFile, "utf8"));
-      }
-    }
 
     // Robots.txt
     if (req.method === "GET" && pathname === "/robots.txt") {
@@ -9560,10 +9561,6 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(content);
     }
-    if (pathname === "/english/predictions") {
-      res.writeHead(302, { "Location": "/english/mock-tests" });
-      return res.end();
-    }
     const englishRoutes = {
       "/english": "english.html",
       "/english/courses": "english-courses.html",
@@ -9581,7 +9578,7 @@ const server = http.createServer(async (req, res) => {
       "/english/mock-exam": "english-mock-exam.html",
       "/english/speaking": "english-speaking.html",
       "/english/speaking-studio": "english-speaking.html",
-      "/english/predictions": "english-mock-tests.html",
+      "/english/predictions": "english-predictions.html",
       "/bunyodvibecodern1": "admin.html",
       
       
@@ -9593,7 +9590,7 @@ const server = http.createServer(async (req, res) => {
       "english-writing-editor.js", "english-writing-editor.css", "english-product-v4.css",
       "english-mock-tests.js", "english-mock-tests.css", "english-mock-exam.js", "english-mock-exam.css",
       "english-speaking.js", "english-speaking.css", "speaking-avatar.js", "speaking-recorder.js",
-      "english-session.js", "english-onboarding.js", "firebase-config.js",
+      "english-predictions.js", "english-session.js", "english-onboarding.js", "firebase-config.js",
       "english-refinement.css", "english-precision.css", "english-catalog.css", "english-internal-premium.css", "listening-engine.js",
       "admin.js"
     ]);
@@ -9686,10 +9683,28 @@ function handleShutdown() {
 process.on("SIGTERM", handleShutdown);
 process.on("SIGINT", handleShutdown);
 
-if (require.main === module) server.listen(PORT, "0.0.0.0", () => {
-  console.log(`IELTS Core: http://127.0.0.1:${PORT}/english`);
-  if (!ADMIN_USERNAME || !ADMIN_PASSWORD) console.log("Warning: ADMIN_USERNAME or ADMIN_PASSWORD is missing, so administrator sign-in is disabled.");
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) console.log("Google sign-in is disabled until GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are configured.");
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`IELTS Core running at:`);
+    console.log(`  > http://localhost:${PORT}/english`);
+    console.log(`  > http://127.0.0.1:${PORT}/english`);
+    if (!ADMIN_USERNAME || !ADMIN_PASSWORD) console.log("Warning: ADMIN_USERNAME or ADMIN_PASSWORD is missing, so administrator sign-in is disabled.");
+    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) console.log("Google sign-in is disabled until GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are configured.");
+  });
+
+  // Auxiliary redirect on port 3000 for developers who instinctively open localhost:3000
+  if (PORT !== 3000) {
+    try {
+      const auxServer = http.createServer((req, res) => {
+        res.writeHead(302, { Location: `http://localhost:${PORT}${req.url}` });
+        res.end();
+      });
+      auxServer.on("error", () => {}); // Silently ignore if port 3000 is occupied
+      auxServer.listen(3000, () => {
+        console.log(`  > http://localhost:3000 (auto-redirects to :${PORT})`);
+      });
+    } catch (_) {}
+  }
+}
 
 module.exports = server;

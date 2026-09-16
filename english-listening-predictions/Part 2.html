@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Listening – Part 2: Outdoor Education Centre</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a2e;
+            --border: #d8dde6;
+            --primary: #1e4fa8;
+            --secondary-bg: #f4f6fb;
+            --correct: #1a7a45;
+            --incorrect: #c0392b;
+            --highlight: #ffe066;
+            --highlight-text: #1a1a2e;
+            
+            --input-bg: #ffffff;
+            --input-text: #1a1a2e;
+            --card-shadow: 0 2px 8px rgba(30, 79, 168, 0.08);
+            --font-size: 16px;
+            --track-color: #d0d5e0;
+            --accent-color: #1e4fa8;
+        }
+        [data-theme="dark"] {
+            --bg: #12141c;
+            --text: #e8eaf0;
+            --border: #2e3350;
+            --primary: #5b8af7;
+            --secondary-bg: #1c1f2e;
+            --correct: #27ae60;
+            --incorrect: #e74c3c;
+            --highlight: #f0c040;
+            --highlight-text: #000;
+            
+            --input-bg: #1c1f2e;
+            --input-text: #ffffff;
+            --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --track-color: #3a3f5a;
+            --accent-color: #5b8af7;
+        }
+        .font-small {
+            --font-size: 14px;
+        }
+        .font-medium {
+            --font-size: 16px;
+        }
+        .font-large {
+            --font-size: 18px;
+        }
+        .font-xlarge {
+            --font-size: 20px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: var(--font-size);
+            line-height: 1.5;
+            padding-bottom: 90px;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+
+        /* === HEADER === */
+        .header {
+            background: var(--bg);
+            padding: 0 20px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+            transition: background 0.3s;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .ielts-logo {
+            height: 44px;
+            width: auto;
+            border-radius: 4px;
+        }
+        
+        
+        .header-icons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.2s;
+            position: relative;
+        }
+        .icon-btn:hover {
+            background: var(--secondary-bg);
+        }
+        .font-size-options {
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 0;
+            min-width: 130px;
+            display: none;
+            z-index: 200;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+        .font-size-options.show {
+            display: block;
+        }
+        .font-size-options div {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.15s;
+        }
+        .font-size-options div:hover {
+            background: var(--secondary-bg);
+        }
+        .sun-icon,
+        .moon-icon {
+            position: absolute;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .sun-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .moon-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        [data-theme="dark"] .sun-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        [data-theme="dark"] .moon-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* === AUDIO PLAYER === */
+        .audio-player-container {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 520px;
+            max-width: 92%;
+            height: 44px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            z-index: 99;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .player-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            flex-shrink: 0;
+        }
+        .player-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        #volume-btn svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+        .progress-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        #progress-bar {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            background: var(--track-color);
+            outline: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+        }
+        #progress-bar::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: none;
+            cursor: pointer;
+        }
+        #current-time,
+        #total-duration {
+            font-size: 12px;
+            color: var(--text);
+            opacity: 0.8;
+            min-width: 35px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            flex-shrink: 0;
+        }
+        .controls-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        #new-volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 50px;
+            height: 3px;
+            background: var(--track-color);
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        #new-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text);
+            cursor: pointer;
+        }
+        #new-volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text);
+            border: none;
+            cursor: pointer;
+        }
+        .speed-container {
+            position: relative;
+        }
+        #speed-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 8px;
+            cursor: pointer;
+            height: 24px;
+            line-height: 1;
+        }
+        #speed-options {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1200;
+            min-width: 70px;
+            display: none;
+        }
+        #speed-options.show {
+            display: block;
+        }
+        #speed-options div {
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text);
+            transition: background 0.15s;
+        }
+        #speed-options div:hover {
+            background: var(--secondary-bg);
+        }
+        #speed-options div.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        #global-audio-player {
+            display: none;
+        }
+
+        /* === MAIN === */
+        .main-container {
+            margin-top: 110px;
+            display: flex;
+            background: var(--bg);
+            padding-bottom: 100px;
+            transition: background 0.3s;
+        }
+        .main-container.results-mode {
+            flex-direction: row;
+        }
+        .left-panel {
+            flex: 1;
+            padding: 24px 28px;
+            min-width: 0;
+        }
+        .main-container.results-mode .left-panel {
+            width: 70%;
+            flex: none;
+            overflow-y: auto;
+            height: calc(100vh - 180px);
+        }
+        .right-panel {
+            display: none;
+            width: 30%;
+            flex: none;
+            padding: 20px;
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            height: calc(100vh - 180px);
+            background: var(--secondary-bg);
+        }
+        .main-container.results-mode .right-panel {
+            display: block;
+        }
+        #transcription-container h2 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+        #transcription-text {
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        /* === PART HEADER === */
+        .part-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #2d6fd4 100%);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .part-header p {
+            margin: 2px 0;
+        }
+        .part-header p:first-child {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .section-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin: 28px 0 6px;
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+        .instruction {
+            font-size: 15px;
+            color: var(--text);
+            opacity: 0.75;
+            margin-bottom: 16px;
+            font-style: italic;
+        }
+
+        /* === MCQ === */
+        .question-block {
+            margin-bottom: 24px;
+        }
+        .question-text {
+            font-weight: 600;
+            font-size: var(--font-size);
+            margin-bottom: 10px;
+        }
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+        .multi-choice-option {
+            display: block;
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            transition: background 0.15s, border-color 0.15s;
+            cursor: pointer;
+        }
+        .multi-choice-option:hover {
+            background: #eef3fd;
+            border-color: #b0c4f5;
+        }
+        [data-theme="dark"] .multi-choice-option:hover {
+            background: #1e2440;
+            border-color: #3a4880;
+        }
+        .multi-choice-option label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: var(--font-size);
+            width: 100%;
+        }
+        .multi-choice-option input[type="radio"] {
+            transform: scale(1.2);
+            accent-color: var(--primary);
+        }
+        .multi-choice-option:has(input[type="radio"]:checked) {
+            background: #cfe3f9;
+            border-color: var(--primary);
+        }
+        [data-theme="dark"] .multi-choice-option:has(input[type="radio"]:checked) {
+            background: #1a2e55;
+            border-color: var(--primary);
+        }
+        .multi-choice-option.correct {
+            background: #d4edda !important;
+            border-color: var(--correct) !important;
+        }
+        .multi-choice-option.incorrect {
+            background: #fde8e8 !important;
+            border-color: var(--incorrect) !important;
+        }
+        [data-theme="dark"] .multi-choice-option.correct {
+            background: #0d3320 !important;
+        }
+        [data-theme="dark"] .multi-choice-option.incorrect {
+            background: #3b1010 !important;
+        }
+
+        /* === MAP === */
+        .map-question-wrap {
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+        .map-questions-list {
+            flex: 0 0 260px;
+            min-width: 220px;
+        }
+        .map-q-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            font-size: var(--font-size);
+        }
+        .map-q-item label {
+            font-weight: 600;
+            min-width: 180px;
+        }
+        .map-image-wrap {
+            flex: 1;
+            min-width: 260px;
+        }
+        .map-image-wrap img {
+            width: 100%;
+            max-width: 520px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: var(--card-shadow);
+            display: block;
+        }
+        .map-select {
+            border: 1px solid #9aa3ad;
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--input-text);
+            padding: 4px 8px;
+            font-size: 15px;
+            min-width: 60px;
+            height: 30px;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        [data-theme="dark"] .map-select {
+            background: var(--input-bg);
+            color: #ffffff;
+            border-color: #555;
+        }
+        .map-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            border-width: 2px;
+        }
+        .map-select.correct {
+            border-color: var(--correct);
+            background: #e9f7ef;
+            color: #155724;
+        }
+        .map-select.incorrect {
+            border-color: var(--incorrect);
+            background: #fde8e8;
+            color: #721c24;
+        }
+        [data-theme="dark"] .map-select.correct {
+            background: #0d3320;
+            color: #6effa8;
+        }
+        [data-theme="dark"] .map-select.incorrect {
+            background: #3b1010;
+            color: #ffaaaa;
+        }
+
+        .correct-inline {
+            color: var(--correct);
+            font-weight: 700;
+            margin-left: 8px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        .correct-inline::before {
+            content: "→ ";
+        }
+
+        /* === HIGHLIGHT === */
+        .highlight {
+            background: var(--highlight);
+            color: var(--highlight-text) !important;
+            font-weight: 600;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        [data-theme="dark"] .highlight {
+            background: #f0c040;
+            color: #000 !important;
+        }
+        .comment-highlight {
+            background: #90EE90;
+            position: relative;
+            cursor: help;
+            color: #000 !important;
+        }
+        [data-theme="dark"] .comment-highlight {
+            background: #006400;
+            color: #fff !important;
+        }
+        .comment-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .comment-highlight:hover .comment-tooltip {
+            opacity: 1;
+        }
+
+        /* === CONTEXT MENU === */
+        .context-menu {
+            position: fixed;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+            min-width: 140px;
+        }
+        .context-menu-item {
+            padding: 11px 16px;
+            cursor: pointer;
+            font-size: 15px;
+            border-bottom: 1px solid var(--secondary-bg);
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .context-menu-item:hover {
+            background: var(--secondary-bg);
+        }
+        .context-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        /* === BOTTOM NAV === */
+        .nav-row {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            height: 70px;
+            z-index: 100;
+            padding: 0 16px;
+            transition: background 0.3s;
+            gap: 6px;
+            overflow-x: auto;
+        }
+        .sub-q-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .subQuestion {
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .subQuestion:hover {
+            background: var(--secondary-bg);
+            border-color: #999;
+        }
+        .subQuestion.answered {
+            background: var(--secondary-bg);
+        }
+        .subQuestion.correct {
+            background: var(--correct);
+            color: #fff;
+            border-color: var(--correct);
+        }
+        .subQuestion.incorrect {
+            background: var(--incorrect);
+            color: #fff;
+            border-color: var(--incorrect);
+        }
+        .subQuestion.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .part-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-right: 6px;
+            white-space: nowrap;
+        }
+        .deliver-btn {
+            margin-left: auto;
+            background: var(--secondary-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .deliver-btn:hover {
+            background: #dde5f5;
+        }
+        .deliver-btn.success {
+            background: var(--correct);
+            color: #fff;
+            border-color: var(--correct);
+        }
+        .deliver-btn.success:hover {
+            background: #148a37;
+        }
+
+        /* === NAV ARROWS === */
+        .nav-arrows {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            display: flex;
+            gap: 4px;
+            z-index: 101;
+        }
+        .nav-arrow {
+            width: 44px;
+            height: 44px;
+            background: var(--text);
+            color: var(--bg);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+        }
+        .nav-arrow:hover {
+            opacity: 0.8;
+        }
+        .nav-arrow:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* === MODAL === */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--bg);
+            padding: 28px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+        .modal-header h2 {
+            font-size: 22px;
+            color: var(--primary);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+        }
+        .modal-close:hover {
+            color: var(--text);
+        }
+        #score-summary {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        #result-details table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        #result-details th,
+        #result-details td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        #result-details th {
+            background: var(--secondary-bg);
+            font-weight: 700;
+        }
+        #result-details td:first-child {
+            font-weight: 700;
+            text-align: center;
+        }
+        .result-correct {
+            color: var(--correct);
+            font-weight: 700;
+        }
+        .result-incorrect {
+            color: var(--incorrect);
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+        @keyframes flash {
+            0% {
+                background: #ddeaff;
+            }
+            100% {
+                background: transparent;
+            }
+        }
+        .flash {
+            animation: flash 0.8s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .map-question-wrap {
+                flex-direction: column;
+            }
+            .map-questions-list {
+                flex: none;
+                width: 100%;
+            }
+            .left-panel {
+                padding: 16px 12px;
+            }
+            .main-container.results-mode .left-panel {
+                width: 100%;
+                height: auto;
+                overflow: visible;
+            }
+            .main-container.results-mode .right-panel {
+                display: none;
+            }
+            .audio-player-container {
+                width: 96%;
+                height: 40px;
+                padding: 0 10px;
+                gap: 6px;
+                top: 58px;
+            }
+            .main-container {
+                margin-top: 102px;
+            }
+            #new-volume-slider {
+                width: 30px;
+            }
+            .controls-container {
+                gap: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-left">
+            <img src="https://i.pinimg.com/736x/88/93/a8/8893a81fed78f6989142a13e3605c45e.jpg" alt="IELTS Logo" class="ielts-logo">
+            
+        </div>
+        <div class="header-icons">
+            <div style="position:relative;">
+                <button class="icon-btn" id="font-size-toggle" title="Font Size">A</button>
+                <div id="font-size-options" class="font-size-options">
+                    <div data-size="small">Small</div>
+                    <div data-size="medium">Medium</div>
+                    <div data-size="large">Large</div>
+                    <div data-size="xlarge">Extra Large</div>
+                </div>
+            </div>
+            <button class="icon-btn" id="dark-mode-toggle" title="Toggle Dark Mode">
+                <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== AUDIO PLAYER ===== -->
+    <div class="audio-player-container">
+        <button id="play-pause-btn" class="player-btn" aria-label="Play / Pause">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="progress-container">
+            <span id="current-time">0:00</span>
+            <input type="range" id="progress-bar" value="0" step="1" min="0" max="100" aria-label="Seek">
+            <span id="total-duration">0:00</span>
+        </div>
+        <div class="controls-container">
+            <div style="display:flex;align-items:center;gap:4px;">
+                <button id="volume-btn" class="player-btn" aria-label="Toggle mute">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                    </svg>
+                </button>
+                <input type="range" id="new-volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+            </div>
+            <div class="speed-container">
+                <button id="speed-btn" class="player-btn">1x</button>
+                <div id="speed-options">
+                    <div data-speed="0.5">0.5x</div>
+                    <div data-speed="0.75">0.75x</div>
+                    <div data-speed="1" class="active">1x</div>
+                    <div data-speed="1.25">1.25x</div>
+                    <div data-speed="1.5">1.5x</div>
+                    <div data-speed="2">2x</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="global-audio-player" preload="metadata"
+    src="https://ia600705.us.archive.org/25/items/0803_20260803_202608/0803.MP3">
+</audio>
+
+<!-- ===== MAIN ===== -->
+<div class="main-container" id="main-container">
+    <div class="left-panel">
+        <div class="part-header">
+            <p>Part 2 &nbsp;·&nbsp; Outdoor Education Centre</p>
+            <p style="font-weight:400;font-size:15px;margin-top:4px;">Listen and answer questions 11–20.</p>
+        </div>
+
+        <!-- Q11–16: MCQ -->
+        <div class="section-title">Questions 11–16</div>
+        <p class="instruction">Choose the correct answer, A, B or C.</p>
+
+        <div class="question-block" id="qblock-11">
+            <p class="question-text"><strong>11.</strong> A trip to the outdoor education centre will help the children</p>
+            <ul class="options-list">
+                <li class="multi-choice-option"><label><input type="radio" name="q11" value="A"> A &nbsp; create good relationships</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q11" value="B"> B &nbsp; manage without adult supervision</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q11" value="C"> C &nbsp; react positively to new challenges</label></li>
+            </ul>
+        </div>
+
+        <div class="question-block" id="qblock-12">
+            <p class="question-text"><strong>12.</strong> To prepare their children for the trip, parents should</p>
+            <ul class="options-list">
+                <li class="multi-choice-option"><label><input type="radio" name="q12" value="A"> A &nbsp; let them try sleeping in a tent at home</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q12" value="B"> B &nbsp; make sure they get enough sleep before they leave</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q12" value="C"> C &nbsp; tell them that they will be in a tent with their friends</label></li>
+            </ul>
+        </div>
+
+        <div class="question-block" id="qblock-13">
+            <p class="question-text"><strong>13.</strong> What do parents need to put in their children's backpack?</p>
+            <ul class="options-list">
+                <li class="multi-choice-option"><label><input type="radio" name="q13" value="A"> A &nbsp; plastic bags</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q13" value="B"> B &nbsp; snacks and biscuits</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q13" value="C"> C &nbsp; a small amount of money</label></li>
+            </ul>
+        </div>
+
+        <div class="question-block" id="qblock-14">
+            <p class="question-text"><strong>14.</strong> What are children allowed to bring on the trip?</p>
+            <ul class="options-list">
+                <li class="multi-choice-option"><label><input type="radio" name="q14" value="A"> A &nbsp; electronic games</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q14" value="B"> B &nbsp; cell phones</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q14" value="C"> C &nbsp; penknives</label></li>
+            </ul>
+        </div>
+
+        <div class="question-block" id="qblock-15">
+            <p class="question-text"><strong>15.</strong> How are parents selected to attend the trip?</p>
+            <ul class="options-list">
+                <li class="multi-choice-option"><label><input type="radio" name="q15" value="A"> A &nbsp; The first ten parents to sign up will be able to go</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q15" value="B"> B &nbsp; Parents' names will be chosen from a box</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q15" value="C"> C &nbsp; Preference will be given to parents with camping skills</label></li>
+            </ul>
+        </div>
+
+        <div class="question-block" id="qblock-16">
+            <p class="question-text"><strong>16.</strong> Payment for the trip</p>
+            <ul class="options-list">
+                <li class="multi-choice-option"><label><input type="radio" name="q16" value="A"> A &nbsp; must be handed to the child's teacher</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q16" value="B"> B &nbsp; can be left at the school office</label></li>
+                <li class="multi-choice-option"><label><input type="radio" name="q16" value="C"> C &nbsp; should be made directly to the outdoor education centre</label></li>
+            </ul>
+        </div>
+
+        <!-- Q17–20: Map -->
+        <div class="section-title" style="margin-top:36px;">Questions 17–20</div>
+        <p class="instruction">Label the map below. Choose the correct letter, A–G, next to questions 17–20.</p>
+
+        <div class="map-question-wrap">
+            <div class="map-questions-list">
+                <div class="map-q-item" id="qblock-17">
+                    <label for="q17"><strong>17.</strong> Woodcarving studio</label>
+                    <select id="q17" class="map-select">
+                        <option value="">–</option>
+                        <option>A</option><option>B</option><option>C</option><option>D</option>
+                        <option>E</option><option>F</option><option>G</option>
+                    </select>
+                </div>
+                <div class="map-q-item" id="qblock-18">
+                    <label for="q18"><strong>18.</strong> Emergency meeting point</label>
+                    <select id="q18" class="map-select">
+                        <option value="">–</option>
+                        <option>A</option><option>B</option><option>C</option><option>D</option>
+                        <option>E</option><option>F</option><option>G</option>
+                    </select>
+                </div>
+                <div class="map-q-item" id="qblock-19">
+                    <label for="q19"><strong>19.</strong> Conservation centre</label>
+                    <select id="q19" class="map-select">
+                        <option value="">–</option>
+                        <option>A</option><option>B</option><option>C</option><option>D</option>
+                        <option>E</option><option>F</option><option>G</option>
+                    </select>
+                </div>
+                <div class="map-q-item" id="qblock-20">
+                    <label for="q20"><strong>20.</strong> Arts and crafts room</label>
+                    <select id="q20" class="map-select">
+                        <option value="">–</option>
+                        <option>A</option><option>B</option><option>C</option><option>D</option>
+                        <option>E</option><option>F</option><option>G</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="map-image-wrap">
+                <img src="https://i.pinimg.com/736x/1b/8e/d3/1b8ed34adfa6c05877e7ad56198fe4cd.jpg"
+                alt="Outdoor Education Centre Map">
+            </div>
+        </div>
+    </div>
+
+    <!-- Transcript panel -->
+    <div class="right-panel" id="right-panel">
+        <div id="transcription-container">
+            <h2>Transcript</h2>
+            <div id="transcription-text"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden transcript -->
+<div id="transcription-data" style="display:none;">
+    <div data-part="2">Good evening. It's good to see so many parents here. Let me begin by explaining why we go to the outdoor education centre. Well, by age 10, we feel the children are ready for a trip away from home, but still in a safe environment and under the guidance of a familiar adult. At the school, we strongly believe <span class="highlight">children should be encouraged to try different things and not give up when it gets difficult</span>. And that's what the centre is all about, having a go.
+
+    Anyway, to start with, the sleeping arrangements. For some children, this will be their first time in a tent and away from home, so please prepare them. You can do this just by <span class="highlight">making sure they have some early nights before we go</span>. Another thing, there's space for three children per tent, so we can't guarantee your child will be in with their best friends. So do make them aware of this.
+
+    Now, you should have received a list with the clothing the children will need in their backpack. But there are some extras. Please provide a packet of biscuits or maybe fruit bars. But <strong>these need to go in the box in the school hall, not with the children</strong>. Actually, <span class="highlight">what we do need in the backpacks are bags for cleaning up and for wet clothing, so plastic ones please</span>. A torch is a good idea, but don't worry about putting money in because there's nothing to buy.
+
+    While we're on the subject, let's talk about some other items. <span class="highlight">Cell phones are permitted</span>, but they must be switched off at night and also off during the teaching sessions. Also, for wood carving activities, knives will be provided by the centre so children shouldn't bring them from home. Electronic games are banned, so rather than bring one of these, children should bring quiet board games.
+
+    Turning to the question of parent attendance, in the past we've had too many volunteers, so we have written names on bits of paper and pulled them out of the box. But then some parents have changed their minds. So, <span class="highlight">if you're absolutely sure you can come, put your name down on the sign-up form and the first ten will be asked to come</span>. Experience isn't required, we just want you to lend a hand.
+
+    Now, I'm afraid the fee for the trip needs to be paid by the 15th. Payment to the centre is made by school, not by parents. And your teacher will be given your child a form with the school's bank account details if you want to use them to make payments. Otherwise, <span class="highlight">please leave payment in an envelope in the box at the school office</span>.
+
+    Right. Let's have a look at the centre. I hope you all have a leaflet with a map on the back, and we'd like you to show this to your children before they go. Now, if you look at the map, you will see the entrance at the bottom. OK, so just through the entrance you'll see reception, now <span class="highlight">the woodcarving studio is to the right of the hall and opposite the kitchen</span>. It's crucial that children know where the emergency meeting point is. <span class="highlight">If you look to the top of the map and to north of Forest Road, that's the location</span>. It is on the same side of river as the tents. There's a lot going on at the river, for example, the conservation centre. See the building marked "Kayaks" on right side riverbank? Well, <span class="highlight">the conservation centre is between the two bridges just below it</span>. I should also mention that if your child is not a confident swimmer, there are life jackets hanging all along the riverbank. <span class="highlight">If your child likes drawing and painting, the arts and crafts room is to the right of the river, a little further up from the kayaks</span>.
+
+    Okay, so are there any questions so far?</div>
+</div>
+
+<!-- Context menu -->
+<div id="contextMenu" class="context-menu">
+    <div class="context-menu-item" onclick="highlightText()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.24 12.32L12.28 9.36l-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-3.12 3.12c-.59.58-1.54.58-2.12 0l-1.04-1.04c-.58-.59-.58-1.54 0-2.12L7.88.88c.59-.58 1.54-.58 2.12 0l1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 3.12 3.12c.58.59.58 1.54 0 2.12l-1.04 1.04c-.58.59-1.54.59-2.12 0z"/></svg>
+        Highlight
+    </div>
+    <div class="context-menu-item" onclick="addComment()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 12H5.17L4 15.17V4h16v10z"/></svg>
+        Comment
+    </div>
+    <div class="context-menu-item" id="clear-item" onclick="clearHighlight()" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        Clear
+    </div>
+    <div class="context-menu-item" onclick="clearAllHighlights()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 9h-2.29l3-3-1.42-1.42-3 3V5h-2v2.29l-3 3 1.42 1.42 3-3V17h2v-2.29l3 3 1.42-1.42-3-3H17V9h-2z"/></svg>
+        Clear All
+    </div>
+</div>
+
+<!-- Nav arrows -->
+<div class="nav-arrows">
+    <button class="nav-arrow" onclick="goToPrev()" id="prevBtn">‹</button>
+    <button class="nav-arrow" onclick="goToNext()" id="nextBtn">›</button>
+</div>
+
+<!-- Bottom nav -->
+<nav class="nav-row">
+    <span class="part-label">Part 2</span>
+    <div class="sub-q-row" id="sub-q-row"></div>
+    <button id="deliver-button" class="deliver-btn">✓ Check Answers</button>
+</nav>
+
+<!-- Result modal -->
+<div id="result-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Your Results</h2>
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <p id="score-summary"></p>
+        <div id="result-details"></div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    //  ANSWER KEY
+    // ============================================================
+    const correctAnswers = {
+        q11: 'C',
+        q12: 'B',
+        q13: 'A',
+        q14: 'B',
+        q15: 'A',
+        q16: 'B',
+        q17: 'E',
+        q18: 'A',
+        q19: 'F',
+        q20: 'B'
+    };
+
+    const qLabels = {
+        q11: 'Purpose of trip',
+        q12: 'Prepare children',
+        q13: 'Backpack item',
+        q14: 'Allowed to bring',
+        q15: 'Parent selection',
+        q16: 'Payment method',
+        q17: 'Woodcarving studio',
+        q18: 'Emergency meeting point',
+        q19: 'Conservation centre',
+        q20: 'Arts and crafts room'
+    };
+
+    let currentQ = 11;
+    let selectedRange = null;
+    let contextElement = null;
+    let graded = false;
+
+    // ============================================================
+    //  BUILD SUB-QUESTION BUTTONS
+    // ============================================================
+    const sqRow = document.getElementById('sub-q-row');
+    for (let i = 11; i <= 20; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'subQuestion';
+        btn.id = `sq-${i}`;
+        btn.textContent = i;
+        btn.onclick = () => scrollToQ(i);
+        sqRow.appendChild(btn);
+    }
+
+    function setActive(n) {
+        document.querySelectorAll('.subQuestion').forEach(b => b.classList.remove('active'));
+        const b = document.getElementById(`sq-${n}`);
+        if (b) b.classList.add('active');
+        currentQ = n;
+        document.getElementById('prevBtn').disabled = n <= 11;
+        document.getElementById('nextBtn').disabled = n >= 20;
+    }
+
+    function scrollToQ(n) {
+        setActive(n);
+        const el = document.getElementById(`qblock-${n}`);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('flash');
+            setTimeout(() => el.classList.remove('flash'), 800);
+        }
+    }
+
+    function goToPrev() { if (currentQ > 11) scrollToQ(currentQ - 1); }
+    function goToNext() { if (currentQ < 20) scrollToQ(currentQ + 1); }
+
+    // ============================================================
+    //  ANSWERED TRACKING
+    // ============================================================
+    function updateAnswered() {
+        if (graded) return;
+        for (let i = 11; i <= 20; i++) {
+            const btn = document.getElementById(`sq-${i}`);
+            if (!btn || btn.classList.contains('correct') || btn.classList.contains('incorrect')) continue;
+            let answered = false;
+            if (i <= 16) {
+                answered = !!document.querySelector(`input[name="q${i}"]:checked`);
+            } else {
+                const sel = document.getElementById(`q${i}`);
+                answered = sel && sel.value !== '';
+            }
+            btn.classList.toggle('answered', answered);
+        }
+    }
+
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.addEventListener('change', updateAnswered));
+    document.querySelectorAll('.map-select').forEach(s => s.addEventListener('change', updateAnswered));
+
+    // ============================================================
+    //  CHECK ANSWERS
+    // ============================================================
+    document.getElementById('deliver-button').addEventListener('click', function() {
+        if (graded) { document.getElementById('result-modal').classList.remove('hidden'); return; }
+        graded = true;
+
+        let score = 0;
+        const results = [];
+
+        // MCQ Q11-16
+        for (let i = 11; i <= 16; i++) {
+            const checked = document.querySelector(`input[name="q${i}"]:checked`);
+            const user = checked ? checked.value : '';
+            const correct = correctAnswers[`q${i}`];
+            const ok = user === correct;
+            if (ok) score++;
+            document.querySelectorAll(`input[name="q${i}"]`).forEach(r => {
+                r.disabled = true;
+                const li = r.closest('.multi-choice-option');
+                if (r.value === correct) li.classList.add('correct');
+                else if (r.checked) li.classList.add('incorrect');
+            });
+            const btn = document.getElementById(`sq-${i}`);
+            if (btn) { btn.classList.remove('answered');
+                btn.classList.add(ok ? 'correct' : 'incorrect'); }
+            results.push({ q: i, label: qLabels[`q${i}`], user: user || '–', correct, ok });
+        }
+
+        // Map Q17-20
+        for (let i = 17; i <= 20; i++) {
+            const sel = document.getElementById(`q${i}`);
+            const user = sel ? sel.value : '';
+            const correct = correctAnswers[`q${i}`];
+            const ok = user.toUpperCase() === correct.toUpperCase();
+            if (ok) score++;
+            if (sel) {
+                sel.classList.add(ok ? 'correct' : 'incorrect');
+                sel.disabled = true;
+                if (!ok) {
+                    const span = document.createElement('span');
+                    span.className = 'correct-inline';
+                    span.textContent = correct;
+                    sel.insertAdjacentElement('afterend', span);
+                }
+            }
+            const btn = document.getElementById(`sq-${i}`);
+            if (btn) { btn.classList.remove('answered');
+                btn.classList.add(ok ? 'correct' : 'incorrect'); }
+            results.push({ q: i, label: qLabels[`q${i}`], user: user || '–', correct, ok });
+        }
+
+        const bandTable = [
+            [9, 9],
+            [8, 8.5],
+            [7, 8],
+            [6, 7.5],
+            [5, 7],
+            [4, 6.5],
+            [3, 6],
+            [2, 5.5],
+            [1, 5],
+            [0, 4]
+        ];
+        const band = (bandTable.find(([raw]) => score >= raw) || [0, 4])[1];
+
+        document.getElementById('main-container').classList.add('results-mode');
+        const src = document.querySelector('#transcription-data [data-part="2"]');
+        if (src) document.getElementById('transcription-text').innerHTML = src.innerHTML;
+
+        document.getElementById('score-summary').textContent =
+            `You scored ${score} out of 10 (Band estimate: ${band}).`;
+
+        let html =
+            `<table><thead><tr><th>Q</th><th>Topic</th><th>Your Answer</th><th>Correct</th><th>Result</th></tr></thead><tbody>`;
+        results.forEach(r => {
+            html += `<tr>
+                <td>${r.q}</td>
+                <td style="font-size:13px">${r.label}</td>
+                <td style="font-size:13px">${r.user}</td>
+                <td style="font-size:13px">${r.correct}</td>
+                <td class="${r.ok ? 'result-correct' : 'result-incorrect'}">${r.ok ? '✔' : '✖'}</td>
+            </tr>`;
+        });
+        html += '</tbody></table>';
+        document.getElementById('result-details').innerHTML = html;
+
+        this.classList.add('success');
+        this.innerHTML = '📊 My Results';
+        document.getElementById('result-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('modal-close-btn').addEventListener('click', () => {
+        document.getElementById('result-modal').classList.add('hidden');
+    });
+
+    // ============================================================
+    //  DARK MODE
+    // ============================================================
+    function initTheme() { document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light'); }
+    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+        const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+    });
+    initTheme();
+
+    // ============================================================
+    //  FONT SIZE
+    // ============================================================
+    function setFontSize(size) {
+        document.body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+        document.body.classList.add(`font-${size}`);
+        localStorage.setItem('fontSize', size);
+    }
+    document.getElementById('font-size-toggle').addEventListener('click', () => {
+        document.getElementById('font-size-options').classList.toggle('show');
+    });
+    document.querySelectorAll('#font-size-options div').forEach(d => {
+        d.addEventListener('click', () => { setFontSize(d.getAttribute('data-size'));
+            document.getElementById('font-size-options').classList.remove('show'); });
+    });
+    document.addEventListener('click', e => {
+        if (!e.target.closest('#font-size-toggle') && !e.target.closest('#font-size-options'))
+            document.getElementById('font-size-options').classList.remove('show');
+    });
+    setFontSize(localStorage.getItem('fontSize') || 'medium');
+
+    // ============================================================
+    //  HIGHLIGHT / CONTEXT MENU
+    // ============================================================
+    function highlightText() {
+        if (!selectedRange || selectedRange.collapsed) { closeMenu(); return; }
+        try { const s = document.createElement('span');
+            s.className = 'highlight';
+            selectedRange.surroundContents(s); } catch (e) {}
+        window.getSelection().removeAllRanges();
+        closeMenu();
+    }
+
+    function addComment() {
+        const txt = prompt('Enter comment:');
+        if (!txt || !selectedRange || selectedRange.collapsed) { closeMenu(); return; }
+        try {
+            const s = document.createElement('span');
+            s.className = 'comment-highlight';
+            const tip = document.createElement('span');
+            tip.className = 'comment-tooltip';
+            tip.textContent = txt;
+            s.appendChild(tip);
+            selectedRange.surroundContents(s);
+        } catch (e) {}
+        window.getSelection().removeAllRanges();
+        closeMenu();
+    }
+
+    function clearHighlight() {
+        if (!contextElement) { closeMenu(); return; }
+        const p = contextElement.parentNode;
+        while (contextElement.firstChild) {
+            if (!contextElement.firstChild.classList?.contains('comment-tooltip')) p.insertBefore(contextElement
+                .firstChild, contextElement);
+            else contextElement.removeChild(contextElement.firstChild);
+        }
+        p.removeChild(contextElement);
+        p.normalize();
+        closeMenu();
+    }
+
+    function clearAllHighlights() {
+        document.querySelectorAll('.highlight,.comment-highlight').forEach(el => {
+            const p = el.parentNode,
+                f = document.createDocumentFragment();
+            while (el.firstChild) {
+                if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) el
+                    .removeChild(el.firstChild);
+                else f.appendChild(el.firstChild);
+            }
+            p.replaceChild(f, el);
+        });
+        closeMenu();
+    }
+
+    function closeMenu() { document.getElementById('contextMenu').style.display = 'none';
+        contextElement = null; }
+
+    document.addEventListener('contextmenu', e => {
+        if (!window.getSelection().toString()) return;
+        e.preventDefault();
+        const menu = document.getElementById('contextMenu');
+        menu.style.left = e.clientX + 'px';
+        menu.style.top = e.clientY + 'px';
+        menu.style.display = 'block';
+        contextElement = e.target.closest('.highlight,.comment-highlight');
+        document.getElementById('clear-item').style.display = contextElement ? 'flex' : 'none';
+    });
+    document.addEventListener('click', e => { if (!e.target.closest('#contextMenu')) closeMenu(); });
+    document.addEventListener('selectionchange', () => {
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0 && !sel.isCollapsed) selectedRange = sel.getRangeAt(0);
+    });
+
+    setActive(11);
+    updateAnswered();
+
+    // ============================================================
+    //  AUDIO PLAYER
+    // ============================================================
+    (function() {
+        'use strict';
+
+        const audio = document.getElementById('global-audio-player');
+        const playBtn = document.getElementById('play-pause-btn');
+        const progress = document.getElementById('progress-bar');
+        const currentLabel = document.getElementById('current-time');
+        const totalLabel = document.getElementById('total-duration');
+        const volumeSlider = document.getElementById('new-volume-slider');
+        const volumeBtn = document.getElementById('volume-btn');
+        const speedBtn = document.getElementById('speed-btn');
+        const speedOptions = document.getElementById('speed-options');
+
+        let isDragging = false;
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        function togglePlay() {
+            if (audio.paused) { audio.play().catch(() => {}); } else { audio.pause(); }
+        }
+
+        function updatePlayIcon() {
+            playBtn.innerHTML = audio.paused ?
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' :
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        }
+
+        function updateVolumeIcon(val) {
+            const v = val !== undefined ? val : audio.volume;
+            const icon = volumeBtn.querySelector('svg');
+            if (v === 0) {
+                icon.innerHTML =
+                    '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+            } else if (v < 0.5) {
+                icon.innerHTML =
+                    '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+            } else {
+                icon.innerHTML =
+                    '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+            }
+        }
+
+        function setVolume(val) {
+            const v = Math.min(1, Math.max(0, parseFloat(val)));
+            audio.volume = v;
+            volumeSlider.value = v;
+            updateVolumeIcon(v);
+        }
+
+        function toggleMute() {
+            if (audio.volume > 0) {
+                audio.dataset.prevVolume = audio.volume;
+                setVolume(0);
+            } else {
+                setVolume(parseFloat(audio.dataset.prevVolume) || 0.8);
+            }
+        }
+
+        function setSpeed(val) {
+            const speed = parseFloat(val);
+            if (isNaN(speed)) return;
+            audio.playbackRate = speed;
+            speedBtn.textContent = speed + 'x';
+            speedOptions.querySelectorAll('div').forEach(el => {
+                el.classList.toggle('active', parseFloat(el.dataset.speed) === speed);
+            });
+            speedOptions.classList.remove('show');
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+        audio.addEventListener('play', updatePlayIcon);
+        audio.addEventListener('pause', updatePlayIcon);
+        audio.addEventListener('ended', () => {
+            updatePlayIcon();
+            progress.value = 0;
+            currentLabel.textContent = formatTime(0);
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            progress.max = audio.duration;
+            totalLabel.textContent = formatTime(audio.duration);
+            currentLabel.textContent = formatTime(audio.currentTime);
+        });
+        audio.addEventListener('timeupdate', () => {
+            if (isDragging) return;
+            progress.value = audio.currentTime;
+            currentLabel.textContent = formatTime(audio.currentTime);
+        });
+
+        progress.addEventListener('mousedown', () => { isDragging = true; });
+        progress.addEventListener('mouseup', () => { isDragging = false; });
+        progress.addEventListener('touchstart', () => { isDragging = true; });
+        progress.addEventListener('touchend', () => { isDragging = false; });
+        progress.addEventListener('input', () => {
+            audio.currentTime = progress.value;
+            currentLabel.textContent = formatTime(progress.value);
+        });
+
+        volumeSlider.addEventListener('input', (e) => {
+            const v = parseFloat(e.target.value);
+            audio.volume = v;
+            updateVolumeIcon(v);
+        });
+        volumeBtn.addEventListener('click', toggleMute);
+
+        speedBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            speedOptions.classList.toggle('show');
+        });
+        speedOptions.addEventListener('click', (e) => {
+            if (e.target.dataset.speed) setSpeed(e.target.dataset.speed);
+        });
+        document.addEventListener('click', () => speedOptions.classList.remove('show'));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code !== 'Space') return;
+            const tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+            if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
+            e.preventDefault();
+            togglePlay();
+        });
+
+        setVolume(1);
+        updatePlayIcon();
+
+        audio.addEventListener('error', () => {
+            console.warn('Audio failed to load. Check the source URL.');
+            totalLabel.textContent = '-:--';
+        });
+    })();
+</script>
+</body>
+</html>

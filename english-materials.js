@@ -34,8 +34,10 @@
   const allowedSkills = ['listening', 'speaking', 'reading', 'writing', 'all'];
   const allowedCollections = ['full-test', 'practice', 'article', 'writing-sample', 'speaking', 'book', 'all'];
 
-  let skill = allowedSkills.includes(params.get('skill')) ? params.get('skill') : 'reading';
-  let collection = allowedCollections.includes(params.get('collection')) ? params.get('collection') : 'practice';
+  let skill = allowedSkills.includes(params.get('skill')) ? params.get('skill') : (params.has('collection') ? 'all' : 'reading');
+  let collection = allowedCollections.includes(params.get('collection')) 
+    ? params.get('collection') 
+    : (skill === 'all' ? 'all' : (skill === 'writing' ? 'writing-sample' : (skill === 'speaking' ? 'speaking' : 'practice')));
   let query = (params.get('q') || '').trim();
 
   let selectedPassage = params.get('passage') || 'all';
@@ -142,6 +144,14 @@
 
   // 5. Category Meta Configuration
   const getCategoryMeta = (s, c) => {
+    if (s === 'all' || c === 'all') {
+      return {
+        title: 'All Test Library',
+        subtitle: 'Complete library of IELTS practice tests, reading passages, listening sections, and mock exams',
+        icon: 'local_library',
+        breadcrumb: 'All Test Library'
+      };
+    }
     if (c === 'full-test') {
       if (s === 'listening') {
         return {
@@ -158,15 +168,15 @@
         breadcrumb: 'Full Tests > Reading'
       };
     }
-    if (c === 'writing-sample') {
+    if (c === 'writing-sample' || s === 'writing') {
       return {
-        title: 'Writing Tasks',
+        title: 'Writing Practice',
         subtitle: 'Writing Task 1 and Task 2 prompts with high-band model responses',
         icon: 'edit_note',
         breadcrumb: 'Part Practice > Writing'
       };
     }
-    if (c === 'speaking') {
+    if (c === 'speaking' || s === 'speaking') {
       return {
         title: 'Speaking Topics',
         subtitle: 'Speaking topics, cue cards, and high-band answer drills for focused practice',
@@ -186,7 +196,7 @@
       return {
         title: 'Listening Sections',
         subtitle: 'Practice individual listening sections with targeted question types',
-        icon: 'hearing',
+        icon: 'headphones',
         breadcrumb: 'Part Practice > Listening'
       };
     }
@@ -205,12 +215,17 @@
     if (catIconBadge) catIconBadge.textContent = meta.icon;
     if (breadcrumbCurrent) breadcrumbCurrent.textContent = meta.breadcrumb;
     if (search) search.placeholder = `Search ${meta.title.toLowerCase()}...`;
+    document.title = `${meta.title} | IELTS Core`;
   };
 
   const syncUrl = () => {
     const url = new URL(location.href);
     url.searchParams.set('skill', skill);
-    url.searchParams.set('collection', collection);
+    if (skill === 'all' && collection === 'all') {
+      url.searchParams.delete('collection');
+    } else {
+      url.searchParams.set('collection', collection);
+    }
     query ? url.searchParams.set('q', query) : url.searchParams.delete('q');
     selectedPassage === 'all' ? url.searchParams.delete('passage') : url.searchParams.set('passage', selectedPassage);
     selectedStatus === 'all' ? url.searchParams.delete('status') : url.searchParams.set('status', selectedStatus);
@@ -240,6 +255,24 @@
       btn.classList.toggle('active', active);
     });
 
+    document.querySelectorAll('.member-sidebar-nav a').forEach(a => {
+      try {
+        const u = new URL(a.getAttribute('href') || '', location.origin);
+        if (u.pathname === '/english/materials') {
+          const uSkill = u.searchParams.get('skill');
+          const uColl = u.searchParams.get('collection');
+          let isMatch = false;
+          if (uColl === 'article' && collection === 'article') isMatch = true;
+          else if (uSkill === 'all' && skill === 'all') isMatch = true;
+          else if (uSkill && uSkill === skill && collection !== 'article') isMatch = true;
+          else if (!uSkill && !uColl && skill === 'reading' && collection !== 'article') isMatch = true;
+
+          if (isMatch) a.setAttribute('aria-current', 'page');
+          else a.removeAttribute('aria-current');
+        }
+      } catch (_) {}
+    });
+
     updateHeaderAndBreadcrumb();
 
     const normalized = query.trim().toLocaleLowerCase('en');
@@ -257,11 +290,24 @@
         || (collection === 'full-test' && (itemColl === 'full-test' || item.materialKind === 'full-test'))
         || itemColl === collection;
 
-      // Passage filter
+      // Passage / Section filter
       let matchesPassage = true;
       if (selectedPassage !== 'all') {
         const pNum = Number(selectedPassage);
-        matchesPassage = item.passageNumber === pNum;
+        const isFull = item.materialKind === 'full-test' || itemColl === 'full-test';
+        if (isFull) {
+          matchesPassage = false;
+        } else if (item.skill === 'listening') {
+          if (pNum === 1 || pNum === 2) {
+            matchesPassage = (item.title && item.title.includes('Section 1 & 2')) || item.partNumber === pNum;
+          } else if (pNum === 3 || pNum === 4) {
+            matchesPassage = (item.title && item.title.includes('Section 3 & 4')) || item.partNumber === pNum;
+          } else {
+            matchesPassage = item.partNumber === pNum;
+          }
+        } else {
+          matchesPassage = (item.passageNumber || 1) === pNum;
+        }
       }
 
       // Status filter
@@ -336,37 +382,59 @@
       const isFree = item.access === 'free' || item.free === true;
       const isLocked = item.locked;
       const isCompleted = item.completed;
-      const formatTag = item.materialKind === 'full-test' || inferCollection(item) === 'full-test'
-        ? 'Full Test'
-        : item.skill === 'listening'
-          ? 'Listening'
-          : item.skill === 'writing'
-            ? 'Writing'
-            : item.skill === 'speaking'
-              ? 'Speaking'
-              : 'Reading';
-
-      const metaSubtitle = item.questionCount
-        ? `${item.questionCount} Questions · ${item.skill === 'listening' ? 'Audio CDI' : 'Timed'}`
-        : (item.formatLabel || 'Practice');
-
+      const isFull = item.materialKind === 'full-test' || inferCollection(item) === 'full-test';
       const pNum = item.passageNumber || (item.skill === 'listening' ? item.partNumber : 1) || 1;
 
-      // Passage / Section badge text
-      let badgeLabel = `Passage ${pNum}`;
-      if (item.materialKind === 'full-test' || inferCollection(item) === 'full-test') {
-        badgeLabel = 'Full Test';
-      } else if (item.skill === 'listening') {
-        badgeLabel = `Section ${item.partNumber || 1}`;
-      } else if (item.skill === 'writing') {
-        badgeLabel = 'Task 1 & 2';
-      }
+      // Passage / Section badge text & category tags
+      let kickerClass = `tag-passage-${pNum}`;
+      let kickerIcon = 'menu_book';
+      let kickerText = `Passage ${pNum}`;
+      let metaTime = '20 Mins';
+      let metaQuestions = '13–14 Qs';
+      let metaFormat = 'Passage Drill';
 
-      // Graphic center icon
-      let centerIcon = 'menu_book';
-      if (item.skill === 'listening') centerIcon = 'headphones';
-      else if (item.skill === 'writing') centerIcon = 'edit_note';
-      else if (item.skill === 'speaking') centerIcon = 'record_voice_over';
+      if (isFull) {
+        kickerClass = 'tag-full-test';
+        kickerIcon = 'assignment';
+        kickerText = item.skill === 'listening' ? 'Full Listening Test' : 'Academic Full Test';
+        metaTime = item.skill === 'listening' ? '40 Mins' : '60 Mins';
+        metaQuestions = '40 Questions';
+        metaFormat = 'Official CDI Exam';
+      } else if (item.skill === 'listening') {
+        kickerClass = 'tag-section-listening';
+        kickerIcon = 'headphones';
+        metaTime = '15 Mins';
+        metaQuestions = '10–20 Qs';
+        metaFormat = 'Audio Drill';
+        if (item.title && item.title.includes('Section 3 & 4')) {
+          kickerText = 'Section 3 & 4';
+        } else if (item.title && item.title.includes('Section 1 & 2')) {
+          kickerText = 'Section 1 & 2';
+        } else {
+          kickerText = `Section ${item.partNumber || 1}`;
+        }
+      } else if (item.skill === 'writing') {
+        kickerClass = 'tag-writing';
+        kickerIcon = 'edit_note';
+        kickerText = 'Writing Task';
+        metaTime = '40 Mins';
+        metaQuestions = 'Essay Task';
+        metaFormat = 'Timed Writing';
+      } else if (item.skill === 'speaking') {
+        kickerClass = 'tag-speaking';
+        kickerIcon = 'record_voice_over';
+        kickerText = 'Speaking Studio';
+        metaTime = '15 Mins';
+        metaQuestions = '3 Parts';
+        metaFormat = 'AI Examiner';
+      } else {
+        kickerClass = `tag-passage-${pNum}`;
+        kickerIcon = 'menu_book';
+        kickerText = `Passage ${pNum}`;
+        metaTime = '20 Mins';
+        metaQuestions = '13–14 Qs';
+        metaFormat = 'Reading Drill';
+      }
 
       // Question types pills
       const qTypes = Array.isArray(item.questionTypes) && item.questionTypes.length
@@ -374,7 +442,7 @@
         : ['True False Not Given', 'Summary Completion'];
 
       const visibleChips = qTypes.slice(0, 2).map(t => `<span class="vx-qtype-chip">${escape(t)}</span>`).join('');
-      const moreChips = qTypes.length > 2 ? `<span class="vx-qtype-more">+${qTypes.length - 2} more</span>` : '';
+      const moreChips = qTypes.length > 2 ? `<span class="vx-qtype-more">+${qTypes.length - 2}</span>` : '';
 
       // Direct Action Link
       const rawHref = item.href || `/english/${item.skill === 'listening' ? 'listening-exam' : 'reading-exam'}?id=${encodeURIComponent(item.id)}`;
@@ -403,54 +471,63 @@
       let actionBtn = '';
       if (isCompleted) {
         actionBtn = `
-          <div class="vx-card-actions">
-            <a href="${escape(reviewHref)}" class="vx-card-cta-btn review" title="Review your mistakes and answers">
-              <span class="material-symbols-outlined" style="font-size:18px;">equalizer</span>
-              <span>Review Mistakes</span>
-            </a>
-          </div>`;
+          <a href="${escape(reviewHref)}" class="vx-card-cta-btn review" title="Review your mistakes and answers">
+            <span>Review Mistakes</span>
+            <span class="material-symbols-outlined cta-arrow" aria-hidden="true">arrow_forward</span>
+          </a>`;
       } else if (isLocked) {
         actionBtn = `
-          <div class="vx-card-actions">
-            <button type="button" class="vx-card-cta-btn unlock" onclick="window.showUpgradeModal ? window.showUpgradeModal() : location.href='/english/pricing'">
-              <span class="material-symbols-outlined" style="font-size:18px;">lock</span>
-              <span>Get Access</span>
-            </button>
-          </div>`;
+          <button type="button" class="vx-card-cta-btn unlock" onclick="window.showUpgradeModal ? window.showUpgradeModal() : location.href='/english/pricing'">
+            <span class="material-symbols-outlined" style="font-size:16px;" aria-hidden="true">lock</span>
+            <span>Unlock Test</span>
+          </button>`;
       } else {
         actionBtn = `
-          <div class="vx-card-actions">
-            <a href="${escape(href)}" class="vx-card-cta-btn primary">
-              <span class="material-symbols-outlined" style="font-size:18px;">star</span>
-              <span>Start Practice</span>
-            </a>
-          </div>`;
+          <a href="${escape(href)}" class="vx-card-cta-btn primary">
+            <span>Start Practice</span>
+            <span class="material-symbols-outlined cta-arrow" aria-hidden="true">arrow_forward</span>
+          </a>`;
       }
 
       return `
-        <article class="vx-test-card skill-${escape(item.skill || 'reading')}">
-          <div class="vx-card-graphic">
-            <div class="vx-card-graphic-top">
-              <span class="vx-card-badge-max"><span class="material-symbols-outlined" aria-hidden="true">star</span> MAX</span>
-              <span class="vx-card-badge-passage">${escape(badgeLabel)}</span>
-            </div>
-            <div class="vx-card-graphic-center">
-            <span class="material-symbols-outlined vx-card-center-icon" aria-hidden="true">${centerIcon}</span>
-              <span class="vx-card-volume-label">${escape(formatTag)}</span>
-            </div>
+        <article class="vx-test-card skill-${escape(item.skill || 'reading')}${isCompleted ? ' is-completed' : ''}">
+          <div class="vx-card-header-bar">
+            <span class="vx-card-kicker ${kickerClass}">
+              <span class="material-symbols-outlined kicker-icon" aria-hidden="true">${kickerIcon}</span>
+              <span>${escape(kickerText)}</span>
+            </span>
+            <span class="vx-card-meta-pill">
+              <span class="material-symbols-outlined" style="font-size:13px;" aria-hidden="true">${item.skill === 'listening' ? 'headphones' : 'timer'}</span>
+              <span>${escape(metaTime)}</span>
+            </span>
           </div>
+
           <div class="vx-card-body">
-            <h2 class="vx-card-title">${escape(displayTitle)}</h2>
-            <div class="vx-card-sub-pack">
-              <span class="material-symbols-outlined" style="font-size:15px;color:#94a3b8;">quiz</span>
-              <span>${escape(metaSubtitle)}</span>
-              ${isCompleted ? '<span class="vx-completed-badge"><span class="material-symbols-outlined" style="font-size:12px;">check_circle</span> Completed</span>' : ''}
+            <h2 class="vx-card-title" title="${escape(displayTitle)}">${escape(displayTitle)}</h2>
+
+            <div class="vx-card-specs-row">
+              <span class="vx-spec-item">
+                <span class="material-symbols-outlined" style="font-size:14px;" aria-hidden="true">quiz</span>
+                <span>${escape(metaQuestions)}</span>
+              </span>
+              <span class="vx-spec-dot">•</span>
+              <span class="vx-spec-item">
+                <span class="material-symbols-outlined" style="font-size:14px;" aria-hidden="true">verified</span>
+                <span>${escape(metaFormat)}</span>
+              </span>
             </div>
+
             <div class="vx-card-qtypes">
               ${visibleChips}
               ${moreChips}
             </div>
-            ${actionBtn}
+          </div>
+
+          <div class="vx-card-footer">
+            ${isCompleted ? '<span class="vx-completed-badge"><span class="material-symbols-outlined" style="font-size:13px;" aria-hidden="true">check_circle</span> Completed</span>' : ''}
+            <div class="vx-card-actions">
+              ${actionBtn}
+            </div>
           </div>
         </article>`;
     }).join('');
@@ -473,6 +550,29 @@
   };
 
   // 7. Event Handlers
+  document.addEventListener('click', e => {
+    const link = e.target.closest('.member-sidebar-nav a[href*="/english/materials"]');
+    if (!link) return;
+    try {
+      const u = new URL(link.getAttribute('href'), location.origin);
+      if (u.pathname === '/english/materials') {
+        e.preventDefault();
+        const targetSkill = u.searchParams.get('skill');
+        const targetCollection = u.searchParams.get('collection');
+        skill = targetSkill || 'all';
+        collection = targetCollection || (skill === 'all' ? 'all' : 'practice');
+        if (targetCollection) collection = targetCollection;
+        selectedPassage = 'all';
+        if (filterPassage) filterPassage.value = 'all';
+        syncUrl();
+        render();
+        document.querySelectorAll('.member-sidebar-nav a').forEach(a => a.removeAttribute('aria-current'));
+        link.setAttribute('aria-current', 'page');
+        document.body.classList.remove('member-sidebar-open');
+      }
+    } catch (_) {}
+  });
+
   document.querySelectorAll('[data-side-skill]').forEach(btn => {
     btn.addEventListener('click', () => {
       skill = btn.dataset.sideSkill;
@@ -567,8 +667,7 @@
       .then(res => {
         if (res.status === 401) {
           localStorage.removeItem('vortex-english-token');
-          location.replace(`/english/login?next=${encodeURIComponent(location.pathname + location.search)}`);
-          throw new Error('AUTH_REDIRECT');
+          return fetch('/api/resources').then(r => r.ok ? r.json() : []);
         }
         return res.ok ? res.json() : Promise.reject(new Error('Network response was not ok'));
       })

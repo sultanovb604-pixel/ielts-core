@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Listening Practice – Part 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --primary-color: #1e6de6;
+            --secondary-bg: #f8f9fa;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --highlight-color: #ffe066;
+            --highlight-text-color: #333333;
+            
+            --font-size: 16px;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --track-color: #dddddd;
+            --accent-color: #4a6cf7;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --border-color: #444444;
+            --primary-color: #4a90e2;
+            --secondary-bg: #2d2d2d;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --highlight-color: #ffd700;
+            --highlight-text-color: #000000;
+            
+            --input-bg: #2d2d2d;
+            --input-text: #ffffff;
+            --track-color: #4a4a4a;
+            --accent-color: #6d8bff;
+        }
+
+        .font-small { --font-size: 14px; }
+        .font-medium { --font-size: 16px; }
+        .font-large { --font-size: 18px; }
+        .font-xlarge { --font-size: 20px; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            font-size: var(--font-size);
+            padding-bottom: 90px;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+
+        
+
+        .highlight {
+            background-color: var(--highlight-color);
+            color: var(--highlight-text-color) !important;
+            font-weight: 600;
+            padding: 1px 3px;
+            border-radius: 2px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        [data-theme="dark"] .highlight {
+            background-color: var(--highlight-color);
+            color: #000000 !important;
+            text-shadow: none;
+        }
+
+        /* ===== Comment (Note) highlight ===== */
+        .comment-highlight {
+            background-color: #90EE90;
+            position: relative;
+            cursor: help;
+            color: #000000 !important;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        [data-theme="dark"] .comment-highlight { background-color: #006400; color: #ffffff !important; }
+        .comment-tooltip {
+            position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            background: #333; color: #fff; padding: 8px 12px; border-radius: 4px;
+            font-size: 14px; white-space: nowrap; z-index: 1000; opacity: 0;
+            pointer-events: none; transition: opacity 0.3s;
+        }
+        .comment-highlight:hover .comment-tooltip { opacity: 1; }
+
+        /* ===== Selection toolbar ===== */
+        #selection-toolbar {
+            position: absolute; display: none; gap: 4px; background: var(--bg-color);
+            border: 1px solid var(--border-color); border-radius: 6px; padding: 4px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.18); z-index: 1500;
+        }
+        #selection-toolbar button {
+            background: var(--primary-color); color: #fff; border: none; border-radius: 4px;
+            padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+        }
+        #selection-toolbar button.secondary {
+            background: var(--secondary-bg); color: var(--text-color); border: 1px solid var(--border-color);
+        }
+        #selection-toolbar button:hover { opacity: 0.9; }
+
+        /* ===== Clear-all highlight button ===== */
+        .tool-btn {
+            width: 32px; height: 32px; border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color); color: var(--text-color);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .tool-btn:hover { background-color: var(--secondary-bg); }
+
+        /* ===================================================================
+           AUDIO PLAYER
+           =================================================================== */
+        .audio-player-container {
+            position: fixed; top: 65px; left: 50%; transform: translateX(-50%);
+            width: 500px; max-width: 90%; height: 40px;
+            background: var(--secondary-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; display: flex; align-items: center; padding: 0 15px;
+            z-index: 99; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .player-btn {
+            background: none; border: none; cursor: pointer; padding: 5px;
+            display: flex; align-items: center; justify-content: center; color: var(--text-color);
+        }
+        .player-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        #volume-btn svg { fill: none; stroke: currentColor; stroke-width: 2; }
+        .progress-container { flex-grow: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+        #progress-bar {
+            flex-grow: 1; -webkit-appearance: none; appearance: none; height: 4px;
+            background: var(--track-color, #ddd); outline: none; border-radius: 3px; cursor: pointer;
+        }
+        #progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+            background: var(--accent-color, #4a6cf7); cursor: pointer;
+        }
+        #progress-bar::-moz-range-thumb {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--accent-color, #4a6cf7); border: none; cursor: pointer;
+        }
+        #current-time, #total-duration {
+            font-size: 12px; color: var(--text-color); opacity: 0.8;
+            min-width: 35px; text-align: center; font-variant-numeric: tabular-nums;
+        }
+        .controls-container { display: flex; align-items: center; gap: 10px; }
+        #new-volume-slider {
+            -webkit-appearance: none; appearance: none; width: 60px; height: 3px;
+            background: var(--track-color, #ddd); outline: none; border-radius: 2px; cursor: pointer; margin-left: 8px;
+        }
+        #new-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%;
+            background: var(--text-color); cursor: pointer;
+        }
+        #new-volume-slider::-moz-range-thumb {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: var(--text-color); border: none; cursor: pointer;
+        }
+        .speed-container { position: relative; }
+        #speed-btn {
+            font-size: 12px; font-weight: 600; color: var(--text-color);
+            background-color: var(--bg-color); border: 1px solid var(--border-color);
+            border-radius: 4px; padding: 4px 8px; cursor: pointer;
+        }
+        #speed-options {
+            position: absolute; top: calc(100% + 5px); right: 0; background: var(--bg-color);
+            border: 1px solid var(--border-color); border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1200;
+        }
+        #speed-options div { padding: 8px 15px; cursor: pointer; font-size: 13px; color: var(--text-color); }
+        #speed-options div:hover { background-color: var(--secondary-bg); }
+        #speed-options div.active { color: var(--accent-color, #4a6cf7); font-weight: 600; }
+        #global-audio-player { display: none; }
+
+        .header {
+            background-color: var(--bg-color);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .ielts-logo {
+            height: 55px;
+            width: auto;
+            display: block;
+        }
+
+        
+        
+
+        .header-icons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .font-size-container { position: relative; }
+        .font-size-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .font-size-btn:hover { background-color: var(--secondary-bg); }
+        .font-size-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px 0;
+            min-width: 120px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .font-size-options.show { display: block; }
+        .font-size-options div {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .font-size-options div:hover { background-color: var(--secondary-bg); }
+
+        .dark-mode-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .dark-mode-btn:hover { background-color: var(--secondary-bg); }
+        .sun-icon, .moon-icon {
+            position: absolute;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .sun-icon { opacity: 1; transform: scale(1); }
+        .moon-icon { opacity: 0; transform: scale(0.5); }
+        [data-theme="dark"] .sun-icon { opacity: 0; transform: scale(0.5); }
+        [data-theme="dark"] .moon-icon { opacity: 1; transform: scale(1); }
+
+        .main-container {
+            margin-top: 115px;
+            display: flex;
+            background: var(--bg-color);
+            padding-bottom: 100px;
+            transition: background-color 0.3s;
+        }
+
+        .left-panel {
+            width: 100%;
+            padding: 20px;
+            transition: width 0.4s ease;
+        }
+
+        .main-container.results-mode .left-panel {
+            width: 75%;
+            overflow-y: auto;
+            height: calc(100vh - 195px);
+        }
+
+        .right-panel {
+            display: none;
+            width: 25%;
+            padding: 20px;
+            border-left: 1px solid var(--border-color);
+            overflow-y: auto;
+            height: calc(100vh - 195px);
+            background-color: var(--bg-color);
+        }
+
+        .main-container.results-mode .right-panel {
+            display: block;
+        }
+
+        .part-header {
+            background-color: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .centered-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .answer-input {
+            border: 1px solid #9aa3ad;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            padding: 4px 8px;
+            font-size: 16px;
+            margin: 0 5px;
+            width: 140px;
+            max-width: 160px;
+            min-width: 120px;
+            height: 28px;
+            vertical-align: middle;
+            font-weight: 600;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        [data-theme="dark"] .answer-input,
+        [data-theme="dark"] .answer-input:focus {
+            background-color: var(--input-bg);
+            color: #ffffff !important;
+            border-color: #666;
+        }
+        [data-theme="dark"] .answer-input::placeholder { color: #999; }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #2c6bed;
+            border-width: 2px;
+        }
+        .answer-input.correct {
+            border-color: var(--correct-color);
+            background-color: #e9f7ef;
+            color: #155724;
+        }
+        .answer-input.incorrect {
+            border-color: var(--incorrect-color);
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        [data-theme="dark"] .answer-input.correct {
+            background-color: #14532d;
+            color: #ffffff !important;
+        }
+        [data-theme="dark"] .answer-input.incorrect {
+            background-color: #5c1a1f;
+            color: #ffffff !important;
+        }
+
+        .correct-inline {
+            color: var(--correct-color);
+            font-weight: 700;
+            margin-left: 10px;
+            display: inline-block;
+        }
+        .correct-inline::before { content: "→ "; }
+
+        .nav-arrows {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            z-index: 101;
+        }
+        .nav-arrow {
+            width: 50px;
+            height: 50px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .nav-arrow:disabled { background: #ccc; cursor: not-allowed; }
+
+        .nav-row {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            height: 80px;
+            z-index: 100;
+            padding: 0 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .footer__questionWrapper__1tZ46 {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .footer__questionNo__3WNct {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        .footer__subquestionWrapper__9GgoP {
+            display: flex;
+            gap: 2px;
+            margin-left: 10px;
+        }
+        .subQuestion {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+        }
+        .subQuestion.answered { background-color: var(--secondary-bg); }
+        .subQuestion.correct { background-color: var(--correct-color); color: white; border-color: var(--correct-color); }
+        .subQuestion.incorrect { background-color: var(--incorrect-color); color: white; border-color: var(--incorrect-color); }
+        .subQuestion.active { background-color: var(--primary-color); color: white; }
+
+        .footer__deliverButton__3FM07 {
+            margin-left: auto;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 170px;
+            justify-content: center;
+        }
+        .footer__deliverButton__3FM07:hover { background-color: #e0e0e0; }
+        .footer__deliverButton__3FM07.success { background-color: var(--correct-color); color: #fff; border-color: var(--correct-color); }
+
+        .context-menu {
+            position: absolute;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            min-width: 140px;
+        }
+        .context-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--secondary-bg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .context-menu-item:hover { background-color: var(--secondary-bg); }
+        .context-menu-item:last-child { border-bottom: none; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: var(--bg-color);
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        @keyframes flash {
+            0% { background-color: #e6f4ff; }
+            100% { background-color: transparent; }
+        }
+        .question.flash { animation: flash 1s ease-out; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="https://i.pinimg.com/736x/88/93/a8/8893a81fed78f6989142a13e3605c45e.jpg" alt="IELTS Logo" class="ielts-logo">
+            
+        </div>
+        <div class="header-icons">
+            <button class="tool-btn" id="clear-all-btn" title="Clear all highlights">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 9h-2.29l3-3-1.42-1.42-3 3V5h-2v2.29l-3-3-1.42 1.42 3 3H5v2h2.29l-3 3 1.42 1.42 3-3V17h2v-2.29l3 3 1.42-1.42-3-3H17V9h-2zm-4 4h-2v-2h2v2z"/></svg>
+            </button>
+            <div class="font-size-container">
+                <button class="font-size-btn" id="font-size-toggle" title="Adjust Font Size">A</button>
+                <div id="font-size-options" class="font-size-options">
+                    <div data-size="small">Small</div>
+                    <div data-size="medium">Medium</div>
+                    <div data-size="large">Large</div>
+                    <div data-size="xlarge">Extra Large</div>
+                </div>
+            </div>
+            <button class="dark-mode-btn" id="dark-mode-toggle" title="Toggle Dark Mode">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= AUDIO PLAYER ================= -->
+    <div class="audio-player-container">
+        <button id="play-pause-btn" class="player-btn" aria-label="Play / Pause">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="progress-container">
+            <span id="current-time">0:00</span>
+            <input type="range" id="progress-bar" value="0" step="1" min="0" max="100" aria-label="Seek">
+            <span id="total-duration">0:00</span>
+        </div>
+        <div class="controls-container">
+            <div style="display:flex;align-items:center;">
+                <button id="volume-btn" class="player-btn" aria-label="Toggle mute">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                </button>
+                <input type="range" id="new-volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+            </div>
+            <div class="speed-container">
+                <button id="speed-btn" class="player-btn">1x</button>
+                <div id="speed-options" class="hidden">
+                    <div data-speed="0.5">0.5x</div>
+                    <div data-speed="0.75">0.75x</div>
+                    <div data-speed="1" class="active">1x</div>
+                    <div data-speed="1.25">1.25x</div>
+                    <div data-speed="1.5">1.5x</div>
+                    <div data-speed="2">2x</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="global-audio-player" preload="metadata"
+           src="https://ia600804.us.archive.org/26/items/0803_20260803/0803.MP3"></audio>
+
+    <div class="main-container">
+        <div class="left-panel">
+            <div id="part-4" class="question-part">
+                <div class="part-header">
+                    <p><strong>Part 4</strong></p>
+                    <p>Listen and answer questions 31-40.</p>
+                </div>
+                <div class="questions-container">
+                    <div class="question">
+                        <div class="question-prompt">
+                            <p><strong>Questions 31–40</strong></p>
+                            <p>Complete the notes below.</p>
+                            <p>Write <strong>ONE WORD ONLY</strong> for each answer.</p>
+                        </div>
+                        <p class="centered-title"><strong>Providing IT support for University Teachers</strong></p>
+
+                        <p><strong>Problems</strong></p>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li>In the past, some people believed that the use of <strong>31</strong> <input type="text" id="q31" class="answer-input" placeholder="31" autocomplete="off"> failed to help students interact with teachers.</li>
+                        </ul>
+
+                        <p><strong>Qualities to look for in mentors</strong></p>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li>Students enjoy the <strong>32</strong> <input type="text" id="q32" class="answer-input" placeholder="32" autocomplete="off"> with teachers.</li>
+                        </ul>
+
+                        <p><strong>Advantages:</strong></p>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li>IT in education develops a tight <strong>33</strong> <input type="text" id="q33" class="answer-input" placeholder="33" autocomplete="off"> with the local economy.</li>
+                        </ul>
+
+                        <p><strong>For teachers:</strong></p>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li>Computers are commonly used to develop teaching <strong>34</strong> <input type="text" id="q34" class="answer-input" placeholder="34" autocomplete="off"></li>
+                            <li>New technology builds up greater <strong>35</strong> <input type="text" id="q35" class="answer-input" placeholder="35" autocomplete="off"> for students.</li>
+                            <li>Compared with traditional teaching, the new way is more <strong>36</strong> <input type="text" id="q36" class="answer-input" placeholder="36" autocomplete="off"></li>
+                            <li>It offers students quality <strong>37</strong> <input type="text" id="q37" class="answer-input" placeholder="37" autocomplete="off"></li>
+                        </ul>
+
+                        <p><strong>For students:</strong></p>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li>It is seen as a new solution to new <strong>38</strong> <input type="text" id="q38" class="answer-input" placeholder="38" autocomplete="off"></li>
+                            <li>It nurtures <strong>39</strong> <input type="text" id="q39" class="answer-input" placeholder="39" autocomplete="off"> management skills.</li>
+                            <li>It also provides students a source of <strong>40</strong> <input type="text" id="q40" class="answer-input" placeholder="40" autocomplete="off"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel" id="transcription-panel">
+            <h2>Transcription</h2>
+            <div id="transcription-text"></div>
+        </div>
+    </div>
+
+    <!-- Hidden transcription data -->
+    <div id="transcription-data" style="display:none;">
+        <div data-part="4">
+            <strong>SECTION 4</strong><br><br>
+            Questions 31-40<br><br>
+            Hello and welcome to today's seminar about education. Education is a lifelong process. There is no limit on when to start and stop, and we have been using technology so much these days in each and every sector of our lives, including education. Have we ever taken out a second to wonder if it's leaving a positive impact on our work, or it's just that we have been relying on it so much that we've become used to it. Yes, there used to be some problems here. Earlier, there was a lot of debate about technology and education amongst the faculty at our school. Everyone had their own views. At first, some believed that the use of <span class="highlight">email</span> made students and teachers interact with each other rather less, and this was not a good thing. In terms of characteristics to consider when seeking mentors, this practice involves a kind of software which allows students, as well as teachers, to talk and discuss with each other more easily, and they said they enjoy this way of <span class="highlight">communication</span>. But gradually, as technology was embraced by more educational institutes, they realised the importance of technology in education. The main benefit is that there is a strong <span class="highlight">relationship</span> with the local economy when it comes to the effectiveness of the use of IT in education. In the more developed areas, the schools and institutions have better access to more advanced technology, and the teachers are better trained to use the technology to improve the quality of their classes. In contrast, in some less developed regions and remote areas where technology is not so common, the effectiveness can't be guaranteed. However, wherever they are, the most common example for teachers using technology in education is the usage of computers in their <span class="highlight">methods</span> of incorporating computers into teaching. In most classrooms, the mode offers students a channel to post any work that they are proud of, whether it's a nice photograph that they take, a case study they do, a song they record, or even just a great idea they have, so it gives them a chance to showcase their strength and build up their <span class="highlight">confidence</span>. Many students use this feature to show the best of themselves. It also provides students an opportunity to choose what they learn on the Internet, so they no longer have to sit in the classroom listening to something they aren't bored with and they don't have to wait all night trying to register for their favorite elective courses. Compared with the traditional platform, it is more <span class="highlight">flexible</span>. The open source which the new mode provides is free for students to use when they are trying to look up online for their papers or researchers and the data will not easily be found on the Internet because only registered users have access to the database. By the way, all the materials are original works of teachers or scholars, so there is no need to worry about the quality of the <span class="highlight">content</span>, and with the overwhelming amount of unwanted information on the Internet, this mode gives students a new search engine they can use on campus, so information like advertisements and sceptical sources will be filtered easily. This is a perfect example that can offer some hope of reducing <span class="highlight">problems</span>. Apart from that, students can arrange their daily activities and improve their <span class="highlight">time</span> management skills by simply ticking the boxes in the timetable online. They can set up their own starting time and their deadline for each assignment. The system also gives them a reliable source of <span class="highlight">information</span>.
+        </div>
+    </div>
+
+    <div class="nav-arrows">
+        <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+        <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+    </div>
+
+    <nav class="nav-row" aria-label="Questions">
+        <div class="footer__questionWrapper__1tZ46 multiple">
+            <button class="footer__questionNo__3WNct" onclick="goToQuestion(31)">
+                <span>Part 4 <span style="font-size:14px;" id="answered-count">0 of 10</span></span>
+            </button>
+            <div class="footer__subquestionWrapper__9GgoP">
+                <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+                <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+                <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+                <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+                <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+                <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+                <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+                <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+                <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+                <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+            </div>
+        </div>
+        <button id="deliver-button" class="footer__deliverButton__3FM07">Check Answers</button>
+    </nav>
+
+    <div id="contextMenu" class="context-menu">
+        <div class="context-menu-item" onclick="highlightText()">Highlight</div>
+        <div class="context-menu-item" onclick="clearAllHighlights()">Clear All</div>
+    </div>
+
+    <div id="selection-toolbar">
+        <button onclick="applyHighlight()">Highlight</button>
+        <button class="secondary" onclick="addComment()">Note</button>
+        <button class="secondary" onclick="clearSelectionHighlight()">Clear</button>
+    </div>
+
+    <div id="result-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Results</h2>
+                <button id="modal-close-button" class="modal-close-btn">&times;</button>
+            </div>
+            <p id="score-summary"></p>
+            <div id="result-details"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 31;
+        let selectedRange = null;
+
+        const body = document.body;
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const fontSizeToggle = document.getElementById('font-size-toggle');
+        const fontSizeOptions = document.getElementById('font-size-options');
+
+        // Answer key for Part 4
+        const correctAnswers = {
+            q31: 'email',
+            q32: 'communication',
+            q33: 'relationship',
+            q34: 'methods',
+            q35: 'confidence',
+            q36: 'flexible',
+            q37: 'content',
+            q38: 'problems',
+            q39: 'time',
+            q40: 'information'
+        };
+
+        function initDarkMode() {
+            const saved = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', saved);
+        }
+        function toggleDarkMode() {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+        function changeFontSize(size) {
+            body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+            body.classList.add(`font-${size}`);
+            localStorage.setItem('fontSize', size);
+            fontSizeOptions.classList.remove('show');
+        }
+        function initFontSize() {
+            const saved = localStorage.getItem('fontSize') || 'medium';
+            changeFontSize(saved);
+        }
+
+        function goToQuestion(qNum) {
+            if (qNum < 31 || qNum > 40) return;
+            currentQuestion = qNum;
+            document.querySelectorAll('.subQuestion').forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${qNum})"]`);
+            if (btn) btn.classList.add('active');
+            document.getElementById('prevBtn').disabled = currentQuestion === 31;
+            document.getElementById('nextBtn').disabled = currentQuestion === 40;
+
+            const inputEl = document.getElementById(`q${qNum}`);
+            if (inputEl) {
+                const container = inputEl.closest('.question') || inputEl.closest('ul');
+                if (container) {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    container.classList.add('flash');
+                    setTimeout(() => container.classList.remove('flash'), 1000);
+                }
+            }
+        }
+
+        function nextQuestion() { if (currentQuestion < 40) goToQuestion(currentQuestion + 1); }
+        function previousQuestion() { if (currentQuestion > 31) goToQuestion(currentQuestion - 1); }
+
+        function updateAnsweredIndicators() {
+            for (let q = 31; q <= 40; q++) {
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+                if (!btn) continue;
+                if (btn.classList.contains('correct') || btn.classList.contains('incorrect')) continue;
+                const input = document.getElementById(`q${q}`);
+                const answered = input && input.value.trim() !== '';
+                btn.classList.toggle('answered', answered);
+            }
+            const count = document.querySelectorAll('.subQuestion.answered, .subQuestion.correct, .subQuestion.incorrect').length;
+            document.getElementById('answered-count').textContent = `${count} of 10`;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            let resultsData = [];
+            document.querySelectorAll('.correct, .incorrect, .correct-inline').forEach(el => {
+                if (el.classList.contains('correct-inline')) el.remove();
+                else el.classList.remove('correct', 'incorrect');
+            });
+
+            for (let q = 31; q <= 40; q++) {
+                const key = `q${q}`;
+                const correct = correctAnswers[key].toLowerCase();
+                const input = document.getElementById(key);
+                let userAnswer = '';
+                let isCorrect = false;
+
+                if (input) {
+                    userAnswer = input.value.trim();
+                    isCorrect = userAnswer.toLowerCase() === correct;
+                    input.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (!isCorrect) {
+                        const span = document.createElement('span');
+                        span.className = 'correct-inline';
+                        span.textContent = correctAnswers[key];
+                        input.insertAdjacentElement('afterend', span);
+                    }
+                }
+
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+                if (btn) {
+                    btn.classList.remove('answered');
+                    btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                resultsData.push({
+                    question: q,
+                    userAnswer: userAnswer || 'No Answer',
+                    correctAnswer: correctAnswers[key],
+                    isCorrect
+                });
+                if (isCorrect) score++;
+            }
+
+            document.querySelectorAll('.answer-input').forEach(input => input.disabled = true);
+
+            // Show transcription panel in results mode
+            document.querySelector('.main-container').classList.add('results-mode');
+            const transcriptionSource = document.querySelector('#transcription-data [data-part="4"]');
+            document.getElementById('transcription-text').innerHTML = transcriptionSource ? transcriptionSource.innerHTML : '';
+
+            const modal = document.getElementById('result-modal');
+            document.getElementById('score-summary').textContent = `You scored ${score} out of 10`;
+            let tableHTML = `<table style="width:100%; border-collapse:collapse;"><tr><th>Q</th><th>Your Answer</th><th>Correct</th><th>Result</th></tr>`;
+            resultsData.forEach(r => {
+                tableHTML += `<tr>
+                    <td>${r.question}</td>
+                    <td>${r.userAnswer}</td>
+                    <td>${r.correctAnswer}</td>
+                    <td style="color:${r.isCorrect ? 'green' : 'red'}">${r.isCorrect ? '✔' : '✖'}</td>
+                </tr>`;
+            });
+            tableHTML += '</table>';
+            document.getElementById('result-details').innerHTML = tableHTML;
+            modal.style.display = 'flex';
+
+            const deliverBtn = document.getElementById('deliver-button');
+            deliverBtn.classList.add('success');
+            deliverBtn.innerHTML = '<span>My Results</span>';
+            deliverBtn.disabled = false;
+            deliverBtn.onclick = () => { modal.style.display = 'flex'; };
+        }
+
+        // --- Highlighting functionality ---
+        const selToolbar = document.getElementById('selection-toolbar');
+        let currentSelectionRange = null;
+
+        function saveSelection() {
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0 && !sel.isCollapsed && sel.toString().trim() !== '') {
+                currentSelectionRange = sel.getRangeAt(0).cloneRange();
+                selectedRange = currentSelectionRange;
+                return true;
+            }
+            return false;
+        }
+
+        function showSelectionToolbar() {
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0 || sel.isCollapsed || sel.toString().trim() === '') { hideSelectionToolbar(); return; }
+            const range = sel.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            if (rect.width === 0 && rect.height === 0) { hideSelectionToolbar(); return; }
+            currentSelectionRange = range.cloneRange();
+            selToolbar.style.display = 'flex';
+            let top = window.scrollY + rect.top - selToolbar.offsetHeight - 8;
+            let left = window.scrollX + rect.left + rect.width / 2 - selToolbar.offsetWidth / 2;
+            if (top < window.scrollY + 5) top = window.scrollY + rect.bottom + 8;
+            left = Math.max(8, Math.min(left, window.scrollX + document.documentElement.clientWidth - selToolbar.offsetWidth - 8));
+            selToolbar.style.top = top + 'px';
+            selToolbar.style.left = left + 'px';
+        }
+
+        function hideSelectionToolbar() { selToolbar.style.display = 'none'; }
+
+        function mergeAdjacentHighlights(root) {
+            root.querySelectorAll('span.highlight').forEach(span => {
+                let next = span.nextSibling;
+                while (next && next.nodeType === 1 && next.classList && next.classList.contains('highlight')) {
+                    while (next.firstChild) span.appendChild(next.firstChild);
+                    const toRemove = next; next = next.nextSibling; toRemove.remove();
+                }
+                span.normalize();
+            });
+        }
+
+        function applyHighlight() {
+            const range = currentSelectionRange;
+            if (!range || range.collapsed) { hideSelectionToolbar(); return; }
+            try {
+                if (range.startContainer === range.endContainer && range.startContainer.nodeType === Node.TEXT_NODE) {
+                    const span = document.createElement('span'); span.className = 'highlight';
+                    range.surroundContents(span);
+                } else {
+                    const frag = range.extractContents();
+                    const span = document.createElement('span'); span.className = 'highlight';
+                    span.appendChild(frag); range.insertNode(span);
+                }
+            } catch (err) { console.warn('Highlight failed:', err); }
+            mergeAdjacentHighlights(document.body);
+            const sel = window.getSelection(); if (sel) sel.removeAllRanges();
+            currentSelectionRange = null; hideSelectionToolbar();
+        }
+
+        function addComment() {
+            const range = currentSelectionRange;
+            if (!range || range.collapsed) { hideSelectionToolbar(); return; }
+            const commentText = prompt('Enter your note:');
+            if (!commentText) { hideSelectionToolbar(); return; }
+            try {
+                const span = document.createElement('span'); span.className = 'comment-highlight';
+                const tooltip = document.createElement('span'); tooltip.className = 'comment-tooltip'; tooltip.textContent = commentText;
+                const frag = range.extractContents();
+                span.appendChild(frag); span.appendChild(tooltip); range.insertNode(span);
+            } catch (err) { console.warn('Comment failed:', err); }
+            const sel = window.getSelection(); if (sel) sel.removeAllRanges();
+            currentSelectionRange = null; hideSelectionToolbar();
+        }
+
+        function clearSelectionHighlight() {
+            const range = currentSelectionRange;
+            if (!range) { hideSelectionToolbar(); return; }
+            document.querySelectorAll('.highlight, .comment-highlight').forEach(el => {
+                let intersects = false;
+                try { intersects = range.intersectsNode(el); } catch (e) { intersects = false; }
+                if (intersects) {
+                    const parent = el.parentNode;
+                    while (el.firstChild) {
+                        if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) el.removeChild(el.firstChild);
+                        else parent.insertBefore(el.firstChild, el);
+                    }
+                    parent.removeChild(el); parent.normalize();
+                }
+            });
+            const sel = window.getSelection(); if (sel) sel.removeAllRanges();
+            currentSelectionRange = null; hideSelectionToolbar();
+        }
+
+        // Legacy right-click menu handler (kept for context menu)
+        function highlightText() {
+            saveSelection();
+            applyHighlight();
+            closeContextMenu();
+        }
+
+        function clearAllHighlights() {
+            document.querySelectorAll('.highlight, .comment-highlight').forEach(el => {
+                const parent = el.parentNode;
+                while (el.firstChild) {
+                    if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) el.removeChild(el.firstChild);
+                    else parent.insertBefore(el.firstChild, el);
+                }
+                parent.removeChild(el); parent.normalize();
+            });
+            closeContextMenu();
+        }
+
+        function closeContextMenu() { document.getElementById('contextMenu').style.display = 'none'; }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            initFontSize();
+            goToQuestion(31);
+
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            fontSizeToggle.addEventListener('click', () => fontSizeOptions.classList.toggle('show'));
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.font-size-container')) fontSizeOptions.classList.remove('show');
+            });
+            document.querySelectorAll('.font-size-options div').forEach(opt => {
+                opt.addEventListener('click', () => changeFontSize(opt.dataset.size));
+            });
+            document.getElementById('deliver-button').addEventListener('click', checkAnswers);
+            document.getElementById('modal-close-button').addEventListener('click', () => {
+                document.getElementById('result-modal').style.display = 'none';
+            });
+
+            document.querySelectorAll('.answer-input').forEach(input => {
+                input.addEventListener('input', updateAnsweredIndicators);
+            });
+
+            document.getElementById('clear-all-btn').addEventListener('click', clearAllHighlights);
+
+            document.addEventListener('mouseup', (e) => {
+                if (e.target.closest('.audio-player-container')) return;
+                if (e.target.closest('#selection-toolbar')) return;
+                setTimeout(showSelectionToolbar, 0);
+            });
+            document.addEventListener('touchend', (e) => {
+                if (e.target.closest('.audio-player-container')) return;
+                if (e.target.closest('#selection-toolbar')) return;
+                setTimeout(showSelectionToolbar, 0);
+            });
+            document.addEventListener('mousedown', (e) => { if (!e.target.closest('#selection-toolbar')) hideSelectionToolbar(); });
+            window.addEventListener('scroll', hideSelectionToolbar, true);
+
+            document.body.addEventListener('contextmenu', (e) => {
+                const selection = window.getSelection().toString();
+                if (!selection) return;
+                e.preventDefault();
+                const menu = document.getElementById('contextMenu');
+                menu.style.left = e.pageX + 'px';
+                menu.style.top = e.pageY + 'px';
+                menu.style.display = 'block';
+            });
+            document.body.addEventListener('click', (e) => {
+                if (!e.target.closest('.context-menu')) closeContextMenu();
+            });
+            document.addEventListener('selectionchange', () => { saveSelection(); });
+        });
+
+        /* ===================================================================
+           AUDIO PLAYER
+           =================================================================== */
+        (function () {
+            'use strict';
+            const audio = document.getElementById('global-audio-player');
+            const playBtn = document.getElementById('play-pause-btn');
+            const progress = document.getElementById('progress-bar');
+            const currentLabel = document.getElementById('current-time');
+            const totalLabel = document.getElementById('total-duration');
+            const volumeSlider = document.getElementById('new-volume-slider');
+            const volumeBtn = document.getElementById('volume-btn');
+            const speedBtn = document.getElementById('speed-btn');
+            const speedOptions = document.getElementById('speed-options');
+            let isDragging = false;
+
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return m + ':' + (s < 10 ? '0' : '') + s;
+            }
+            function togglePlay() {
+                if (audio.paused) { audio.play().catch(() => {}); } else { audio.pause(); }
+            }
+            function updatePlayIcon() {
+                playBtn.innerHTML = audio.paused
+                    ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
+                    : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+            }
+            function updateVolumeIcon(val) {
+                const v = val !== undefined ? val : audio.volume;
+                const icon = volumeBtn.querySelector('svg');
+                if (v === 0) {
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+                } else if (v < 0.5) {
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                } else {
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                }
+            }
+            function setVolume(val) {
+                const v = Math.min(1, Math.max(0, parseFloat(val)));
+                audio.volume = v; volumeSlider.value = v; updateVolumeIcon(v);
+            }
+            function toggleMute() {
+                if (audio.volume > 0) { audio.dataset.prevVolume = audio.volume; setVolume(0); }
+                else { setVolume(parseFloat(audio.dataset.prevVolume) || 0.8); }
+            }
+            function setSpeed(val) {
+                const speed = parseFloat(val);
+                if (isNaN(speed)) return;
+                audio.playbackRate = speed;
+                speedBtn.textContent = speed + 'x';
+                speedOptions.querySelectorAll('div').forEach(el => el.classList.toggle('active', parseFloat(el.dataset.speed) === speed));
+                speedOptions.classList.add('hidden');
+            }
+
+            playBtn.addEventListener('click', togglePlay);
+            audio.addEventListener('play', updatePlayIcon);
+            audio.addEventListener('pause', updatePlayIcon);
+            audio.addEventListener('ended', () => { updatePlayIcon(); progress.value = 0; currentLabel.textContent = formatTime(0); });
+            audio.addEventListener('loadedmetadata', () => {
+                progress.max = audio.duration;
+                totalLabel.textContent = formatTime(audio.duration);
+                currentLabel.textContent = formatTime(audio.currentTime);
+            });
+            audio.addEventListener('timeupdate', () => {
+                if (isDragging) return;
+                progress.value = audio.currentTime;
+                currentLabel.textContent = formatTime(audio.currentTime);
+            });
+            progress.addEventListener('mousedown', () => { isDragging = true; });
+            progress.addEventListener('mouseup', () => { isDragging = false; });
+            progress.addEventListener('touchstart', () => { isDragging = true; });
+            progress.addEventListener('touchend', () => { isDragging = false; });
+            progress.addEventListener('input', () => {
+                audio.currentTime = progress.value;
+                currentLabel.textContent = formatTime(progress.value);
+            });
+            volumeSlider.addEventListener('input', (e) => {
+                const v = parseFloat(e.target.value);
+                audio.volume = v; updateVolumeIcon(v);
+            });
+            volumeBtn.addEventListener('click', toggleMute);
+            speedBtn.addEventListener('click', (e) => { e.stopPropagation(); speedOptions.classList.toggle('hidden'); });
+            speedOptions.addEventListener('click', (e) => { if (e.target.dataset.speed) setSpeed(e.target.dataset.speed); });
+            document.addEventListener('click', () => speedOptions.classList.add('hidden'));
+
+            document.addEventListener('keydown', (e) => {
+                if (e.code !== 'Space') return;
+                const tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+                if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
+                e.preventDefault();
+                togglePlay();
+            });
+
+            setVolume(1);
+            updatePlayIcon();
+            audio.addEventListener('error', () => {
+                console.warn('Audio failed to load. Check the source URL.');
+                totalLabel.textContent = '-:--';
+            });
+        })();
+    </script>
+</body>
+</html>

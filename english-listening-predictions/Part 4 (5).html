@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS CDI Listening Practice – Part 4</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --primary-color: #1e6de6;
+            --secondary-bg: #f8f9fa;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --highlight-color: #ffe066;
+            --highlight-text-color: #333333;
+            
+            --font-size: 16px;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --placeholder-color: #999;
+            --track-color: #dddddd;
+            --accent-color: #4a6cf7;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --border-color: #444444;
+            --primary-color: #4a90e2;
+            --secondary-bg: #2d2d2d;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --highlight-color: #ffd700;
+            --highlight-text-color: #000000;
+            
+            --input-bg: #2d2d2d;
+            --input-text: #ffffff;
+            --placeholder-color: #aaa;
+            --track-color: #4a4a4a;
+            --accent-color: #6d8bff;
+        }
+
+        .font-small { --font-size: 14px; }
+        .font-medium { --font-size: 16px; }
+        .font-large { --font-size: 18px; }
+        .font-xlarge { --font-size: 20px; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            font-size: var(--font-size);
+            padding-bottom: 90px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        
+
+        .highlight {
+            background-color: var(--highlight-color);
+            color: var(--highlight-text-color) !important;
+            font-weight: 600; padding: 1px 3px; border-radius: 2px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        [data-theme="dark"] .highlight { background-color: var(--highlight-color); color: #000000 !important; }
+
+        .comment-highlight {
+            background-color: #90EE90; position: relative; cursor: help;
+            color: #000000 !important;
+        }
+        [data-theme="dark"] .comment-highlight { background-color: #006400; color: #ffffff !important; }
+        .comment-tooltip {
+            position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            background: #333; color: white; padding: 8px 12px; border-radius: 4px;
+            font-size: 14px; white-space: nowrap; z-index: 1000; opacity: 0;
+            pointer-events: none; transition: opacity 0.3s;
+        }
+        .comment-highlight:hover .comment-tooltip { opacity: 1; }
+
+        /* Header */
+        .header {
+            background-color: var(--bg-color); padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color); display: flex;
+            justify-content: space-between; align-items: center;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .ielts-logo { height: 55px; width: auto; display: block; }
+        
+        
+        .header-icons { display: flex; gap: 10px; align-items: center; }
+        .font-size-container { position: relative; }
+        .font-size-btn, .dark-mode-btn {
+            width: 32px; height: 32px; border-radius: 4px;
+            border: 1px solid var(--border-color); background: var(--bg-color);
+            color: var(--text-color); font-weight: bold; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; position: relative;
+        }
+        .font-size-btn:hover, .dark-mode-btn:hover { background-color: var(--secondary-bg); }
+        .font-size-options {
+            position: absolute; top: 100%; right: 0; background: var(--bg-color);
+            border: 1px solid var(--border-color); border-radius: 4px;
+            padding: 8px 0; min-width: 120px; display: none; z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .font-size-options.show { display: block; }
+        .font-size-options div { padding: 8px 16px; cursor: pointer; font-size: 14px; color: var(--text-color); }
+        .font-size-options div:hover { background-color: var(--secondary-bg); }
+        .sun-icon, .moon-icon { position: absolute; transition: opacity 0.3s, transform 0.3s; }
+        .sun-icon { opacity: 1; transform: scale(1); }
+        .moon-icon { opacity: 0; transform: scale(0.5); }
+        [data-theme="dark"] .sun-icon { opacity: 0; transform: scale(0.5); }
+        [data-theme="dark"] .moon-icon { opacity: 1; transform: scale(1); }
+
+        /* Audio Player */
+        .audio-player-container {
+            position: fixed; top: 65px; left: 50%; transform: translateX(-50%);
+            width: 500px; max-width: 90%; height: 40px;
+            background: var(--secondary-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; display: flex; align-items: center; padding: 0 15px;
+            z-index: 99; gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .player-btn { background: none; border: none; cursor: pointer; padding: 5px; display: flex; align-items: center; justify-content: center; color: var(--text-color); }
+        .player-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        #volume-btn svg { fill: none; stroke: currentColor; stroke-width: 2; }
+        .progress-container { flex-grow: 1; display: flex; align-items: center; gap: 10px; min-width: 0; }
+        #progress-bar { flex-grow: 1; -webkit-appearance: none; appearance: none; height: 4px; background: var(--track-color); outline: none; border-radius: 3px; cursor: pointer; }
+        #progress-bar::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-color); cursor: pointer; }
+        #progress-bar::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--accent-color); border: none; cursor: pointer; }
+        #current-time, #total-duration { font-size: 12px; color: var(--text-color); opacity: 0.8; min-width: 35px; text-align: center; font-variant-numeric: tabular-nums; }
+        .controls-container { display: flex; align-items: center; gap: 10px; }
+        #new-volume-slider { -webkit-appearance: none; appearance: none; width: 60px; height: 3px; background: var(--track-color); outline: none; border-radius: 2px; cursor: pointer; margin-left: 8px; }
+        #new-volume-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--text-color); cursor: pointer; }
+        #new-volume-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--text-color); border: none; cursor: pointer; }
+        .speed-container { position: relative; }
+        #speed-btn { font-size: 12px; font-weight: 600; color: var(--text-color); background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; cursor: pointer; }
+        #speed-options { position: absolute; top: calc(100% + 5px); right: 0; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1200; }
+        #speed-options div { padding: 8px 15px; cursor: pointer; font-size: 13px; color: var(--text-color); }
+        #speed-options div:hover { background-color: var(--secondary-bg); }
+        #speed-options div.active { color: var(--accent-color); font-weight: 600; }
+
+        .main-container {
+            margin-top: 115px; display: flex; background: var(--bg-color);
+            padding-bottom: 100px; transition: background-color 0.3s;
+        }
+        .main-container.results-mode { display: flex; flex-direction: row; }
+        .left-panel { width: 100%; padding: 20px; transition: width 0.4s ease; }
+        .main-container.results-mode .left-panel { width: 65%; overflow-y: auto; height: calc(100vh - 195px); }
+        .right-panel { display: none; width: 35%; padding: 20px; border-left: 1px solid var(--border-color); overflow-y: auto; height: calc(100vh - 195px); }
+        .main-container.results-mode .right-panel { display: block; }
+
+        .part-header { background-color: var(--secondary-bg); padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .questions-container { width: 70%; max-width: 800px; }
+        .main-container.results-mode .questions-container { width: 85%; }
+        .centered-title { text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 15px; }
+
+        .answer-input {
+            border: 1px solid #9aa3ad; border-radius: 4px;
+            background-color: var(--input-bg); color: var(--input-text);
+            padding: 4px 8px; font-size: 16px; width: 160px; max-width: 180px; min-width: 120px;
+            height: 28px; line-height: 1.2; vertical-align: middle;
+            font-weight: 600; z-index: 10; position: relative;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        [data-theme="dark"] .answer-input { background-color: var(--input-bg); color: #ffffff; border-color: #666; }
+        .answer-input::placeholder { color: var(--placeholder-color); font-weight: bold; text-align: center; }
+        .answer-input:focus { outline: none; border-color: #2c6bed; border-width: 2px; }
+        .answer-input.correct { border-color: var(--correct-color); background-color: #e9f7ef; }
+        .answer-input.incorrect { border-color: var(--incorrect-color); background-color: #f8d7da; color: #721c24; }
+        .correct-inline { color: var(--correct-color); font-weight: 700; margin-left: 10px; display: inline-block; white-space: nowrap; }
+        .correct-inline::before { content: "→ "; font-weight: 700; }
+
+        .nav-arrows { position: fixed; bottom: 100px; right: 20px; display: flex; gap: 5px; z-index: 101; }
+        .nav-arrow { width: 50px; height: 50px; background: var(--text-color); color: var(--bg-color); border: none; cursor: pointer; font-size: 22px; font-weight: bold; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+        .nav-arrow:hover { background: #555; }
+        .nav-arrow:disabled { background: #ccc; cursor: not-allowed; }
+
+        .nav-row {
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-color);
+            border-top: 1px solid var(--border-color); padding: 0; display: flex;
+            align-items: center; height: 80px; z-index: 100; overflow-x: auto; white-space: nowrap;
+        }
+        .footer__questionWrapper__1tZ46 { display: flex; align-items: center; margin-right: 20px; flex-shrink: 0; }
+        .footer__questionNo__3WNct { background: none; border: none; padding: 10px 15px; font-size: 16px; font-weight: 600; color: var(--text-color); cursor: pointer; }
+        .attemptedCount { font-size: 14px; color: #666; margin-left: 5px; }
+        .footer__subquestionWrapper__9GgoP { display: flex; gap: 2px; margin-left: 10px; }
+        .subQuestion {
+            width: 32px; height: 32px; border: 1px solid var(--border-color);
+            background: var(--bg-color); color: var(--text-color); font-size: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            border-radius: 2px; transition: all 0.2s;
+        }
+        .subQuestion.answered { background-color: var(--secondary-bg); }
+        .subQuestion.correct { background-color: var(--correct-color); color: white; }
+        .subQuestion.incorrect { background-color: var(--incorrect-color); color: white; }
+        .subQuestion.active { background-color: var(--primary-color); color: white; }
+        .footer__deliverButton__3FM07 {
+            margin-left: auto; margin-right: 20px; background-color: var(--secondary-bg);
+            color: var(--text-color); border: 1px solid var(--border-color);
+            padding: 12px 20px; border-radius: 4px; font-size: 16px; font-weight: 600;
+            cursor: pointer; min-width: 170px; transition: background-color 0.2s;
+        }
+        .footer__deliverButton__3FM07.success { background-color: var(--correct-color); color: #fff; }
+
+        .hidden { display: none; }
+        .context-menu {
+            position: absolute; background: var(--bg-color); border: 1px solid var(--border-color);
+            border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000; display: none; min-width: 140px;
+        }
+        .context-menu-item { padding: 12px 16px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px; color: var(--text-color); }
+        .context-menu-item:hover { background-color: var(--secondary-bg); }
+
+        /* Selection toolbar */
+        .selection-toolbar {
+            position: absolute; z-index: 1500; display: none; gap: 4px;
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            border-radius: 6px; padding: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .selection-toolbar button {
+            background: var(--primary-color); color: white; border: none;
+            border-radius: 4px; padding: 6px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+        }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: var(--bg-color); padding: 25px; border-radius: 8px; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .result-correct { color: var(--correct-color); font-weight: bold; }
+        .result-incorrect { color: var(--incorrect-color); font-weight: bold; }
+
+        @keyframes flash { 0% { background-color: #e6f4ff; } 100% { background-color: transparent; } }
+        .question.flash { animation: flash 1s ease-out; }
+
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column; }
+            .right-panel, .main-container.results-mode .right-panel { display: none; }
+            .left-panel, .main-container.results-mode .left-panel { width: 100%; }
+            .questions-container { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-left">
+        <img src="https://i.pinimg.com/736x/88/93/a8/8893a81fed78f6989142a13e3605c45e.jpg" alt="IELTS Logo" class="ielts-logo">
+        
+    </div>
+    <div class="header-icons">
+        <div class="font-size-container">
+            <button class="font-size-btn" id="font-size-toggle">A</button>
+            <div id="font-size-options" class="font-size-options">
+                <div data-size="small">Small</div><div data-size="medium">Medium</div>
+                <div data-size="large">Large</div><div data-size="xlarge">Extra Large</div>
+            </div>
+        </div>
+        <button class="dark-mode-btn" id="dark-mode-toggle">
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2"/></svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+    </div>
+</div>
+
+<!-- Audio player -->
+<div class="audio-player-container">
+    <button id="play-pause-btn" class="player-btn" aria-label="Play / Pause">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <div class="progress-container">
+        <span id="current-time">0:00</span>
+        <input type="range" id="progress-bar" value="0" step="1" min="0" max="100" aria-label="Seek">
+        <span id="total-duration">0:00</span>
+    </div>
+    <div class="controls-container">
+        <div style="display:flex;align-items:center;">
+            <button id="volume-btn" class="player-btn" aria-label="Toggle mute">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </button>
+            <input type="range" id="new-volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+        </div>
+        <div class="speed-container">
+            <button id="speed-btn" class="player-btn">1x</button>
+            <div id="speed-options" class="hidden">
+                <div data-speed="0.5">0.5x</div><div data-speed="0.75">0.75x</div>
+                <div data-speed="1" class="active">1x</div><div data-speed="1.25">1.25x</div>
+                <div data-speed="1.5">1.5x</div><div data-speed="2">2x</div>
+            </div>
+        </div>
+    </div>
+</div>
+<audio id="global-audio-player" preload="metadata"
+       src="https://raw.githubusercontent.com/foziljon155-glitch/vcds/60666bb24bd445b59abe8b3df8aa3a088713e0bd/0806%20(1).MP3"></audio>
+
+<div class="main-container">
+    <div class="left-panel">
+        <div id="part-4" class="question-part">
+            <div class="part-header">
+                <p><strong>Part 4</strong></p>
+                <p>Listen and answer questions 31-40.</p>
+            </div>
+            <div class="questions-container">
+                <div class="question" id="question-block-31-40">
+                    <div class="question-prompt">
+                        <p><strong>Questions 31-40</strong></p>
+                        <p>Complete the notes below.</p>
+                        <p>Write <strong>ONE WORD ONLY</strong> for each answer.</p>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p class="centered-title"><strong>Early Developments in Portraits</strong></p>
+                        <div class="notes-section" style="margin-bottom:30px;">
+                            <p>Early Developments in Portraits</p>
+                            <ul>
+                                <li>In 1500, a Frenchman was known for his work in both landscape and <strong>31.</strong> <input type="text" id="q31" class="answer-input" placeholder="31" autocomplete="off"></li>
+                                <li>They discovered the remains of a <strong>32.</strong> <input type="text" id="q32" class="answer-input" placeholder="32" autocomplete="off"></li>
+                                <li>Another thing could include the reputation of their <strong>33.</strong> <input type="text" id="q33" class="answer-input" placeholder="33" autocomplete="off"></li>
+                            </ul>
+                        </div>
+                        <div class="notes-section" style="margin-bottom:30px;">
+                            <p>Evolution of Photography</p>
+                            <ul>
+                                <li>This photograph style is thought to be the <strong>34.</strong> <input type="text" id="q34" class="answer-input" placeholder="34" autocomplete="off"> of that process</li>
+                                <li>Most of his artwork was stolen and <strong>35.</strong> <input type="text" id="q35" class="answer-input" placeholder="35" autocomplete="off"></li>
+                                <li>He is thought to be a well-known <strong>36.</strong> <input type="text" id="q36" class="answer-input" placeholder="36" autocomplete="off"></li>
+                            </ul>
+                        </div>
+                        <div class="notes-section" style="margin-bottom:30px;">
+                            <p>Skills and Techniques</p>
+                            <ul>
+                                <li>One key skill for becoming a popular photographer is an emphasis on <strong>37.</strong> <input type="text" id="q37" class="answer-input" placeholder="37" autocomplete="off"></li>
+                                <li>For the production of food and livestock, these artists began to concentrate on <strong>38.</strong> <input type="text" id="q38" class="answer-input" placeholder="38" autocomplete="off"></li>
+                            </ul>
+                        </div>
+                        <div class="notes-section" style="margin-bottom:30px;">
+                            <p>Impact on Economy and Progress</p>
+                            <ul>
+                                <li>The economy has been affected in several ways, the most important being the <strong>39.</strong> <input type="text" id="q39" class="answer-input" placeholder="39" autocomplete="off"> of these masterpieces</li>
+                                <li>One way of making progress is to show different <strong>40.</strong> <input type="text" id="q40" class="answer-input" placeholder="40" autocomplete="off"> of reproduction.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right-panel">
+        <div id="transcription-container">
+            <h2>Transcription</h2>
+            <div id="transcription-text"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Transcription Data -->
+<div id="transcription-data" style="display:none;">
+    <div data-part="4">
+        <strong>SECTION 4</strong><br><br>
+        Portraiture has been an essential part of human artistic expression… <span class="highlight">portraits</span>… <span class="highlight">castle</span>… <span class="highlight">family</span>… <span class="highlight">symbolism</span>… <span class="highlight">prints</span>… <span class="highlight">poet</span>… <span class="highlight">focus</span>… <span class="highlight">farming</span>… <span class="highlight">quality</span>… <span class="highlight">methods</span>…
+    </div>
+</div>
+
+<div class="nav-arrows">
+    <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+    <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+</div>
+
+<nav class="nav-row">
+    <div class="footer__questionWrapper__1tZ46 selected multiple">
+        <button class="footer__questionNo__3WNct" onclick="switchToPart(4)">
+            <span><span class="section-prefix">Part </span><span class="sectionNr">4</span><span class="attemptedCount">0 of 10</span></span>
+        </button>
+        <div class="footer__subquestionWrapper__9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+            <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+            <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+            <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+            <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+            <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+            <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+            <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+            <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+            <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+        </div>
+    </div>
+    <button id="deliver-button" class="footer__deliverButton__3FM07"><span>Check Answers</span></button>
+</nav>
+
+<!-- Floating selection toolbar -->
+<div id="selection-toolbar" class="selection-toolbar" style="display:none;">
+    <button onclick="highlightText()">Highlight</button>
+    <button onclick="addComment()">Comment</button>
+</div>
+
+<!-- Context menu -->
+<div id="contextMenu" class="context-menu">
+    <div class="context-menu-item" onclick="highlightText()">🔆 Highlight</div>
+    <div class="context-menu-item" onclick="addComment()">💬 Comment</div>
+    <div class="context-menu-item" id="clear-item" onclick="clearHighlight()" style="display:none;">🗑 Clear</div>
+    <div class="context-menu-item" onclick="clearAllHighlights()">🧹 Clear All</div>
+</div>
+
+<div id="result-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header"><h2>Your Results</h2><button id="modal-close-button" class="modal-close-btn">&times;</button></div>
+        <div class="modal-body"><p id="score-summary"></p><div id="result-details"></div></div>
+    </div>
+</div>
+
+<script>
+    // Answer key
+    const correctAnswers = {
+        q31: 'portraits', q32: 'castle', q33: 'family', q34: 'symbolism',
+        q35: 'prints', q36: 'poet', q37: 'focus', q38: 'farming',
+        q39: 'quality', q40: 'methods'
+    };
+
+    let currentQuestion = 31;
+    let selectedRange = null, contextElement = null;
+    const body = document.body;
+    const selToolbar = document.getElementById('selection-toolbar');
+
+    // Dark mode / font
+    function initDarkMode() { body.setAttribute('data-theme', localStorage.getItem('theme') || 'light'); }
+    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+        const isDark = body.getAttribute('data-theme') === 'dark';
+        body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    });
+
+    function changeFontSize(size) {
+        body.classList.remove('font-small','font-medium','font-large','font-xlarge');
+        body.classList.add('font-'+size);
+        localStorage.setItem('fontSize', size);
+        document.getElementById('font-size-options').classList.remove('show');
+    }
+    document.getElementById('font-size-toggle').addEventListener('click', () => {
+        document.getElementById('font-size-options').classList.toggle('show');
+    });
+    document.querySelectorAll('.font-size-options div').forEach(d => d.addEventListener('click', e => changeFontSize(e.target.dataset.size)));
+    changeFontSize(localStorage.getItem('fontSize') || 'medium');
+    initDarkMode();
+
+    // Navigation
+    function goToQuestion(q) {
+        if (q < 31 || q > 40) return;
+        currentQuestion = q;
+        document.querySelectorAll('.subQuestion').forEach(b => b.classList.remove('active'));
+        const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+        if (btn) btn.classList.add('active');
+        const input = document.getElementById('q'+q);
+        if (input) {
+            input.closest('.question')?.scrollIntoView({ behavior:'smooth', block:'center' });
+            input.closest('.question')?.classList.add('flash');
+            setTimeout(() => input.closest('.question')?.classList.remove('flash'), 1000);
+        }
+        updateNav();
+    }
+    function previousQuestion() { if (currentQuestion > 31) goToQuestion(currentQuestion - 1); }
+    function nextQuestion() { if (currentQuestion < 40) goToQuestion(currentQuestion + 1); }
+    function updateNav() {
+        document.getElementById('prevBtn').disabled = currentQuestion === 31;
+        document.getElementById('nextBtn').disabled = currentQuestion === 40;
+        updateCount();
+    }
+    function updateCount() {
+        let cnt = 0;
+        for (let i = 31; i <= 40; i++) {
+            const inp = document.getElementById('q'+i);
+            if (inp && inp.value.trim()) cnt++;
+            const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+            if (btn && !btn.classList.contains('correct') && !btn.classList.contains('incorrect'))
+                btn.classList.toggle('answered', inp && inp.value.trim());
+        }
+        document.querySelector('.attemptedCount').textContent = cnt + ' of 10';
+    }
+    document.querySelectorAll('.answer-input').forEach(i => i.addEventListener('input', updateCount));
+
+    // Highlighting
+    function saveSel() {
+        const s = window.getSelection();
+        if (s && s.rangeCount && !s.isCollapsed && s.toString().trim()) {
+            selectedRange = s.getRangeAt(0).cloneRange();
+            return true;
+        }
+        return false;
+    }
+    function showToolbar() {
+        const s = window.getSelection();
+        if (!s || s.rangeCount === 0 || s.isCollapsed || !s.toString().trim()) { selToolbar.style.display='none'; return; }
+        const r = s.getRangeAt(0).getBoundingClientRect();
+        if (r.width === 0 && r.height === 0) { selToolbar.style.display='none'; return; }
+        selectedRange = s.getRangeAt(0).cloneRange();
+        selToolbar.style.display = 'flex';
+        let top = window.scrollY + r.top - selToolbar.offsetHeight - 8;
+        let left = window.scrollX + r.left + r.width/2 - selToolbar.offsetWidth/2;
+        if (top < window.scrollY + 5) top = window.scrollY + r.bottom + 8;
+        left = Math.max(8, Math.min(left, window.scrollX + document.documentElement.clientWidth - selToolbar.offsetWidth - 8));
+        selToolbar.style.top = top + 'px';
+        selToolbar.style.left = left + 'px';
+    }
+    function hideToolbar() { selToolbar.style.display = 'none'; }
+    function highlightText() {
+        if (!selectedRange || selectedRange.collapsed) { hideToolbar(); closeMenu(); return; }
+        try { const span = document.createElement('span'); span.className = 'highlight'; selectedRange.surroundContents(span); }
+        catch(e) { document.execCommand('backColor', false, 'yellow'); }
+        window.getSelection().removeAllRanges();
+        hideToolbar(); closeMenu();
+    }
+    function addComment() {
+        if (!selectedRange || selectedRange.collapsed) { hideToolbar(); closeMenu(); return; }
+        const txt = prompt('Enter your comment:');
+        if (!txt) { hideToolbar(); closeMenu(); return; }
+        try {
+            const span = document.createElement('span'); span.className = 'comment-highlight';
+            const tip = document.createElement('span'); tip.className = 'comment-tooltip'; tip.textContent = txt;
+            span.appendChild(tip); selectedRange.surroundContents(span);
+        } catch(e) {}
+        window.getSelection().removeAllRanges();
+        hideToolbar(); closeMenu();
+    }
+    function clearHighlight() {
+        if (!contextElement) { closeMenu(); return; }
+        const parent = contextElement.parentNode;
+        while (contextElement.firstChild) {
+            if (!contextElement.firstChild.classList?.contains('comment-tooltip'))
+                parent.insertBefore(contextElement.firstChild, contextElement);
+            else contextElement.removeChild(contextElement.firstChild);
+        }
+        parent.removeChild(contextElement); parent.normalize();
+        closeMenu();
+    }
+    function clearAllHighlights() {
+        document.querySelectorAll('.highlight, .comment-highlight').forEach(el => {
+            const p = el.parentNode, f = document.createDocumentFragment();
+            while (el.firstChild) {
+                if (el.firstChild.nodeType===1 && el.firstChild.classList.contains('comment-tooltip'))
+                    el.removeChild(el.firstChild);
+                else f.appendChild(el.firstChild);
+            }
+            p.replaceChild(f, el);
+        });
+        closeMenu();
+    }
+    function closeMenu() { document.getElementById('contextMenu').style.display = 'none'; contextElement = null; }
+
+    // Check answers
+    function checkAnswers() {
+        let score = 0;
+        document.querySelectorAll('.correct,.incorrect,.correct-inline').forEach(e => {
+            if (e.classList.contains('correct-inline')) e.remove(); else e.classList.remove('correct','incorrect');
+        });
+        const results = [];
+        for (let i = 31; i <= 40; i++) {
+            const key = 'q'+i, input = document.getElementById(key);
+            const user = input ? input.value.trim() : '';
+            const correct = correctAnswers[key];
+            const isCorrect = user.toLowerCase() === correct.toLowerCase();
+            if (isCorrect) score++;
+            if (input) {
+                input.classList.add(isCorrect ? 'correct' : 'incorrect');
+                if (!isCorrect) {
+                    const span = document.createElement('span'); span.className = 'correct-inline'; span.textContent = correct;
+                    input.insertAdjacentElement('afterend', span);
+                }
+            }
+            const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+            if (btn) { btn.classList.remove('answered'); btn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+            results.push({ question: i, userAnswer: user || 'No Answer', correctAnswer: correct, isCorrect });
+        }
+        const band = score >= 10 ? 9 : score >= 9 ? 8.5 : score >= 8 ? 8 : score >= 7 ? 7.5 : score >= 6 ? 7 : score >= 5 ? 6.5 : 5;
+        document.querySelectorAll('.answer-input').forEach(i => i.disabled = true);
+        document.querySelector('.main-container').classList.add('results-mode');
+        document.getElementById('transcription-text').innerHTML = document.querySelector('#transcription-data [data-part="4"]').innerHTML;
+        document.getElementById('score-summary').textContent = `You scored ${score} out of 10 (Band ${band}).`;
+        let html = '<table><thead><tr><th>Q</th><th>Your</th><th>Correct</th><th></th></tr></thead><tbody>';
+        results.forEach(r => html += `<tr><td>${r.question}</td><td>${r.userAnswer}</td><td>${r.correctAnswer}</td><td class="${r.isCorrect ? 'result-correct' : 'result-incorrect'}">${r.isCorrect ? '✔' : '✖'}</td></tr>`);
+        html += '</tbody></table>';
+        document.getElementById('result-details').innerHTML = html;
+        document.getElementById('result-modal').style.display = 'flex';
+        const delBtn = document.getElementById('deliver-button');
+        delBtn.classList.add('success'); delBtn.innerHTML = '<span>My Results</span>';
+        const newBtn = delBtn.cloneNode(true);
+        delBtn.parentNode.replaceChild(newBtn, delBtn);
+        newBtn.addEventListener('click', () => document.getElementById('result-modal').style.display = 'flex');
+    }
+
+    document.getElementById('deliver-button').addEventListener('click', checkAnswers);
+    document.getElementById('modal-close-button').addEventListener('click', () => document.getElementById('result-modal').style.display = 'none');
+
+    document.addEventListener('mouseup', () => { saveSel(); showToolbar(); });
+    document.addEventListener('touchend', () => { saveSel(); showToolbar(); });
+    document.addEventListener('selectionchange', saveSel);
+    document.addEventListener('click', e => { if (!e.target.closest('#selection-toolbar') && !e.target.closest('.context-menu')) { hideToolbar(); closeMenu(); } });
+
+    document.body.addEventListener('contextmenu', function(e) {
+        if (!window.getSelection().toString()) return;
+        e.preventDefault();
+        const menu = document.getElementById('contextMenu');
+        menu.style.left = e.pageX + 'px';
+        menu.style.top = e.pageY + 'px';
+        menu.style.display = 'block';
+        contextElement = e.target.closest('.highlight, .comment-highlight');
+        document.getElementById('clear-item').style.display = contextElement ? 'block' : 'none';
+        saveSel();
+    });
+
+    goToQuestion(31);
+</script>
+
+<!-- Audio player script -->
+<script>
+(function() {
+    const a = document.getElementById('global-audio-player');
+    const playBtn = document.getElementById('play-pause-btn');
+    const progress = document.getElementById('progress-bar');
+    const cur = document.getElementById('current-time');
+    const dur = document.getElementById('total-duration');
+    const volSlider = document.getElementById('new-volume-slider');
+    const volBtn = document.getElementById('volume-btn');
+    const speedBtn = document.getElementById('speed-btn');
+    const speedOpts = document.getElementById('speed-options');
+    let dragging = false;
+    function fmt(s) { if (isNaN(s)) return '0:00'; const m = Math.floor(s/60), sec = Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; }
+    function toggle() { if (a.paused) a.play().catch(()=>{}); else a.pause(); }
+    function playIcon() {
+        playBtn.innerHTML = a.paused
+            ? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+    }
+    function volIcon(v) {
+        v = v !== undefined ? v : a.volume;
+        const i = volBtn.querySelector('svg');
+        if (v === 0) i.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+        else if (v < 0.5) i.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+        else i.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+    }
+    function setVol(v) { const val = Math.min(1, Math.max(0, parseFloat(v))); a.volume = val; volSlider.value = val; volIcon(val); }
+    function mute() { if (a.volume > 0) { a.dataset.prevVol = a.volume; setVol(0); } else { setVol(parseFloat(a.dataset.prevVol) || 0.8); } }
+    function setSpeed(v) { const s = parseFloat(v); if (isNaN(s)) return; a.playbackRate = s; speedBtn.textContent = s+'x'; speedOpts.querySelectorAll('div').forEach(d => d.classList.toggle('active', parseFloat(d.dataset.speed) === s)); speedOpts.classList.add('hidden'); }
+    playBtn.addEventListener('click', toggle);
+    a.addEventListener('play', playIcon);
+    a.addEventListener('pause', playIcon);
+    a.addEventListener('ended', () => { playIcon(); progress.value = 0; cur.textContent = fmt(0); });
+    a.addEventListener('loadedmetadata', () => { progress.max = a.duration; dur.textContent = fmt(a.duration); cur.textContent = fmt(a.currentTime); });
+    a.addEventListener('timeupdate', () => { if (!dragging) { progress.value = a.currentTime; cur.textContent = fmt(a.currentTime); } });
+    progress.addEventListener('mousedown', () => dragging = true);
+    progress.addEventListener('mouseup', () => dragging = false);
+    progress.addEventListener('touchstart', () => dragging = true);
+    progress.addEventListener('touchend', () => dragging = false);
+    progress.addEventListener('input', () => { a.currentTime = progress.value; cur.textContent = fmt(progress.value); });
+    volSlider.addEventListener('input', e => setVol(e.target.value));
+    volBtn.addEventListener('click', mute);
+    speedBtn.addEventListener('click', e => { e.stopPropagation(); speedOpts.classList.toggle('hidden'); });
+    speedOpts.addEventListener('click', e => { if (e.target.dataset.speed) setSpeed(e.target.dataset.speed); });
+    document.addEventListener('click', () => speedOpts.classList.add('hidden'));
+    document.addEventListener('keydown', e => { if (e.code === 'Space' && !['input','textarea','select','button'].includes((e.target?.tagName||'').toLowerCase())) { e.preventDefault(); toggle(); } });
+    setVol(1); playIcon();
+})();
+</script>
+</body>
+</html>

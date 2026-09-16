@@ -341,39 +341,43 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     color: #f8fafc !important;
   }
 
-  /* Cambridge CDI Top Exam Header */
+  /* ==========================================================================
+     Authentic 1:1 Cambridge CDI Top Exam Header
+     ========================================================================== */
   .vx-listening-header-bar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 56px;
+    height: 48px;
     background: #ffffff;
     color: #1e293b;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 18px;
+    padding: 0 16px;
     z-index: 10000;
-    border-bottom: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border-bottom: 1px solid #e5e7eb;
+    box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
-  body.night-mode .vx-listening-header-bar {
+  body.night-mode .vx-listening-header-bar,
+  html[data-theme="dark"] .vx-listening-header-bar {
     background: #0f172a;
     color: #f8fafc;
-    border-color: #1e293b;
+    border-color: #334155;
   }
 
   body {
-    padding-top: 100px !important;
-    padding-bottom: 64px !important;
+    padding-top: 104px !important;
+    padding-bottom: 50px !important;
   }
 
   .vx-lh-left {
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
   }
   .vx-lh-brand {
     display: inline-flex;
@@ -383,49 +387,47 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     flex-shrink: 0;
   }
   .vx-lh-title {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    color: #0f172a;
+    color: #111827;
     white-space: nowrap;
-    max-width: 240px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  body.night-mode .vx-lh-title {
+  body.night-mode .vx-lh-title,
+  html[data-theme="dark"] .vx-lh-title {
     color: #f8fafc;
-  }
-  .vx-lh-mode-pill {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 2px 8px;
-    border-radius: 999px;
-  }
-  .vx-lh-mode-pill.real-exam {
-    background: #fef3c7;
-    color: #b45309;
-    border: 1px solid #fde68a;
-  }
-  .vx-lh-mode-pill.practice-mode {
-    background: #dcfce7;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
   }
 
   .vx-lh-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    pointer-events: none;
   }
   .vx-timer-text {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 600;
     color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     font-variant-numeric: tabular-nums;
   }
-  body.night-mode .vx-timer-text {
+  body.night-mode .vx-timer-text,
+  html[data-theme="dark"] .vx-timer-text {
     color: #f8fafc;
+  }
+
+  .vx-audio-player-wrap {
+    pointer-events: auto;
+  }
+
+  .vx-lh-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .vx-header-volume {
@@ -435,16 +437,17 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     color: #475569;
     padding: 0 4px;
   }
-  body.night-mode .vx-header-volume {
+  body.night-mode .vx-header-volume,
+  html[data-theme="dark"] .vx-header-volume {
     color: #cbd5e1;
   }
   .vx-volume-slider {
     -webkit-appearance: none;
     appearance: none;
-    width: 84px;
+    width: 80px;
     height: 4px;
-    background: #cbd5e1;
     border-radius: 2px;
+    background: linear-gradient(to right, #2563eb 100%, #cbd5e1 100%);
     outline: none;
     cursor: pointer;
     vertical-align: middle;
@@ -452,53 +455,126 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   .vx-volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: #1e293b;
+    background: #2563eb;
+    box-shadow: 0 0 0 2px #ffffff, 0 1px 3px rgba(0,0,0,0.25);
     cursor: pointer;
     transition: transform 0.1s;
   }
   .vx-volume-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
+    transform: scale(1.15);
   }
-  body.night-mode .vx-volume-slider {
-    background: #475569;
+  body.night-mode .vx-volume-slider,
+  html[data-theme="dark"] .vx-volume-slider {
+    background: linear-gradient(to right, #3b82f6 100%, #475569 100%);
   }
-  body.night-mode .vx-volume-slider::-webkit-slider-thumb {
-    background: #f8fafc;
+  body.night-mode .vx-volume-slider::-webkit-slider-thumb,
+  html[data-theme="dark"] .vx-volume-slider::-webkit-slider-thumb {
+    background: #3b82f6;
+    box-shadow: 0 0 0 2px #0f172a;
   }
 
-  /* Subheader banner (matching authentic Cambridge CDI) */
+  .vx-cdi-hdr-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #111827;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+  }
+  .vx-cdi-hdr-btn:hover {
+    background: #f3f4f6;
+    border-color: #94a3b8;
+  }
+  body.night-mode .vx-cdi-hdr-btn,
+  html[data-theme="dark"] .vx-cdi-hdr-btn {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+  body.night-mode .vx-cdi-hdr-btn:hover,
+  html[data-theme="dark"] .vx-cdi-hdr-btn:hover {
+    background: #334155;
+  }
+
+  .vx-cdi-submit-btn {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 5px 16px;
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .vx-cdi-submit-btn:hover {
+    background: #f3f4f6;
+    border-color: #94a3b8;
+  }
+  body.night-mode .vx-cdi-submit-btn,
+  html[data-theme="dark"] .vx-cdi-submit-btn {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+  body.night-mode .vx-cdi-submit-btn:hover,
+  html[data-theme="dark"] .vx-cdi-submit-btn:hover {
+    background: #334155;
+  }
+
+  /* Subheader banner (2-line stacked matching authentic Cambridge CDI) */
   .vx-listening-part-banner {
     position: fixed;
-    top: 56px;
+    top: 48px;
     left: 0;
     right: 0;
-    height: 38px;
-    background: #f4f4f0;
-    border-bottom: 1px solid #e0e0dc;
+    height: 56px;
+    background: #f2f4f7;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px 24px;
     display: flex;
-    align-items: center;
-    padding: 0 20px;
-    font-size: 13.5px;
-    color: #1f2937;
-    z-index: 9990;
-    font-family: Arial, Helvetica, sans-serif;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    z-index: 9999;
     box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
-  body.night-mode .vx-listening-part-banner {
+  body.night-mode .vx-listening-part-banner,
+  html[data-theme="dark"] .vx-listening-part-banner {
     background: #1e293b;
     border-bottom-color: #334155;
-    color: #f1f5f9;
   }
-  .vx-listening-part-banner strong {
-    font-weight: 800;
-    margin-right: 4px;
+  .vx-listening-part-banner .vx-cdi-part-title {
+    font-size: 14px;
+    font-weight: 700;
     color: #111827;
+    margin: 0;
+    line-height: 1.3;
   }
-  body.night-mode .vx-listening-part-banner strong {
-    color: #ffffff;
+  body.night-mode .vx-listening-part-banner .vx-cdi-part-title,
+  html[data-theme="dark"] .vx-listening-part-banner .vx-cdi-part-title {
+    color: #f8fafc;
+  }
+  .vx-listening-part-banner .vx-cdi-part-instruction {
+    font-size: 13px;
+    color: #374151;
+    margin: 0;
+    line-height: 1.3;
+  }
+  body.night-mode .vx-listening-part-banner .vx-cdi-part-instruction,
+  html[data-theme="dark"] .vx-listening-part-banner .vx-cdi-part-instruction {
+    color: #94a3b8;
   }
 
   /* Authentic Cambridge CDI Bottom Dock for Listening */
@@ -507,9 +583,9 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 52px;
+    height: 50px;
     background: #ffffff;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #e5e7eb;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -518,135 +594,186 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     box-sizing: border-box;
   }
-  body.night-mode .vx-cdi-bottom-dock {
+  body.night-mode .vx-cdi-bottom-dock,
+  html[data-theme="dark"] .vx-cdi-bottom-dock {
     background: #0f172a;
-    border-top-color: #1e293b;
+    border-top-color: #334155;
   }
-  .vx-cdi-dock-parts {
+  .vx-cdi-bottom-parts {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 18px;
     overflow-x: auto;
     scrollbar-width: none;
     flex: 1;
+    height: 100%;
   }
-  .vx-cdi-dock-parts::-webkit-scrollbar { display: none; }
-  .vx-cdi-dock-part-group {
+  .vx-cdi-bottom-parts::-webkit-scrollbar { display: none; }
+
+  .vx-cdi-part-block {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    cursor: pointer;
+    user-select: none;
+    padding: 0 6px;
+    transition: all 0.15s ease;
+  }
+  .vx-cdi-part-block.active {
+    cursor: default;
+  }
+  .vx-cdi-part-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #111827;
+  }
+  body.night-mode .vx-cdi-part-indicator,
+  html[data-theme="dark"] .vx-cdi-part-indicator {
+    background: #60a5fa;
+  }
+  .vx-cdi-part-block.active .vx-cdi-part-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #111827;
+    margin-right: 14px;
+  }
+  body.night-mode .vx-cdi-part-block.active .vx-cdi-part-title,
+  html[data-theme="dark"] .vx-cdi-part-block.active .vx-cdi-part-title {
+    color: #f8fafc;
+  }
+  .vx-cdi-part-block.inactive {
+    padding: 4px 12px;
+    height: auto;
+    border-radius: 4px;
+    gap: 6px;
+  }
+  .vx-cdi-part-block.inactive:hover {
+    background: #f3f4f6;
+  }
+  body.night-mode .vx-cdi-part-block.inactive:hover,
+  html[data-theme="dark"] .vx-cdi-part-block.inactive:hover {
+    background: #1e293b;
+  }
+  .vx-cdi-part-block.inactive .vx-cdi-part-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+  body.night-mode .vx-cdi-part-block.inactive .vx-cdi-part-title,
+  html[data-theme="dark"] .vx-cdi-part-block.inactive .vx-cdi-part-title {
+    color: #cbd5e1;
+  }
+  .vx-cdi-part-count {
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+  }
+  body.night-mode .vx-cdi-part-count,
+  html[data-theme="dark"] .vx-cdi-part-count {
+    color: #94a3b8;
+  }
+
+  .vx-cdi-question-pills-row {
     display: inline-flex;
     align-items: center;
     gap: 8px;
   }
-  .vx-cdi-dock-part-tab {
+  .vx-cdi-q-item {
     display: inline-flex;
-    align-items: center;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 800;
-    color: #334155;
-    cursor: pointer;
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    white-space: nowrap;
-    transition: all 0.15s;
-  }
-  .vx-cdi-dock-part-tab.active {
-    background: #1e293b;
-    color: #ffffff;
-    border-color: #1e293b;
-  }
-  body.night-mode .vx-cdi-dock-part-tab {
-    background: #1e293b;
-    color: #cbd5e1;
-    border-color: #334155;
-  }
-  body.night-mode .vx-cdi-dock-part-tab.active {
-    background: #3b82f6;
-    color: #ffffff;
-    border-color: #3b82f6;
-  }
-  .vx-cdi-dock-q-list {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .vx-cdi-dock-q-item {
-    display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 20px;
-    padding: 1px 3px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #475569;
+    justify-content: center;
+    min-width: 18px;
+    padding: 2px 3px;
     cursor: pointer;
-    border-radius: 3px;
-    transition: all 0.12s;
     user-select: none;
+    transition: all 0.12s;
   }
-  body.night-mode .vx-cdi-dock-q-item {
-    color: #cbd5e1;
+  .vx-cdi-q-item .vx-cdi-q-num {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111827;
+    line-height: 1.2;
   }
-  .vx-cdi-dock-q-item .vx-q-top-line {
+  body.night-mode .vx-cdi-q-item .vx-cdi-q-num,
+  html[data-theme="dark"] .vx-cdi-q-item .vx-cdi-q-num {
+    color: #e2e8f0;
+  }
+  .vx-cdi-q-item.current .vx-cdi-q-num {
+    color: #2563eb;
+    font-weight: 800;
+  }
+  .vx-cdi-q-underline {
     width: 14px;
-    height: 2.5px;
-    background: #cbd5e1;
+    height: 2px;
+    background: transparent;
+    margin-top: 2px;
     border-radius: 1px;
-    margin-bottom: 2px;
   }
-  body.night-mode .vx-cdi-dock-q-item .vx-q-top-line {
-    background: #475569;
+  .vx-cdi-q-item.answered .vx-cdi-q-underline {
+    background: #111827;
+    height: 2.5px;
   }
-  .vx-cdi-dock-q-item.active {
-    color: #1d4ed8;
-    font-weight: 900;
+  body.night-mode .vx-cdi-q-item.answered .vx-cdi-q-underline,
+  html[data-theme="dark"] .vx-cdi-q-item.answered .vx-cdi-q-underline {
+    background: #e2e8f0;
   }
-  .vx-cdi-dock-q-item.active .vx-q-top-line {
-    background: #1d4ed8;
-    height: 3px;
+  .vx-cdi-q-item.current .vx-cdi-q-underline {
+    background: #2563eb;
+    height: 2.5px;
   }
-  .vx-cdi-dock-q-item.answered .vx-q-top-line {
-    background: #1e293b;
-    height: 3px;
-  }
-  body.night-mode .vx-cdi-dock-q-item.answered .vx-q-top-line {
-    background: #94a3b8;
-  }
-  .vx-cdi-dock-q-item.review-incorrect {
+  .vx-cdi-q-item.review-incorrect .vx-cdi-q-num {
     color: #dc2626 !important;
   }
-  .vx-cdi-dock-q-item.review-incorrect .vx-q-top-line {
+  .vx-cdi-q-item.review-incorrect .vx-cdi-q-underline {
     background: #ef4444 !important;
-    height: 3.5px;
+    height: 2.5px;
   }
-  .vx-cdi-dock-q-item.review-correct {
+  .vx-cdi-q-item.review-correct .vx-cdi-q-num {
     color: #166534 !important;
   }
-  .vx-cdi-dock-q-item.review-correct .vx-q-top-line {
+  .vx-cdi-q-item.review-correct .vx-cdi-q-underline {
     background: #10b981 !important;
-    height: 3.5px;
+    height: 2.5px;
   }
-  .vx-cdi-dock-arrows {
+
+  /* Far Right Arrow Buttons */
+  .vx-cdi-bottom-right {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-left: 10px;
     flex-shrink: 0;
   }
-  .vx-dock-arrow-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 6px;
-    background: #374151;
-    color: #ffffff;
-    border: none;
-    display: grid;
-    place-items: center;
+  .vx-cdi-arrow-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #111827;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: all 0.15s ease;
   }
-  .vx-dock-arrow-btn:hover {
-    background: #1f2937;
+  .vx-cdi-arrow-btn:hover {
+    background: #f3f4f6;
+    border-color: #94a3b8;
+  }
+  body.night-mode .vx-cdi-arrow-btn,
+  html[data-theme="dark"] .vx-cdi-arrow-btn {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+  }
+  body.night-mode .vx-cdi-arrow-btn:hover,
+  html[data-theme="dark"] .vx-cdi-arrow-btn:hover {
+    background: #334155;
   }
 
   /* Fill in the blank inputs */
@@ -2570,10 +2697,9 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
 <div class="vx-listening-header-bar" id="vxListeningHeaderBar">
   <div class="vx-lh-left">
     <a href="/english" class="vx-lh-brand" title="IELTS Core">
-      <img src="/assets/ielts-core-mark.png" height="26" alt="IELTS Core">
+      <img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core" style="border-radius:4px;">
     </a>
     <span class="vx-lh-title" title="${material.title.replace(/"/g, "&quot;")}">${material.title.replace(/</g, "&lt;")}</span>
-    <span class="vx-lh-mode-pill ${modeClass}" id="vxExamModeBadge">${modeLabel}</span>
   </div>
 
   <div class="vx-lh-center">
@@ -2605,83 +2731,66 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       </svg>
       <input type="range" id="vxAudioVolumeSlider" min="0" max="1" step="0.01" value="1" class="vx-volume-slider" aria-label="Volume">
     </div>
-    <button type="button" class="vx-submit-header-btn" id="vxHeaderScoreBreakdownBtn" style="display:none;background:#0f172a;color:#fff;border:1px solid #334155;padding:5px 12px;border-radius:6px;" title="View Score Report">
+    <button type="button" class="vx-cdi-submit-btn" id="vxHeaderScoreBreakdownBtn" style="display:none;background:#0f172a;color:#fff;border:1px solid #334155;padding:5px 12px;border-radius:4px;" title="View Score Report">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;vertical-align:-2px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17v-4m5 4v-8m5 8v-6"/></svg>
       <span>Score Report</span>
     </button>
-    <button type="button" class="vx-submit-header-btn" id="vxHeaderTranscriptBtn" style="display:none;background:#ffffff;color:#334155;border:1px solid #cbd5e1;padding:5px 12px;border-radius:6px;" title="Audio Transcript">
+    <button type="button" class="vx-cdi-submit-btn" id="vxHeaderTranscriptBtn" style="display:none;background:#ffffff;color:#334155;border:1px solid #cbd5e1;padding:5px 12px;border-radius:4px;" title="Audio Transcript">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;vertical-align:-2px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       <span>Transcript</span>
     </button>
-    <button type="button" class="vx-submit-header-btn" id="vxHeaderRetakeBtn" style="display:none;background:#ffffff;color:#334155;border:1px solid #cbd5e1;padding:5px 12px;border-radius:6px;" title="Retake Test">
+    <button type="button" class="vx-cdi-submit-btn" id="vxHeaderRetakeBtn" style="display:none;background:#ffffff;color:#334155;border:1px solid #cbd5e1;padding:5px 12px;border-radius:4px;" title="Retake Test">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;vertical-align:-2px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
       <span>Retake</span>
     </button>
-    <button type="button" class="vx-icon-btn" id="vxFullscreenBtn" title="Toggle Fullscreen">⛶</button>
-    <button type="button" class="vx-icon-btn" id="vxOpenSettingsBtn" title="Exam Settings">☰</button>
-    <button type="button" class="vx-submit-header-btn" id="vxHeaderSubmitBtn">Submit</button>
+    <button type="button" class="vx-cdi-hdr-btn" id="vxFullscreenBtn" title="Toggle Fullscreen" aria-label="Toggle fullscreen">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    </button>
+    <button type="button" class="vx-cdi-hdr-btn" id="vxOpenSettingsBtn" title="Exam Settings" aria-label="Settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <button type="button" class="vx-cdi-submit-btn" id="vxHeaderSubmitBtn">Submit</button>
   </div>
 </div>
 
 <!-- Subheader Banner (Part Instruction matching Cambridge CDI) -->
-<div class="vx-listening-part-banner" id="vxListeningPartBanner">
-  <strong id="vxListeningPartTitle">Part 1</strong>: <span id="vxListeningPartDesc">Listen and answer questions 1–10.</span>
+<div class="vx-listening-part-banner" id="vxListeningPartBanner" role="region" aria-label="Part instruction">
+  <div class="vx-cdi-part-title" id="vxListeningPartTitle">Part 1</div>
+  <div class="vx-cdi-part-instruction" id="vxListeningPartDesc">${isFullTest ? "Listen and answer questions 1–40." : `Listen and answer questions ${material.startQ}–${material.endQ}.`}</div>
 </div>
 
-<!-- Injected Exam Settings Modal (Matching Exact Reference UI) -->
-<div id="vxSettingsModal" class="vx-modal-backdrop" role="dialog" aria-modal="true">
-  <div class="vx-settings-sheet">
-    <div class="vx-settings-header">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color:#64748b"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      <strong style="font-size:15px;color:#0f172a;font-weight:800;">Exam Settings & Appearance</strong>
-      <button type="button" id="vxCloseSettingsBtn" style="margin-left:auto;background:none;border:none;font-size:20px;color:#64748b;cursor:pointer;padding:2px 6px;line-height:1;">✕</button>
+<!-- Injected Authentic Cambridge CDI Settings Modal -->
+<div id="vxSettingsModal" class="vx-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="vxSettingsModalTitle">
+  <div class="vx-modal-card" style="max-width:380px;padding:24px;border-radius:12px;text-align:left;background:#ffffff;box-shadow:0 20px 50px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;border-bottom:1px solid #e5e7eb;padding-bottom:12px;">
+      <h3 id="vxSettingsModalTitle" style="margin:0;font-size:16px;font-weight:700;color:#111827;">Exam Settings</h3>
+      <button type="button" id="vxCloseSettingsBtn" style="border:none;background:none;font-size:20px;cursor:pointer;color:#6b7280;line-height:1;">&times;</button>
     </div>
 
-    <!-- Color Scheme Selection -->
-    <div class="vx-setting-section-title">Color Scheme</div>
-    <div class="vx-setting-btn-group" id="vxThemeGroup">
-      <button type="button" class="vx-setting-opt-btn active" data-theme="light">
-        <span>Standard (Light)</span>
-        <span class="vx-check-icon">✓</span>
-      </button>
-      <button type="button" class="vx-setting-opt-btn" data-theme="dark">
-        <span>Dark</span>
-        <span class="vx-check-icon" style="display:none;">✓</span>
-      </button>
-      <button type="button" class="vx-setting-opt-btn" data-theme="system">
-        <span>System</span>
-        <span class="vx-check-icon" style="display:none;">✓</span>
-      </button>
+    <div style="margin-bottom:18px;">
+      <label style="display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:8px;">Text Size</label>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="vxTextSizeGroup">
+        <button type="button" class="vx-cdi-submit-btn vx-size-opt active" data-zoom="100">Standard</button>
+        <button type="button" class="vx-cdi-submit-btn vx-size-opt" data-zoom="115">Large</button>
+        <button type="button" class="vx-cdi-submit-btn vx-size-opt" data-zoom="130">Extra Large</button>
+      </div>
     </div>
 
-    <!-- Text Size Selection -->
-    <div class="vx-setting-section-title">Text Size</div>
-    <div class="vx-setting-btn-group" id="vxTextSizeGroup">
-      <button type="button" class="vx-setting-opt-btn active" data-size="default">
-        <span>Default</span>
-        <span class="vx-check-icon">✓</span>
-      </button>
-      <button type="button" class="vx-setting-opt-btn" data-size="large">
-        <span>Large</span>
-        <span class="vx-check-icon" style="display:none;">✓</span>
-      </button>
-      <button type="button" class="vx-setting-opt-btn" data-size="xlarge">
-        <span>Extra Large</span>
-        <span class="vx-check-icon" style="display:none;">✓</span>
-      </button>
+    <div style="margin-bottom:20px;">
+      <label style="display:block;font-size:13px;font-weight:700;color:#374151;margin-bottom:8px;">Colors / Contrast</label>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;" id="vxThemeGroup">
+        <button type="button" class="vx-cdi-submit-btn vx-theme-opt active" data-theme-val="light">Standard (Light)</button>
+        <button type="button" class="vx-cdi-submit-btn vx-theme-opt" data-theme-val="dark">Inverted (Dark)</button>
+      </div>
     </div>
 
-    <!-- Report Issue Banner -->
-    <div class="vx-report-issue-card">
-      <div class="vx-report-issue-title">Report an Issue</div>
-      <p class="vx-report-issue-desc">Tell us if something is missing, broken, or incorrect.</p>
+    <div style="border-top:1px solid #e5e7eb;padding-top:16px;display:flex;justify-content:space-between;align-items:center;">
+      <a href="/english/materials?level=ielts&skill=listening" style="color:#dc2626;text-decoration:none;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Leave Exam
+      </a>
+      <button type="button" id="vxSettingsDoneBtn" class="vx-cdi-submit-btn" style="background:#111827;color:#fff;border-color:#111827;">Done</button>
     </div>
-
-    <!-- Leave Test Link -->
-    <a href="/english/materials?level=ielts&skill=listening" class="vx-leave-test-link">
-      <div class="vx-leave-test-title">← Leave Test Without Saving</div>
-      <p class="vx-leave-test-desc">Return to the tests page.</p>
-    </a>
   </div>
 </div>
 
@@ -2825,33 +2934,32 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
 
 <!-- Injected Authentic Cambridge CDI Bottom Dock for Listening -->
 <footer id="vxListeningBottomDock" class="vx-cdi-bottom-dock" role="navigation" aria-label="Exam question navigation">
-  <div class="vx-cdi-dock-parts" id="vxListeningDockParts">
+  <div class="vx-cdi-bottom-parts" id="vxListeningDockParts">
     <!-- Rendered dynamically in script -->
   </div>
-  <div class="vx-cdi-dock-arrows">
-    <button type="button" class="vx-dock-arrow-btn" id="vxListeningPrevBtn" title="Previous question" aria-label="Previous question">
+  <div class="vx-cdi-bottom-right">
+    <button type="button" class="vx-cdi-arrow-btn" id="vxListeningPrevBtn" title="Previous question" aria-label="Previous question">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
-    <button type="button" class="vx-dock-arrow-btn" id="vxListeningNextBtn" title="Next question" aria-label="Next question">
+    <button type="button" class="vx-cdi-arrow-btn" id="vxListeningNextBtn" title="Next question" aria-label="Next question">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
     </button>
   </div>
 </footer>
 
-<!-- Injected Authentic IELTS CDI Selection Toolbar -->
+<!-- Injected Authentic Cambridge CDI Selection Toolbar -->
 <div id="ieltsSelectionToolbar" class="ielts-selection-toolbar" role="toolbar" aria-label="Text Highlight and Note Actions">
+  <button type="button" id="ieltsNoteBtn" class="ielts-tool-btn" title="Add note">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Note</span>
+  </button>
   <button type="button" id="ieltsHlBtn" class="ielts-tool-btn" title="Highlight selection">
-    <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#ffe066;border:1px solid #d97706;"></span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/></svg>
     <span>Highlight</span>
   </button>
-  <button type="button" id="ieltsNoteBtn" class="ielts-tool-btn" title="Add note">
-    <span>📝 Notes</span>
-  </button>
   <button type="button" id="ieltsClearBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear highlight">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     <span>Clear</span>
-  </button>
-  <button type="button" id="ieltsClearAllBtn" class="ielts-tool-btn btn-clear" style="display:none;" title="Clear all highlights">
-    <span>Clear all</span>
   </button>
 </div>
 
@@ -2917,13 +3025,19 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   var testStartedAt = Date.now();
   var submitted = false;
 
-  // 1. Settings Modal Controls
-  var settingsModal = document.getElementById('vxSettingsModal');
+  // 1. Authentic Cambridge CDI Settings Modal Controls
+  var settingsModal = document.getElementById('vxSettingsModal') || document.getElementById('vortexSettingsModal');
   document.getElementById('vxOpenSettingsBtn')?.addEventListener('click', function() {
-    settingsModal?.classList.add('show');
+    if (settingsModal) settingsModal.classList.add('show');
   });
   document.getElementById('vxCloseSettingsBtn')?.addEventListener('click', function() {
-    settingsModal?.classList.remove('show');
+    if (settingsModal) settingsModal.classList.remove('show');
+  });
+  document.getElementById('vxSettingsDoneBtn')?.addEventListener('click', function() {
+    if (settingsModal) settingsModal.classList.remove('show');
+  });
+  document.getElementById('vxSettingsCloseBtn')?.addEventListener('click', function() {
+    if (settingsModal) settingsModal.classList.remove('show');
   });
 
   // 2. Fullscreen Toggle
@@ -2935,49 +3049,52 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     }
   });
 
-  // 3. Theme Switcher
+  // 3. Theme Switcher (Standard Light vs Inverted Dark)
   function applyTheme(theme) {
     var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
     document.body.classList.toggle('night-mode', isDark);
-    document.querySelectorAll('#vxThemeGroup .vx-setting-opt-btn').forEach(function(btn) {
-      var match = btn.getAttribute('data-theme') === theme;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.querySelectorAll('#vxThemeGroup .vx-setting-opt-btn, #vxThemeGroup .vx-theme-opt').forEach(function(btn) {
+      var btnVal = btn.getAttribute('data-theme') || btn.getAttribute('data-theme-val');
+      var match = btnVal === theme;
       btn.classList.toggle('active', match);
       var check = btn.querySelector('.vx-check-icon');
       if (check) check.style.display = match ? 'inline' : 'none';
     });
     try { localStorage.setItem('vx_ielts_theme', theme); } catch(e){}
   }
-  document.querySelectorAll('#vxThemeGroup .vx-setting-opt-btn').forEach(function(btn) {
+  document.querySelectorAll('#vxThemeGroup .vx-setting-opt-btn, #vxThemeGroup .vx-theme-opt').forEach(function(btn) {
     btn.addEventListener('click', function() {
-      applyTheme(btn.getAttribute('data-theme'));
+      applyTheme(this.getAttribute('data-theme') || this.getAttribute('data-theme-val'));
     });
   });
   var savedTheme = 'light';
   try { savedTheme = localStorage.getItem('vx_ielts_theme') || 'light'; } catch(e){}
   applyTheme(savedTheme);
 
-  // 4. Text Size Switcher
+  // 4. Text Size Switcher (Standard, Large, Extra Large)
   function applyTextSize(size) {
     var root = document.documentElement;
-    if (size === 'large') root.style.fontSize = '115%';
-    else if (size === 'xlarge') root.style.fontSize = '130%';
-    else root.style.fontSize = '100%';
+    var zoomMap = { 'default': '100%', '100': '100%', 'large': '115%', '115': '115%', 'xlarge': '130%', '130': '130%' };
+    var val = zoomMap[size] || '100%';
+    root.style.fontSize = val;
 
-    document.querySelectorAll('#vxTextSizeGroup .vx-setting-opt-btn').forEach(function(btn) {
-      var match = btn.getAttribute('data-size') === size;
+    document.querySelectorAll('#vxTextSizeGroup .vx-setting-opt-btn, #vxTextSizeGroup .vx-size-opt').forEach(function(btn) {
+      var btnVal = btn.getAttribute('data-size') || btn.getAttribute('data-zoom');
+      var match = (btnVal === size || (size === '100' && btnVal === 'default') || (size === 'default' && btnVal === '100') || (size === '115' && btnVal === 'large') || (size === 'large' && btnVal === '115') || (size === '130' && btnVal === 'xlarge') || (size === 'xlarge' && btnVal === '130'));
       btn.classList.toggle('active', match);
       var check = btn.querySelector('.vx-check-icon');
       if (check) check.style.display = match ? 'inline' : 'none';
     });
     try { localStorage.setItem('vx_ielts_text_size', size); } catch(e){}
   }
-  document.querySelectorAll('#vxTextSizeGroup .vx-setting-opt-btn').forEach(function(btn) {
+  document.querySelectorAll('#vxTextSizeGroup .vx-setting-opt-btn, #vxTextSizeGroup .vx-size-opt').forEach(function(btn) {
     btn.addEventListener('click', function() {
-      applyTextSize(btn.getAttribute('data-size'));
+      applyTextSize(this.getAttribute('data-size') || this.getAttribute('data-zoom'));
     });
   });
-  var savedTextSize = 'default';
-  try { savedTextSize = localStorage.getItem('vx_ielts_text_size') || 'default'; } catch(e){}
+  var savedTextSize = '100';
+  try { savedTextSize = localStorage.getItem('vx_ielts_text_size') || '100'; } catch(e){}
   applyTextSize(savedTextSize);
 
   // 5. Audio Initializer
@@ -3138,11 +3255,19 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     }
   }
 
-  // Volume slider control
+  // Volume slider control with dynamic blue track fill
   var volumeSlider = document.getElementById('vxAudioVolumeSlider');
+  function updateVolumeTrack(val) {
+    if (!volumeSlider) return;
+    var pct = Math.round(val * 100);
+    volumeSlider.style.background = 'linear-gradient(to right, #2563eb ' + pct + '%, #cbd5e1 ' + pct + '%)';
+  }
   if (volumeSlider && audioEl) {
+    updateVolumeTrack(parseFloat(volumeSlider.value || 1));
     volumeSlider.addEventListener('input', function() {
-      audioEl.volume = parseFloat(this.value);
+      var val = parseFloat(this.value);
+      audioEl.volume = val;
+      updateVolumeTrack(val);
     });
   }
 
@@ -3151,18 +3276,21 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
 
   function updatePartBanner(qNum) {
     var part = 1;
-    var range = '1–10';
-    if (qNum > 30) { part = 4; range = '31–40'; }
-    else if (qNum > 20) { part = 3; range = '21–30'; }
-    else if (qNum > 10) { part = 2; range = '11–20'; }
+    if (qNum > 30) { part = 4; }
+    else if (qNum > 20) { part = 3; }
+    else if (qNum > 10) { part = 2; }
     var leadEl = document.getElementById('vxListeningPartTitle');
     var descEl = document.getElementById('vxListeningPartDesc');
     if (leadEl) leadEl.textContent = 'Part ' + part;
-    if (descEl) descEl.textContent = 'Listen and answer questions ' + range + '.';
+    if (descEl) {
+      descEl.textContent = isFullTest
+        ? 'Listen and answer questions 1–40.'
+        : 'Listen and answer questions ' + (material.startQ || 1) + '–' + (material.endQ || material.questionCount || 10) + '.';
+    }
   }
 
   function jumpToQuestion(qNum) {
-    currentQ = qNum;
+    currentQ = Number(qNum);
     var input = document.getElementById('q' + qNum) ||
                 document.querySelector('[data-q="' + qNum + '"]') ||
                 document.querySelector('[data-question="' + qNum + '"]') ||
@@ -3174,29 +3302,58 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       input.scrollIntoView({ behavior: 'smooth', block: 'center' });
       try { input.focus(); } catch(e){}
     }
-    updatePartBanner(qNum);
+    updatePartBanner(currentQ);
     renderListeningBottomDock();
+  }
+
+  function getListeningPartsConfig() {
+    if (!isFullTest) {
+      var st = material.startQ || 1;
+      var en = material.endQ || material.questionCount || 10;
+      var cnt = en - st + 1;
+      return [{
+        part: 1,
+        title: 'Part 1',
+        start: st,
+        end: en,
+        count: cnt
+      }];
+    }
+    return [
+      { part: 1, title: 'Part 1', start: 1, end: 10, count: 10 },
+      { part: 2, title: 'Part 2', start: 11, end: 20, count: 10 },
+      { part: 3, title: 'Part 3', start: 21, end: 30, count: 10 },
+      { part: 4, title: 'Part 4', start: 31, end: 40, count: 10 }
+    ];
   }
 
   function renderListeningBottomDock() {
     var dockParts = document.getElementById('vxListeningDockParts');
     if (!dockParts) return;
-    var numParts = isFullTest ? 4 : (material.questionCount <= 10 ? 1 : (material.questionCount <= 20 ? 2 : 4));
-    var html = '';
-    for (var p = 1; p <= numParts; p++) {
-      var pStart = (p - 1) * 10 + 1;
-      var pEnd = p * 10;
-      if (material.questionCount !== 40) {
-        pStart = material.startQ + (p - 1) * Math.ceil(material.questionCount / numParts);
-        pEnd = Math.min(material.endQ, pStart + Math.ceil(material.questionCount / numParts) - 1);
+
+    var parts = getListeningPartsConfig();
+    var currentPartNum = 1;
+    for (var i = 0; i < parts.length; i++) {
+      if (currentQ >= parts[i].start && currentQ <= parts[i].end) {
+        currentPartNum = parts[i].part;
+        break;
       }
-      var isPartActive = currentQ >= pStart && currentQ <= pEnd;
-      html += '<div class="vx-cdi-dock-part-group" data-dock-part="' + p + '">';
-      html += '<button type="button" class="vx-cdi-dock-part-tab ' + (isPartActive ? 'active' : '') + '" data-part-jump="' + pStart + '">Part ' + p + '</button>';
-      html += '<div class="vx-cdi-dock-q-list">';
-      for (var q = pStart; q <= pEnd; q++) {
-        var isQActive = (q === currentQ);
-        var ctrl = document.getElementById('q' + q) || document.querySelector('[name="q' + q + '"]') || document.querySelector('[data-q="' + q + '"]');
+    }
+
+    var isReview = Boolean(currentListeningAttempt);
+    var incorrectSet = new Set((currentListeningAttempt && currentListeningAttempt.incorrectQuestions) || []);
+
+    var html = '';
+    parts.forEach(function(p) {
+      var isCurPart = (p.part === currentPartNum);
+      var partAnswered = 0;
+
+      for (var q = p.start; q <= p.end; q++) {
+        var ctrl = document.getElementById('q' + q) ||
+                   document.querySelector('[name="q' + q + '"]') ||
+                   document.querySelector('[name="question-' + q + '"]') ||
+                   document.querySelector('[data-q="' + q + '"]') ||
+                   document.querySelector('[data-question="' + q + '"]');
         var isAnswered = false;
         if (ctrl) {
           if (ctrl.type === 'radio' || ctrl.type === 'checkbox') {
@@ -3206,31 +3363,69 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
             isAnswered = String(ctrl.value || '').trim().length > 0;
           }
         }
-        var isReview = Boolean(currentListeningAttempt);
-        var isIncorrect = isReview && (currentListeningAttempt.incorrectQuestions || []).includes(q);
-        var qClass = 'vx-cdi-dock-q-item';
-        if (isQActive) qClass += ' active';
-        if (isAnswered) qClass += ' answered';
-        if (isReview) {
-          qClass += isIncorrect ? ' review-incorrect' : ' review-correct';
-        }
-        html += '<div class="' + qClass + '" data-q-select="' + q + '"><span class="vx-q-top-line"></span><span>' + q + '</span></div>';
+        if (isAnswered) partAnswered++;
       }
-      html += '</div></div>';
-    }
+
+      if (isCurPart) {
+        var qHtml = '';
+        for (var q = p.start; q <= p.end; q++) {
+          var ctrl = document.getElementById('q' + q) ||
+                     document.querySelector('[name="q' + q + '"]') ||
+                     document.querySelector('[name="question-' + q + '"]') ||
+                     document.querySelector('[data-q="' + q + '"]') ||
+                     document.querySelector('[data-question="' + q + '"]');
+          var isAnswered = false;
+          if (ctrl) {
+            if (ctrl.type === 'radio' || ctrl.type === 'checkbox') {
+              var checkedEl = document.querySelector('[name="' + ctrl.name + '"]:checked');
+              isAnswered = Boolean(checkedEl);
+            } else {
+              isAnswered = String(ctrl.value || '').trim().length > 0;
+            }
+          }
+          var isCurQ = (q === currentQ);
+          var isRevInc = isReview && incorrectSet.has(q);
+          var isRevCor = isReview && !incorrectSet.has(q);
+
+          var itemClass = 'vx-cdi-q-item';
+          if (isCurQ) itemClass += ' current';
+          if (isAnswered) itemClass += ' answered';
+          if (isRevInc) itemClass += ' review-incorrect';
+          if (isRevCor) itemClass += ' review-correct';
+
+          qHtml += '<div class="' + itemClass + '" data-q-select="' + q + '" title="Question ' + q + '">' +
+            '<span class="vx-cdi-q-num">' + q + '</span>' +
+            '<span class="vx-cdi-q-underline"></span>' +
+          '</div>';
+        }
+        html += '<div class="vx-cdi-part-block active" data-part-jump="' + p.start + '">' +
+          '<div class="vx-cdi-part-indicator"></div>' +
+          '<span class="vx-cdi-part-title">' + p.title + '</span>' +
+          '<div class="vx-cdi-question-pills-row">' + qHtml + '</div>' +
+        '</div>';
+      } else {
+        html += '<div class="vx-cdi-part-block inactive" data-part-jump="' + p.start + '">' +
+          '<span class="vx-cdi-part-title">' + p.title + '</span>' +
+          '<span class="vx-cdi-part-count">' + partAnswered + '/' + p.count + '</span>' +
+        '</div>';
+      }
+    });
+
     dockParts.innerHTML = html;
 
     dockParts.querySelectorAll('[data-q-select]').forEach(function(el) {
-      el.onclick = function() {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
         var qNum = parseInt(this.getAttribute('data-q-select'), 10);
         jumpToQuestion(qNum);
-      };
+      });
     });
+
     dockParts.querySelectorAll('[data-part-jump]').forEach(function(el) {
-      el.onclick = function() {
+      el.addEventListener('click', function() {
         var qNum = parseInt(this.getAttribute('data-part-jump'), 10);
         jumpToQuestion(qNum);
-      };
+      });
     });
   }
 

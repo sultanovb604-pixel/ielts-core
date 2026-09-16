@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Listening Practice - History of Time Measurement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --primary-color: #1e6de6;
+            --secondary-bg: #f8f9fa;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --highlight-color: #ffe066;
+            --highlight-text-color: #333333;
+            
+            --font-size: 16px;
+            --input-bg: #ffffff;
+            --input-text: #333333;
+            --track-color: #dddddd;
+            --accent-color: #4a6cf7;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #f0f0f0;
+            --border-color: #444444;
+            --primary-color: #4a90e2;
+            --secondary-bg: #2d2d2d;
+            --correct-color: #2ecc71;
+            --incorrect-color: #e74c3c;
+            --highlight-color: #ffd700;
+            --highlight-text-color: #000000;
+            
+            --input-bg: #2d2d2d;
+            --input-text: #ffffff;
+            --track-color: #4a4a4a;
+            --accent-color: #6d8bff;
+        }
+
+        .font-small {
+            --font-size: 14px;
+        }
+        .font-medium {
+            --font-size: 16px;
+        }
+        .font-large {
+            --font-size: 18px;
+        }
+        .font-xlarge {
+            --font-size: 20px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.4;
+            font-size: var(--font-size);
+            padding-bottom: 90px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        
+
+        .highlight {
+            background-color: var(--highlight-color);
+            color: var(--highlight-text-color) !important;
+            font-weight: 600;
+            padding: 1px 3px;
+            border-radius: 2px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        [data-theme="dark"] .highlight {
+            background-color: var(--highlight-color);
+            color: #000000 !important;
+            text-shadow: none;
+        }
+
+        .comment-highlight {
+            background-color: #90EE90;
+            position: relative;
+            cursor: help;
+            color: #000000 !important;
+        }
+        [data-theme="dark"] .comment-highlight {
+            background-color: #006400;
+            color: #ffffff !important;
+        }
+        .comment-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .comment-highlight:hover .comment-tooltip {
+            opacity: 1;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--bg-color);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .ielts-logo {
+            height: 32px;
+            width: auto;
+            display: block;
+        }
+        
+        
+        .header-icons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .font-size-container {
+            position: relative;
+        }
+        .font-size-btn,
+        .dark-mode-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .font-size-btn:hover,
+        .dark-mode-btn:hover {
+            background-color: var(--secondary-bg);
+        }
+        .font-size-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px 0;
+            min-width: 120px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .font-size-options.show {
+            display: block;
+        }
+        .font-size-options div {
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+        }
+        .font-size-options div:hover {
+            background-color: var(--secondary-bg);
+        }
+        .sun-icon,
+        .moon-icon {
+            position: absolute;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .sun-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .moon-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        [data-theme="dark"] .sun-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        [data-theme="dark"] .moon-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ========= AUDIO PLAYER ========= */
+        .audio-player-container {
+            position: fixed;
+            top: 65px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            max-width: 90%;
+            height: 40px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 99;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .player-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+        }
+        .player-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        #volume-btn svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+        .progress-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+        #progress-bar {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            background: var(--track-color);
+            outline: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #progress-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+        }
+        #progress-bar::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: none;
+            cursor: pointer;
+        }
+        #current-time,
+        #total-duration {
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.8;
+            min-width: 35px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+        .controls-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #new-volume-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 60px;
+            height: 3px;
+            background: var(--track-color);
+            outline: none;
+            border-radius: 2px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        #new-volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-color);
+            cursor: pointer;
+        }
+        #new-volume-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-color);
+            border: none;
+            cursor: pointer;
+        }
+        .speed-container {
+            position: relative;
+        }
+        #speed-btn {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        #speed-options {
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 0;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1200;
+        }
+        #speed-options div {
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-color);
+        }
+        #speed-options div:hover {
+            background-color: var(--secondary-bg);
+        }
+        #speed-options div.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 115px;
+            display: flex;
+            background: var(--bg-color);
+            padding-bottom: 100px;
+            transition: background-color 0.3s;
+        }
+        .main-container.results-mode {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .left-panel {
+            width: 100%;
+            padding: 20px;
+            transition: width 0.4s ease;
+        }
+        .main-container.results-mode .left-panel {
+            width: 75%;
+            overflow-y: auto;
+            height: calc(100vh - 195px);
+        }
+
+        .right-panel {
+            display: none;
+            width: 50%;
+            padding: 20px;
+            position: relative;
+            border-left: 1px solid var(--border-color);
+            overflow-y: auto;
+            height: calc(100vh - 195px);
+        }
+        #transcription-container h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        #transcription-text {
+            white-space: pre-wrap;
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        .main-container.results-mode .right-panel {
+            display: block;
+            width: 25%;
+            border-left: 1px solid var(--border-color);
+            border-top: none;
+            height: calc(100vh - 195px);
+            overflow-y: auto;
+        }
+
+        .part-header {
+            background-color: var(--secondary-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .part-header p {
+            margin: 0;
+        }
+        .questions-container {
+            width: 100%;
+        }
+        .main-container.results-mode .questions-container {
+            width: 80%;
+        }
+        .question {
+            margin-bottom: 40px;
+        }
+        .question-prompt {
+            margin-bottom: 20px;
+        }
+        .question-prompt p {
+            margin-bottom: 10px;
+        }
+        .centered-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .answer-input {
+            border: 1px solid #9aa3ad;
+            border-radius: 4px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            padding: 4px 8px;
+            font-size: 16px;
+            text-align: left;
+            margin-right: 4px;
+            width: 140px;
+            max-width: 160px;
+            min-width: 120px;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            height: 28px;
+            min-height: 28px;
+            line-height: 1.2;
+            vertical-align: middle;
+            font-weight: 600;
+            position: relative;
+            z-index: 10;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        [data-theme="dark"] .answer-input {
+            background-color: var(--input-bg);
+            color: #ffffff;
+            border-color: #666;
+        }
+        .answer-input::placeholder {
+            color: #999;
+            font-weight: bold;
+            text-align: center;
+        }
+        .answer-input:focus {
+            outline: none;
+            border-color: #2c6bed;
+            border-width: 2px;
+        }
+        .answer-input.correct {
+            border-color: var(--correct-color);
+            background-color: #e9f7ef;
+        }
+        .answer-input.incorrect {
+            border-color: var(--incorrect-color);
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .correct-inline {
+            color: var(--correct-color);
+            font-weight: 700;
+            margin-left: 10px;
+            display: inline-block;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .correct-inline::before {
+            content: "→ ";
+            font-weight: 700;
+        }
+
+        .nav-arrows {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            z-index: 101;
+        }
+        .nav-arrow {
+            width: 50px;
+            height: 50px;
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .nav-arrow:hover {
+            background: #555;
+        }
+        .nav-arrow:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nav-row {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            height: 80px;
+            z-index: 100;
+            transition: background-color 0.3s, border-color 0.3s;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        .footer__questionWrapper__1tZ46 {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        .footer__questionNo__3WNct {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+        }
+        .footer__questionNo__3WNct:hover {
+            background-color: var(--secondary-bg);
+        }
+        .section-prefix {
+            font-size: 16px;
+        }
+        .sectionNr {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .attemptedCount {
+            font-size: 14px;
+            color: #666;
+            margin-left: 5px;
+            font-weight: 400;
+        }
+        .footer__questionWrapper__1tZ46.selected .attemptedCount {
+            display: none;
+        }
+        .footer__subquestionWrapper__9GgoP {
+            display: none;
+            gap: 2px;
+            margin-left: 10px;
+        }
+        .footer__questionWrapper__1tZ46.selected .footer__subquestionWrapper__9GgoP {
+            display: flex;
+        }
+        .subQuestion {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            border-radius: 2px;
+        }
+        .subQuestion.answered {
+            background-color: var(--secondary-bg);
+            border-color: var(--border-color);
+        }
+        .subQuestion.correct {
+            background-color: var(--correct-color);
+            color: white;
+            border-color: var(--correct-color);
+        }
+        .subQuestion.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+            border-color: var(--incorrect-color);
+        }
+        .subQuestion:hover {
+            background-color: var(--secondary-bg);
+            border-color: #999;
+        }
+        .subQuestion.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .footer__deliverButton__3FM07 {
+            margin-left: auto;
+            margin-right: 20px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s, border-color 0.2s;
+            min-width: 170px;
+            justify-content: center;
+        }
+        .footer__deliverButton__3FM07:hover {
+            background-color: #e0e0e0;
+            border-color: #bbb;
+        }
+        .footer__deliverButton__3FM07.success {
+            background-color: var(--correct-color);
+            color: #fff;
+            border-color: var(--correct-color);
+        }
+        .footer__deliverButton__3FM07.success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        .hidden {
+            display: none;
+        }
+
+        .context-menu {
+            position: absolute;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+            min-width: 140px;
+        }
+        .context-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 16px;
+            border-bottom: 1px solid var(--secondary-bg);
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .context-menu-item:hover {
+            background-color: var(--secondary-bg);
+        }
+        .context-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: var(--bg-color);
+            padding: 25px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 {
+            font-size: 24px;
+            color: var(--text-color);
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            line-height: 1;
+        }
+        .modal-close-btn:hover {
+            color: var(--text-color);
+        }
+        #score-summary {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        #result-details table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        #result-details th,
+        #result-details td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        #result-details th {
+            background-color: var(--secondary-bg);
+            font-weight: 600;
+        }
+        #result-details td:nth-child(1) {
+            font-weight: bold;
+            text-align: center;
+        }
+        .result-correct {
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+        .result-incorrect {
+            color: var(--incorrect-color);
+            font-weight: bold;
+        }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @keyframes flash {
+            0% {
+                background-color: #e6f4ff;
+            }
+            100% {
+                background-color: transparent;
+            }
+        }
+        .question.flash {
+            animation: flash 1s ease-out;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .right-panel,
+            .main-container.results-mode .right-panel {
+                display: none;
+            }
+            .left-panel,
+            .main-container.results-mode .left-panel {
+                width: 100%;
+                padding: 20px 10px;
+                height: auto;
+            }
+            .questions-container {
+                width: 100%;
+            }
+            .answer-input {
+                width: 90px;
+                max-width: 110px;
+                font-size: 15px;
+            }
+        }
+        @media (max-width: 768px) {
+            .answer-input {
+                width: 80px;
+                max-width: 100px;
+                font-size: 14px;
+                padding: 2px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="https://d2snzxottmona5.cloudfront.net/releases/3.46.0/images/logo/ielts.svg" alt="IELTS Logo" class="ielts-logo">
+            
+        </div>
+        <div class="header-icons">
+            <div class="font-size-container">
+                <button class="font-size-btn" id="font-size-toggle" title="Adjust Font Size">A</button>
+                <div id="font-size-options" class="font-size-options">
+                    <div data-size="small">Small</div>
+                    <div data-size="medium">Medium</div>
+                    <div data-size="large">Large</div>
+                    <div data-size="xlarge">Extra Large</div>
+                </div>
+            </div>
+            <button class="dark-mode-btn" id="dark-mode-toggle" title="Toggle Dark Mode">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= AUDIO PLAYER ================= -->
+    <div class="audio-player-container">
+        <button id="play-pause-btn" class="player-btn" aria-label="Play / Pause">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+        </button>
+        <div class="progress-container">
+            <span id="current-time">0:00</span>
+            <input type="range" id="progress-bar" value="0" step="1" min="0" max="100" aria-label="Seek">
+            <span id="total-duration">0:00</span>
+        </div>
+        <div class="controls-container">
+            <div style="display:flex;align-items:center;">
+                <button id="volume-btn" class="player-btn" aria-label="Toggle mute">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                </button>
+                <input type="range" id="new-volume-slider" min="0" max="1" step="0.01" value="1" aria-label="Volume">
+            </div>
+            <div class="speed-container">
+                <button id="speed-btn" class="player-btn">1x</button>
+                <div id="speed-options" class="hidden">
+                    <div data-speed="0.5">0.5x</div>
+                    <div data-speed="0.75">0.75x</div>
+                    <div data-speed="1" class="active">1x</div>
+                    <div data-speed="1.25">1.25x</div>
+                    <div data-speed="1.5">1.5x</div>
+                    <div data-speed="2">2x</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="global-audio-player" preload="metadata"
+           src="https://raw.githubusercontent.com/foziljon155-glitch/Time-measurement2/448dc9ef4cd4305dfa0850b96ec48630ca7ae905/0806%20(1)(2).MP3"></audio>
+
+    <div class="main-container">
+        <div class="left-panel">
+            <div id="part-4" class="question-part">
+                <div class="part-header">
+                    <p><strong>Part 4</strong></p>
+                    <p>Listen and answer questions 31-40.</p>
+                </div>
+                <div class="questions-container">
+                    <div class="question">
+                        <div class="question-prompt">
+                            <p><strong>Questions 31-35</strong></p>
+                            <p>Write <strong>NO MORE THAN TWO WORDS</strong> for each answer.</p>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <p class="centered-title"><strong>HISTORY OF TIME MEASUREMENT</strong></p>
+                            <div style="margin-bottom: 30px;">
+                                <p><strong>Primitive measurements by observing</strong></p>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="margin-bottom: 10px;">Two time keepers:</li>
+                                    <li style="margin-bottom: 10px; margin-left: 20px;">The <strong>31.</strong> <input type="text" id="q31" class="answer-input" placeholder="31" autocomplete="off"></li>
+                                    <li style="margin-bottom: 10px; margin-left: 20px;">Natural events, such as winds and rains, rivers flooding, plants flowering, and the cycles of breeding or <strong>32.</strong> <input type="text" id="q32" class="answer-input" placeholder="32" autocomplete="off"> behaviour.</li>
+                                </ul>
+                            </div>
+                            <div style="margin-bottom: 30px;">
+                                <p><strong>Precise measurements</strong></p>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="margin-bottom: 10px;">They became important for organising activities for:</li>
+                                    <li style="margin-bottom: 10px; margin-left: 20px;"><strong>33.</strong> <input type="text" id="q33" class="answer-input" placeholder="33" autocomplete="off"></li>
+                                    <li style="margin-bottom: 10px; margin-left: 20px;"><strong>34.</strong> <input type="text" id="q34" class="answer-input" placeholder="34" autocomplete="off"></li>
+                                    <li style="margin-bottom: 10px;">The oldest time keepers were discovered in Mesopotamia and <strong>35.</strong> <input type="text" id="q35" class="answer-input" placeholder="35" autocomplete="off"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="question">
+                        <div class="question-prompt" style="margin-top: 40px;">
+                            <p><strong>Questions 36-40</strong></p>
+                            <p>Write <strong>ONE WORD ONLY</strong> for each answer.</p>
+                            <p><strong>Time keepers and their disadvantages</strong></p>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <div style="margin-bottom: 30px;">
+                                <p><strong>The sundial</strong></p>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="margin-bottom: 10px;">In different parts of the year, the time for day <strong>36.</strong> <input type="text" id="q36" class="answer-input" placeholder="36" autocomplete="off"></li>
+                                </ul>
+                            </div>
+                            <div style="margin-bottom: 30px;">
+                                <p><strong>The clepsydra (Water clock)</strong></p>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="margin-bottom: 10px;">The changing pressure and <strong>37.</strong> <input type="text" id="q37" class="answer-input" placeholder="37" autocomplete="off"> were what the flow of water still relied on.</li>
+                                </ul>
+                            </div>
+                            <div style="margin-bottom: 30px;">
+                                <p><strong>The sandglass</strong></p>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="margin-bottom: 10px;">As clocks became more accurate they were calibrated to measure specific periods of time, replacing <strong>38.</strong> <input type="text" id="q38" class="answer-input" placeholder="38" autocomplete="off"> like lamps or candles.</li>
+                                    <li style="margin-bottom: 10px;">The time duration was <strong>39.</strong> <input type="text" id="q39" class="answer-input" placeholder="39" autocomplete="off"></li>
+                                </ul>
+                            </div>
+                            <div style="margin-bottom: 30px;">
+                                <p><strong>Fire candle clock</strong></p>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li style="margin-bottom: 10px;">The burning <strong>40.</strong> <input type="text" id="q40" class="answer-input" placeholder="40" autocomplete="off"> or the rate of burning, was subject to the candle's wax.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div id="transcription-container">
+                <h2>Transcription</h2>
+                <div id="transcription-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Transcription Data -->
+    <div id="transcription-data" style="display:none;">
+        <div data-part="4">
+            <strong>SECTION 4</strong><br><br>
+            Good morning, everyone. Today, I'm going to talk about the research project I've been involved in on time measurement.<br><br>
+            Do you know how time is measured? Consider how we measure length, and how with time we encounter a difficulty. Before we could grasp it, it would slip through our fingers. In fact, as we can see, we are forced to have the recourse to measure something else—the movement of something in space, or a set of movements in space. All the methods that have been employed so far really measure time by a motion in space. The measurement of time is no easy matter; a scientific unit only arrives at after much thought and reflection.<br><br>
+            As the most primitive form of measurement, the <span class="highlight">sun's position</span> seems to be natural. Ever since man first noticed the regular movements of the sun and stars, we have wondered about the passage of time. Prehistoric people first recorded time according to the sun's position. To start off, let us take noon, which is when the sun is on the meridian at the highest point of its course across the heavens, and when it casts the shortest shadow. But this measurement, which was regarded as a major one in ancient times, was less important than the natural events that occurred.<br><br>
+            The earliest natural events that had been recognised were in the heavens, but during the course of the year there were many other events that indicated significant changes in the environment. Seasonal winds and rains, the flooding of rivers, the flowering of trees and plants, and the breeding cycles or <span class="highlight">migration</span> of animals, all led to natural divisions of the year, and further observation and local customs led to the recognition of the seasons.<br><br>
+            Years later, precise measurements were invented, because the passage of time was extremely important for astronomers and priests who were responsible for determining the exact hour for daily rituals and for important religious festivals. Apart from the connection with <span class="highlight">religion</span>, accurate time measurement was also related to the <span class="highlight">government</span>, since they divided the day or the night into different periods in order to regulate work and various events. For thousands of years, devices have been used to measure and keep track of time. The current sexagesimal system of time measurement, dates back to approximately 2000 BCE from the Sumerians. It was found that the earliest ancient time keepers were mainly invented and used in Mesopotamia, where the water clock was introduced from, as well as in <span class="highlight">North Africa</span>, especially in the area of ancient Egypt.<br><br>
+            So now, I'd like to introduce you to some of the most well-known ancient timekeepers, as well as the disadvantages of them, for which they were replaced by various new forms of clocks that were used afterwards.<br><br>
+            A sundial is a device that tells the time of day by the apparent positioning of the Sun in the sky. In the narrowest sense of the word, it consists of a flat plate and a gnomon which casts a shadow onto the dial. As the sun appears to move across the sky, the shadow aligns with different hour-lines which are marked on the dial to indicate the time of day. However, it was quickly noted that the length of the day <span class="highlight">varied</span> at different times of the year, therefore there could have been a difference between 'clock time' and 'sundial time'. In addition, the sundial was of no use at night, so a water clock was invented.<br><br>
+            The water clock, or clepsydra, appeared to have been invented around 1,500 BCE and was a device which relied on the steady flow of water from or into a container. Measurements could be marked on the container or on a receptacle for the water. It was reliable, but the water flow still depended on the variation of pressure and <span class="highlight">temperature</span> from the top of water in the container.<br><br>
+            As the technology of glass-blowing developed, from some time in the 14th century, it became possible to make <span class="highlight">sandglasses</span>. Originally, they were used as a measure for periods of time like lamps or candles, but as clocks became more accurate they were calibrated to measure specific periods of time. The drawback however, as you can imagine, was the <span class="highlight">limited</span> length of time they could measure.<br><br>
+            The last timekeeper to be introduced is the fire candle clock. Candle clocks take advantage of a simple concept: the slow and consistent nature of a burning wax candle. By utilising this process, our ancestors were able to keep steady track of the time. The clocks were created by engraving the length of the candle with evenly spaced markings. Each marking represented a single unit of time, and as the wax burned down, each hour would disappear. However, the draughts and the variable quality of the wax mainly influenced the <span class="highlight">time</span> of burning. Like oil lamps, candles were used to mark the passage of time from one event to another, rather than tell the time of day...
+        </div>
+    </div>
+
+    <!-- Hidden Answer Key -->
+    <div id="answer-key" style="display:none;">
+        <p>31. sun's position<br>32. migration<br>33. religion<br>34. government<br>35. North Africa<br>36. varied<br>37. temperature<br>38. sandglasses<br>39. limited<br>40. time</p>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <div class="nav-arrows">
+        <button class="nav-arrow" onclick="previousQuestion()" id="prevBtn">‹</button>
+        <button class="nav-arrow" onclick="nextQuestion()" id="nextBtn">›</button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="nav-row perScorableItem" aria-label="Questions">
+        <div class="footer__questionWrapper__1tZ46 multiple selected" role="tablist">
+            <button role="tab" class="footer__questionNo__3WNct" onclick="switchToPart(4)">
+                <span><span aria-hidden="true" class="section-prefix">Part </span><span class="sectionNr" aria-hidden="true">4</span><span class="attemptedCount" aria-hidden="true">0 of 10</span></span>
+            </button>
+            <div class="footer__subquestionWrapper__9GgoP">
+                <button class="subQuestion scorable-item" onclick="goToQuestion(31)"><span class="sr-only">Question 31</span><span aria-hidden="true">31</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(32)"><span class="sr-only">Question 32</span><span aria-hidden="true">32</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(33)"><span class="sr-only">Question 33</span><span aria-hidden="true">33</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(34)"><span class="sr-only">Question 34</span><span aria-hidden="true">34</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(35)"><span class="sr-only">Question 35</span><span aria-hidden="true">35</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(36)"><span class="sr-only">Question 36</span><span aria-hidden="true">36</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(37)"><span class="sr-only">Question 37</span><span aria-hidden="true">37</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(38)"><span class="sr-only">Question 38</span><span aria-hidden="true">38</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(39)"><span class="sr-only">Question 39</span><span aria-hidden="true">39</span></button>
+                <button class="subQuestion scorable-item" onclick="goToQuestion(40)"><span class="sr-only">Question 40</span><span aria-hidden="true">40</span></button>
+            </div>
+        </div>
+        <button id="deliver-button" aria-label="Review your answers" class="footer__deliverButton__3FM07">
+            <i class="fa fa fa-check" aria-hidden="true"></i>
+            <span>Check Answers</span>
+        </button>
+    </nav>
+
+    <!-- Context Menu -->
+    <div id="contextMenu" class="context-menu">
+        <div class="context-menu-item" id="highlight-item" onclick="highlightText()">
+            <span class="context-menu-icon"><svg viewBox="0 0 24 24" fill="black"><path d="M15.24 12.32L12.28 9.36l-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-1.04 1.04-1.04-1.04-3.12 3.12c-.59.58-1.54.58-2.12 0l-1.04-1.04c-.58-.59-.58-1.54 0-2.12L7.88.88c.59-.58 1.54-.58 2.12 0l1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 1.04 1.04 1.04-1.04 3.12 3.12c.58.59.58 1.54 0 2.12l-1.04 1.04c-.58.59-1.54.59-2.12 0zM12 15l-3 3-7-7 3-3 7 7zm-9-5l-2.29 2.29c-.39.39-.39 1.02 0 1.41l8.29 8.29c.39.39 1.02.39 1.41 0L22.7 8.41c.39-.39.39-1.02 0-1.41L14.42.29c-.39-.39-1.02-.39-1.41 0L3 10z"/></svg></span>
+            <span>Highlight</span>
+        </div>
+        <div class="context-menu-item" id="comment-item" onclick="addComment()">
+            <span class="context-menu-icon"><svg viewBox="0 0 24 24" fill="black"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 12H5.17L4 15.17V4h16v10z"/></svg></span>
+            <span>Comment</span>
+        </div>
+        <div class="context-menu-item" id="clear-item" onclick="clearHighlight()" style="display:none;">
+            <span class="context-menu-icon"><svg viewBox="0 0 24 24" fill="black"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></span>
+            <span>Clear</span>
+        </div>
+        <div class="context-menu-item" onclick="clearAllHighlights()">
+            <span class="context-menu-icon"><svg viewBox="0 0 24 24" fill="black"><path d="M16 9h-2.29l3-3-1.42-1.42-3 3V5h-2v2.29l-3-3-1.42 1.42 3 3H5v2h2.29l-3 3 1.42 1.42 3-3V17h2v-2.29l3 3 1.42-1.42-3-3H17V9h-2zm-4 4h-2v-2h2v2z"/></svg></span>
+            <span>Clear All</span>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Results</h2>
+                <button id="modal-close-button" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="score-summary"></p>
+                <div id="result-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPart = 4;
+        let currentQuestion = 31;
+        let selectedText = '';
+        let selectedRange = null;
+        let contextElement = null;
+
+        const body = document.body;
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const fontSizeToggle = document.getElementById('font-size-toggle');
+        const fontSizeOptions = document.getElementById('font-size-options');
+
+        const correctAnswers = {
+            q31: "sun's position",
+            q32: 'migration',
+            q33: 'religion',
+            q34: 'government',
+            q35: 'North Africa',
+            q36: 'varied',
+            q37: 'temperature',
+            q38: 'sandglasses',
+            q39: 'limited',
+            q40: 'time'
+        };
+
+        function initDarkMode() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+        }
+        function toggleDarkMode() {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+        }
+        function changeFontSize(size) {
+            body.classList.remove('font-small', 'font-medium', 'font-large', 'font-xlarge');
+            body.classList.add(`font-${size}`);
+            localStorage.setItem('fontSize', size);
+            fontSizeOptions.classList.remove('show');
+        }
+        function initFontSize() {
+            const savedSize = localStorage.getItem('fontSize') || 'medium';
+            changeFontSize(savedSize);
+        }
+
+        function switchToPart(partNumber) {
+            if (currentPart !== partNumber) currentQuestion = (partNumber - 1) * 10 + 1;
+            currentPart = partNumber;
+            document.querySelectorAll('.question-part').forEach(part => part.classList.add('hidden'));
+            const partToShow = document.getElementById(`part-${partNumber}`);
+            if (partToShow) partToShow.classList.remove('hidden');
+            if (document.querySelector('.main-container.results-mode')) {
+                const src = document.querySelector(`#transcription-data [data-part="${partNumber}"]`);
+                const tgt = document.getElementById('transcription-text');
+                if (src && tgt) tgt.innerHTML = src.innerHTML;
+            }
+            updateNavigation();
+        }
+
+        function goToQuestion(questionNumber) {
+            currentQuestion = questionNumber;
+            if (currentPart !== 4) switchToPart(4);
+            document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('active'));
+            const questionBtn = document.querySelector(`.subQuestion[onclick="goToQuestion(${questionNumber})"]`);
+            if (questionBtn) questionBtn.classList.add('active');
+            const el = document.getElementById(`q${questionNumber}`);
+            if (el) {
+                const container = el.closest('.question') || el.closest('li') || el;
+                if (container) {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    const flashTarget = el.closest('.question') || el;
+                    if (flashTarget) {
+                        flashTarget.classList.add('flash');
+                        setTimeout(() => flashTarget.classList.remove('flash'), 1000);
+                    }
+                }
+            }
+            updateNavigation();
+        }
+
+        function nextQuestion() { if (currentQuestion < 40) goToQuestion(currentQuestion + 1); }
+        function previousQuestion() { if (currentQuestion > 31) goToQuestion(currentQuestion - 1); }
+
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 31;
+            document.getElementById('nextBtn').disabled = currentQuestion === 40;
+            updateAnsweredIndicators();
+        }
+
+        function updateAnsweredIndicators() {
+            for (let q = 31; q <= 40; q++) {
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+                if (!btn || btn.classList.contains('correct') || btn.classList.contains('incorrect')) continue;
+                const input = document.getElementById(`q${q}`);
+                const answered = input && input.value.trim() !== '';
+                btn.classList.toggle('answered', answered);
+            }
+            let count = 0;
+            for (let q = 31; q <= 40; q++) {
+                const input = document.getElementById(`q${q}`);
+                if (input && input.value.trim() !== '') count++;
+            }
+            const disp = document.querySelector('.attemptedCount');
+            if (disp) disp.textContent = `${count} of 10`;
+        }
+
+        function highlightText() {
+            if (!selectedRange || selectedRange.collapsed) { closeContextMenu(); return; }
+            try {
+                const span = document.createElement('span');
+                span.className = 'highlight';
+                selectedRange.surroundContents(span);
+            } catch (e) { document.execCommand('backColor', false, 'yellow'); }
+            window.getSelection().removeAllRanges();
+            closeContextMenu();
+        }
+        function addComment() {
+            const text = prompt('Enter your comment:');
+            if (!text || !selectedRange || selectedRange.collapsed) { closeContextMenu(); return; }
+            try {
+                const span = document.createElement('span');
+                span.className = 'comment-highlight';
+                const tooltip = document.createElement('span');
+                tooltip.className = 'comment-tooltip';
+                tooltip.textContent = text;
+                span.appendChild(tooltip);
+                selectedRange.surroundContents(span);
+            } catch (e) {}
+            window.getSelection().removeAllRanges();
+            closeContextMenu();
+        }
+        function clearHighlight() {
+            if (!contextElement) { closeContextMenu(); return; }
+            const parent = contextElement.parentNode;
+            while (contextElement.firstChild) {
+                if (!contextElement.firstChild.classList?.contains('comment-tooltip')) parent.insertBefore(contextElement.firstChild, contextElement);
+                else contextElement.removeChild(contextElement.firstChild);
+            }
+            parent.removeChild(contextElement);
+            parent.normalize();
+            closeContextMenu();
+        }
+        function clearAllHighlights() {
+            document.querySelectorAll('.highlight, .comment-highlight').forEach(el => {
+                const parent = el.parentNode;
+                const frag = document.createDocumentFragment();
+                while (el.firstChild) {
+                    if (el.firstChild.nodeType === 1 && el.firstChild.classList.contains('comment-tooltip')) el.removeChild(el.firstChild);
+                    else frag.appendChild(el.firstChild);
+                }
+                parent.replaceChild(frag, el);
+            });
+            closeContextMenu();
+        }
+        function closeContextMenu() {
+            document.getElementById('contextMenu').style.display = 'none';
+            contextElement = null;
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            const results = [];
+            document.querySelectorAll('.correct, .incorrect, .correct-inline').forEach(el => {
+                if (el.classList.contains('correct-inline')) el.remove();
+                else el.classList.remove('correct', 'incorrect');
+            });
+            for (let q = 31; q <= 40; q++) {
+                const key = `q${q}`;
+                const input = document.getElementById(key);
+                const user = input ? input.value.trim() : '';
+                const correct = correctAnswers[key];
+                const isCorrect = user.toLowerCase().replace(/'/g, '') === correct.toLowerCase().replace(/'/g, '');
+                if (isCorrect) score++;
+                if (input) {
+                    input.classList.remove('correct', 'incorrect');
+                    input.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (!isCorrect) {
+                        const span = document.createElement('span');
+                        span.className = 'correct-inline';
+                        span.textContent = correct;
+                        input.insertAdjacentElement('afterend', span);
+                    }
+                }
+                const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${q})"]`);
+                if (btn) { btn.classList.remove('answered'); btn.classList.add(isCorrect ? 'correct' : 'incorrect'); }
+                results.push({ question: q, userAnswer: user || 'No Answer', correctAnswer: correct, isCorrect });
+            }
+            const band = score >= 10 ? 9 : score >= 9 ? 8.5 : score >= 8 ? 8 : score >= 7 ? 7.5 : score >= 6 ? 7 : score >= 5 ? 6.5 : 5;
+            document.querySelectorAll('.answer-input').forEach(inp => inp.disabled = true);
+            document.querySelector('.main-container').classList.add('results-mode');
+            switchToPart(4);
+            const modal = document.getElementById('result-modal');
+            document.getElementById('score-summary').textContent = `You scored ${score} out of 10 (Band ${band}).`;
+            let html = '<table><thead><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>';
+            results.forEach(r => {
+                html += `<tr><td>${r.question}</td><td>${r.userAnswer}</td><td>${r.correctAnswer}</td><td class="${r.isCorrect ? 'result-correct' : 'result-incorrect'}">${r.isCorrect ? '✔ Correct' : '✖ Incorrect'}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('result-details').innerHTML = html;
+            modal.style.display = 'flex';
+            const delBtn = document.getElementById('deliver-button');
+            delBtn.classList.add('success');
+            delBtn.innerHTML = '<span>My Results</span>';
+            delBtn.disabled = false;
+            const newBtn = delBtn.cloneNode(true);
+            delBtn.parentNode.replaceChild(newBtn, delBtn);
+            newBtn.addEventListener('click', () => modal.style.display = 'flex');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            initFontSize();
+            switchToPart(4);
+            goToQuestion(31);
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+            fontSizeToggle.addEventListener('click', () => fontSizeOptions.classList.toggle('show'));
+            document.addEventListener('click', (e) => { if (!e.target.closest('.font-size-container')) fontSizeOptions.classList.remove('show'); });
+            document.querySelectorAll('.font-size-options div').forEach(option => {
+                option.addEventListener('click', () => changeFontSize(option.getAttribute('data-size')));
+            });
+            document.getElementById('deliver-button').addEventListener('click', checkAnswers);
+            document.getElementById('modal-close-button').addEventListener('click', () => {
+                document.getElementById('result-modal').style.display = 'none';
+            });
+            document.querySelectorAll('.answer-input').forEach(input => {
+                input.addEventListener('input', updateAnsweredIndicators);
+            });
+            document.body.addEventListener('contextmenu', function(e) {
+                const sel = window.getSelection().toString();
+                if (!sel) return;
+                e.preventDefault();
+                const menu = document.getElementById('contextMenu');
+                menu.style.left = e.pageX + 'px';
+                menu.style.top = e.pageY + 'px';
+                menu.style.display = 'block';
+                contextElement = e.target.closest('.highlight, .comment-highlight');
+                document.getElementById('clear-item').style.display = contextElement ? 'block' : 'none';
+            });
+            document.body.addEventListener('click', function(e) {
+                if (!e.target.closest('.context-menu')) document.getElementById('contextMenu').style.display = 'none';
+            });
+            document.addEventListener('selectionchange', () => {
+                const sel = window.getSelection();
+                if (sel && sel.rangeCount > 0 && !sel.isCollapsed) selectedRange = sel.getRangeAt(0);
+            });
+            updateAnsweredIndicators();
+        });
+    </script>
+
+    <!-- ================= AUDIO PLAYER SCRIPT ================= -->
+    <script>
+        (function() {
+            const audio = document.getElementById('global-audio-player');
+            const playBtn = document.getElementById('play-pause-btn');
+            const progress = document.getElementById('progress-bar');
+            const currentLabel = document.getElementById('current-time');
+            const totalLabel = document.getElementById('total-duration');
+            const volumeSlider = document.getElementById('new-volume-slider');
+            const volumeBtn = document.getElementById('volume-btn');
+            const speedBtn = document.getElementById('speed-btn');
+            const speedOptions = document.getElementById('speed-options');
+            let isDragging = false;
+
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return m + ':' + (s < 10 ? '0' : '') + s;
+            }
+            function togglePlay() {
+                if (audio.paused) { audio.play().catch(() => {}); } else { audio.pause(); }
+            }
+            function updatePlayIcon() {
+                playBtn.innerHTML = audio.paused ?
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' :
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+            }
+            function updateVolumeIcon(val) {
+                const v = val !== undefined ? val : audio.volume;
+                const icon = volumeBtn.querySelector('svg');
+                if (v === 0) {
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+                } else if (v < 0.5) {
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                } else {
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                }
+            }
+            function setVolume(val) {
+                const v = Math.min(1, Math.max(0, parseFloat(val)));
+                audio.volume = v;
+                volumeSlider.value = v;
+                updateVolumeIcon(v);
+            }
+            function toggleMute() {
+                if (audio.volume > 0) { audio.dataset.prevVolume = audio.volume; setVolume(0); } else { setVolume(parseFloat(audio.dataset.prevVolume) || 0.8); }
+            }
+            function setSpeed(val) {
+                const speed = parseFloat(val);
+                if (isNaN(speed)) return;
+                audio.playbackRate = speed;
+                speedBtn.textContent = speed + 'x';
+                speedOptions.querySelectorAll('div').forEach(el => {
+                    el.classList.toggle('active', parseFloat(el.dataset.speed) === speed);
+                });
+                speedOptions.classList.add('hidden');
+            }
+
+            playBtn.addEventListener('click', togglePlay);
+            audio.addEventListener('play', updatePlayIcon);
+            audio.addEventListener('pause', updatePlayIcon);
+            audio.addEventListener('ended', () => { updatePlayIcon(); progress.value = 0; currentLabel.textContent = formatTime(0); });
+            audio.addEventListener('loadedmetadata', () => {
+                progress.max = audio.duration;
+                totalLabel.textContent = formatTime(audio.duration);
+                currentLabel.textContent = formatTime(audio.currentTime);
+            });
+            audio.addEventListener('timeupdate', () => {
+                if (isDragging) return;
+                progress.value = audio.currentTime;
+                currentLabel.textContent = formatTime(audio.currentTime);
+            });
+            progress.addEventListener('mousedown', () => { isDragging = true; });
+            progress.addEventListener('mouseup', () => { isDragging = false; });
+            progress.addEventListener('touchstart', () => { isDragging = true; });
+            progress.addEventListener('touchend', () => { isDragging = false; });
+            progress.addEventListener('input', () => {
+                audio.currentTime = progress.value;
+                currentLabel.textContent = formatTime(progress.value);
+            });
+            volumeSlider.addEventListener('input', (e) => {
+                const v = parseFloat(e.target.value);
+                audio.volume = v;
+                updateVolumeIcon(v);
+            });
+            volumeBtn.addEventListener('click', toggleMute);
+            speedBtn.addEventListener('click', (e) => { e.stopPropagation(); speedOptions.classList.toggle('hidden'); });
+            speedOptions.addEventListener('click', (e) => { if (e.target.dataset.speed) setSpeed(e.target.dataset.speed); });
+            document.addEventListener('click', () => speedOptions.classList.add('hidden'));
+            document.addEventListener('keydown', (e) => {
+                if (e.code !== 'Space') return;
+                const tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '';
+                if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
+                e.preventDefault();
+                togglePlay();
+            });
+            setVolume(1);
+            updatePlayIcon();
+            audio.addEventListener('error', () => { console.warn('Audio failed to load.'); totalLabel.textContent = '-:--'; });
+        })();
+    </script>
+</body>
+</html>
