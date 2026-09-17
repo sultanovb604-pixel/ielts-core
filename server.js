@@ -5730,8 +5730,19 @@ async function getDatabase() {
   }
 }
 
-let inMemoryData = null;
-let inMemoryCachedAt = 0;
+function loadInitialState() {
+  try {
+    if (fs.existsSync(DATA_FILE)) {
+      return normalizeData(JSON.parse(fs.readFileSync(DATA_FILE, "utf8")));
+    }
+  } catch (err) {
+    console.error("Initial data load notice:", err.message);
+  }
+  return emptyData();
+}
+
+let inMemoryData = loadInitialState();
+let inMemoryCachedAt = Date.now();
 let isSyncingDb = false;
 const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
 const SUPABASE_KEY = String(process.env.SUPABASE_KEY || "").trim();
@@ -5742,7 +5753,7 @@ const FIRESTORE_CONFIGURED = Boolean(FIRESTORE_PROJECT_ID && FIRESTORE_API_KEY);
 const DURABLE_STORAGE_CONFIGURED = Boolean(SUPABASE_CONFIGURED || DATABASE_URL || FIRESTORE_CONFIGURED);
 if (Boolean(SUPABASE_URL) !== Boolean(SUPABASE_KEY)) console.error("ERROR: SUPABASE_URL and SUPABASE_KEY must both be configured.");
 if (IS_PRODUCTION && !DURABLE_STORAGE_CONFIGURED) console.error("ERROR: No durable database is configured; state-changing API routes are disabled.");
-const SUPABASE_CACHE_MS = 5_000;
+const SUPABASE_CACHE_MS = 120_000; // 2 minutes cache TTL to avoid continuous remote roundtrips
 let supabaseLastReadAt = 0;
 let supabaseLastWriteAt = 0;
 let supabaseLastError = "";
@@ -9642,12 +9653,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     const ext = path.extname(file).toLowerCase();
-    const cacheControl = "no-cache, must-revalidate";
-
-    res.writeHead(200, { "Content-Type": mime[ext] || "application/octet-stream", "Cache-Control": cacheControl });
-    const stream = fs.createReadStream(file);
-    stream.on('error', () => { if (!res.headersSent) { res.writeHead(500); res.end('File read error'); } });
-    stream.pipe(res);
+    const isStaticAsset = ext !== ".html";
+    return serveCompressedFile(req, res, file, mime[ext] || "application/octet-stream", isStaticAsset);
   } catch (error) {
     console.error("Internal Server Error:", error);
     if (res.headersSent) return res.end();
@@ -9657,16 +9664,18 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-// Periodic automated database backup (runs every 30 minutes)
-setInterval(async () => {
-  try {
-    const data = await readData();
-    performDataBackup(data);
-  } catch (_) {}
-}, 30 * 60 * 1000);
+if (require.main === module) {
+  // Periodic automated database backup (runs every 30 minutes)
+  setInterval(async () => {
+    try {
+      const data = await readData();
+      performDataBackup(data);
+    } catch (_) {}
+  }, 30 * 60 * 1000);
 
-// Perform immediate backup on startup
-readData().then(data => performDataBackup(data)).catch(() => {});
+  // Perform immediate backup on startup
+  readData().then(data => performDataBackup(data)).catch(() => {});
+}
 
 // Graceful shutdown handler to ensure in-memory state is flushed to disk
 function handleShutdown() {
