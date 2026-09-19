@@ -5473,6 +5473,296 @@
       ]
     },
     {
+      "id": "b7d09590-738d-4bef-afa1-f0db030e603d",
+      "band": 9,
+      "kind": "full-test",
+      "skill": "reading",
+      "total": 40,
+      "points": 100,
+      "answers": [
+        {
+          "key": "q1",
+          "type": "text",
+          "value": "YES",
+          "checked": false
+        },
+        {
+          "key": "q2",
+          "type": "text",
+          "value": "YES",
+          "checked": false
+        },
+        {
+          "key": "q3",
+          "type": "text",
+          "value": "NO",
+          "checked": false
+        },
+        {
+          "key": "q4",
+          "type": "text",
+          "value": "NOT GIVEN",
+          "checked": false
+        },
+        {
+          "key": "q5",
+          "type": "text",
+          "value": "NO",
+          "checked": false
+        },
+        {
+          "key": "q6",
+          "type": "text",
+          "value": "NOT GIVEN",
+          "checked": false
+        },
+        {
+          "key": "q7",
+          "type": "text",
+          "value": "sail",
+          "checked": false
+        },
+        {
+          "key": "q8",
+          "type": "text",
+          "value": "narrow",
+          "checked": false
+        },
+        {
+          "key": "q9",
+          "type": "text",
+          "value": "locomotion",
+          "checked": false
+        },
+        {
+          "key": "q10",
+          "type": "text",
+          "value": "moisture",
+          "checked": false
+        },
+        {
+          "key": "q11",
+          "type": "text",
+          "value": "stress",
+          "checked": false
+        },
+        {
+          "key": "q12",
+          "type": "text",
+          "value": "ground",
+          "checked": false
+        },
+        {
+          "key": "q13",
+          "type": "text",
+          "value": "fossil tracks",
+          "checked": false
+        },
+        {
+          "key": "q14",
+          "type": "text",
+          "value": "C",
+          "checked": false
+        },
+        {
+          "key": "q15",
+          "type": "text",
+          "value": "E",
+          "checked": false
+        },
+        {
+          "key": "q16",
+          "type": "text",
+          "value": "B",
+          "checked": false
+        },
+        {
+          "key": "q17",
+          "type": "text",
+          "value": "D",
+          "checked": false
+        },
+        {
+          "key": "q18",
+          "type": "text",
+          "value": "A",
+          "checked": false
+        },
+        {
+          "key": "q19",
+          "type": "text",
+          "value": "F",
+          "checked": false
+        },
+        {
+          "key": "q20",
+          "type": "text",
+          "value": "C",
+          "checked": false
+        },
+        {
+          "key": "q21",
+          "type": "text",
+          "value": "D",
+          "checked": false
+        },
+        {
+          "key": "q22",
+          "type": "text",
+          "value": "C",
+          "checked": false
+        },
+        {
+          "key": "q23",
+          "type": "text",
+          "value": "A",
+          "checked": false
+        },
+        {
+          "key": "q24",
+          "type": "text",
+          "value": "disc",
+          "checked": false
+        },
+        {
+          "key": "q25",
+          "type": "text",
+          "value": "patterns",
+          "checked": false
+        },
+        {
+          "key": "q26",
+          "type": "text",
+          "value": "Mars",
+          "checked": false
+        },
+        {
+          "key": "q27",
+          "type": "text",
+          "value": "YES",
+          "checked": false
+        },
+        {
+          "key": "q28",
+          "type": "text",
+          "value": "NO",
+          "checked": false
+        },
+        {
+          "key": "q29",
+          "type": "text",
+          "value": "YES",
+          "checked": false
+        },
+        {
+          "key": "q30",
+          "type": "text",
+          "value": "NOT GIVEN",
+          "checked": false
+        },
+        {
+          "key": "q31",
+          "type": "text",
+          "value": "YES",
+          "checked": false
+        },
+        {
+          "key": "q32",
+          "type": "text",
+          "value": "NO",
+          "checked": false
+        },
+        {
+          "key": "q33",
+          "type": "text",
+          "value": "D",
+          "checked": false
+        },
+        {
+          "key": "q34",
+          "type": "text",
+          "value": "A",
+          "checked": false
+        },
+        {
+          "key": "q35",
+          "type": "text",
+          "value": "C",
+          "checked": false
+        },
+        {
+          "key": "q36",
+          "type": "text",
+          "value": "A",
+          "checked": false
+        },
+        {
+          "key": "q37",
+          "type": "text",
+          "value": "C",
+          "checked": false
+        },
+        {
+          "key": "q38",
+          "type": "text",
+          "value": "A",
+          "checked": false
+        },
+        {
+          "key": "q39",
+          "type": "text",
+          "value": "F",
+          "checked": false
+        },
+        {
+          "key": "q40",
+          "type": "text",
+          "value": "B",
+          "checked": false
+        }
+      ],
+      "correct": 100,
+      "verified": true,
+      "createdAt": "2026-09-19T12:02:54.266+00:00",
+      "studentId": "0a630267-85c8-4982-a996-de58d77b7d12",
+      "materialId": "reading-46e7438e9982",
+      "materialTitle": "IELTS Reading Full Test 01",
+      "partBreakdown": [
+        {
+          "part": "Part 1",
+          "mistakes": 0
+        },
+        {
+          "part": "Part 2",
+          "mistakes": 0
+        },
+        {
+          "part": "Part 3",
+          "mistakes": 0
+        }
+      ],
+      "durationSeconds": 1200,
+      "incorrectQuestions": [],
+      "questionTypeBreakdown": [
+        {
+          "type": "True / False / Not Given & Yes/No/NG",
+          "mistakes": 0
+        },
+        {
+          "type": "Matching Headings & Information",
+          "mistakes": 0
+        },
+        {
+          "type": "Multiple Choice Questions (MCQ)",
+          "mistakes": 0
+        },
+        {
+          "type": "Sentence & Summary Completion",
+          "mistakes": 0
+        }
+      ]
+    },
+    {
       "id": "b922364d-e7d5-4765-9861-a77836e21089",
       "band": 2,
       "kind": "full-test",
@@ -6119,6 +6409,96 @@
         {
           "type": "Sentence & Summary Completion",
           "mistakes": 8
+        }
+      ]
+    },
+    {
+      "id": "c2fc77c2-10aa-4247-8c24-0043b4a7ca70",
+      "band": 0,
+      "kind": "full-test",
+      "skill": "reading",
+      "total": 40,
+      "points": 0,
+      "answers": [],
+      "correct": 0,
+      "verified": true,
+      "createdAt": "2026-09-19T12:02:54.282+00:00",
+      "studentId": "0a630267-85c8-4982-a996-de58d77b7d12",
+      "materialId": "reading-46e7438e9982",
+      "materialTitle": "IELTS Reading Full Test 01",
+      "partBreakdown": [
+        {
+          "part": "Part 1",
+          "mistakes": 13
+        },
+        {
+          "part": "Part 2",
+          "mistakes": 13
+        },
+        {
+          "part": "Part 3",
+          "mistakes": 14
+        }
+      ],
+      "durationSeconds": 1,
+      "incorrectQuestions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "questionTypeBreakdown": [
+        {
+          "type": "True / False / Not Given & Yes/No/NG",
+          "mistakes": 13
+        },
+        {
+          "type": "Matching Headings & Information",
+          "mistakes": 7
+        },
+        {
+          "type": "Multiple Choice Questions (MCQ)",
+          "mistakes": 11
+        },
+        {
+          "type": "Sentence & Summary Completion",
+          "mistakes": 9
         }
       ]
     },
@@ -8602,6 +8982,345 @@
       ]
     },
     {
+      "id": "478e130f-17f7-4034-9223-cc68f1801a84",
+      "band": 0,
+      "kind": "full-test",
+      "skill": "listening",
+      "total": 40,
+      "points": 0,
+      "answers": [],
+      "correct": 0,
+      "createdAt": "2026-09-19T12:02:45.307+00:00",
+      "studentId": "b9daa74a-5b8b-4f2a-9bf8-e81c81acbf10",
+      "materialId": "listening-full-test-01",
+      "materialTitle": "IELTS Listening Full Test 01",
+      "partBreakdown": [
+        {
+          "part": "Part 1",
+          "mistakes": 10
+        },
+        {
+          "part": "Part 2",
+          "mistakes": 10
+        },
+        {
+          "part": "Part 3",
+          "mistakes": 10
+        },
+        {
+          "part": "Part 4",
+          "mistakes": 10
+        }
+      ],
+      "durationSeconds": 5,
+      "incorrectQuestions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "questionTypeBreakdown": [
+        {
+          "type": "Note & Form Completion",
+          "mistakes": 20
+        },
+        {
+          "type": "Multiple Choice Questions (MCQ)",
+          "mistakes": 11
+        },
+        {
+          "type": "Matching & Classification",
+          "mistakes": 9
+        }
+      ]
+    },
+    {
+      "id": "4d8c8fdb-40b6-44a6-bf15-0c83315b5b9f",
+      "band": 0,
+      "kind": "full-test",
+      "skill": "listening",
+      "total": 40,
+      "points": 0,
+      "answers": [
+        {
+          "key": "q1",
+          "value": ""
+        },
+        {
+          "key": "q2",
+          "value": ""
+        },
+        {
+          "key": "q3",
+          "value": ""
+        },
+        {
+          "key": "q4",
+          "value": ""
+        },
+        {
+          "key": "q5",
+          "value": ""
+        },
+        {
+          "key": "q6",
+          "value": ""
+        },
+        {
+          "key": "q7",
+          "value": ""
+        },
+        {
+          "key": "q8",
+          "value": ""
+        },
+        {
+          "key": "q9",
+          "value": ""
+        },
+        {
+          "key": "q10",
+          "value": ""
+        },
+        {
+          "key": "q11",
+          "value": ""
+        },
+        {
+          "key": "q12",
+          "value": ""
+        },
+        {
+          "key": "q13",
+          "value": ""
+        },
+        {
+          "key": "q14",
+          "value": ""
+        },
+        {
+          "key": "q15",
+          "value": ""
+        },
+        {
+          "key": "q16",
+          "value": ""
+        },
+        {
+          "key": "q17",
+          "value": ""
+        },
+        {
+          "key": "q18",
+          "value": ""
+        },
+        {
+          "key": "q19",
+          "value": ""
+        },
+        {
+          "key": "q20",
+          "value": ""
+        },
+        {
+          "key": "q21",
+          "value": ""
+        },
+        {
+          "key": "q22",
+          "value": ""
+        },
+        {
+          "key": "q23",
+          "value": ""
+        },
+        {
+          "key": "q24",
+          "value": ""
+        },
+        {
+          "key": "q25",
+          "value": ""
+        },
+        {
+          "key": "q26",
+          "value": ""
+        },
+        {
+          "key": "q27",
+          "value": ""
+        },
+        {
+          "key": "q28",
+          "value": ""
+        },
+        {
+          "key": "q29",
+          "value": ""
+        },
+        {
+          "key": "q30",
+          "value": ""
+        },
+        {
+          "key": "q31",
+          "value": ""
+        },
+        {
+          "key": "q32",
+          "value": ""
+        },
+        {
+          "key": "q33",
+          "value": ""
+        },
+        {
+          "key": "q34",
+          "value": ""
+        },
+        {
+          "key": "q35",
+          "value": ""
+        },
+        {
+          "key": "q36",
+          "value": ""
+        },
+        {
+          "key": "q37",
+          "value": ""
+        },
+        {
+          "key": "q38",
+          "value": ""
+        },
+        {
+          "key": "q39",
+          "value": ""
+        },
+        {
+          "key": "q40",
+          "value": ""
+        }
+      ],
+      "correct": 0,
+      "createdAt": "2026-09-16T16:28:16.166+00:00",
+      "studentId": "34914327-3b7e-4934-b8ec-f040c3d1d776",
+      "materialId": "listening-full-test-01",
+      "materialTitle": "IELTS Listening Full Test 01",
+      "partBreakdown": [
+        {
+          "part": "Part 1",
+          "mistakes": 10
+        },
+        {
+          "part": "Part 2",
+          "mistakes": 10
+        },
+        {
+          "part": "Part 3",
+          "mistakes": 10
+        },
+        {
+          "part": "Part 4",
+          "mistakes": 10
+        }
+      ],
+      "durationSeconds": 646,
+      "incorrectQuestions": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "questionTypeBreakdown": [
+        {
+          "type": "Note & Form Completion",
+          "mistakes": 20
+        },
+        {
+          "type": "Multiple Choice Questions (MCQ)",
+          "mistakes": 11
+        },
+        {
+          "type": "Matching & Classification",
+          "mistakes": 9
+        }
+      ]
+    },
+    {
       "id": "58a1a819-b726-45e7-86f7-5038a95a2756",
       "band": 0,
       "kind": "skill-practice",
@@ -9762,6 +10481,215 @@
         {
           "type": "Multiple Choice & Matching",
           "mistakes": 10
+        }
+      ]
+    },
+    {
+      "id": "ca7e7e50-bd65-4f9a-98d1-7ea8cd5bbb5e",
+      "band": 9,
+      "kind": "full-test",
+      "skill": "listening",
+      "total": 40,
+      "points": 100,
+      "answers": [
+        {
+          "key": "q1",
+          "value": "B"
+        },
+        {
+          "key": "q2",
+          "value": "B"
+        },
+        {
+          "key": "q3",
+          "value": "C"
+        },
+        {
+          "key": "q4",
+          "value": "A"
+        },
+        {
+          "key": "q5",
+          "value": "D"
+        },
+        {
+          "key": "q6",
+          "value": "B"
+        },
+        {
+          "key": "q7",
+          "value": "write music"
+        },
+        {
+          "key": "q8",
+          "value": "85"
+        },
+        {
+          "key": "q9",
+          "value": "14th September"
+        },
+        {
+          "key": "q10",
+          "value": "Curtis"
+        },
+        {
+          "key": "q11",
+          "value": "lake"
+        },
+        {
+          "key": "q12",
+          "value": "picnic"
+        },
+        {
+          "key": "q13",
+          "value": "flowers"
+        },
+        {
+          "key": "q14",
+          "value": "20"
+        },
+        {
+          "key": "q15",
+          "value": "motor"
+        },
+        {
+          "key": "q16",
+          "value": "art gallery"
+        },
+        {
+          "key": "q17",
+          "value": "concert hall"
+        },
+        {
+          "key": "q18",
+          "value": "2:30"
+        },
+        {
+          "key": "q19",
+          "value": "C"
+        },
+        {
+          "key": "q20",
+          "value": "B"
+        },
+        {
+          "key": "q21",
+          "value": "C"
+        },
+        {
+          "key": "q22",
+          "value": "D"
+        },
+        {
+          "key": "q23",
+          "value": "C"
+        },
+        {
+          "key": "q24",
+          "value": "E"
+        },
+        {
+          "key": "q25",
+          "value": "A"
+        },
+        {
+          "key": "q26",
+          "value": "C"
+        },
+        {
+          "key": "q27",
+          "value": "B"
+        },
+        {
+          "key": "q28",
+          "value": "E"
+        },
+        {
+          "key": "q29",
+          "value": "G"
+        },
+        {
+          "key": "q30",
+          "value": "A"
+        },
+        {
+          "key": "q31",
+          "value": "B"
+        },
+        {
+          "key": "q32",
+          "value": "B"
+        },
+        {
+          "key": "q33",
+          "value": "B"
+        },
+        {
+          "key": "q34",
+          "value": "C"
+        },
+        {
+          "key": "q35",
+          "value": "leak"
+        },
+        {
+          "key": "q36",
+          "value": "conference centre"
+        },
+        {
+          "key": "q37",
+          "value": "balcony"
+        },
+        {
+          "key": "q38",
+          "value": "car park"
+        },
+        {
+          "key": "q39",
+          "value": "exercise"
+        },
+        {
+          "key": "q40",
+          "value": "transport museum"
+        }
+      ],
+      "correct": 100,
+      "createdAt": "2026-09-19T12:02:45.283+00:00",
+      "studentId": "b9daa74a-5b8b-4f2a-9bf8-e81c81acbf10",
+      "materialId": "listening-full-test-01",
+      "materialTitle": "IELTS Listening Full Test 01",
+      "partBreakdown": [
+        {
+          "part": "Part 1",
+          "mistakes": 0
+        },
+        {
+          "part": "Part 2",
+          "mistakes": 0
+        },
+        {
+          "part": "Part 3",
+          "mistakes": 0
+        },
+        {
+          "part": "Part 4",
+          "mistakes": 0
+        }
+      ],
+      "durationSeconds": 1200,
+      "incorrectQuestions": [],
+      "questionTypeBreakdown": [
+        {
+          "type": "Note & Form Completion",
+          "mistakes": 0
+        },
+        {
+          "type": "Multiple Choice Questions (MCQ)",
+          "mistakes": 0
+        },
+        {
+          "type": "Matching & Classification",
+          "mistakes": 0
         }
       ]
     },
@@ -11107,9 +12035,21 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJmbWF0eWFxdWJvdmEzMzVAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJnb29nbGUiLCJncmFkZSI6ImJlZ2lubmVyIiwibGVhcm5pbmciOiIiLCJnb2FsIjoiIiwicGxhbkV4cGlyZXNBdCI6bnVsbCwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSUxha2I5a2lIdGNpUE9IbUFrSUdWM3JvX3VBWml2Nm1BZ3hXQUFpQzkyZTVKTlZRPXM5Ni1jIn0",
       "planExpiresAt": null,
       "profileWallpaper": "default"
+    },
+    {
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJib2J1cmF0YW11cmF0b3Y2MjJAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiJzcVVlNEZJcXY0TjJpNUZiOGhWTFJBVk9wUksyIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOiIyMDI3LTAzLTE1VDE2OjA2OjEwLjYxM1oiLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJUmxucVBnUjZFcXdnT204X1lxMGhoZkpUWFhhQjNsbGNTdDJkd0VyZDgwc0xLanc9czk2LWMifQ",
+      "id": "02e6a4d6-de08-4e2e-a17f-80b2f0da9721",
+      "name": "Bobur Atamuratov",
+      "username": "boburatamuratov622",
+      "salt": "",
+      "role": "student",
+      "plan": "premium",
+      "planExpiresAt": "2027-03-15T16:06:10.613+00:00",
+      "grade": "beginner",
+      "createdAt": "2026-09-16T16:05:32.042+00:00"
     },
     {
       "id": "03ec4065-5f34-47a3-a02e-690f580fe692",
@@ -11117,7 +12057,7 @@
       "name": "Bekhruz Xolboyev",
       "plan": "free",
       "role": "student",
-      "salt": "2345a2215a04f07e014db0e55824a029",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11127,7 +12067,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "14182d0c1752be1264479c9371367ef32b87c3f459716b918d2c1f8f793d176faf8e86aec2149fd4b1e11f86ee4604f009ead5db4efc8c31e44f17504f4ce656",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMjM0NWEyMjE1YTA0ZjA3ZTAxNGRiMGU1NTgyNGEwMjkiLCJwYXNzd29yZEhhc2giOiIxNDE4MmQwYzE3NTJiZTEyNjQ0NzljOTM3MTM2N2VmMzJiODdjM2Y0NTk3MTZiOTE4ZDJjMWY4Zjc5M2QxNzZmYWY4ZTg2YWVjMjE0OWZkNGIxZTExZjg2ZWU0NjA0ZjAwOWVhZDVkYjRlZmM4YzMxZTQ0ZjE3NTA0ZjRjZTY1NiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11148,9 +12088,21 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2026-09-13T03:41:04.211Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJzYWR1bGxheWV2YWxheWxvOTE3QGdtYWlsLmNvbSIsImdvb2dsZVN1YiI6IiIsImdvb2dsZUlkIjoiRHdPVVZZZ0NpTGFXTjlleXhGdGFDU2szaUJjMiIsImF1dGhQcm92aWRlciI6Imdvb2dsZSIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0wOS0xM1QwMzo0MTowNC4yMTFaIiwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWttV3hEVWxOODJPX0s0alNQQ2tUb3czcVItT0ptWUxvTlBsdVBmQm5zUjBWc1dRPXM5Ni1jIn0",
+      "planExpiresAt": "2026-09-13T03:41:04.211+00:00",
       "profileWallpaper": "default"
+    },
+    {
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMDkyMGYwODM2NWY5ZGRkOWI0OTI4NWY5ZTMxMjMyZmMiLCJwYXNzd29yZEhhc2giOiJlYTMwNjdmMWUxYjA1Y2NmNTM4NGYwYTllMjRhMjIyYjVjZjExOGEzOWEyZjAzNGE5NGVlZjQ1NzU4OGJlNTA0ZDQzZmFlOTQxNmZhMWI4MDRlNTBhODAwNmQ2NzY2MTUwOWJlYjJhNDM2ZWEwMjIyY2Q1NDhkOWI3ODRlODYxNSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6ImllbHRzIiwiZ29hbCI6ImZ1dHVyZSIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6IiJ9",
+      "id": "0a630267-85c8-4982-a996-de58d77b7d12",
+      "name": "Reading QA",
+      "username": "qa_reading_mu8c8r2f",
+      "salt": "",
+      "role": "student",
+      "plan": "free",
+      "planExpiresAt": null,
+      "grade": "beginner",
+      "createdAt": "2026-09-19T12:02:54.235+00:00"
     },
     {
       "id": "10fb4e09-5b6c-4ebd-9bc8-a5d8f1665e4a",
@@ -11158,7 +12110,7 @@
       "name": "b.bobur",
       "plan": "premium",
       "role": "student",
-      "salt": "93c4d986f82d99675802abd7c0ed8d0d",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11169,8 +12121,8 @@
       "googleSub": "",
       "statusBadge": "gamer",
       "authProvider": "password",
-      "passwordHash": "9aa54c5ea26608220a9cb3201728c008ca7035e7ff79c681aa478609e6369fa1e519cad91a1b7e2cfec2406fb6ba711d012b65ccd4328ac4bf59b4f80d02ab06",
-      "planExpiresAt": "2026-10-09T12:58:43.531Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiOTNjNGQ5ODZmODJkOTk2NzU4MDJhYmQ3YzBlZDhkMGQiLCJwYXNzd29yZEhhc2giOiI5YWE1NGM1ZWEyNjYwODIyMGE5Y2IzMjAxNzI4YzAwOGNhNzAzNWU3ZmY3OWM2ODFhYTQ3ODYwOWU2MzY5ZmExZTUxOWNhZDkxYTFiN2UyY2ZlYzI0MDZmYjZiYTcxMWQwMTJiNjVjY2Q0MzI4YWM0YmY1OWI0ZjgwZDAyYWIwNiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0xMC0wOVQxMjo1ODo0My41MzFaIiwic3RhdHVzQmFkZ2UiOiJnYW1lciIsInByb2ZpbGVXYWxscGFwZXIiOiJnYWxheHkiLCJhdmF0YXJVcmwiOiIifQ",
+      "planExpiresAt": "2026-10-09T12:58:43.531+00:00",
       "profileWallpaper": "galaxy"
     },
     {
@@ -11179,7 +12131,7 @@
       "name": "Barchinoy Sultanova",
       "plan": "free",
       "role": "student",
-      "salt": "bd2ec995871b6fd7f1242929ede5ed18",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "foundation",
@@ -11189,7 +12141,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "402d3d67a1cb852daacd8e0a1b06bc4ee0fcfe07ecaaecbef43ab844ebd487a32054b7b57eea156d1fecdac530e9ce01d123409736f06c8a9494325fc8109ad2",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiYmQyZWM5OTU4NzFiNmZkN2YxMjQyOTI5ZWRlNWVkMTgiLCJwYXNzd29yZEhhc2giOiI0MDJkM2Q2N2ExY2I4NTJkYWFjZDhlMGExYjA2YmM0ZWUwZmNmZTA3ZWNhYWVjYmVmNDNhYjg0NGViZDQ4N2EzMjA1NGI3YjU3ZWVhMTU2ZDFmZWNkYWM1MzBlOWNlMDFkMTIzNDA5NzM2ZjA2YzhhOTQ5NDMyNWZjODEwOWFkMiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6ImZvdW5kYXRpb24iLCJnb2FsIjoic2Nob29sIiwicGxhbkV4cGlyZXNBdCI6bnVsbCwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiIn0",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11210,8 +12162,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2026-10-09T07:44:58.106Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJuaWx1ZmFyanVtYW5peW96b3ZhMDUwM0BnbWFpbC5jb20iLCJnb29nbGVTdWIiOiIiLCJnb29nbGVJZCI6ImpXaGN4cmdxbEVaU0RqaEl3ZXRIeVFJdmM1MDMiLCJhdXRoUHJvdmlkZXIiOiJnb29nbGUiLCJncmFkZSI6ImJlZ2lubmVyIiwibGVhcm5pbmciOiIiLCJnb2FsIjoiIiwicGxhbkV4cGlyZXNBdCI6IjIwMjYtMTAtMDlUMDc6NDQ6NTguMTA2WiIsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0xTVmxqQ2MyVjVydUZQT3FIZHNEZ1AtNkZaQUo2c3FqdFk1bDBndHhTekZKdS1qZz1zOTYtYyJ9",
+      "planExpiresAt": "2026-10-09T07:44:58.106+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11231,7 +12183,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJjaGRhdWQxMTBAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiJZbG4wWmx2a043WVl5YWhXMThKVHV1NmpvZUEyIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0pfVnRlenk0Z1ROdGVtWngta3ZQVTA4UW5NNTVRY05IakVDajF0TXZLbGpvNU92Q285PXM5Ni1jIn0",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11241,7 +12193,7 @@
       "name": "Sardor Baxtiyorov",
       "plan": "premium",
       "role": "student",
-      "salt": "96e0416a830b1c17a6026060dd6ccf7b",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11251,7 +12203,7 @@
       "googleSub": "",
       "statusBadge": "trophy",
       "authProvider": "password",
-      "passwordHash": "95f622836850d2b629ded462f63c18c93a5d8afb62a8982806aeffecb2adb30591a3b5125e1f576d0d258e8d7b2f28b5ce43df2437b8aee4d2c45a3dd6c376c4",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiOTZlMDQxNmE4MzBiMWMxN2E2MDI2MDYwZGQ2Y2NmN2IiLCJwYXNzd29yZEhhc2giOiI5NWY2MjI4MzY4NTBkMmI2MjlkZWQ0NjJmNjNjMThjOTNhNWQ4YWZiNjJhODk4MjgwNmFlZmZlY2IyYWRiMzA1OTFhM2I1MTI1ZTFmNTc2ZDBkMjU4ZThkN2IyZjI4YjVjZTQzZGYyNDM3YjhhZWU0ZDJjNDVhM2RkNmMzNzZjNCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6InRyb3BoeSIsInByb2ZpbGVXYWxscGFwZXIiOiJuZW9uX3B1cnBsZSIsImF2YXRhclVybCI6IiJ9",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-19T09:45:35.703Z",
       "profileWallpaper": "neon_purple"
@@ -11262,7 +12214,7 @@
       "name": "Bahora Sultanova",
       "plan": "free",
       "role": "student",
-      "salt": "7c81ef7aa8d960446802951c816f95f0",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11272,7 +12224,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "7f0d871180fec73e365dbef0d635011aaa8d11b2b34cb20ff7a5d775f2ca09b584841708c8822d630dc5fb205c191a85408de7efa26d5b46ff835f2fc094fc19",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiN2M4MWVmN2FhOGQ5NjA0NDY4MDI5NTFjODE2Zjk1ZjAiLCJwYXNzd29yZEhhc2giOiI3ZjBkODcxMTgwZmVjNzNlMzY1ZGJlZjBkNjM1MDExYWFhOGQxMWIyYjM0Y2IyMGZmN2E1ZDc3NWYyY2EwOWI1ODQ4NDE3MDhjODgyMmQ2MzBkYzVmYjIwNWMxOTFhODU0MDhkZTdlZmEyNmQ1YjQ2ZmY4MzVmMmZjMDk0ZmMxOSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11282,7 +12234,7 @@
       "name": "Bunyod Sultanov",
       "plan": "free",
       "role": "student",
-      "salt": "c930ce6da5ae3cf9c2484c2718a4f41c",
+      "salt": "",
       "email": "",
       "grade": "elementary",
       "learning": "",
@@ -11292,7 +12244,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "8588bc1a9555b104bf8085f22d1c0ea533c68e112700bd23cb0d0021cd5f95ddd47a786ea2f46bb871cb170b0d88663a0e458130a7134efaffebd00e938ea719",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiYzkzMGNlNmRhNWFlM2NmOWMyNDg0YzI3MThhNGY0MWMiLCJwYXNzd29yZEhhc2giOiI4NTg4YmMxYTk1NTViMTA0YmY4MDg1ZjIyZDFjMGVhNTMzYzY4ZTExMjcwMGJkMjNjYjBkMDAyMWNkNWY5NWRkZDQ3YTc4NmVhMmY0NmJiODcxY2IxNzBiMGQ4ODY2M2EwZTQ1ODEzMGE3MTM0ZWZhZmZlYmQwMGU5MzhlYTcxOSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiZWxlbWVudGFyeSIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6IiJ9",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11302,7 +12254,7 @@
       "name": "Bunyod Sultanov",
       "plan": "free",
       "role": "student",
-      "salt": "159b1d24cb66bc6e29069587863034f5",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11312,7 +12264,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "f29aecab0d82245708fd970797efa29cd97a7505fc7ca19c28a2e1a3774c0b9f9ef9d7aac2ae9cf433573ca1b78ca06476953164d80133e2a9c027638c052357",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMTU5YjFkMjRjYjY2YmM2ZTI5MDY5NTg3ODYzMDM0ZjUiLCJwYXNzd29yZEhhc2giOiJmMjlhZWNhYjBkODIyNDU3MDhmZDk3MDc5N2VmYTI5Y2Q5N2E3NTA1ZmM3Y2ExOWMyOGEyZTFhMzc3NGMwYjlmOWVmOWQ3YWFjMmFlOWNmNDMzNTczY2ExYjc4Y2EwNjQ3Njk1MzE2NGQ4MDEzM2UyYTljMDI3NjM4YzA1MjM1NyIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11322,7 +12274,7 @@
       "name": "Saboxat Jumanazarova",
       "plan": "free",
       "role": "student",
-      "salt": "6871cca9664e1de7dcc98d51fe59fe56",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11332,7 +12284,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "986988ca482bc1a7c50cda25fc294dd99187c02f4f7d8f4748f07ba516ad3bd42c2edf951e628a1b2f35f58b7570c7f19d35b768c79f31c7e3c77d042246b4a4",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNjg3MWNjYTk2NjRlMWRlN2RjYzk4ZDUxZmU1OWZlNTYiLCJwYXNzd29yZEhhc2giOiI5ODY5ODhjYTQ4MmJjMWE3YzUwY2RhMjVmYzI5NGRkOTkxODdjMDJmNGY3ZDhmNDc0OGYwN2JhNTE2YWQzYmQ0MmMyZWRmOTUxZTYyOGExYjJmMzVmNThiNzU3MGM3ZjE5ZDM1Yjc2OGM3OWYzMWM3ZTNjNzdkMDQyMjQ2YjRhNCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11342,7 +12294,7 @@
       "name": "Sultonboyev Egamberdi",
       "plan": "premium",
       "role": "student",
-      "salt": "4dabf5cefe9f928c0021e527ea64aab9",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11353,8 +12305,8 @@
       "googleSub": "",
       "statusBadge": "gamer",
       "authProvider": "password",
-      "passwordHash": "270cb117c99edd70b661e9cbf84ae16a57d13ec7c2deb982b114cf8094dcadd758f5cf044a7d0705ad95bd7b40ac79837f40fe462ac18655cead00113cd967f3",
-      "planExpiresAt": "2026-10-08T03:45:20.248Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNGRhYmY1Y2VmZTlmOTI4YzAwMjFlNTI3ZWE2NGFhYjkiLCJwYXNzd29yZEhhc2giOiIyNzBjYjExN2M5OWVkZDcwYjY2MWU5Y2JmODRhZTE2YTU3ZDEzZWM3YzJkZWI5ODJiMTE0Y2Y4MDk0ZGNhZGQ3NThmNWNmMDQ0YTdkMDcwNWFkOTViZDdiNDBhYzc5ODM3ZjQwZmU0NjJhYzE4NjU1Y2VhZDAwMTEzY2Q5NjdmMyIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0xMC0wOFQwMzo0NToyMC4yNDhaIiwic3RhdHVzQmFkZ2UiOiJnYW1lciIsInByb2ZpbGVXYWxscGFwZXIiOiJnYWxheHkiLCJhdmF0YXJVcmwiOiIifQ",
+      "planExpiresAt": "2026-10-08T03:45:20.248+00:00",
       "profileWallpaper": "galaxy"
     },
     {
@@ -11363,7 +12315,7 @@
       "name": "Bilolbek IELTS9 instructor",
       "plan": "premium",
       "role": "student",
-      "salt": "f9df7d9c3d5dc0bbd79b077fd31b6964",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11373,7 +12325,7 @@
       "googleSub": "",
       "statusBadge": "verified",
       "authProvider": "password",
-      "passwordHash": "13bd9621a57aef2c77678e2ff4b7dc7c51f1ce26496cbdd2303cb940683e6153c73f937b7e59b49836c3cd2b778c03a87997e4a049d6b2ee1e8a0ab1fac7477b",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiZjlkZjdkOWMzZDVkYzBiYmQ3OWIwNzdmZDMxYjY5NjQiLCJwYXNzd29yZEhhc2giOiIxM2JkOTYyMWE1N2FlZjJjNzc2NzhlMmZmNGI3ZGM3YzUxZjFjZTI2NDk2Y2JkZDIzMDNjYjk0MDY4M2U2MTUzYzczZjkzN2I3ZTU5YjQ5ODM2YzNjZDJiNzc4YzAzYTg3OTk3ZTRhMDQ5ZDZiMmVlMWU4YTBhYjFmYWM3NDc3YiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6InZlcmlmaWVkIiwicHJvZmlsZVdhbGxwYXBlciI6InN1bnNldCIsImF2YXRhclVybCI6IiJ9",
       "redeemedCode": "TESTPROMO_965",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-23T12:53:31.681Z",
@@ -11395,8 +12347,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2027-02-25T11:39:38.167Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJib2J1cnN1bHRhbm92NzBAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJnb29nbGUiLCJncmFkZSI6ImJlZ2lubmVyIiwibGVhcm5pbmciOiIiLCJnb2FsIjoiIiwicGxhbkV4cGlyZXNBdCI6IjIwMjctMDItMjVUMTE6Mzk6MzguMTY3WiIsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0puWlJYU3pDel9jVVpyT2wxYVFhN1BIeUJzR1czYVhkeXFtLW00Z2tvTElPWFFaQT1zOTYtYyJ9",
+      "planExpiresAt": "2027-02-25T11:39:38.167+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11416,7 +12368,7 @@
       "googleSub": "",
       "statusBadge": "target",
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJzdWx0YW5vdmI2MDRAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiI3QjBwZlZKU3dhV3M4OHRzeUxQdHpGWFg4dkEyIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjoidGFyZ2V0IiwicHJvZmlsZVdhbGxwYXBlciI6InN1bnNldCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0lmMjF4MEI2aHNwekVBTThZUi1vQzRCLVBjWG56UVF4UGNVVlNCVUN6UnpadlFVbHN4PXM5Ni1jIn0",
       "planExpiresAt": null,
       "profileWallpaper": "sunset"
     },
@@ -11426,7 +12378,7 @@
       "name": "Mexrinoz",
       "plan": "free",
       "role": "student",
-      "salt": "79606041c750bf68fc319864c7d98354",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11437,7 +12389,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "2c74db6ef5618256732cd1ab4d39ae7a12b405ae4bb9e3d2bd5263857451f2e1cd705a018cf33a0d2607eb43c42ffe9fd839360d724d7691050a61df9a1b155b",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNzk2MDYwNDFjNzUwYmY2OGZjMzE5ODY0YzdkOTgzNTQiLCJwYXNzd29yZEhhc2giOiIyYzc0ZGI2ZWY1NjE4MjU2NzMyY2QxYWI0ZDM5YWU3YTEyYjQwNWFlNGJiOWUzZDJiZDUyNjM4NTc0NTFmMmUxY2Q3MDVhMDE4Y2YzM2EwZDI2MDdlYjQzYzQyZmZlOWZkODM5MzYwZDcyNGQ3NjkxMDUwYTYxZGY5YTFiMTU1YiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6ImllbHRzIiwiZ29hbCI6InNjaG9vbCIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6IiJ9",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-23T08:28:02.324Z",
       "profileWallpaper": "default"
@@ -11448,7 +12400,7 @@
       "name": "ur",
       "plan": "premium",
       "role": "student",
-      "salt": "2e9e082c63f89001518893a80c49144f",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11459,8 +12411,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "8b4d35af7de92e2fa1678fda6b961dfd9f14dca4a48f41631f2b2185705161964f69e5eb2dec1a5e01dd757b85df775195d02455966718b959437da8ae84a878",
-      "planExpiresAt": "2026-09-13T08:27:44.902Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMmU5ZTA4MmM2M2Y4OTAwMTUxODg5M2E4MGM0OTE0NGYiLCJwYXNzd29yZEhhc2giOiI4YjRkMzVhZjdkZTkyZTJmYTE2NzhmZGE2Yjk2MWRmZDlmMTRkY2E0YTQ4ZjQxNjMxZjJiMjE4NTcwNTE2MTk2NGY2OWU1ZWIyZGVjMWE1ZTAxZGQ3NTdiODVkZjc3NTE5NWQwMjQ1NTk2NjcxOGI5NTk0MzdkYThhZTg0YTg3OCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0wOS0xM1QwODoyNzo0NC45MDJaIiwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiIn0",
+      "planExpiresAt": "2026-09-13T08:27:44.902+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11480,8 +12432,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2026-09-20T10:55:36.802Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJkYW5peWFycmF4aW1vdjAwMUBnbWFpbC5jb20iLCJnb29nbGVTdWIiOiIiLCJnb29nbGVJZCI6IkFTaG5xMVJHa1pkdEd2eE8wME9BdUg3WmE4QjMiLCJhdXRoUHJvdmlkZXIiOiJnb29nbGUiLCJncmFkZSI6ImJlZ2lubmVyIiwibGVhcm5pbmciOiJpZWx0cyIsImdvYWwiOiJmdXR1cmUiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0wOS0yMFQxMDo1NTozNi44MDJaIiwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jTDhTeUU4aVlobk5mbi1CNkZUQWZsN3E4VGNnSTFzbU5nUG5Xa0tRUFF3RW5tc1hBPXM5Ni1jIn0",
+      "planExpiresAt": "2026-09-20T10:55:36.802+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11490,7 +12442,7 @@
       "name": "codex5.6sol",
       "plan": "free",
       "role": "student",
-      "salt": "637847233ebe2786d2910004a4a62597",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11501,7 +12453,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "107144b3c83a125b0cb2e4ce30d661bd84a17e32157c073d85cefe52d63ff2a5e4adc17d9aee946b93025868af875b5443630c86c6ae8ae44115fb125ec9ac45",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNjM3ODQ3MjMzZWJlMjc4NmQyOTEwMDA0YTRhNjI1OTciLCJwYXNzd29yZEhhc2giOiIxMDcxNDRiM2M4M2ExMjViMGNiMmU0Y2UzMGQ2NjFiZDg0YTE3ZTMyMTU3YzA3M2Q4NWNlZmU1MmQ2M2ZmMmE1ZTRhZGMxN2Q5YWVlOTQ2YjkzMDI1ODY4YWY4NzViNTQ0MzYzMGM4NmM2YWU4YWU0NDExNWZiMTI1ZWM5YWM0NSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11522,8 +12474,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2026-10-02T17:14:00.720Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJmYXJhbmdpenJhamFib3ZhMTMxMEBnbWFpbC5jb20iLCJnb29nbGVTdWIiOiIiLCJnb29nbGVJZCI6IlhhckdvQjBqcmhmNmpUN1BpOTBabm5DSmRkUjIiLCJhdXRoUHJvdmlkZXIiOiJnb29nbGUiLCJncmFkZSI6ImJlZ2lubmVyIiwibGVhcm5pbmciOiIiLCJnb2FsIjoiIiwicGxhbkV4cGlyZXNBdCI6IjIwMjYtMTAtMDJUMTc6MTQ6MDAuNzIwWiIsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0pJWmh0MEJwd19LSXRZQlFRV3MyaDctYjlCR1FxaVNMSDhNVGxyWXctZTU3VVlsUT1zOTYtYyJ9",
+      "planExpiresAt": "2026-10-02T17:14:00.72+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11532,7 +12484,7 @@
       "name": "Bunyod Sultanov",
       "plan": "premium",
       "role": "student",
-      "salt": "91398420f48993818636f271f82437c8",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11542,7 +12494,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "0eb424f9d6192b432f51c78e7afdd3bcb42eb9692abb741c7363d4a352adc2712614ccdd7c121f13bb3568c304ad75732ae2cfa4e431fdcae1a531ee34635205",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiOTEzOTg0MjBmNDg5OTM4MTg2MzZmMjcxZjgyNDM3YzgiLCJwYXNzd29yZEhhc2giOiIwZWI0MjRmOWQ2MTkyYjQzMmY1MWM3OGU3YWZkZDNiY2I0MmViOTY5MmFiYjc0MWM3MzYzZDRhMzUyYWRjMjcxMjYxNGNjZGQ3YzEyMWYxM2JiMzU2OGMzMDRhZDc1NzMyYWUyY2ZhNGU0MzFmZGNhZTFhNTMxZWUzNDYzNTIwNSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "redeemedCode": "TESTPROMO_965",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-23T08:24:21.304Z",
@@ -11565,8 +12517,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2026-09-20T10:55:27.429Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJza2lsbG1heG9mZjFAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIxNHpyNmQzOGhlVzhhS2Q5eXlKY3g5VXpldkEzIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiaWVsdHMiLCJnb2FsIjoiZnV0dXJlIiwicGxhbkV4cGlyZXNBdCI6IjIwMjYtMDktMjBUMTA6NTU6MjcuNDI5WiIsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0xGdzFlcG1aNHVCemhrQnBoMXZSNzFNV01qSGpZSWE4NkxLQXByNk02ZzFwZlNyY289czk2LWMifQ",
+      "planExpiresAt": "2026-09-20T10:55:27.429+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11586,7 +12538,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJzdWx0YW5vdmJvYnVyNDRAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiJvaVF3SjAwRW9HVTVvMXB5SmtYczJaTnZrRmUyIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0xOeG94RlRwWXlRakdobG9rb0pkZWJSVTVsMURlTTQ5cHRESE1HQmxYNVRxR0lyQT1zOTYtYyJ9",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11596,7 +12548,7 @@
       "name": "Mexrinoz",
       "plan": "free",
       "role": "student",
-      "salt": "92dc2cd46f97f2b4a1e8b2f6c83f7c62",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11606,7 +12558,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "c17c69ad75dd9658f700cd5763a428b49f7c7cd2dcd847011c4b2d9ee1277f9592f56fab334b38ac8586419ad0e9da6fb6c5efcd61bccf63aaddcc832460c238",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiOTJkYzJjZDQ2Zjk3ZjJiNGExZThiMmY2YzgzZjdjNjIiLCJwYXNzd29yZEhhc2giOiJjMTdjNjlhZDc1ZGQ5NjU4ZjcwMGNkNTc2M2E0MjhiNDlmN2M3Y2QyZGNkODQ3MDExYzRiMmQ5ZWUxMjc3Zjk1OTJmNTZmYWIzMzRiMzhhYzg1ODY0MTlhZDBlOWRhNmZiNmM1ZWZjZDYxYmNjZjYzYWFkZGNjODMyNDYwYzIzOCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11627,7 +12579,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJuYXppcmJveTE0NzRAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIwYXRMc29ZRjJTTWwzWFZCbTI0bFFBTFpzMDQyIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tMUlNqbC1JSE14M3VveWlmblVPR25qR3k5a0JwTXFCbnJvME5FdUtqQVV1c3h6Zz1zOTYtYyJ9",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11637,7 +12589,7 @@
       "name": "Mexrinoz",
       "plan": "free",
       "role": "student",
-      "salt": "88f9bef41dc534a3877791522d661aef",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11647,7 +12599,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "44fccb4bbc5b9277464715dc7a653306763cb1354762b76dd6ec1754918b07bc8f32a7661509b707f065fc541156d746af2e217a5b245e2eea0d903fb9d94110",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiODhmOWJlZjQxZGM1MzRhMzg3Nzc5MTUyMmQ2NjFhZWYiLCJwYXNzd29yZEhhc2giOiI0NGZjY2I0YmJjNWI5Mjc3NDY0NzE1ZGM3YTY1MzMwNjc2M2NiMTM1NDc2MmI3NmRkNmVjMTc1NDkxOGIwN2JjOGYzMmE3NjYxNTA5YjcwN2YwNjVmYzU0MTE1NmQ3NDZhZjJlMjE3YTViMjQ1ZTJlZWEwZDkwM2ZiOWQ5NDExMCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11657,7 +12609,7 @@
       "name": "Diyorbek Odamboyev",
       "plan": "premium",
       "role": "student",
-      "salt": "42e94dfac39da3eb328fd00b9a7dead2",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11668,8 +12620,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "62ad7ba4a09475dc1af6bb85b29ae571af26e4b938dac7b6e6ab72dca36e6906b04b719b01b8c97b0ce84a51baa86f124e752ccc35d93f8848fb21689fbbd8a9",
-      "planExpiresAt": "2026-10-08T03:41:09.321Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNDJlOTRkZmFjMzlkYTNlYjMyOGZkMDBiOWE3ZGVhZDIiLCJwYXNzd29yZEhhc2giOiI2MmFkN2JhNGEwOTQ3NWRjMWFmNmJiODViMjlhZTU3MWFmMjZlNGI5MzhkYWM3YjZlNmFiNzJkY2EzNmU2OTA2YjA0YjcxOWIwMWI4Yzk3YjBjZTg0YTUxYmFhODZmMTI0ZTc1MmNjYzM1ZDkzZjg4NDhmYjIxNjg5ZmJiZDhhOSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0xMC0wOFQwMzo0MTowOS4zMjFaIiwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiIn0",
+      "planExpiresAt": "2026-10-08T03:41:09.321+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11678,7 +12630,7 @@
       "name": "Bahora Sultanova",
       "plan": "premium",
       "role": "student",
-      "salt": "761a9a10175c02a0146924be47a3e24c",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11688,7 +12640,7 @@
       "googleSub": "",
       "statusBadge": "verified",
       "authProvider": "password",
-      "passwordHash": "c0bcca9dfef395e6067bba0d3d96eff5cb069b44ae60be482cfa5e3ed20e8a567be585b0408ff0daae713f4f6a9989ecc06c77d88ac5a32d70a089c2a567eb42",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNzYxYTlhMTAxNzVjMDJhMDE0NjkyNGJlNDdhM2UyNGMiLCJwYXNzd29yZEhhc2giOiJjMGJjY2E5ZGZlZjM5NWU2MDY3YmJhMGQzZDk2ZWZmNWNiMDY5YjQ0YWU2MGJlNDgyY2ZhNWUzZWQyMGU4YTU2N2JlNTg1YjA0MDhmZjBkYWFlNzEzZjRmNmE5OTg5ZWNjMDZjNzdkODhhYzVhMzJkNzBhMDg5YzJhNTY3ZWI0MiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6InZlcmlmaWVkIiwicHJvZmlsZVdhbGxwYXBlciI6ImF1cm9yYSIsImF2YXRhclVybCI6IiJ9",
       "redeemedCode": "IELTS9",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-23T16:51:28.428Z",
@@ -11700,7 +12652,7 @@
       "name": "Alisher",
       "plan": "free",
       "role": "student",
-      "salt": "2803ca22edd73cb526092ad189b52f62",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "speaking",
@@ -11710,9 +12662,21 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "0343eca2d3c0466f9ea68fbbbea91e2e9386288384db7b779ed4a5b1844d834697d014675e0a9910c7f21037e9ca5c02c40d3cfb66e7c4ca25a499d2a62bffeb",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMjgwM2NhMjJlZGQ3M2NiNTI2MDkyYWQxODliNTJmNjIiLCJwYXNzd29yZEhhc2giOiIwMzQzZWNhMmQzYzA0NjZmOWVhNjhmYmJiZWE5MWUyZTkzODYyODgzODRkYjdiNzc5ZWQ0YTViMTg0NGQ4MzQ2OTdkMDE0Njc1ZTBhOTkxMGM3ZjIxMDM3ZTljYTVjMDJjNDBkM2NmYjY2ZTdjNGNhMjVhNDk5ZDJhNjJiZmZlYiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6InNwZWFraW5nIiwiZ29hbCI6ImNvbmZpZGVuY2UiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
+    },
+    {
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNzliMGZjMmFlZmYzN2ZjOTY2YTYzMGM5YjczNTZhOGMiLCJwYXNzd29yZEhhc2giOiIzZmNiZjg0OWJlZTBiMTM1NThjMzRmNzM5MTI1Y2E1MDM5MTdhZDEzNjRiNTY4ZmM2ZGY1MDVkNWM5NzcxODg4YWNmYmMxNGEwZWQ5OGQ5NzczZjUyNDAxZTdjODU4ZGM5NjIzZTEzODIyZTUyMjU2YWFmMzg1MTg1MmRkMjI4ZSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
+      "id": "7beb8d78-c965-45c4-95f8-30e883ce4639",
+      "name": "Bunyod Sultanov",
+      "username": "diyorbek",
+      "salt": "",
+      "role": "student",
+      "plan": "free",
+      "planExpiresAt": null,
+      "grade": "beginner",
+      "createdAt": "2026-09-17T09:25:59.886+00:00"
     },
     {
       "id": "81ed187c-62d4-4894-8876-bc9d8d5248a9",
@@ -11720,7 +12684,7 @@
       "name": "Bobur Sultanov",
       "plan": "premium",
       "role": "student",
-      "salt": "17605ff97fba9876bd9ce760368b68f6",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11730,7 +12694,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "400ab93b0172f3bb125bc5a37568ce35cf5f3ca65e557aac0caa2d0c53c5a250bbd425655e951cabaa2765fe87d31d117f2ddb77a659d244b9f73cc0bad3c6c0",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMTc2MDVmZjk3ZmJhOTg3NmJkOWNlNzYwMzY4YjY4ZjYiLCJwYXNzd29yZEhhc2giOiI0MDBhYjkzYjAxNzJmM2JiMTI1YmM1YTM3NTY4Y2UzNWNmNWYzY2E2NWU1NTdhYWMwY2FhMmQwYzUzYzVhMjUwYmJkNDI1NjU1ZTk1MWNhYmFhMjc2NWZlODdkMzFkMTE3ZjJkZGI3N2E2NTlkMjQ0YjlmNzNjYzBiYWQzYzZjMCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11751,8 +12715,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2027-03-08T07:43:48.117Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJhbnZhcmJla292amF2b3hpcjVAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiJWQTZNYnlQQ1cwU2VLYkVSeUM1c29jcXdpTmEyIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOiIyMDI3LTAzLTA4VDA3OjQzOjQ4LjExN1oiLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJeXY2N3ppVUNfeGJ0NGFRb2tkNnJyX1BFSUV3dlA2Q3dEbEZsem9yNTAyY1BXcktnPXM5Ni1jIn0",
+      "planExpiresAt": "2027-03-08T07:43:48.117+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11761,7 +12725,7 @@
       "name": "Artur Satlikov",
       "plan": "premium",
       "role": "student",
-      "salt": "138d0963ef0c66d5890d52967f0912e2",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11772,8 +12736,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "445f2ccbd77c2281d8a6e93364b06a9b48dd2e724ab4dbc58e3bf6bd58c742a77a29a84fbe461d06f1c8f8061b42522184f01500406172536c24339d0e356faf",
-      "planExpiresAt": "2026-09-13T03:41:16.468Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMTM4ZDA5NjNlZjBjNjZkNTg5MGQ1Mjk2N2YwOTEyZTIiLCJwYXNzd29yZEhhc2giOiI0NDVmMmNjYmQ3N2MyMjgxZDhhNmU5MzM2NGIwNmE5YjQ4ZGQyZTcyNGFiNGRiYzU4ZTNiZjZiZDU4Yzc0MmE3N2EyOWE4NGZiZTQ2MWQwNmYxYzhmODA2MWI0MjUyMjE4NGYwMTUwMDQwNjE3MjUzNmMyNDMzOWQwZTM1NmZhZiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0wOS0xM1QwMzo0MToxNi40NjhaIiwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiIn0",
+      "planExpiresAt": "2026-09-13T03:41:16.468+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -11782,7 +12746,7 @@
       "name": "musobek",
       "plan": "premium",
       "role": "student",
-      "salt": "eaa902ba72642d136488458a7176b9fd",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11793,8 +12757,8 @@
       "googleSub": "",
       "statusBadge": "fire",
       "authProvider": "password",
-      "passwordHash": "d081becf968073937498942add8815e18e4a0f1733f7fbed6381bbeaf2874ed9fcd02549ba000d7ba4f45762c18e2d70e6edcc8f623af640bc7f9cf9ab4dff66",
-      "planExpiresAt": "2026-10-09T12:29:27.941Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiZWFhOTAyYmE3MjY0MmQxMzY0ODg0NThhNzE3NmI5ZmQiLCJwYXNzd29yZEhhc2giOiJkMDgxYmVjZjk2ODA3MzkzNzQ5ODk0MmFkZDg4MTVlMThlNGEwZjE3MzNmN2ZiZWQ2MzgxYmJlYWYyODc0ZWQ5ZmNkMDI1NDliYTAwMGQ3YmE0ZjQ1NzYyYzE4ZTJkNzBlNmVkY2M4ZjYyM2FmNjQwYmM3ZjljZjlhYjRkZmY2NiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0xMC0wOVQxMjoyOToyNy45NDFaIiwic3RhdHVzQmFkZ2UiOiJmaXJlIiwicHJvZmlsZVdhbGxwYXBlciI6ImVtZXJhbGQiLCJhdmF0YXJVcmwiOiIifQ",
+      "planExpiresAt": "2026-10-09T12:29:27.941+00:00",
       "profileWallpaper": "emerald"
     },
     {
@@ -11814,7 +12778,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJzaG9oamFob24yNzIwMDlAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiJRb0xaNTJTdlplWWFwOXdocFJHeW5OVkZQNW8xIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0lQWHhoRzZyQUpuZkluMXdUbUs0SXo5MjhUMEJxd2tkN3pWVmtkQVZTN2M2VTdsQT1zOTYtYyJ9",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11824,7 +12788,7 @@
       "name": "bunyod11",
       "plan": "premium",
       "role": "student",
-      "salt": "3a78692cdff5e9b2091c1f195aa0ad38",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11834,7 +12798,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "313f4a47040f8c6e88f58d88c3c882b453854b7fc67c3a4f6f57c12731313c5314116730c2ff8cb8ae654c4d21898652542a9e749c56208d3545a11b6d7ebc98",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiM2E3ODY5MmNkZmY1ZTliMjA5MWMxZjE5NWFhMGFkMzgiLCJwYXNzd29yZEhhc2giOiIzMTNmNGE0NzA0MGY4YzZlODhmNThkODhjM2M4ODJiNDUzODU0YjdmYzY3YzNhNGY2ZjU3YzEyNzMxMzEzYzUzMTQxMTY3MzBjMmZmOGNiOGFlNjU0YzRkMjE4OTg2NTI1NDJhOWU3NDljNTYyMDhkMzU0NWExMWI2ZDdlYmM5OCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "redeemedCode": "IELTS9",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-18T18:58:50.863Z",
@@ -11856,7 +12820,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJhbnZhcmJla292amF2b2hpcjRAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJnb29nbGUiLCJncmFkZSI6ImJlZ2lubmVyIiwibGVhcm5pbmciOiIiLCJnb2FsIjoiIiwicGxhbkV4cGlyZXNBdCI6bnVsbCwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSi1tRWFiV3V6NFFwWTduVjAyMDhoV0VnYmEtRmJCOUJWSFFWQlB2NWF4NzRnTk13PXM5Ni1jIn0",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11866,7 +12830,7 @@
       "name": "Bobur Sultanov",
       "plan": "free",
       "role": "student",
-      "salt": "920abfeadd1753d6215b1cc6b0d56072",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11876,7 +12840,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "04a8d4d22ecf1c213e806821c33481b47681e7f05048aa10cfc67514beddd7de18c0ba2b724289a7fdd5d653dec072962298c9e8c70e83751a18d414a3111ef2",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiOTIwYWJmZWFkZDE3NTNkNjIxNWIxY2M2YjBkNTYwNzIiLCJwYXNzd29yZEhhc2giOiIwNGE4ZDRkMjJlY2YxYzIxM2U4MDY4MjFjMzM0ODFiNDc2ODFlN2YwNTA0OGFhMTBjZmM2NzUxNGJlZGRkN2RlMThjMGJhMmI3MjQyODlhN2ZkZDVkNjUzZGVjMDcyOTYyMjk4YzllOGM3MGU4Mzc1MWExOGQ0MTRhMzExMWVmMiIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11886,7 +12850,7 @@
       "name": "Bunyod Sultanov",
       "plan": "premium",
       "role": "student",
-      "salt": "cc25be2c7f43138518274eafa1e381c2",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11896,11 +12860,23 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "91687cb01437e73be98fbae06e78a235a65542f1cc5f95e413b5667f658d8280a7a8f8ba6bd222b6431eecfbd7b445e80122b914d96a44459e78b2a75c03f534",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiY2MyNWJlMmM3ZjQzMTM4NTE4Mjc0ZWFmYTFlMzgxYzIiLCJwYXNzd29yZEhhc2giOiI5MTY4N2NiMDE0MzdlNzNiZTk4ZmJhZTA2ZTc4YTIzNWE2NTU0MmYxY2M1Zjk1ZTQxM2I1NjY3ZjY1OGQ4MjgwYTdhOGY4YmE2YmQyMjJiNjQzMWVlY2ZiZDdiNDQ1ZTgwMTIyYjkxNGQ5NmE0NDQ1OWU3OGIyYTc1YzAzZjUzNCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "redeemedCode": "IELTS9",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-19T06:06:32.840Z",
       "profileWallpaper": "default"
+    },
+    {
+      "passwordHash": "vortex$1$eyJzYWx0IjoiODMzMTQxMGY2Nzg3M2UyYTE5OGRmZDRmNzY0NDEzNDQiLCJwYXNzd29yZEhhc2giOiI2M2Q4MjdmYTk4M2MxZTUzZTFhNWQzZjU3YjQ3OWIyYWFiMTAxNzE2NmExZWYzNTQyZWE2ZWE3ZTk3OWQyNTJiN2RlYTMwZmEwMGM3ZTg2NWY2ODQ4NDZmNDI4NzZmNjVkMjk4YjYwNGM1YzExNjliMzFhY2NlZmQ2Y2E0NzgzNSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
+      "id": "b9daa74a-5b8b-4f2a-9bf8-e81c81acbf10",
+      "name": "Listening QA",
+      "username": "qa_1789819356304",
+      "salt": "",
+      "role": "student",
+      "plan": "free",
+      "planExpiresAt": null,
+      "grade": "beginner",
+      "createdAt": "2026-09-19T12:02:39.893+00:00"
     },
     {
       "id": "c2a27861-8555-4642-b7fc-e7fee9535cac",
@@ -11908,7 +12884,7 @@
       "name": "Sultanova Barchinoy",
       "plan": "premium",
       "role": "student",
-      "salt": "a141dc60fffc90514b518f33f01261c0",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11918,7 +12894,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "eb30a8d546d353e6c159f7d5a71fb915661685bd98e1508b561380b12031c46f7f1d17646fba9e7cada6f1d5695175408470f1d051d21401ab62e5aafc541254",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiYTE0MWRjNjBmZmZjOTA1MTRiNTE4ZjMzZjAxMjYxYzAiLCJwYXNzd29yZEhhc2giOiJlYjMwYThkNTQ2ZDM1M2U2YzE1OWY3ZDVhNzFmYjkxNTY2MTY4NWJkOThlMTUwOGI1NjEzODBiMTIwMzFjNDZmN2YxZDE3NjQ2ZmJhOWU3Y2FkYTZmMWQ1Njk1MTc1NDA4NDcwZjFkMDUxZDIxNDAxYWI2MmU1YWFmYzU0MTI1NCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "planUpdatedAt": "2026-08-15T19:28:40.229Z",
       "profileWallpaper": "default"
@@ -11929,7 +12905,7 @@
       "name": "Bunyod Sultanov",
       "plan": "free",
       "role": "student",
-      "salt": "398cc45b1cd7e5c75cfc573d34699220",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -11940,7 +12916,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "0257d1282f128590ead3ff8f4a89489bea7a3b231f5236c6b9eab05f4ccb3283c947d9222d2fa43a319ade344f39acd6465020965673f1f38830e9c9e8109663",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMzk4Y2M0NWIxY2Q3ZTVjNzVjZmM1NzNkMzQ2OTkyMjAiLCJwYXNzd29yZEhhc2giOiIwMjU3ZDEyODJmMTI4NTkwZWFkM2ZmOGY0YTg5NDg5YmVhN2EzYjIzMWY1MjM2YzZiOWVhYjA1ZjRjY2IzMjgzYzk0N2Q5MjIyZDJmYTQzYTMxOWFkZTM0NGYzOWFjZDY0NjUwMjA5NjU2NzNmMWYzODgzMGU5YzllODEwOTY2MyIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11950,7 +12926,7 @@
       "name": "Maftuna Saburova",
       "plan": "free",
       "role": "student",
-      "salt": "d4ca1fcd9ddbcffcfa06bfcbde4456ab",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -11960,7 +12936,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "f50e87e06cdbf75f9d65896a31d6271a1ab1458135a6017c564632d04651341e349a57c604f5e0d21bb1f47421b486c8f432a197579409eccac55816cf9aada5",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiZDRjYTFmY2Q5ZGRiY2ZmY2ZhMDZiZmNiZGU0NDU2YWIiLCJwYXNzd29yZEhhc2giOiJmNTBlODdlMDZjZGJmNzVmOWQ2NTg5NmEzMWQ2MjcxYTFhYjE0NTgxMzVhNjAxN2M1NjQ2MzJkMDQ2NTEzNDFlMzQ5YTU3YzYwNGY1ZTBkMjFiYjFmNDc0MjFiNDg2YzhmNDMyYTE5NzU3OTQwOWVjY2FjNTU4MTZjZjlhYWRhNSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -11980,8 +12956,8 @@
       "googleSub": "",
       "statusBadge": "target",
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2026-09-28T11:57:54.240Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJhaWlzaGVyLm96b2RvZmZAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJnb29nbGUiLCJncmFkZSI6ImJlZ2lubmVyIiwibGVhcm5pbmciOiIiLCJnb2FsIjoiIiwicGxhbkV4cGlyZXNBdCI6IjIwMjYtMDktMjhUMTE6NTc6NTQuMjQwWiIsInN0YXR1c0JhZGdlIjoidGFyZ2V0IiwicHJvZmlsZVdhbGxwYXBlciI6ImVtZXJhbGQiLCJhdmF0YXJVcmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJZmJFa0czZHg1ODg0NXEwbDZ4dVJfc2hZUFlsSml2WHZlZHdaZjk4ZjhsbnZnVmhtTz1zOTYtYyJ9",
+      "planExpiresAt": "2026-09-28T11:57:54.24+00:00",
       "profileWallpaper": "emerald"
     },
     {
@@ -12001,8 +12977,8 @@
       "googleSub": "",
       "statusBadge": "target",
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2026-10-09T12:29:12.422Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJhYnJvcmJla3J1c3RhbW92MTAyQGdtYWlsLmNvbSIsImdvb2dsZVN1YiI6IiIsImdvb2dsZUlkIjoieFZkeElLT0Q1RGFGbE5zV1NJZ3lZcVNoSTNnMSIsImF1dGhQcm92aWRlciI6Imdvb2dsZSIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0xMC0wOVQxMjoyOToxMi40MjJaIiwic3RhdHVzQmFkZ2UiOiJ0YXJnZXQiLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0lvYTRHQndxU2ZhS2NEamJaM3JkQXE5b1ZwUTFzZXY4LUlwODc3V083MDZ6RGdrQT1zOTYtYyJ9",
+      "planExpiresAt": "2026-10-09T12:29:12.422+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -12011,7 +12987,7 @@
       "name": "Bunyod Sultanov",
       "plan": "free",
       "role": "student",
-      "salt": "6da8a589a6dcc424528e66a13c88e5eb",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "",
@@ -12021,7 +12997,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "7c1ff1685b597377217663202d665e5ee968cd08a3f661bed7b74f645932c52c506cef74deb7a19571791e5a77f7df6ed663e6c100d1d57ee95131ef7210eb4a",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNmRhOGE1ODlhNmRjYzQyNDUyOGU2NmExM2M4OGU1ZWIiLCJwYXNzd29yZEhhc2giOiI3YzFmZjE2ODViNTk3Mzc3MjE3NjYzMjAyZDY2NWU1ZWU5NjhjZDA4YTNmNjYxYmVkN2I3NGY2NDU5MzJjNTJjNTA2Y2VmNzRkZWI3YTE5NTcxNzkxZTVhNzdmN2RmNmVkNjYzZTZjMTAwZDFkNTdlZTk1MTMxZWY3MjEwZWI0YSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -12042,7 +13018,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJidW55b2RzODkzQGdtYWlsLmNvbSIsImdvb2dsZVN1YiI6IiIsImdvb2dsZUlkIjoiVlJXZGpxNGR2VU5RR05kV1g1NmJlSjVaWnFnMiIsImF1dGhQcm92aWRlciI6Imdvb2dsZSIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6ImllbHRzIiwiZ29hbCI6ImZ1dHVyZSIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tHTW1tR2syRXRIUVlSZmVvc0V6WFN1bHlrenJSbXlTNXhRUjV1NUtzVVZCU0F6Zz1zOTYtYyJ9",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -12052,7 +13028,7 @@
       "name": "Zahirbek Umirov",
       "plan": "free",
       "role": "student",
-      "salt": "477c994c4429db279f12cf0357da3739",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "ielts",
@@ -12062,7 +13038,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "1f9bf2b3487dd95bb3bcbf250553fcc9f280c6f611ec97a696c8c5992c3f5aad70fba91945a473c1a3bdd9273cace8a7f439a2d795133f7bcfd57e2c05c713ca",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNDc3Yzk5NGM0NDI5ZGIyNzlmMTJjZjAzNTdkYTM3MzkiLCJwYXNzd29yZEhhc2giOiIxZjliZjJiMzQ4N2RkOTViYjNiY2JmMjUwNTUzZmNjOWYyODBjNmY2MTFlYzk3YTY5NmM4YzU5OTJjM2Y1YWFkNzBmYmE5MTk0NWE0NzNjMWEzYmRkOTI3M2NhY2U4YTdmNDM5YTJkNzk1MTMzZjdiY2ZkNTdlMmMwNWM3MTNjYSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6ImllbHRzIiwiZ29hbCI6ImZ1dHVyZSIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6IiJ9",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -12083,7 +13059,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJidW55b2RfZ29vZ2xlX3N0dWRlbnRAZ21haWwuY29tIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiJnb29nbGVfdWlkXzk4NzY1NCIsImF1dGhQcm92aWRlciI6Imdvb2dsZSIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -12103,8 +13079,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "google",
-      "passwordHash": "",
-      "planExpiresAt": "2027-02-25T11:38:17.276Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiIiwicGFzc3dvcmRIYXNoIjoiIiwiZW1haWwiOiJkamFiYm9yb3ZtdXNham9uQGdtYWlsLmNvbSIsImdvb2dsZVN1YiI6IiIsImdvb2dsZUlkIjoiIiwiYXV0aFByb3ZpZGVyIjoiZ29vZ2xlIiwiZ3JhZGUiOiJiZWdpbm5lciIsImxlYXJuaW5nIjoiaWVsdHMiLCJnb2FsIjoiZnV0dXJlIiwicGxhbkV4cGlyZXNBdCI6IjIwMjctMDItMjVUMTE6Mzg6MTcuMjc2WiIsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0pydXE4LVVBZUJzX3V1cWdyZ1JIZXo0elhkbnZmOHFwZ1RxUzBoXzRPM2lwYVN5dz1zOTYtYyJ9",
+      "planExpiresAt": "2027-02-25T11:38:17.276+00:00",
       "profileWallpaper": "default"
     },
     {
@@ -12113,7 +13089,7 @@
       "name": "Bunyod Sultanov",
       "plan": "free",
       "role": "student",
-      "salt": "13a85cf401fff19b095ab75456a22791",
+      "salt": "",
       "email": "",
       "grade": "2",
       "learning": "",
@@ -12123,7 +13099,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "0c4a05e136af4a3fdeba8c76fae0f7021e6ec2c14587224b475ed58a572402afe9a1de14cef78d2956ee9e2350bf0a141fa2d0d15267f214ddfbfd1de863583c",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMTNhODVjZjQwMWZmZjE5YjA5NWFiNzU0NTZhMjI3OTEiLCJwYXNzd29yZEhhc2giOiIwYzRhMDVlMTM2YWY0YTNmZGViYThjNzZmYWUwZjcwMjFlNmVjMmMxNDU4NzIyNGI0NzVlZDU4YTU3MjQwMmFmZTlhMWRlMTRjZWY3OGQyOTU2ZWU5ZTIzNTBiZjBhMTQxZmEyZDBkMTUyNjdmMjE0ZGRmYmZkMWRlODYzNTgzYyIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiMiIsImxlYXJuaW5nIjoiIiwiZ29hbCI6IiIsInBsYW5FeHBpcmVzQXQiOm51bGwsInN0YXR1c0JhZGdlIjpudWxsLCJwcm9maWxlV2FsbHBhcGVyIjoiZGVmYXVsdCIsImF2YXRhclVybCI6IiJ9",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -12133,7 +13109,7 @@
       "name": "oCHILBEKOV ZAFARBEK NOSKASHOV",
       "plan": "free",
       "role": "student",
-      "salt": "0ee84ae3d5b5cf87b8d445a0f7212b5b",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -12144,7 +13120,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "222eaf77f25ab25b661a306ca5a026861519d895768799a65399b0ac25c50fb846d425a2425b2572e82b44885653de308448534d9a0f2e1685ed8e7915e4f15a",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiMGVlODRhZTNkNWI1Y2Y4N2I4ZDQ0NWEwZjcyMTJiNWIiLCJwYXNzd29yZEhhc2giOiIyMjJlYWY3N2YyNWFiMjViNjYxYTMwNmNhNWEwMjY4NjE1MTlkODk1NzY4Nzk5YTY1Mzk5YjBhYzI1YzUwZmI4NDZkNDI1YTI0MjViMjU3MmU4MmI0NDg4NTY1M2RlMzA4NDQ4NTM0ZDlhMGYyZTE2ODVlZDhlNzkxNWU0ZjE1YSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -12154,7 +13130,7 @@
       "name": "Bunyod Sultanov",
       "plan": "free",
       "role": "student",
-      "salt": "c3b763fb5cf2c9929329a991368971a6",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "learning": "speaking",
@@ -12164,7 +13140,7 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "3a59acf48d469789b417dfec14b4c644047fc584cec5437c7dfdf027dcc6e6274e1dfd27580d96d9a85b73b71ce49bc43324b5353669e224736aa95a636f4fee",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiYzNiNzYzZmI1Y2YyYzk5MjkzMjlhOTkxMzY4OTcxYTYiLCJwYXNzd29yZEhhc2giOiIzYTU5YWNmNDhkNDY5Nzg5YjQxN2RmZWMxNGI0YzY0NDA0N2ZjNTg0Y2VjNTQzN2M3ZGZkZjAyN2RjYzZlNjI3NGUxZGZkMjc1ODBkOTZkOWE4NWI3M2I3MWNlNDliYzQzMzI0YjUzNTM2NjllMjI0NzM2YWE5NWE2MzZmNGZlZSIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6InNwZWFraW5nIiwiZ29hbCI6ImNvbmZpZGVuY2UiLCJwbGFuRXhwaXJlc0F0IjpudWxsLCJzdGF0dXNCYWRnZSI6bnVsbCwicHJvZmlsZVdhbGxwYXBlciI6ImRlZmF1bHQiLCJhdmF0YXJVcmwiOiIifQ",
       "planExpiresAt": null,
       "profileWallpaper": "default"
     },
@@ -12174,7 +13150,7 @@
       "name": "Sabirov Asadbek",
       "plan": "premium",
       "role": "student",
-      "salt": "608c48a33bb3c7914c2e13922d729ea6",
+      "salt": "",
       "email": "",
       "grade": "beginner",
       "googleId": "",
@@ -12185,8 +13161,8 @@
       "googleSub": "",
       "statusBadge": null,
       "authProvider": "password",
-      "passwordHash": "922ac2581f5d2d66be3a56b5ec1ce8e1fd5c7f45807cf9c4c8117fdfd92cb1dc45bf988e2de9df8d72959fb656218e97924a35e89d5b65b6290ac481bdd04f28",
-      "planExpiresAt": "2026-09-13T03:41:44.826Z",
+      "passwordHash": "vortex$1$eyJzYWx0IjoiNjA4YzQ4YTMzYmIzYzc5MTRjMmUxMzkyMmQ3MjllYTYiLCJwYXNzd29yZEhhc2giOiI5MjJhYzI1ODFmNWQyZDY2YmUzYTU2YjVlYzFjZThlMWZkNWM3ZjQ1ODA3Y2Y5YzRjODExN2ZkZmQ5MmNiMWRjNDViZjk4OGUyZGU5ZGY4ZDcyOTU5ZmI2NTYyMThlOTc5MjRhMzVlODlkNWI2NWI2MjkwYWM0ODFiZGQwNGYyOCIsImVtYWlsIjoiIiwiZ29vZ2xlU3ViIjoiIiwiZ29vZ2xlSWQiOiIiLCJhdXRoUHJvdmlkZXIiOiJwYXNzd29yZCIsImdyYWRlIjoiYmVnaW5uZXIiLCJsZWFybmluZyI6IiIsImdvYWwiOiIiLCJwbGFuRXhwaXJlc0F0IjoiMjAyNi0wOS0xM1QwMzo0MTo0NC44MjZaIiwic3RhdHVzQmFkZ2UiOm51bGwsInByb2ZpbGVXYWxscGFwZXIiOiJkZWZhdWx0IiwiYXZhdGFyVXJsIjoiIn0",
+      "planExpiresAt": "2026-09-13T03:41:44.826+00:00",
       "profileWallpaper": "default"
     }
   ],

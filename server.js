@@ -5927,6 +5927,7 @@ async function performDataSync() {
       } catch (err) {
         supabaseLastError = err.message;
         console.error("Supabase read error:", err.message);
+        supabaseLastReadAt = Date.now();
       }
     }
     inMemoryData = normalizeData(nextData);
@@ -5947,11 +5948,11 @@ async function performDataSync() {
 
 async function readData() {
   const now = Date.now();
-  if (inMemoryData) {
-    const cacheTtl = SUPABASE_CONFIGURED ? SUPABASE_CACHE_MS : 30_000;
-    if ((DATABASE_URL || SUPABASE_CONFIGURED) && (now - inMemoryCachedAt > cacheTtl) && !isSyncingDb) {
-      syncStateFromDb().catch(() => {});
-    }
+  const hasSyncedOnce = Boolean(supabaseLastReadAt || supabaseLastWriteAt || !SUPABASE_CONFIGURED);
+  const cacheTtl = SUPABASE_CONFIGURED ? SUPABASE_CACHE_MS : 30_000;
+  const isFresh = (now - inMemoryCachedAt) <= cacheTtl;
+
+  if (inMemoryData && hasSyncedOnce && isFresh) {
     return inMemoryData;
   }
   return await syncStateFromDb();
