@@ -3904,8 +3904,23 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       </div>
     </div>
 
+    <!-- Dedicated Review CTA Section -->
+    <div class="vx-res-section-block" style="text-align:center;padding:18px 20px;background:linear-gradient(180deg,#f8fafc,#f1f5f9);border-radius:16px;border:1.5px solid #e2e8f0;margin-bottom:20px;">
+      <h3 style="margin:0 0 6px;font-size:16px;font-weight:800;color:#0f172a;">Javoblarni tahlil qilish (Review Answers)</h3>
+      <p style="margin:0 0 14px;font-size:13px;color:#64748b;">Har bir savol boʻyicha belgilangan javobingiz va rasmiy toʻgʻri javoblarni koʻrib chiqing:</p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <button type="button" class="vx-btn-review-mistakes-cta" id="vxMainReviewBtn" style="font-size:14px;padding:10px 22px;border-radius:10px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Review Answers on Test (Testda Koʻrish)</span>
+        </button>
+        <button type="button" class="vx-btn-modal-secondary" id="vxToggleAnswersTableBtn" style="font-size:13px;padding:8px 18px;border-radius:10px;">
+          <span>📋 Show Answers Table (Jadvalda Koʻrish)</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Complete Answers & Explanations Review Sheet -->
-    <div class="vx-res-answers-table-wrap" id="vxResultAnswersTableWrap">
+    <div class="vx-res-answers-table-wrap" id="vxResultAnswersTableWrap" style="display:none;">
       <div class="vx-res-section-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;gap:8px;">
           <span>Detailed Answer Key & Review</span>
@@ -4819,8 +4834,12 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       }
     }
 
-    // Inline question feedback and input highlights
-    document.querySelectorAll('.vx-inline-feedback').forEach(function(el) { el.remove(); });
+    // Remove any previously injected review feedback and pills
+    document.querySelectorAll('.vx-inline-feedback, .vx-correct-answer-pill, .vx-correct-badge, .vx-wrong-badge').forEach(function(el) { el.remove(); });
+    document.querySelectorAll('.vx-review-correct-opt, .vx-review-incorrect-opt, .vx-review-input-correct, .vx-review-input-incorrect').forEach(function(el) {
+      el.classList.remove('vx-review-correct-opt', 'vx-review-incorrect-opt', 'vx-review-input-correct', 'vx-review-input-incorrect');
+    });
+
     var answersMap = new Map();
     (submittedAnswers || []).forEach(function(a) {
       var k = String(a.key || '').toLowerCase().replace(/^q/, '');
@@ -4830,25 +4849,116 @@ function readingPersistenceMarkup(material, user, requestedMode) {
 
     for (var q = 1; q <= total; q++) {
       var isIncorrect = incorrectSet.has(q);
-      var expected = answerKey['q' + q] || answerKey[q] || answerKey[String(q)];
-      var expectedDisplay = Array.isArray(expected) ? expected.join(' / ') : (expected !== undefined && expected !== null ? String(expected) : 'Not specified');
+      var rawExpected = answerKey['q' + q] || answerKey[q] || answerKey[String(q)];
+      var expectedList = (Array.isArray(rawExpected) ? rawExpected : [rawExpected]).filter(function(x) { return x !== undefined && x !== null; }).map(function(x) { return String(x).trim(); });
+      var expectedDisplay = expectedList.join(' / ') || 'Not specified';
       var userAns = answersMap.get(q) || '';
 
-      var ctrl = document.querySelector('[name="q' + q + '"], [id="q' + q + '"], [name="question_' + q + '"], [id="question_' + q + '"]');
-      if (ctrl) {
-        ctrl.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
-        var feedback = document.createElement('div');
-        feedback.className = 'vx-inline-feedback ' + (isIncorrect ? 'incorrect' : 'correct');
-        if (isIncorrect) {
-          feedback.innerHTML = '<strong>✕ Incorrect.</strong> Your Answer: <em>' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</em> · Official Correct Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
-        } else {
-          feedback.innerHTML = '<strong>✔ Correct!</strong> Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
+      // Build unified feedback banner
+      var feedback = document.createElement('div');
+      feedback.className = 'vx-inline-feedback ' + (isIncorrect ? 'incorrect' : 'correct');
+      if (isIncorrect) {
+        feedback.innerHTML = '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+          '<span style="font-weight:900;color:#dc2626;font-size:13px;">✕ Question ' + q + ' Incorrect</span>' +
+          '<span>Your Answer: <strong style="color:#b91c1c;background:#fef2f2;padding:2px 8px;border-radius:4px;border:1px solid #fca5a5;">' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</strong></span>' +
+          '<span>Correct Answer: <strong style="color:#15803d;background:#f0fdf4;padding:2px 8px;border-radius:4px;border:1px solid #86efac;">' + escapeHtml(expectedDisplay) + '</strong></span>' +
+          '</div>';
+      } else {
+        feedback.innerHTML = '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+          '<span style="font-weight:900;color:#15803d;font-size:13px;">✔ Question ' + q + ' Correct</span>' +
+          '<span>Answer: <strong style="color:#15803d;background:#f0fdf4;padding:2px 8px;border-radius:4px;border:1px solid #86efac;">' + escapeHtml(expectedDisplay) + '</strong></span>' +
+          '</div>';
+      }
+
+      // Check 1: Radio buttons (MCQ / Yes-No-Not Given / True-False-Not Given)
+      var radios = document.querySelectorAll('input[type="radio"][name="q' + q + '"], input[type="radio"][name="question-' + q + '"], input[type="radio"][name="question_' + q + '"]');
+      if (radios.length > 0) {
+        radios.forEach(function(r) {
+          r.disabled = true;
+          var rVal = String(r.value || '').trim().toLowerCase();
+          var isMatch = expectedList.some(function(exp) { return exp.toLowerCase() === rVal; });
+          var isSelected = (userAns.toLowerCase() === rVal) || r.checked;
+          var optParent = r.closest('.tfng-option, .ynng-option, .mcq-option, .radio-option, .option, label') || r.parentElement;
+          if (isMatch && optParent) {
+            optParent.classList.add('vx-review-correct-opt');
+            optParent.insertAdjacentHTML('beforeend', '<span class="vx-correct-badge" style="margin-left:auto;font-size:11px;font-weight:800;color:#10b981;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:#ecfdf5;border:1px solid #a7f3d0;">✔ CORRECT</span>');
+          }
+          if (isSelected && !isMatch && optParent) {
+            optParent.classList.add('vx-review-incorrect-opt');
+            optParent.insertAdjacentHTML('beforeend', '<span class="vx-wrong-badge" style="margin-left:auto;font-size:11px;font-weight:800;color:#ef4444;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:#fef2f2;border:1px solid #fecaca;">✕ YOUR ANSWER</span>');
+          }
+        });
+
+        var groupWrap = radios[0].closest('.tfng-options, .ynng-options, .mcq-options, .question-options, .options-container, .radio-group');
+        var attachTarget = groupWrap || radios[radios.length - 1].closest('.tfng-option, .ynng-option, label') || radios[radios.length - 1].parentElement;
+        if (attachTarget && attachTarget.nextSibling) {
+          attachTarget.parentNode.insertBefore(feedback, attachTarget.nextSibling);
+        } else if (attachTarget && attachTarget.parentNode) {
+          attachTarget.parentNode.appendChild(feedback);
         }
-        if (ctrl.nextSibling) {
-          ctrl.parentNode.insertBefore(feedback, ctrl.nextSibling);
+        continue;
+      }
+
+      // Check 2: Select dropdown
+      var select = document.querySelector('select[name="q' + q + '"], select[id="q' + q + '"], select[name="question-' + q + '"], select[name="question_' + q + '"]');
+      if (select) {
+        select.disabled = true;
+        select.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
+        var selectPill = document.createElement('span');
+        selectPill.className = 'vx-correct-answer-pill ' + (isIncorrect ? 'incorrect' : 'correct');
+        selectPill.style.cssText = 'display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle;' +
+          (isIncorrect ? 'background:#fef2f2;color:#991b1b;border:1px solid #fecaca;' : 'background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;');
+        selectPill.innerHTML = (isIncorrect ? '✕ Correct: <strong>' + escapeHtml(expectedDisplay) + '</strong>' : '✔ Correct: <strong>' + escapeHtml(expectedDisplay) + '</strong>');
+        if (select.nextSibling) {
+          select.parentNode.insertBefore(selectPill, select.nextSibling);
         } else {
-          ctrl.parentNode.appendChild(feedback);
+          select.parentNode.appendChild(selectPill);
         }
+
+        var selectRow = select.closest('.tf-question-line, .matching-form-row, .matching-row, .question-row, .tfng-option, .ynng-option') || select.parentElement;
+        if (selectRow && selectRow.nextSibling) {
+          selectRow.parentNode.insertBefore(feedback, selectRow.nextSibling);
+        } else if (selectRow && selectRow.parentNode) {
+          selectRow.parentNode.appendChild(feedback);
+        }
+        continue;
+      }
+
+      // Check 3: Text input (blanks, notes, flowchart, summary)
+      var textInp = document.querySelector('input[type="text"][name="q' + q + '"], input[type="text"][id="q' + q + '"], input[name="question-' + q + '"], input[name="question_' + q + '"], input[id="question_' + q + '"]');
+      if (textInp) {
+        textInp.disabled = true;
+        textInp.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
+        var textPill = document.createElement('span');
+        textPill.className = 'vx-correct-answer-pill ' + (isIncorrect ? 'incorrect' : 'correct');
+        textPill.style.cssText = 'display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:middle;' +
+          (isIncorrect ? '✕ Correct: <strong>' + escapeHtml(expectedDisplay) + '</strong>' : '✔ Correct');
+        if (textInp.nextSibling) {
+          textInp.parentNode.insertBefore(textPill, textInp.nextSibling);
+        } else {
+          textInp.parentNode.appendChild(textPill);
+        }
+
+        var sentenceBlock = textInp.closest('.flow-step, .sentence-completion p, .diagram-label, .question-statement') || textInp.parentElement;
+        if (sentenceBlock && sentenceBlock.nextSibling) {
+          sentenceBlock.parentNode.insertBefore(feedback, sentenceBlock.nextSibling);
+        } else if (sentenceBlock && sentenceBlock.parentNode) {
+          sentenceBlock.parentNode.appendChild(feedback);
+        }
+        continue;
+      }
+
+      // Check 4: Drag & Drop zone
+      var dropZone = document.querySelector('.drop-zone[data-target="' + q + '"], .drop-zone[data-q="' + q + '"]');
+      if (dropZone) {
+        dropZone.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
+        var dropRow = dropZone.closest('.matching-form-row, .matching-row') || dropZone.parentElement;
+        if (dropRow && dropRow.nextSibling) {
+          dropRow.parentNode.insertBefore(feedback, dropRow.nextSibling);
+        } else if (dropRow && dropRow.parentNode) {
+          dropRow.parentNode.appendChild(feedback);
+        }
+        continue;
       }
     }
 
@@ -4881,7 +4991,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   }
 
   // Review & Retake actions in result modal and review banner
-  document.getElementById('vxReviewAnswersBtn')?.addEventListener('click', function() {
+  function triggerReviewModeAction() {
     resultModal.classList.remove('show');
     if (currentAttemptData) {
       applyReviewModeUi(currentAttemptData);
@@ -4889,6 +4999,25 @@ function readingPersistenceMarkup(material, user, requestedMode) {
       jumpToQuestion(firstMistake);
     }
     notify('Review Mode Active: Official correct answers are displayed beneath each question!', 'success');
+  }
+
+  document.getElementById('vxReviewAnswersBtn')?.addEventListener('click', triggerReviewModeAction);
+  document.getElementById('vxMainReviewBtn')?.addEventListener('click', triggerReviewModeAction);
+
+  document.getElementById('vxToggleAnswersTableBtn')?.addEventListener('click', function() {
+    var tableWrap = document.getElementById('vxResultAnswersTableWrap');
+    if (!tableWrap) return;
+    if (tableWrap.style.display === 'none' || !tableWrap.style.display) {
+      tableWrap.style.display = 'block';
+      this.textContent = 'Hide Answers Table (Jadvalni yashirish)';
+    } else {
+      tableWrap.style.display = 'none';
+      this.textContent = '📋 Show Answers Table (Jadvalda Koʻrish)';
+    }
+  });
+
+  document.getElementById('vxReadingResultsCloseTopBtn')?.addEventListener('click', function() {
+    resultModal.classList.remove('show');
   });
 
   document.getElementById('vxResultsReportIssueBtn')?.addEventListener('click', function() {
@@ -7353,6 +7482,16 @@ async function api(req, res, pathname) {
       .filter(item => item.studentId === user.id && item.materialId === materialId)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
     return json(res, 200, { attempt: attempt ? { ...readingAttemptSummary(attempt), answers: attempt.answers } : null });
+  }
+  if (req.method === "GET" && pathname === "/api/listening-attempts/latest") {
+    const user = studentFromRequest(req, data);
+    if (!user) return json(res, 401, { error: "Sign in to restore your Listening answers." });
+    const requestUrl = new URL(req.url, `http://${req.headers.host}`);
+    const materialId = String(requestUrl.searchParams.get("materialId") || "");
+    const attempt = (data.listeningAttempts || [])
+      .filter(item => item.studentId === user.id && item.materialId === materialId)
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+    return json(res, 200, { attempt: attempt ? { ...listeningAttemptSummary(attempt), answers: attempt.answers } : null });
   }
   if (req.method === "POST" && pathname === "/api/reading-attempts") {
     const user = studentFromRequest(req, data);

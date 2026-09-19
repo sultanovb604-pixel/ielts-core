@@ -2892,9 +2892,24 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       </div>
     </div>
 
+    <!-- Dedicated Review CTA Section -->
+    <div class="vx-res-section-block" style="text-align:center;padding:18px 20px;background:linear-gradient(180deg,#f8fafc,#f1f5f9);border-radius:16px;border:1.5px solid #e2e8f0;margin-bottom:20px;">
+      <h3 style="margin:0 0 6px;font-size:16px;font-weight:800;color:#0f172a;">Javoblarni tahlil qilish (Review Answers)</h3>
+      <p style="margin:0 0 14px;font-size:13px;color:#64748b;">Har bir savol boʻyicha belgilangan javobingiz va rasmiy toʻgʻri javoblarni koʻrib chiqing:</p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <button type="button" class="vx-btn-review-mistakes-cta" id="vxListeningMainReviewBtn" style="font-size:14px;padding:10px 22px;border-radius:10px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Review Answers on Test (Testda Koʻrish)</span>
+        </button>
+        <button type="button" class="vx-btn-modal-secondary" id="vxListeningToggleAnswersTableBtn" style="font-size:13px;padding:8px 18px;border-radius:10px;">
+          <span>📋 Show Answers Table (Jadvalda Koʻrish)</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Complete Answers & Explanations Review Sheet -->
-    <div class="vx-res-answers-table-wrap" id="vxListeningResultAnswersTableWrap">
-      <div class="vx-res-section-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:gap:10px;margin-bottom:12px;">
+    <div class="vx-res-answers-table-wrap" id="vxListeningResultAnswersTableWrap" style="display:none;">
+      <div class="vx-res-section-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
         <div style="display:flex;align-items:center;gap:8px;">
           <span>Detailed Answer Key & Review</span>
           <span style="font-size:12px;font-weight:600;color:#64748b;text-transform:none;">(All Official Answers)</span>
@@ -3668,12 +3683,27 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       modal.classList.remove('show');
     });
 
-    document.getElementById('vxCloseModalReviewBtn')?.addEventListener('click', function() {
+    function triggerListeningReviewAction() {
       modal.classList.remove('show');
       if (currentListeningAttempt) {
         applyListeningReviewModeUi(currentListeningAttempt);
-        var firstMistake = (currentListeningAttempt.incorrectQuestions || [])[0] || material.startQ;
+        var firstMistake = (currentListeningAttempt.incorrectQuestions || [])[0] || material.startQ || 1;
         jumpToQuestion(firstMistake);
+      }
+    }
+
+    document.getElementById('vxCloseModalReviewBtn')?.addEventListener('click', triggerListeningReviewAction);
+    document.getElementById('vxListeningMainReviewBtn')?.addEventListener('click', triggerListeningReviewAction);
+
+    document.getElementById('vxListeningToggleAnswersTableBtn')?.addEventListener('click', function() {
+      var tableWrap = document.getElementById('vxListeningResultAnswersTableWrap');
+      if (!tableWrap) return;
+      if (tableWrap.style.display === 'none' || !tableWrap.style.display) {
+        tableWrap.style.display = 'block';
+        this.textContent = 'Hide Answers Table (Jadvalni yashirish)';
+      } else {
+        tableWrap.style.display = 'none';
+        this.textContent = '📋 Show Answers Table (Jadvalda Koʻrish)';
       }
     });
 
@@ -3682,6 +3712,44 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     });
 
     if (modal) modal.classList.add('show');
+  }
+
+  function restoreSubmittedListeningAnswers(answers) {
+    if (!Array.isArray(answers)) return;
+    submittedListeningAnswers = answers;
+    answers.forEach(function(item) {
+      if (!item || !item.key) return;
+      var key = String(item.key).toLowerCase().replace(/^q/, '');
+      var qNum = parseInt(key, 10);
+      var val = String(item.value || '').trim();
+      if (!val || !Number.isFinite(qNum)) return;
+
+      var radios = document.querySelectorAll('input[type="radio"][name="q' + qNum + '"], input[type="radio"][name="question-' + qNum + '"], input[type="radio"][name="question_' + qNum + '"]');
+      if (radios.length > 0) {
+        radios.forEach(function(r) {
+          if (String(r.value || '').trim().toLowerCase() === val.toLowerCase()) {
+            r.checked = true;
+          }
+        });
+        return;
+      }
+
+      var select = document.querySelector('select[name="q' + qNum + '"], select[id="q' + qNum + '"], select[name="question-' + qNum + '"]');
+      if (select) {
+        select.value = val;
+        return;
+      }
+
+      var textInp = document.getElementById('q' + qNum) ||
+                    document.querySelector('input[name="q' + qNum + '"]') ||
+                    document.querySelector('input[name="question-' + qNum + '"]') ||
+                    document.querySelector('[data-q="' + qNum + '"]') ||
+                    document.querySelector('[data-question="' + qNum + '"]');
+      if (textInp && (textInp.tagName === 'INPUT' || textInp.tagName === 'TEXTAREA')) {
+        textInp.value = val;
+      }
+    });
+    renderListeningBottomDock();
   }
 
   function applyListeningReviewModeUi(attempt) {
@@ -3700,6 +3768,12 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     if (trBtn) trBtn.style.display = 'inline-block';
     if (retBtn) retBtn.style.display = 'inline-block';
 
+    // Clear previous review feedback badges and classes
+    document.querySelectorAll('.vx-inline-feedback, .vx-correct-answer-pill, .vx-correct-badge, .vx-wrong-badge').forEach(function(el) { el.remove(); });
+    document.querySelectorAll('.vx-review-correct-opt, .vx-review-incorrect-opt, .vx-review-input-correct, .vx-review-input-incorrect').forEach(function(el) {
+      el.classList.remove('vx-review-correct-opt', 'vx-review-incorrect-opt', 'vx-review-input-correct', 'vx-review-input-incorrect');
+    });
+
     // Freeze all inputs for review
     for (var q = 1; q <= total; q++) {
       var inputs = document.querySelectorAll('#q' + q + ', [name="q' + q + '"], [name="question-' + q + '"], [name="question_' + q + '"], [data-q="' + q + '"], [data-question="' + q + '"]');
@@ -3708,8 +3782,6 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       });
     }
 
-    // Inline question feedback and input highlights
-    document.querySelectorAll('.vx-inline-feedback').forEach(function(el) { el.remove(); });
     var answersMap = new Map();
     var sourceAnswers = submittedListeningAnswers.length ? submittedListeningAnswers : (Array.isArray(attempt.answers) ? attempt.answers : []);
     sourceAnswers.forEach(function(a) {
@@ -3721,36 +3793,97 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     for (var q = 1; q <= total; q++) {
       var isIncorrect = incorrectSet.has(q);
       var expected = answerKey['q' + q] || answerKey[q] || answerKey[String(q)];
-      var expectedDisplay = Array.isArray(expected) ? expected.join(' / ') : (expected !== undefined && expected !== null ? String(expected) : 'Not specified');
+      var expectedList = Array.isArray(expected) ? expected.map(String) : (expected !== undefined && expected !== null ? [String(expected)] : []);
+      var expectedDisplay = expectedList.length ? expectedList.join(' / ') : 'Not specified';
       var userAns = answersMap.get(q) || '';
 
-      var ctrl = document.getElementById('q' + q) ||
-                 document.querySelector('input[name="q' + q + '"]') ||
-                 document.querySelector('input[name="question-' + q + '"]') ||
-                 document.querySelector('select[name="q' + q + '"]') ||
-                 document.querySelector('select[name="question-' + q + '"]') ||
-                 document.querySelector('[data-q="' + q + '"]') ||
-                 document.querySelector('[data-question="' + q + '"]');
+      var feedback = document.createElement('div');
+      feedback.className = 'vx-inline-feedback ' + (isIncorrect ? 'incorrect' : 'correct');
+      if (isIncorrect) {
+        feedback.innerHTML = '<div class="vx-fb-main"><strong>✕ Incorrect.</strong> Your Answer: <em>' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</em> · Official Correct Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong></div>';
+      } else {
+        feedback.innerHTML = '<div class="vx-fb-main"><strong>✔ Correct!</strong> Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong></div>';
+      }
 
-      if (ctrl) {
-        ctrl.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
-        var feedback = document.createElement('div');
-        feedback.className = 'vx-inline-feedback ' + (isIncorrect ? 'incorrect' : 'correct');
-        if (isIncorrect) {
-          feedback.innerHTML = '<strong>✕ Incorrect.</strong> Your Answer: <em>' + (userAns ? escapeHtml(userAns) : 'Not Answered') + '</em> · Official Correct Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
-        } else {
-          feedback.innerHTML = '<strong>✔ Correct!</strong> Answer: <strong>' + escapeHtml(expectedDisplay) + '</strong>';
-        }
+      // Check 1: Radio buttons (MCQ)
+      var radios = document.querySelectorAll('input[type="radio"][name="q' + q + '"], input[type="radio"][name="question-' + q + '"], input[type="radio"][name="question_' + q + '"]');
+      if (radios.length > 0) {
+        radios.forEach(function(r) {
+          r.disabled = true;
+          var rVal = String(r.value || '').trim().toLowerCase();
+          var isMatch = expectedList.some(function(exp) { return exp.trim().toLowerCase() === rVal; });
+          var isSelected = (userAns.toLowerCase() === rVal) || r.checked;
+          var optParent = r.closest('.mcq-option, .radio-option, .option, label') || r.parentElement;
+          if (isMatch && optParent) {
+            optParent.classList.add('vx-review-correct-opt');
+            optParent.insertAdjacentHTML('beforeend', '<span class="vx-correct-badge" style="margin-left:auto;font-size:11px;font-weight:800;color:#10b981;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:#ecfdf5;border:1px solid #a7f3d0;">✔ CORRECT</span>');
+          }
+          if (isSelected && !isMatch && optParent) {
+            optParent.classList.add('vx-review-incorrect-opt');
+            optParent.insertAdjacentHTML('beforeend', '<span class="vx-wrong-badge" style="margin-left:auto;font-size:11px;font-weight:800;color:#ef4444;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:#fef2f2;border:1px solid #fecaca;">✕ YOUR ANSWER</span>');
+          }
+        });
 
-        var attachTarget = (ctrl.type === 'radio' || ctrl.type === 'checkbox')
-          ? (ctrl.closest('.form-group, .question-block, .radio-group, .question-options, fieldset') || ctrl.parentElement)
-          : ctrl;
-
+        var groupWrap = radios[0].closest('.mcq-options, .question-options, .options-container, .radio-group');
+        var attachTarget = groupWrap || radios[radios.length - 1].closest('.mcq-option, label') || radios[radios.length - 1].parentElement;
         if (attachTarget && attachTarget.nextSibling) {
           attachTarget.parentNode.insertBefore(feedback, attachTarget.nextSibling);
         } else if (attachTarget && attachTarget.parentNode) {
           attachTarget.parentNode.appendChild(feedback);
         }
+        continue;
+      }
+
+      // Check 2: Select dropdown
+      var select = document.querySelector('select[name="q' + q + '"], select[id="q' + q + '"], select[name="question-' + q + '"], select[name="question_' + q + '"]');
+      if (select) {
+        select.disabled = true;
+        select.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
+        var selectPill = document.createElement('span');
+        selectPill.className = 'vx-correct-answer-pill ' + (isIncorrect ? 'incorrect' : 'correct');
+        selectPill.style.cssText = 'display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;padding:2px 10px;border-radius:6px;margin-left:8px;vertical-align:middle;' +
+          (isIncorrect ? 'background:#fef2f2;color:#991b1b;border:1px solid #fecaca;' : 'background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;');
+        selectPill.innerHTML = (isIncorrect ? '✕ Correct: <strong>' + escapeHtml(expectedDisplay) + '</strong>' : '✔ Correct: <strong>' + escapeHtml(expectedDisplay) + '</strong>');
+        if (select.nextSibling) {
+          select.parentNode.insertBefore(selectPill, select.nextSibling);
+        } else {
+          select.parentNode.appendChild(selectPill);
+        }
+
+        var selectRow = select.closest('.matching-form-row, .matching-row, .question-row') || select.parentElement;
+        if (selectRow && selectRow.nextSibling) {
+          selectRow.parentNode.insertBefore(feedback, selectRow.nextSibling);
+        } else if (selectRow && selectRow.parentNode) {
+          selectRow.parentNode.appendChild(feedback);
+        }
+        continue;
+      }
+
+      // Check 3: Text input (blanks, notes, flowchart, summary)
+      var textInp = document.querySelector('input[type="text"][name="q' + q + '"], input[type="text"][id="q' + q + '"], input[name="question-' + q + '"], input[name="question_' + q + '"], input[id="question_' + q + '"]') ||
+                    document.getElementById('q' + q) ||
+                    document.querySelector('[data-q="' + q + '"]') ||
+                    document.querySelector('[data-question="' + q + '"]');
+      if (textInp) {
+        textInp.disabled = true;
+        textInp.classList.add(isIncorrect ? 'vx-review-input-incorrect' : 'vx-review-input-correct');
+        var textPill = document.createElement('span');
+        textPill.className = 'vx-correct-answer-pill ' + (isIncorrect ? 'incorrect' : 'correct');
+        textPill.style.cssText = 'display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:800;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:middle;' +
+          (isIncorrect ? '✕ Correct: <strong>' + escapeHtml(expectedDisplay) + '</strong>' : '✔ Correct');
+        if (textInp.nextSibling) {
+          textInp.parentNode.insertBefore(textPill, textInp.nextSibling);
+        } else {
+          textInp.parentNode.appendChild(textPill);
+        }
+
+        var sentenceBlock = textInp.closest('.flow-step, .sentence-completion p, .diagram-label, .question-statement, p, li') || textInp.parentElement;
+        if (sentenceBlock && sentenceBlock.nextSibling) {
+          sentenceBlock.parentNode.insertBefore(feedback, sentenceBlock.nextSibling);
+        } else if (sentenceBlock && sentenceBlock.parentNode) {
+          sentenceBlock.parentNode.appendChild(feedback);
+        }
+        continue;
       }
     }
 
@@ -3991,18 +4124,28 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   if (isReviewMode) {
     var banner = document.getElementById('vxReviewBanner');
     if (banner) banner.classList.add('show');
-    toggleTranscriptPanel(true);
     if (token) {
-      fetch('/api/student/results', {
+      fetch('/api/listening-attempts/latest?materialId=' + encodeURIComponent(material.id), {
         headers: { Authorization: 'Bearer ' + token }
-      }).then(function(r){ return r.json(); }).then(function(results) {
-        if (Array.isArray(results)) {
-          var found = results.find(function(item) {
-            return item.materialId === material.id || item.id === material.id;
-          });
-          if (found) {
-            applyListeningReviewModeUi(found);
+      }).then(function(r){ return r.json(); }).then(function(res) {
+        if (res && res.attempt) {
+          if (Array.isArray(res.attempt.answers)) {
+            restoreSubmittedListeningAnswers(res.attempt.answers);
           }
+          applyListeningReviewModeUi(res.attempt);
+        } else {
+          return fetch('/api/student/results', {
+            headers: { Authorization: 'Bearer ' + token }
+          }).then(function(r){ return r.json(); }).then(function(results) {
+            if (Array.isArray(results)) {
+              var found = results.find(function(item) {
+                return item.materialId === material.id || item.id === material.id;
+              });
+              if (found) {
+                applyListeningReviewModeUi(found);
+              }
+            }
+          });
         }
       }).catch(function(){});
     }
