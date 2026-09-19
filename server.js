@@ -6994,6 +6994,9 @@ function detailedStudentAnalytics(user, data) {
 
 async function api(req, res, pathname) {
   if (req.method === "GET" && (pathname === "/api/health" || pathname === "/health")) {
+    if (SUPABASE_CONFIGURED && !supabaseLastReadAt && !supabaseLastWriteAt) {
+      await readData().catch(() => {});
+    }
     const dbStatus = SUPABASE_CONFIGURED ? "supabase" : (databaseClient ? "neon" : (DATABASE_URL ? "neon-connecting" : (FIRESTORE_CONFIGURED ? "firestore" : "local-file")));
     return json(res, 200, {
       status: SESSION_SECRET && DURABLE_STORAGE_CONFIGURED && (!SUPABASE_CONFIGURED || !supabaseLastError) ? "healthy" : "degraded",
