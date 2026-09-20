@@ -7005,6 +7005,7 @@ async function api(req, res, pathname) {
       timestamp: new Date().toISOString(),
       database: dbStatus,
       databaseStatus: SUPABASE_CONFIGURED ? (supabaseLastError ? "error" : (supabaseLastReadAt || supabaseLastWriteAt ? "ready" : "connecting")) : (DURABLE_STORAGE_CONFIGURED ? "ready" : "misconfigured"),
+      databaseError: supabaseLastError || undefined,
       authentication: SESSION_SECRET ? "ready" : "misconfigured",
       version: "2.5.0",
       nodeEnv: process.env.NODE_ENV || "development"
