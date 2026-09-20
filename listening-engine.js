@@ -3163,7 +3163,8 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     if (!audios[idx]) return;
     currentAudioIdx = idx;
     var file = audios[idx].file;
-    audioEl.src = '/english/audio/' + encodeURIComponent(file);
+    var cdnBase = window.__SUPABASE_AUDIO_CDN__ || 'https://apdaktavlprimnjwgnsy.supabase.co/storage/v1/object/public/listening-audio/';
+    audioEl.src = (file && !file.startsWith('http')) ? (cdnBase + encodeURIComponent(file)) : file;
     if (speedSelect) {
       audioEl.playbackRate = parseFloat(speedSelect.value) || 1.0;
     }

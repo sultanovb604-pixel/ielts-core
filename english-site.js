@@ -26,29 +26,26 @@
       try {
         if (preloader && preloader.parentNode) preloader.parentNode.removeChild(preloader);
       } catch (_) {}
-    }, 400);
+    }, 200);
   };
 
   const hideAppPreloader = () => {
     Promise.all(window.__pageReadyPromises || []).then(() => {
-      const elapsed = Date.now() - preloaderStartTime;
-      const wait = Math.max(0, 450 - elapsed);
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          setTimeout(dismissPreloader, 180);
-        });
-      }, wait);
+      requestAnimationFrame(() => {
+        dismissPreloader();
+      });
     });
   };
   window.hideAppPreloader = hideAppPreloader;
 
-  // Maximum safety timeout (1200ms max so page never feels blocked)
-  setTimeout(dismissPreloader, 1200);
+  // Maximum safety timeout (400ms max so page never feels blocked)
+  setTimeout(dismissPreloader, 400);
 
-  const token = localStorage.getItem('vortex-english-token');
-  const isDataPage = ['/english/materials', '/english/account'].includes(location.pathname);
-  if (!token && !isDataPage) {
+  // If DOM is already interactive or complete, dismiss immediately
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
     hideAppPreloader();
+  } else {
+    document.addEventListener('DOMContentLoaded', hideAppPreloader, { once: true });
   }
 
   const header = document.querySelector('.app-header');

@@ -9627,6 +9627,14 @@ const server = http.createServer(async (req, res) => {
     }
     if (pathname.startsWith("/english/audio/")) {
       const audioFileName = decodeURIComponent(path.basename(pathname));
+      if (SUPABASE_CONFIGURED) {
+        const cdnUrl = `${SUPABASE_URL}/storage/v1/object/public/listening-audio/${encodeURIComponent(audioFileName)}`;
+        res.writeHead(302, {
+          "Location": cdnUrl,
+          "Cache-Control": "public, max-age=31536000, immutable"
+        });
+        return res.end();
+      }
       const candidate1 = path.join(LISTENING_AUDIO_DIR, audioFileName);
       const candidate2 = path.join(LISTENING_MATERIALS_DIR, audioFileName);
       const audioPath = fs.existsSync(candidate1) ? candidate1 : (fs.existsSync(candidate2) ? candidate2 : null);
