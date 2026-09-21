@@ -48,6 +48,8 @@
     document.addEventListener('DOMContentLoaded', hideAppPreloader, { once: true });
   }
 
+  const token = localStorage.getItem('vortex-english-token');
+
   const header = document.querySelector('.app-header');
   if (header && !header.classList.contains('refined-header') && !header.querySelector('[data-theme-toggle]')) {
     const themeToggle = document.createElement('button');

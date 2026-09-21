@@ -54,7 +54,11 @@ function readListeningCatalog(forceRefresh = false) {
 }
 
 function listeningBand(correct, total) {
-  if (total !== 40) return null;
+  if (total !== 40) {
+    if (!total || total <= 0) return 0.0;
+    const scaledCorrect = Math.round((Math.max(0, parseInt(correct, 10) || 0) / total) * 40);
+    return listeningBand(scaledCorrect, 40);
+  }
   const c = Math.max(0, Math.min(40, parseInt(correct, 10) || 0));
   if (c >= 39) return 9.0;
   if (c >= 37) return 8.5;
@@ -820,8 +824,8 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     }
   }
   .vx-res-hero-dark-card {
-    background: #0f1c34;
-    color: #ffffff;
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
+    color: #ffffff !important;
     border-radius: 14px;
     padding: 22px 18px;
     text-align: center;
@@ -829,13 +833,14 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
   }
   .vx-res-hero-label {
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #93c5fd;
+    font-size: 12px;
+    font-weight: 800;
+    color: #dbeafe;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     margin-bottom: 4px;
   }
   .vx-res-hero-score {
@@ -848,12 +853,12 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   }
   .vx-res-hero-out-of {
     font-size: 13px;
-    color: #94a3b8;
+    color: #bfdbfe;
     font-weight: 600;
   }
   .vx-res-hero-stats-card {
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    border: 1.5px solid #e2e8f0;
     border-radius: 14px;
     padding: 20px 24px;
     display: flex;
@@ -864,6 +869,70 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   html[data-theme="dark"] .vx-res-hero-stats-card {
     background: #1e293b;
     border-color: #334155;
+  }
+  .vx-res-main-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 18px 0 24px;
+  }
+  .vx-res-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 18px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 750;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border: none;
+    box-sizing: border-box;
+  }
+  .vx-res-action-btn.primary {
+    background: #2563eb;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  }
+  .vx-res-action-btn.primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+  }
+  .vx-res-action-btn.secondary {
+    background: #eff6ff;
+    color: #1d4ed8 !important;
+    border: 1.5px solid #bfdbfe;
+  }
+  .vx-res-action-btn.secondary:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    transform: translateY(-1px);
+  }
+  .vx-res-action-btn.outline {
+    background: #ffffff;
+    color: #475569 !important;
+    border: 1.5px solid #cbd5e1;
+  }
+  .vx-res-action-btn.outline:hover {
+    background: #f8fafc;
+    color: #0f172a !important;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+  }
+  body.night-mode .vx-res-action-btn.outline,
+  html[data-theme="dark"] .vx-res-action-btn.outline {
+    background: #1e293b;
+    color: #cbd5e1 !important;
+    border-color: #334155;
+  }
+  body.night-mode .vx-res-action-btn.secondary,
+  html[data-theme="dark"] .vx-res-action-btn.secondary {
+    background: #1e3a8a;
+    color: #93c5fd !important;
+    border-color: #2563eb;
   }
   .vx-res-stat-item {
     text-align: center;
@@ -2836,15 +2905,16 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
     
     <!-- Top Header -->
     <div class="vx-res-head">
-      <div class="vx-res-title-group">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core">
-          <h2 style="margin:0;font-size:20px;font-weight:800;color:#0f172a;">Exam Results</h2>
+      <div class="vx-res-title-group" style="display:flex;align-items:center;gap:12px;">
+        <img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core">
+        <div>
+          <h2 style="margin:0;font-size:19px;font-weight:800;color:#0f172a;" id="vxResultModalTitle">Diagnostic Exam Report</h2>
+          <span style="font-size:12px;color:#64748b;font-weight:500;">Computer-Delivered IELTS Simulation</span>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span class="vx-res-timer-display" id="vxResTimerDisplay" style="font-size:13.5px;font-weight:600;color:#64748b;">0 seconds remaining</span>
-        <button type="button" class="vx-res-close-x" id="vxResultsCloseTopBtn" title="Close report">✕</button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="vx-res-timer-display" id="vxResTimerDisplay" style="font-size:12px;font-weight:700;color:#0369a1;background:#f0f9ff;border:1px solid #bae6fd;padding:4px 10px;border-radius:6px;">Exam Completed</span>
+        <button type="button" class="vx-res-close-x" id="vxResultsCloseTopBtn" title="Close report" style="width:32px;height:32px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#64748b;">✕</button>
       </div>
     </div>
 
@@ -2853,7 +2923,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       <div class="vx-res-hero-dark-card">
         <div class="vx-res-hero-label">Your Band Score</div>
         <div class="vx-res-hero-score" id="vxResBandNum">0</div>
-        <div class="vx-res-hero-out-of">out of 9</div>
+        <div class="vx-res-hero-out-of">out of 9.0</div>
       </div>
       <div class="vx-res-hero-stats-card">
         <div class="vx-res-stat-item">
@@ -2866,6 +2936,22 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
           <div class="vx-res-stat-label">Test Duration</div>
         </div>
       </div>
+    </div>
+
+    <!-- PRIMARY ACTION BUTTONS (IMMEDIATELY VISIBLE, NO SCROLLING NEEDED!) -->
+    <div class="vx-res-main-actions-grid">
+      <button type="button" class="vx-res-action-btn primary" id="vxListeningModalRetakeBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        <span>Retake Test (Qayta topshirish)</span>
+      </button>
+      <button type="button" class="vx-res-action-btn secondary" id="vxListeningModalReviewBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>Review Answers on Test (Tahlil)</span>
+      </button>
+      <a href="/english/materials?level=ielts&skill=listening" class="vx-res-action-btn outline" id="vxListeningFinishBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span>Exit to Library (Chiqish)</span>
+      </a>
     </div>
 
     <!-- Incorrect Questions Pills -->
@@ -2936,6 +3022,10 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
         </button>
       </div>
       <div style="display:flex;gap:10px;align-items:center;">
+        <button type="button" class="vx-btn-modal-secondary" id="vxListeningBottomRetakeBtn" style="padding:8px 16px;font-size:13px;border-radius:8px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span>Retake Test</span>
+        </button>
         <button type="button" class="vx-btn-modal-primary vx-btn-review-mistakes-cta" id="vxCloseModalReviewBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
           <span>Review Mistakes</span>
@@ -3693,8 +3783,27 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       }
     }
 
+    function retakeListeningAction() {
+      if (!confirm("Are you sure you want to retake this test? All answers and progress will be reset.")) {
+        return;
+      }
+      try {
+        localStorage.removeItem('vortex-listening-answers-' + material.id);
+        localStorage.removeItem('vortex_listening_attempt_' + material.id);
+        localStorage.removeItem('vortex-listening-hl-' + material.id);
+        localStorage.removeItem('vortex-listening-draft-' + material.id);
+        sessionStorage.removeItem('vortex-listening-answers-' + material.id);
+      } catch(e) {}
+      var url = new URL(window.location.href);
+      url.searchParams.delete('review');
+      window.location.href = url.pathname + (material && material.id ? '?id=' + encodeURIComponent(material.id) : '');
+    }
+
     document.getElementById('vxCloseModalReviewBtn')?.addEventListener('click', triggerListeningReviewAction);
     document.getElementById('vxListeningMainReviewBtn')?.addEventListener('click', triggerListeningReviewAction);
+    document.getElementById('vxListeningModalReviewBtn')?.addEventListener('click', triggerListeningReviewAction);
+    document.getElementById('vxListeningModalRetakeBtn')?.addEventListener('click', retakeListeningAction);
+    document.getElementById('vxListeningBottomRetakeBtn')?.addEventListener('click', retakeListeningAction);
 
     document.getElementById('vxListeningToggleAnswersTableBtn')?.addEventListener('click', function() {
       var tableWrap = document.getElementById('vxListeningResultAnswersTableWrap');
@@ -3918,9 +4027,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
       toggleTranscriptPanel(true);
     });
     document.getElementById('vxListeningRsbRetakeBtn')?.addEventListener('click', function() {
-      var url = new URL(window.location.href);
-      url.searchParams.delete('review');
-      window.location.href = url.toString();
+      retakeListeningAction();
     });
   }
 
@@ -4162,9 +4269,7 @@ function listeningPersistenceMarkup(material, user, requestedMode) {
   });
 
   document.getElementById('vxHeaderRetakeBtn')?.addEventListener('click', function() {
-    var url = new URL(window.location.href);
-    url.searchParams.delete('review');
-    window.location.href = url.toString();
+    retakeListeningAction();
   });
 
   // =========================================================================

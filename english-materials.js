@@ -161,6 +161,14 @@
           breadcrumb: 'Full Tests > Listening'
         };
       }
+      if (s === 'all') {
+        return {
+          title: 'IELTS Full Mock Tests',
+          subtitle: 'Complete 40-question Reading and Listening practice tests under exam conditions',
+          icon: 'quiz',
+          breadcrumb: 'Full Tests > All Skills'
+        };
+      }
       return {
         title: 'Reading Full Tests',
         subtitle: 'Complete three-passage, 40-question reading practice in a timed workspace',
