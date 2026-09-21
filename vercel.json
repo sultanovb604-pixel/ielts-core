@@ -15,6 +15,12 @@
       ]
     },
     {
+      "source": "/english(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
       "source": "/(.*\\.(?:css|js|woff2|svg|png|jpg|ico))",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
