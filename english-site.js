@@ -190,9 +190,11 @@
     const isArticles = isMaterials && activeCollection === 'article';
     const isVocabulary = activePath === '/english/vocabulary';
     const isSkillTraining = activePath === '/english/practice' && !activeSkill;
-    const isListening = (isMaterials && activeSkill === 'listening') || activePath === '/english/listening-exam';
-    const isReading = (isMaterials && (activeSkill === 'reading' || (!activeSkill && !activeCollection))) || activePath === '/english/reading-exam';
-    const isAllLibrary = isMaterials && activeSkill === 'all';
+    const isFullReading = isMaterials && activeSkill === 'reading' && activeCollection === 'full-test';
+    const isFullListening = isMaterials && activeSkill === 'listening' && activeCollection === 'full-test';
+    const isReading = (isMaterials && (activeSkill === 'reading' || (!activeSkill && !activeCollection)) && activeCollection !== 'full-test') || activePath === '/english/reading-exam';
+    const isListening = (isMaterials && activeSkill === 'listening' && activeCollection !== 'full-test') || activePath === '/english/listening-exam';
+    const isAllLibrary = isMaterials && activeSkill === 'all' && activeCollection !== 'full-test';
 
     const overviewLinks = isTeacher ? [
       { label: 'Dashboard', icon: 'dashboard', href: '/english/account', active: isDashboard },
@@ -210,13 +212,20 @@
         links: overviewLinks
       },
       {
-        title: 'IELTS Skills',
+        title: 'Full Mock Tests (40 Qs)',
         links: [
-          { label: 'Listening', icon: 'headphones', href: '/english/materials?skill=listening', active: isListening },
-          { label: 'Reading', icon: 'menu_book', href: '/english/materials?skill=reading', active: isReading },
-          { label: 'Writing', icon: 'edit', href: '/english/materials?skill=writing', active: isWriting },
-          { label: 'Speaking', icon: 'mic', href: '/english/speaking', active: isSpeaking },
-          { label: 'Full Mock Exams', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, isPremium: true }
+          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, isPremium: true },
+          { label: 'Full Reading Tests', icon: 'menu_book', href: '/english/materials?skill=reading&collection=full-test', active: isFullReading, badge: '40 Qs' },
+          { label: 'Full Listening Tests', icon: 'headphones', href: '/english/materials?skill=listening&collection=full-test', active: isFullListening, badge: '40 Qs' }
+        ]
+      },
+      {
+        title: 'IELTS Skills (Practice)',
+        links: [
+          { label: 'Listening Practice', icon: 'headphones', href: '/english/materials?skill=listening', active: isListening },
+          { label: 'Reading Passages', icon: 'menu_book', href: '/english/materials?skill=reading', active: isReading },
+          { label: 'Writing Editor', icon: 'edit', href: '/english/materials?skill=writing', active: isWriting },
+          { label: 'Speaking AI', icon: 'mic', href: '/english/speaking', active: isSpeaking }
         ]
       },
       {

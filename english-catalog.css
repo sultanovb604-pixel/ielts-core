@@ -400,6 +400,65 @@ body.materials-page {
   margin: 0;
 }
 
+/* Quick Format Filter Tabs */
+.vx-type-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.vx-type-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--vx-cat-border);
+  background: var(--vx-cat-surface);
+  color: var(--vx-cat-text-muted);
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.vx-type-tab:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: var(--vx-cat-text);
+  transform: translateY(-1px);
+}
+
+.vx-type-tab.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.vx-type-tab.active .material-symbols-outlined {
+  color: #ffffff !important;
+}
+
+body.night-mode .vx-type-tab,
+html[data-theme="dark"] .vx-type-tab {
+  background: #1e293b;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+body.night-mode .vx-type-tab.active,
+html[data-theme="dark"] .vx-type-tab.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
 /* Search Bar Row */
 .vx-search-row {
   display: flex;

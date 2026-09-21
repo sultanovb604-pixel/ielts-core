@@ -287,6 +287,9 @@ body.member-layout.member-sidebar-collapsed {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1px solid #bfdbfe !important;
   transition: all 0.15s ease !important;
 }
 
@@ -1674,6 +1677,12 @@ html[data-theme="dark"] .member-sidebar-nav a[aria-current="page"] .member-crown
 }
 
 /* Dark Badges */
+html[data-theme="dark"] .member-nav-badge {
+  background: rgba(30, 58, 138, 0.35) !important;
+  color: #93c5fd !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
 html[data-theme="dark"] .member-nav-badge.badge-count {
   background: rgba(255, 255, 255, 0.06) !important;
   color: #94a3b8 !important;

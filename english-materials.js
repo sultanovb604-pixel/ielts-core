@@ -155,10 +155,10 @@
     if (c === 'full-test') {
       if (s === 'listening') {
         return {
-          title: 'Listening Full Tests',
-          subtitle: 'Four-part computer-delivered listening practice with a complete audio simulation',
+          title: 'Full Listening Mock Tests (40 Qs)',
+          subtitle: 'Complete 4-part computer-delivered listening tests with full Cambridge audio tracks and official scoring',
           icon: 'headphones',
-          breadcrumb: 'Full Tests > Listening'
+          breadcrumb: 'Full Mock Tests > Listening'
         };
       }
       if (s === 'all') {
@@ -166,14 +166,14 @@
           title: 'IELTS Full Mock Tests',
           subtitle: 'Complete 40-question Reading and Listening practice tests under exam conditions',
           icon: 'quiz',
-          breadcrumb: 'Full Tests > All Skills'
+          breadcrumb: 'Full Mock Tests > All Skills'
         };
       }
       return {
-        title: 'Reading Full Tests',
-        subtitle: 'Complete three-passage, 40-question reading practice in a timed workspace',
+        title: 'Full Reading Mock Tests (40 Qs)',
+        subtitle: 'Complete 3-passage, 40-question academic reading tests with Cambridge CDI timer and diagnostic grading',
         icon: 'menu_book',
-        breadcrumb: 'Full Tests > Reading'
+        breadcrumb: 'Full Mock Tests > Reading'
       };
     }
     if (c === 'writing-sample' || s === 'writing') {
@@ -271,9 +271,10 @@
           const uColl = u.searchParams.get('collection');
           let isMatch = false;
           if (uColl === 'article' && collection === 'article') isMatch = true;
-          else if (uSkill === 'all' && skill === 'all') isMatch = true;
-          else if (uSkill && uSkill === skill && collection !== 'article') isMatch = true;
-          else if (!uSkill && !uColl && skill === 'reading' && collection !== 'article') isMatch = true;
+          else if (uColl === 'full-test' && collection === 'full-test' && uSkill === skill) isMatch = true;
+          else if (uSkill === 'all' && skill === 'all' && collection !== 'full-test') isMatch = true;
+          else if (uSkill && uSkill === skill && collection !== 'article' && collection !== 'full-test') isMatch = true;
+          else if (!uSkill && !uColl && skill === 'reading' && collection !== 'article' && collection !== 'full-test') isMatch = true;
 
           if (isMatch) a.setAttribute('aria-current', 'page');
           else a.removeAttribute('aria-current');
@@ -282,6 +283,25 @@
     });
 
     updateHeaderAndBreadcrumb();
+
+    // Sync Quick Format Filter Tabs
+    document.querySelectorAll('#vxFormatTabs .vx-type-tab').forEach(tab => {
+      const f = tab.dataset.format;
+      const isActive = (f === 'all' && collection === 'all')
+        || (f === 'full-test' && collection === 'full-test')
+        || (f === 'practice' && (collection === 'practice' || collection === 'writing-sample' || collection === 'speaking'));
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    // Passage filter is not applicable to 40-question full tests
+    if (filterPassage) {
+      filterPassage.disabled = collection === 'full-test';
+      if (collection === 'full-test') {
+        selectedPassage = 'all';
+        filterPassage.value = 'all';
+      }
+    }
 
     const normalized = query.trim().toLocaleLowerCase('en');
 
@@ -490,9 +510,10 @@
             <span>Unlock Test</span>
           </button>`;
       } else {
+        const btnText = isFull ? 'Start Full Test' : 'Start Practice';
         actionBtn = `
           <a href="${escape(href)}" class="vx-card-cta-btn primary">
-            <span>Start Practice</span>
+            <span>${btnText}</span>
             <span class="material-symbols-outlined cta-arrow" aria-hidden="true">arrow_forward</span>
           </a>`;
       }
@@ -623,6 +644,23 @@
       render();
     });
   }
+
+  // Quick Format Tabs (All vs Full Tests vs Practice)
+  document.querySelectorAll('#vxFormatTabs .vx-type-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetFormat = tab.dataset.format || 'all';
+      if (targetFormat === 'full-test' && skill !== 'reading' && skill !== 'listening') {
+        skill = 'reading';
+      }
+      collection = targetFormat;
+      if (collection === 'full-test') {
+        selectedPassage = 'all';
+        if (filterPassage) filterPassage.value = 'all';
+      }
+      syncUrl();
+      render();
+    });
+  });
 
   if (clearFiltersBtn) {
     clearFiltersBtn.addEventListener('click', resetFilters);
