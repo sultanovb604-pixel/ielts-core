@@ -168,7 +168,7 @@
 
   const mountMemberSidebar = user => {
     if (document.querySelector('.member-sidebar')) return;
-    const excludedPages = ['/english', '/english/', '/english/login', '/english/signup', '/english/pricing'];
+    const excludedPages = ['/english', '/english/', '/english/login', '/english/signup', '/english/pricing', '/english/courses', '/english/practice'];
     if (excludedPages.includes(location.pathname)) return;
 
     const params = new URLSearchParams(location.search);
