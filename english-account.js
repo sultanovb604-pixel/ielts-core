@@ -509,23 +509,26 @@
     if (profileTab) { activateTab(profileTab); profileTab.focus(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   });
 
-  document.querySelector('#profileForm').addEventListener('submit', async event => {
+  document.querySelector('#profileForm')?.addEventListener('submit', async event => {
     event.preventDefault(); const message = document.querySelector('#profileMessage'); const values = new FormData(event.currentTarget);
     const name = (values.get('name') || '').trim();
     if (!name) { setMessage(message, 'Please enter your name.'); return; }
     try { const data = await api('/api/student/profile', { method: 'PUT', body: JSON.stringify({ name, learning: values.get('learning'), goal: values.get('goal') }) }); renderUser(data.user); setMessage(message, 'Learning focus saved.', true); }
     catch (error) { setMessage(message, error.message); }
   });
-  document.querySelector('#passwordForm').addEventListener('submit', async event => {
+  document.querySelector('#passwordForm')?.addEventListener('submit', async event => {
     event.preventDefault(); const form = event.currentTarget; const message = document.querySelector('#passwordMessage'); const values = new FormData(form);
     if (values.get('newPassword') !== values.get('confirmPassword')) { setMessage(message, 'New passwords do not match.'); return; }
     if ((values.get('newPassword') || '').length < 6) { setMessage(message, 'New password must be at least 6 characters.'); return; }
     try { await api('/api/auth/password', { method: 'PUT', body: JSON.stringify({ currentPassword: values.get('currentPassword'), newPassword: values.get('newPassword') }) }); form.reset(); setMessage(message, 'Password updated.', true); }
     catch (error) { setMessage(message, error.message); }
   });
-  document.querySelector('#logout').addEventListener('click', async () => {
+  document.querySelector('#logout')?.addEventListener('click', async () => {
     try { await api('/api/auth/logout', { method: 'POST', body: '{}' }); } catch {}
-    localStorage.removeItem(tokenKey); localStorage.removeItem('vortex-english-student'); location.assign('/english');
+    localStorage.removeItem(tokenKey);
+    localStorage.removeItem('vortex-english-student');
+    localStorage.removeItem('vortex-english-user');
+    location.assign('/english');
   });
 
   document.querySelector('#accountUpgradeBtn')?.addEventListener('click', () => {
@@ -1450,6 +1453,7 @@
       if (err?.message?.includes('sign in') || err?.message?.includes('401')) {
         localStorage.removeItem(tokenKey);
         localStorage.removeItem('vortex-english-student');
+        localStorage.removeItem('vortex-english-user');
         location.replace('/english/login?next=/english/account');
       }
     }

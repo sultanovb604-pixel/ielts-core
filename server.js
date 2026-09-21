@@ -9708,7 +9708,12 @@ const server = http.createServer(async (req, res) => {
       return stream.pipe(res);
     }
     if (pathname === "/english/reading-exam") {
-      const material = readReadingCatalog().find(item => item.id === requestUrl.searchParams.get("id"));
+      const readingCatalog = readReadingCatalog();
+      const requestedId = requestUrl.searchParams.get("id");
+      let material = readingCatalog.find(item => item.id === requestedId);
+      if (!material) {
+        material = readingCatalog.find(item => item.materialKind === "full-test") || readingCatalog[0];
+      }
       if (!material) { res.writeHead(404); return res.end("Reading material not found."); }
       const data = await readData();
       const user = studentFromRequest(req, data);

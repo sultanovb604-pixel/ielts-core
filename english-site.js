@@ -755,6 +755,7 @@
       .catch(() => {
         localStorage.removeItem('vortex-english-token');
         localStorage.removeItem('vortex-english-student');
+        localStorage.removeItem('vortex-english-user');
         mountMemberSidebar(null);
         hideAppPreloader();
       });
