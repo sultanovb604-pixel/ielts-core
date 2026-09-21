@@ -8,10 +8,6 @@
   const next = query.get('next');
   const destination = next && next.startsWith('/english/') ? next : '/english/account';
   const existingToken = localStorage.getItem(tokenKey);
-  // Preserve the requested lesson or catalogue across login/signup.
-  document.querySelectorAll('a[href="/english/login"], a[href="/english/signup"]').forEach(link => {
-    if (next && destination === next) link.search = new URLSearchParams({ next: destination }).toString();
-  });
 
   const setMessage = (text, success = false) => {
     if (!message) return;
@@ -19,6 +15,16 @@
     message.classList.toggle('success', success);
     if (!text) message.className = 'form-message';
   };
+
+  if (next && destination === next) {
+    document.querySelectorAll('a[href="/english/login"], a[href="/english/signup"], [data-auth-switch]').forEach(link => {
+      try {
+        const u = new URL(link.href, location.origin);
+        u.searchParams.set('next', next);
+        link.href = u.pathname + u.search;
+      } catch (_) {}
+    });
+  }
 
   // If already logged in, redirect
   if (existingToken) {
@@ -71,7 +77,7 @@
       e.preventDefault();
       e.stopPropagation();
     }
-    setMessage('Connecting to Google…');
+    setMessage('Google bilan ulanmoqda...');
 
     try {
       const fb = await ensureFirebaseAuth();
@@ -81,7 +87,7 @@
       const user = result.user;
       const idToken = await user.getIdToken();
 
-      setMessage('Google connected. Checking your account…', true);
+      setMessage('Google hisobi ulandi. Kabinetingizga yo‘naltirilmoqda...', true);
 
       const res = await fetch('/api/auth/firebase-google', {
         method: 'POST',
@@ -97,13 +103,13 @@
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Google sign-in failed. Please try again.');
+      if (!res.ok) throw new Error(data.error || 'Google sign-in xatoligi yuz berdi.');
 
       localStorage.setItem(tokenKey, data.token);
       localStorage.setItem('vortex_student_token', data.token);
       localStorage.setItem(studentKey, JSON.stringify(data.user));
 
-      setMessage('Signed in. Opening your workspace…', true);
+      setMessage('Muvaffaqiyatli kirdingiz! Ochilmoqda...', true);
       setTimeout(() => {
         window.location.replace(destination);
       }, 300);
@@ -111,7 +117,7 @@
       if (err.code === 'auth/popup-closed-by-user') {
         setMessage('');
       } else {
-        setMessage(err.message || 'Could not sign in with Google.');
+        setMessage(err.message || 'Google sign-in xatoligi.');
       }
     }
   }
@@ -139,14 +145,14 @@
       if (!form.reportValidity()) return;
       const fields = new FormData(form);
       if (mode === 'signup' && fields.get('password') !== fields.get('confirmPassword')) {
-        setMessage('Passwords do not match.');
+        setMessage('Kiritilgan parollar bir-biriga mos kelmadi.');
         form.elements.confirmPassword?.focus();
         return;
       }
       const submit = form.querySelector('[type="submit"]');
       const defaultText = submit.innerHTML;
       submit.disabled = true;
-      submit.textContent = mode === 'signup' ? 'Creating account…' : 'Signing in…';
+      submit.textContent = mode === 'signup' ? 'Hisob ochilmoqda...' : 'Kirilmoqda...';
       form.setAttribute('aria-busy', 'true');
 
       const username = String(fields.get('username') || '').trim().toLowerCase();
@@ -163,13 +169,13 @@
           body: JSON.stringify(payload)
         });
         const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+        if (!response.ok) throw new Error(data.error || 'Xatolik yuz berdi.');
 
         localStorage.setItem(tokenKey, data.token);
         localStorage.setItem('vortex_student_token', data.token);
         localStorage.setItem(studentKey, JSON.stringify(data.user));
 
-        setMessage(mode === 'signup' ? 'Account created. Opening your workspace…' : 'Welcome back. Opening your workspace…', true);
+        setMessage(mode === 'signup' ? 'Hisob yaratildi! Kabinetga o‘tilmoqda...' : 'Xush kelibsiz! Ochilmoqda...', true);
         window.setTimeout(() => window.location.replace(destination), 250);
       } catch (error) {
         setMessage(error.message);
