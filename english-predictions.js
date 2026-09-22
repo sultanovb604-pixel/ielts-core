@@ -258,44 +258,7 @@
       });
     });
 
-    // Handle static cards in reading, writing, speaking
-    ['readingPanel', 'writingPanel', 'speakingPanel'].forEach(panelId => {
-      const panel = document.getElementById(panelId);
-      if (!panel) return;
-      panel.querySelectorAll('.mock-card').forEach(card => {
-        card.addEventListener('click', e => {
-          const isOwner = currentUser && (
-            currentUser.email === 'sultanovb604@gmail.com' ||
-            currentUser.username === 'sultanovb604' ||
-            currentUser.username === 'bunyod' ||
-            currentUser.role === 'admin'
-          );
-          const isPremium = isOwner || currentUser?.plan === 'premium';
 
-          if (!isPremium) {
-            e.preventDefault();
-            if (typeof window.showUpgradeModal === 'function') {
-              window.showUpgradeModal();
-            } else {
-              location.href = '/english/pricing?feature=predictions';
-            }
-            return;
-          }
-
-          const actionUrl = card.getAttribute('data-action-url');
-          if (actionUrl && !e.target.closest('a')) {
-            window.location.href = actionUrl;
-          }
-        });
-
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            card.click();
-          }
-        });
-      });
-    });
 
     const initialHash = (location.hash || '').replace('#', '').toLowerCase();
     if (['listening', 'reading', 'writing', 'speaking'].includes(initialHash)) {
