@@ -169,9 +169,40 @@
   };
 
   const mountMemberSidebar = user => {
-    if (document.querySelector('.member-sidebar')) return;
-    const excludedPages = ['/english', '/english/', '/english/login', '/english/signup', '/english/pricing', '/english/courses', '/english/practice'];
-    if (excludedPages.includes(location.pathname)) return;
+    const existingSidebar = document.querySelector('.member-sidebar');
+    if (existingSidebar) {
+      if (user) {
+        const nameEl = existingSidebar.querySelector('.member-profile-info strong');
+        if (nameEl) nameEl.textContent = safe(String(user.name || user.username || 'Student').trim());
+        const subEl = existingSidebar.querySelector('.member-profile-info small');
+        if (subEl) {
+          subEl.textContent = user.email ? safe(String(user.email).trim()) : (user.username ? `@${safe(user.username)}` : (user.plan === 'premium' ? 'Premium Member' : 'Free Account'));
+          subEl.className = user.plan === 'premium' ? 'plan-premium' : 'plan-free';
+        }
+        const profileLink = existingSidebar.querySelector('.member-sidebar-profile');
+        if (profileLink) {
+          profileLink.classList.remove('is-guest-profile');
+          profileLink.href = '/english/account';
+        }
+      } else {
+        const nameEl = existingSidebar.querySelector('.member-profile-info strong');
+        if (nameEl) nameEl.textContent = 'Guest Student';
+        const subEl = existingSidebar.querySelector('.member-profile-info small');
+        if (subEl) {
+          subEl.textContent = 'Sign in to save scores';
+          subEl.className = 'plan-guest';
+        }
+        const profileLink = existingSidebar.querySelector('.member-sidebar-profile');
+        if (profileLink) {
+          profileLink.classList.add('is-guest-profile');
+          profileLink.href = '/english/login';
+        }
+      }
+      return;
+    }
+    const cleanPath = location.pathname.replace(/\/$/, '') || '/';
+    const excludedPages = ['/english', '/english/login', '/english/signup', '/english/pricing'];
+    if (excludedPages.includes(cleanPath)) return;
 
     const params = new URLSearchParams(location.search);
     const activeCollection = params.get('collection');
@@ -714,8 +745,13 @@
     modal.style.display = 'block';
   };
 
+  let cachedUser = null;
+  try {
+    cachedUser = JSON.parse(localStorage.getItem('vortex-english-user') || localStorage.getItem('vortex-english-student') || 'null');
+  } catch (e) {}
+  mountMemberSidebar(cachedUser);
+
   if (!token) {
-    mountMemberSidebar(null);
     hideAppPreloader();
   } else {
     fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
@@ -726,7 +762,10 @@
           location.replace('/english/materials');
           return;
         }
-        mountMemberSidebar(data.user);
+        if (data && data.user) {
+          localStorage.setItem('vortex-english-user', JSON.stringify(data.user));
+          mountMemberSidebar(data.user);
+        }
         if (data.user?.plan === 'premium') {
           document.body.classList.add('user-is-premium');
           document.documentElement.classList.add('user-is-premium');
