@@ -8,10 +8,10 @@
   <script>document.documentElement.dataset.theme='light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="/english-public.css?v=20260921_fresh">
+  <link rel="stylesheet" href="/english-public.css?v=20260922a">
 </head>
 <body class="public-site refined-public app-body auth-page premium-product-page" data-auth-mode="login">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -34,9 +34,9 @@
     <section class="auth-layout">
       <section class="auth-panel">
         <div class="auth-panel-inner">
-          <p class="page-kicker">WELCOME BACK</p>
-          <h1 class="auth-title">Sign in to IELTS Core.</h1>
-          <p class="resource-meta">Pick up where you left off. Your practice and progress are waiting.</p>
+          <p class="page-kicker">YOUR IELTS CORE WORKSPACE</p>
+          <h1 class="auth-title">Welcome back.</h1>
+          <p class="auth-context" data-auth-context hidden></p><p class="resource-meta">Your next session is right where you left it.</p>
 
           <button type="button" class="google-auth-button" data-google-auth>
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" width="20" height="20">
@@ -65,12 +65,13 @@
           </form>
           <p class="auth-switch">New here? <a data-auth-switch href="/english/signup">Create a free account</a></p>
           <details class="auth-help"><summary>Need help signing in?</summary><p>For Google accounts, choose Continue with Google. For a forgotten username or password, <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">contact support</a>. Never send your password or a Google verification code.</p></details>
+          <a class="auth-sample-link" href="/english#practice-preview">Just looking? Try a question without an account <span aria-hidden="true">→</span></a>
         </div>
       </section>
 
       <aside class="auth-aside">
         <div class="auth-aside-badge">Built around your progress</div>
-        <h2>Your practice.<br>Your progress.</h2>
+        <h2>A little practice.<br>A little more confidence.</h2>
         <p>Continue your Reading and Listening preparation, review past attempts, and plan your next practice session.</p>
 
         <ul class="auth-benefits-list">
@@ -109,7 +110,7 @@
       firebase.initializeApp(window.firebaseConfig);
     }
   </script>
-  <script src="/english-public.js?v=20260920"></script>
+  <script src="/english-public.js?v=20260922a"></script>
   <script src="/english-auth.js?v=20260907"></script>
 <script src="/english-session.js?v=20260908"></script>
 </body>

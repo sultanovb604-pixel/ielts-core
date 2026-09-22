@@ -8,10 +8,10 @@
   <script>document.documentElement.dataset.theme='light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=block" rel="stylesheet">
-  <link rel="stylesheet" href="/english-public.css?v=20260921_fresh">
+  <link rel="stylesheet" href="/english-public.css?v=20260922a">
 </head>
 <body class="public-site refined-public app-body auth-page premium-product-page" data-auth-mode="signup">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -34,7 +34,7 @@
     <section class="auth-layout">
       <aside class="auth-aside">
         <div class="auth-aside-badge">Built around your progress</div>
-        <h2>Start practising.<br>See your progress.</h2>
+        <h2>You don’t have to<br>get it all right today.</h2>
         <p>Build your IELTS routine with Reading and Listening practice, answer review, and saved attempts in one workspace.</p>
 
         <ul class="auth-benefits-list">
@@ -65,8 +65,8 @@
       <section class="auth-panel">
         <div class="auth-panel-inner">
           <p class="page-kicker">CREATE YOUR FREE ACCOUNT</p>
-          <h1 class="auth-title">Start your IELTS practice.</h1>
-          <p class="resource-meta">Create your free account. No credit card required.</p>
+          <h1 class="auth-title">Make yourself at home.</h1>
+          <p class="auth-context" data-auth-context hidden></p><p class="resource-meta">Your free account keeps practice, answer review, and future attempts in one place. No credit card needed.</p>
 
           <div class="auth-choice-summary" id="authChoiceSummary"></div>
 
@@ -109,6 +109,7 @@
             </button>
             <p class="consent">By creating an account, you agree to use IELTS Core responsibly.</p>
           </form>
+          <a class="auth-sample-link" href="/english#practice-preview">Try a question before signing up <span aria-hidden="true">→</span></a>
           <p class="auth-switch">Already have an account? <a data-auth-switch href="/english/login">Sign in</a></p>
         </div>
       </section>
@@ -124,7 +125,7 @@
       firebase.initializeApp(window.firebaseConfig);
     }
   </script>
-  <script src="/english-public.js?v=20260920"></script>
+  <script src="/english-public.js?v=20260922a"></script>
   <script src="/english-auth.js?v=20260907"></script>
 <script src="/english-session.js?v=20260908"></script>
 </body>

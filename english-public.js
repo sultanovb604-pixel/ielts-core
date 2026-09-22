@@ -1,5 +1,18 @@
 // Landing and authentication navigation; no workspace or test-launch side effects.
 (() => {
+  const context = document.querySelector('[data-auth-context]');
+  if (context) {
+    const next = new URLSearchParams(location.search).get('next');
+    // Explain the account gate without rendering user-provided text or creating redirects.
+    if (next && next.startsWith('/english/materials')) {
+      const requested = new URL(next, location.origin);
+      const skill = requested.searchParams.get('skill');
+      const label = skill === 'reading' ? 'Reading practice' : skill === 'listening' ? 'Listening practice' : 'the practice library';
+      const action = document.body.dataset.authMode === 'signup' ? 'Create your free account' : 'Sign in';
+      context.textContent = action + ' to continue to ' + label + '. Some materials require Premium.';
+      context.hidden = false;
+    }
+  }
   const menu = document.querySelector('[data-mobile-menu]');
   const nav = document.querySelector('#mainNav');
   if (!menu || !nav) return;
