@@ -196,6 +196,8 @@
     const isReading = (isMaterials && (activeSkill === 'reading' || (!activeSkill && !activeCollection)) && activeCollection !== 'full-test') || activePath === '/english/reading-exam';
     const isListening = (isMaterials && activeSkill === 'listening' && activeCollection !== 'full-test') || activePath === '/english/listening-exam';
     const isAllLibrary = isMaterials && activeSkill === 'all' && activeCollection !== 'full-test';
+    const isVocab = (isMaterials && activeCollection === 'vocab') || activePath === '/english/vocabulary';
+    const isSaved = isMaterials && params.get('saved') === '1';
 
     const overviewLinks = isTeacher ? [
       { label: 'Dashboard', icon: 'dashboard', href: '/english/account', active: isDashboard },
@@ -433,9 +435,9 @@
 
       // Ensure active menu item is scrolled into comfortable view
       const activeLink = navEl.querySelector('a[aria-current="page"]');
-      if (activeLink) {
+      if (activeLink && typeof activeLink.scrollIntoView === 'function') {
         setTimeout(() => {
-          activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          try { activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
         }, 50);
       }
     }
