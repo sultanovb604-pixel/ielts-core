@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/english-pages.css?v=20260823_999">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260901_009">
   <link rel="stylesheet" href="/english-internal-premium.css?v=20260922_sb_final">
-  <link rel="stylesheet" href="/english-speaking-club.css?v=20260922_001">
+  <link rel="stylesheet" href="/english-speaking-club.css?v=20260922_episoden_v2">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
   <!-- PeerJS for WebRTC P2P Voice & Video -->
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -59,6 +59,15 @@
         </div>
         <h1 class="sc-lobby-title">IELTS 1-on-1 Speaking Club</h1>
         <p class="sc-lobby-sub">Connect with a live speaking partner in video or audio-only mode. Follow synchronized Cambridge IELTS Speaking Part 1, 2, and 3 cue cards and boost your fluency naturally.</p>
+        <div class="sc-stats-pill" id="scUserStatsPill">
+          <span>🔥 <strong id="scUserStreak">1</strong> Day Streak</span>
+          <span class="sc-stat-sep">·</span>
+          <span>🗣️ <strong id="scUserSessionsCount">0</strong> Sessions</span>
+          <span class="sc-stat-sep">·</span>
+          <span>⏱️ <strong id="scUserMinutesCount">0</strong> mins spoken</span>
+          <span class="sc-stat-sep">·</span>
+          <span>🌟 <strong id="scUserBadgesCount">0</strong> Badges</span>
+        </div>
       </div>
 
       <div class="sc-lobby-grid">
@@ -186,9 +195,53 @@
 
     <!-- STATE 3: LIVE IN-CALL 1-ON-1 ROOM -->
     <section id="scRoomView" style="display:none;">
+      <!-- Session Stages Roadmap (Episoden style) -->
+      <div class="sc-stage-roadmap" id="scStageRoadmap">
+        <button type="button" class="sc-roadmap-step active" data-stage="1" id="scRoadmapStep1">
+          <span class="sc-step-num">1</span>
+          <span class="sc-step-name">Warm-up</span>
+          <span class="sc-step-time">2m</span>
+        </button>
+        <span class="sc-step-arrow">→</span>
+        <button type="button" class="sc-roadmap-step" data-stage="2" id="scRoadmapStep2">
+          <span class="sc-step-num">2</span>
+          <span class="sc-step-name">Part 1 Q&amp;A</span>
+          <span class="sc-step-time">3m</span>
+        </button>
+        <span class="sc-step-arrow">→</span>
+        <button type="button" class="sc-roadmap-step" data-stage="3" id="scRoadmapStep3">
+          <span class="sc-step-num">3</span>
+          <span class="sc-step-name">Part 2 Cue Card</span>
+          <span class="sc-step-time">3m</span>
+        </button>
+        <span class="sc-step-arrow">→</span>
+        <button type="button" class="sc-roadmap-step" data-stage="4" id="scRoadmapStep4">
+          <span class="sc-step-num">4</span>
+          <span class="sc-step-name">Part 3 &amp; Wrap-up</span>
+          <span class="sc-step-time">2m</span>
+        </button>
+      </div>
+
       <div class="sc-room-layout">
         <!-- Left: Audio / Video Media Feeds & Controls -->
         <div class="sc-stage-wrap">
+          <!-- Role Selector Bar -->
+          <div class="sc-role-bar">
+            <div class="sc-role-pills">
+              <button type="button" class="sc-role-pill active" id="scRoleCandidateBtn" title="Switch your role to Candidate">
+                <span class="material-symbols-outlined" style="font-size:16px;">person</span>
+                <span>You: Candidate</span>
+              </button>
+              <button type="button" class="sc-role-pill" id="scRoleExaminerBtn" title="Switch your role to Examiner">
+                <span class="material-symbols-outlined" style="font-size:16px;">school</span>
+                <span>You: Examiner</span>
+              </button>
+            </div>
+            <div class="sc-partner-role-badge" id="scPartnerRoleBadge">
+              <span class="material-symbols-outlined" style="font-size:15px;color:#2563eb;">school</span>
+              <span>Partner: Examiner</span>
+            </div>
+          </div>
           <!-- Remote Partner View -->
           <div class="sc-remote-view">
             <video id="scRemoteVideo" class="sc-remote-video" autoplay playsinline></video>
@@ -294,7 +347,7 @@
         </div>
 
         <!-- Band Estimate Selector -->
-        <div style="margin-bottom:20px;text-align:left;">
+        <div style="margin-bottom:16px;text-align:left;">
           <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:6px;">Estimated Partner IELTS Band:</label>
           <select id="scFeedbackBand" style="width:100%;padding:10px;border-radius:10px;border:1px solid #cbd5e1;font-size:14px;background:transparent;color:inherit;">
             <option value="6.0">Band 6.0 (Competent)</option>
@@ -305,9 +358,47 @@
           </select>
         </div>
 
-        <div style="display:flex;gap:10px;justify-content:center;">
+        <!-- Episoden-Style Praise Badges -->
+        <div class="sc-praise-wrap">
+          <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:8px;text-align:left;">Award Praise Badges to Partner:</label>
+          <div class="sc-praise-grid" id="scPraiseGrid">
+            <button type="button" class="sc-praise-btn" data-badge="Natural Fluency">
+              <span>🌟</span>
+              <span>Natural Fluency</span>
+            </button>
+            <button type="button" class="sc-praise-btn" data-badge="Advanced Vocab">
+              <span>📚</span>
+              <span>Advanced Vocab</span>
+            </button>
+            <button type="button" class="sc-praise-btn" data-badge="Clear Pronunciation">
+              <span>🗣️</span>
+              <span>Clear Pronunciation</span>
+            </button>
+            <button type="button" class="sc-praise-btn" data-badge="Accurate Grammar">
+              <span>🎯</span>
+              <span>Accurate Grammar</span>
+            </button>
+            <button type="button" class="sc-praise-btn" data-badge="Active Listener">
+              <span>👂</span>
+              <span>Active Listener</span>
+            </button>
+            <button type="button" class="sc-praise-btn" data-badge="Supportive Partner">
+              <span>😊</span>
+              <span>Supportive Partner</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px;">
           <button type="button" class="button secondary" id="scFeedbackCloseBtn" style="padding:10px 18px;border-radius:10px;font-weight:700;">Back to Lobby</button>
           <button type="button" class="button primary" id="scFeedbackFindAgainBtn" style="padding:10px 22px;border-radius:10px;font-weight:700;">Find Next Partner</button>
+        </div>
+
+        <div style="margin-top:14px;text-align:center;">
+          <button type="button" class="sc-report-link" id="scReportBtn">
+            <span class="material-symbols-outlined" style="font-size:14px;">flag</span>
+            <span>Report partner behavior or technical issue</span>
+          </button>
         </div>
       </div>
     </div>
@@ -322,6 +413,6 @@
   </footer>
 
   <script src="/english-site.js?v=20260922_sb_final"></script>
-  <script src="/english-speaking-club.js?v=20260922_001"></script>
+  <script src="/english-speaking-club.js?v=20260922_episoden_v2"></script>
 </body>
 </html>

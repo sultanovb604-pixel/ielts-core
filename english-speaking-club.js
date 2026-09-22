@@ -1,4 +1,5 @@
 // IELTS Core Speaking Club (1-on-1 Live Practice)
+// Episoden-Grade Cambridge IELTS Speaking Partner Engine
 (function () {
   'use strict';
 
@@ -11,6 +12,8 @@
   let audioContext = null;
   let micAnalyser = null;
   let micAnimId = null;
+  let remoteAudioAnalyser = null;
+  let vadAnimId = null;
 
   let selectedMode = 'video'; // 'video' | 'audio'
   let selectedLevel = 'any';
@@ -22,14 +25,19 @@
   let allTopics = [];
   let currentTopicIndex = 0;
   let activePart = 1;
+  let activeSessionStage = 1; // 1: Warm-up, 2: Part 1, 3: Part 2, 4: Part 3
+  let myRole = 'candidate'; // 'candidate' | 'examiner'
   let sessionTimerInterval = null;
   let sessionSecondsRemaining = 600; // 10 minutes
   let prepTimerInterval = null;
   let prepSecondsRemaining = 60;
+  let speechTimerInterval = null;
+  let speechSecondsElapsed = 0;
 
   let currentPartner = null;
   let isMicMuted = false;
   let isCamOff = false;
+  let awardedPraiseBadges = new Set();
 
   // DOM Elements
   const lobbyView = document.getElementById('scLobbyView');
@@ -72,6 +80,10 @@
   const tabPart2 = document.getElementById('scTabPart2');
   const tabPart3 = document.getElementById('scTabPart3');
 
+  const roleCandidateBtn = document.getElementById('scRoleCandidateBtn');
+  const roleExaminerBtn = document.getElementById('scRoleExaminerBtn');
+  const partnerRoleBadge = document.getElementById('scPartnerRoleBadge');
+
   const chatMessagesEl = document.getElementById('scChatMessages');
   const chatForm = document.getElementById('scChatForm');
   const chatInput = document.getElementById('scChatInput');
@@ -80,6 +92,7 @@
   const feedbackCloseBtn = document.getElementById('scFeedbackCloseBtn');
   const feedbackFindAgainBtn = document.getElementById('scFeedbackFindAgainBtn');
   const starRow = document.getElementById('scStarRow');
+  const reportBtn = document.getElementById('scReportBtn');
 
   // User Profile
   let currentUser = {
@@ -87,9 +100,124 @@
     avatarUrl: ''
   };
 
+  // --- Web Audio Sound Synthesizer (Zero External MP3s) ---
+  function playChime(type) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!audioContext || audioContext.state === 'closed') {
+        audioContext = new AudioCtx();
+      }
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      const now = audioContext.currentTime;
+
+      if (type === 'matchFound') {
+        // Melodic 2-tone ping: C5 (523Hz) -> G5 (784Hz)
+        [523.25, 783.99].forEach((freq, i) => {
+          const osc = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.16);
+          gain.gain.setValueAtTime(0, now + i * 0.16);
+          gain.gain.linearRampToValueAtTime(0.22, now + i * 0.16 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.16 + 0.55);
+          osc.connect(gain);
+          gain.connect(audioContext.destination);
+          osc.start(now + i * 0.16);
+          osc.stop(now + i * 0.16 + 0.6);
+        });
+      } else if (type === 'prepEnd') {
+        // Bell chime: G5 (784Hz) -> C6 (1046Hz)
+        [783.99, 1046.50].forEach((freq, i) => {
+          const osc = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.18);
+          gain.gain.setValueAtTime(0, now + i * 0.18);
+          gain.gain.linearRampToValueAtTime(0.24, now + i * 0.18 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.18 + 0.65);
+          osc.connect(gain);
+          gain.connect(audioContext.destination);
+          osc.start(now + i * 0.18);
+          osc.stop(now + i * 0.18 + 0.7);
+        });
+      } else if (type === 'warning') {
+        // Gentle 1-minute warning ping
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(659.25, now);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.2, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.start(now);
+        osc.stop(now + 0.85);
+      }
+    } catch (e) {
+      console.warn('Audio synthesis notice:', e);
+    }
+  }
+
+  // --- Speaking Stats & Badges Persistence ---
+  function loadSpeakingStats() {
+    let stats = { sessions: 0, totalMinutes: 0, badges: {}, streak: 1, lastDate: '' };
+    try {
+      const saved = localStorage.getItem('vortex-speaking-stats');
+      if (saved) stats = Object.assign(stats, JSON.parse(saved));
+    } catch (e) {}
+
+    const today = new Date().toISOString().slice(0, 10);
+    if (stats.lastDate && stats.lastDate !== today) {
+      const last = new Date(stats.lastDate);
+      const diffDays = Math.floor((new Date(today) - last) / (86400000));
+      if (diffDays > 1) {
+        stats.streak = 1;
+      }
+    }
+
+    const streakEl = document.getElementById('scUserStreak');
+    const sessionsEl = document.getElementById('scUserSessionsCount');
+    const minutesEl = document.getElementById('scUserMinutesCount');
+    const badgesEl = document.getElementById('scUserBadgesCount');
+
+    if (streakEl) streakEl.textContent = stats.streak || 1;
+    if (sessionsEl) sessionsEl.textContent = stats.sessions || 0;
+    if (minutesEl) minutesEl.textContent = stats.totalMinutes || 0;
+    const badgeTotal = Object.values(stats.badges || {}).reduce((a, b) => a + b, 0);
+    if (badgesEl) badgesEl.textContent = badgeTotal;
+
+    return stats;
+  }
+
+  function recordSessionCompleted(awardedBadges = []) {
+    const stats = loadSpeakingStats();
+    stats.sessions = (stats.sessions || 0) + 1;
+    stats.totalMinutes = (stats.totalMinutes || 0) + 10;
+    const today = new Date().toISOString().slice(0, 10);
+    if (stats.lastDate !== today) {
+      stats.streak = (stats.streak || 0) + 1;
+      stats.lastDate = today;
+    }
+    stats.badges = stats.badges || {};
+    awardedBadges.forEach(b => {
+      stats.badges[b] = (stats.badges[b] || 0) + 1;
+    });
+
+    try {
+      localStorage.setItem('vortex-speaking-stats', JSON.stringify(stats));
+    } catch (e) {}
+
+    loadSpeakingStats();
+  }
+
   // --- Initialization ---
   async function init() {
     loadUser();
+    loadSpeakingStats();
     setupEventListeners();
     fetchStats();
     await loadTopics();
@@ -210,7 +338,6 @@
       console.warn('Media access warning:', err);
       cameraBadge.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;color:#ef4444;">error</span><span>Check mic permissions</span>';
       if (selectedMode === 'video') {
-        // Fallback to audio only if video failed
         selectedMode = 'audio';
         modeAudioBtn?.classList.add('active');
         modeVideoBtn?.classList.remove('active');
@@ -256,11 +383,55 @@
         if (micMeterFill) {
           micMeterFill.style.width = percent + '%';
         }
+
+        // Active Speaking Glow for local user
+        const isSpeaking = average > 18;
+        if (localVideo) localVideo.parentElement?.classList.toggle('is-speaking', isSpeaking);
+        if (localAudioPip) localAudioPip.classList.toggle('is-speaking', isSpeaking);
+
         micAnimId = requestAnimationFrame(updateMeter);
       }
       updateMeter();
     } catch (e) {
       console.warn('Audio meter init error:', e);
+    }
+  }
+
+  // --- Remote Stream Voice Activity Detection ---
+  function initRemoteVoiceDetection(stream) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx || !stream) return;
+      if (!audioContext || audioContext.state === 'closed') {
+        audioContext = new AudioCtx();
+      }
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      const remoteSource = audioContext.createMediaStreamSource(stream);
+      remoteAudioAnalyser = audioContext.createAnalyser();
+      remoteAudioAnalyser.fftSize = 64;
+      remoteSource.connect(remoteAudioAnalyser);
+
+      const buf = new Uint8Array(remoteAudioAnalyser.frequencyBinCount);
+      function checkRemoteSpeech() {
+        if (!remoteAudioAnalyser) return;
+        remoteAudioAnalyser.getByteFrequencyData(buf);
+        let sum = 0;
+        for (let i = 0; i < buf.length; i++) sum += buf[i];
+        const avg = sum / buf.length;
+        const isSpeaking = avg > 18;
+
+        const remoteViewBox = document.querySelector('.sc-remote-view');
+        const remoteAvatar = document.getElementById('scRemoteAvatarLetter');
+        if (remoteViewBox) remoteViewBox.classList.toggle('is-speaking', isSpeaking);
+        if (remoteAvatar) remoteAvatar.classList.toggle('is-speaking', isSpeaking);
+
+        vadAnimId = requestAnimationFrame(checkRemoteSpeech);
+      }
+      checkRemoteSpeech();
+    } catch (e) {
+      console.warn('Remote VAD error:', e);
     }
   }
 
@@ -317,11 +488,12 @@
 
   function setupDataConn(conn) {
     conn.on('open', () => {
-      // Send our current mode to partner
+      // Send our current mode and role to partner
       conn.send({
         type: 'MODE_SYNC',
         mode: selectedMode,
-        name: currentUser.name
+        name: currentUser.name,
+        role: myRole
       });
     });
 
@@ -334,11 +506,25 @@
         case 'SYNC_TOPIC':
           setTopicByIndex(data.topicIndex, false);
           break;
+        case 'SYNC_STAGE':
+          setSessionStage(data.stage, false);
+          break;
+        case 'SYNC_ROLE':
+          setRole(data.role === 'candidate' ? 'examiner' : 'candidate', false);
+          break;
         case 'START_PREP':
           startPrepCountdown(false);
           break;
+        case 'START_SPEECH_CLOCK':
+          startSpeechClock(false);
+          break;
         case 'CHAT_MSG':
           appendChatMessage(data.name || 'Partner', data.text, false);
+          break;
+        case 'AWARD_BADGE':
+          if (data.badge) {
+            recordSessionCompleted([data.badge]);
+          }
           break;
         case 'MODE_SYNC':
           if (data.mode === 'audio') {
@@ -347,6 +533,9 @@
           } else {
             remoteVideo.style.display = 'block';
             remoteAudioPlaceholder.style.display = 'none';
+          }
+          if (data.role) {
+            setRole(data.role === 'candidate' ? 'examiner' : 'candidate', false);
           }
           break;
         case 'LEAVE_CALL':
@@ -358,6 +547,49 @@
     conn.on('close', () => {
       handlePartnerDisconnected();
     });
+  }
+
+  // --- Session Stages Roadmap (Episoden style) ---
+  function setSessionStage(stageNum, broadcast = true) {
+    activeSessionStage = stageNum;
+    for (let s = 1; s <= 4; s++) {
+      const stepBtn = document.getElementById(`scRoadmapStep${s}`);
+      if (stepBtn) {
+        stepBtn.classList.toggle('active', s === stageNum);
+        stepBtn.classList.toggle('completed', s < stageNum);
+      }
+    }
+
+    // Auto-align IELTS Part tab
+    if (stageNum === 1 || stageNum === 2) {
+      setActivePart(1, false);
+    } else if (stageNum === 3) {
+      setActivePart(2, false);
+    } else if (stageNum === 4) {
+      setActivePart(3, false);
+    }
+
+    if (broadcast && activeDataConn && activeDataConn.open) {
+      activeDataConn.send({ type: 'SYNC_STAGE', stage: stageNum });
+    }
+  }
+
+  // --- Role Switcher (Candidate vs Examiner) ---
+  function setRole(role, broadcast = true) {
+    myRole = role;
+    if (roleCandidateBtn && roleExaminerBtn) {
+      roleCandidateBtn.classList.toggle('active', role === 'candidate');
+      roleExaminerBtn.classList.toggle('active', role === 'examiner');
+    }
+    if (partnerRoleBadge) {
+      const partnerRole = role === 'candidate' ? 'Examiner' : 'Candidate';
+      const icon = role === 'candidate' ? 'school' : 'person';
+      partnerRoleBadge.innerHTML = `<span class="material-symbols-outlined" style="font-size:15px;color:#2563eb;">${icon}</span><span>Partner: ${partnerRole}</span>`;
+    }
+
+    if (broadcast && activeDataConn && activeDataConn.open) {
+      activeDataConn.send({ type: 'SYNC_ROLE', role: role });
+    }
   }
 
   // --- Matchmaking System ---
@@ -463,6 +695,9 @@
 
   // --- Connect with Matched Partner ---
   function connectToPartner(matchData) {
+    // Sound chime alert!
+    playChime('matchFound');
+
     currentPartner = {
       peerId: matchData.partnerPeerId,
       name: matchData.partnerName || 'Speaking Partner',
@@ -496,6 +731,10 @@
     }
     renderTopic();
 
+    // Initialize roadmap & roles
+    setSessionStage(1, false);
+    setRole(matchData.role === 'initiator' ? 'candidate' : 'examiner', false);
+
     // Start in-call timers
     startSessionTimer();
 
@@ -525,6 +764,7 @@
       remoteVideo.style.display = 'block';
       remoteAudioPlaceholder.style.display = 'none';
     }
+    initRemoteVoiceDetection(stream);
   }
 
   function handlePartnerDisconnected() {
@@ -543,8 +783,24 @@
     sessionTimerInterval = setInterval(() => {
       sessionSecondsRemaining--;
       updateSessionTimerDisplay();
+
+      // Stage progression recommendation based on elapsed time:
+      const elapsed = 600 - sessionSecondsRemaining;
+      if (elapsed === 120 && activeSessionStage === 1) { // 2 mins elapsed
+        setSessionStage(2, true);
+      } else if (elapsed === 300 && activeSessionStage === 2) { // 5 mins elapsed
+        setSessionStage(3, true);
+      } else if (elapsed === 480 && activeSessionStage === 3) { // 8 mins elapsed
+        setSessionStage(4, true);
+      }
+
+      if (sessionSecondsRemaining === 60) {
+        playChime('warning');
+      }
+
       if (sessionSecondsRemaining <= 0) {
         clearInterval(sessionTimerInterval);
+        playChime('warning');
         alert('Time is up for this 10-minute session! Take a moment to give feedback.');
         openFeedbackModal();
       }
@@ -564,6 +820,7 @@
     }
   }
 
+  // --- Part 2 1-Min Prep & 2-Min Speech Countdown ---
   function startPrepCountdown(broadcast = true) {
     const prepBtn = document.getElementById('scPrepTimerBtn');
     if (!prepBtn) return;
@@ -581,8 +838,61 @@
       prepBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">timer</span><span>Prep Time: 0:${prepSecondsRemaining < 10 ? '0' : ''}${prepSecondsRemaining}</span>`;
       if (prepSecondsRemaining <= 0) {
         clearInterval(prepTimerInterval);
-        prepBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span><span>Prep Finished! Begin Speaking</span>';
+        playChime('prepEnd');
+        prepBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">check_circle</span><span>Prep Finished! Speech Clock Started</span>';
         prepBtn.style.background = '#10b981';
+        startSpeechClock(true);
+      }
+    }, 1000);
+  }
+
+  function startSpeechClock(broadcast = true) {
+    const wrap = document.getElementById('scSpeechClockWrap');
+    const bar = document.getElementById('scSpeechProgressBar');
+    const display = document.getElementById('scSpeechTimeDisplay');
+    const hint = document.getElementById('scSpeechHint');
+    if (!wrap) return;
+
+    wrap.style.display = 'block';
+    speechSecondsElapsed = 0;
+    if (speechTimerInterval) clearInterval(speechTimerInterval);
+
+    if (broadcast && activeDataConn && activeDataConn.open) {
+      activeDataConn.send({ type: 'START_SPEECH_CLOCK' });
+    }
+
+    function updateSpeechUI() {
+      const mins = Math.floor(speechSecondsElapsed / 60);
+      const secs = speechSecondsElapsed % 60;
+      if (display) display.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+      const pct = Math.min(100, (speechSecondsElapsed / 120) * 100);
+      if (bar) {
+        bar.style.width = pct + '%';
+        bar.classList.toggle('zone-optimal', speechSecondsElapsed >= 90 && speechSecondsElapsed < 110);
+        bar.classList.toggle('zone-finish', speechSecondsElapsed >= 110);
+      }
+
+      if (hint) {
+        if (speechSecondsElapsed < 60) {
+          hint.textContent = 'Keep developing your points and explaining details.';
+        } else if (speechSecondsElapsed < 90) {
+          hint.textContent = 'Good momentum! Approaching the optimal 1:30 - 2:00 zone.';
+        } else if (speechSecondsElapsed < 115) {
+          hint.textContent = '🌟 Optimal speech duration reached (Band 7+ length).';
+        } else {
+          hint.textContent = '⏰ 2 minutes completed. Wrap up your concluding sentence.';
+        }
+      }
+    }
+
+    updateSpeechUI();
+    speechTimerInterval = setInterval(() => {
+      speechSecondsElapsed++;
+      updateSpeechUI();
+      if (speechSecondsElapsed >= 120) {
+        clearInterval(speechTimerInterval);
+        playChime('warning');
       }
     }, 1000);
   }
@@ -626,14 +936,34 @@
           <p style="font-size:12.5px;color:#78350f;margin:0 0 6px;font-weight:700;">You should say:</p>
           <ul class="sc-cue-points">${pointsHtml}</ul>
         </div>
-        <button type="button" class="sc-prep-btn" id="scPrepTimerBtn">
-          <span class="material-symbols-outlined" style="font-size:16px;">timer</span>
-          <span>Start 1-Min Prep Countdown</span>
-        </button>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <button type="button" class="sc-prep-btn" id="scPrepTimerBtn" style="flex:1;">
+            <span class="material-symbols-outlined" style="font-size:16px;">timer</span>
+            <span>Start 1-Min Prep Countdown</span>
+          </button>
+          <button type="button" class="button secondary" id="scManualSpeechClockBtn" style="border-radius:12px;font-weight:700;font-size:12.5px;">
+            <span class="material-symbols-outlined" style="font-size:16px;color:#2563eb;">mic</span>
+            <span>Speech Clock</span>
+          </button>
+        </div>
+
+        <div class="sc-speech-clock-wrap" id="scSpeechClockWrap" style="display:none;">
+          <div class="sc-speech-clock-header">
+            <span>2-Minute Speech Clock (Target: 1:30 - 2:00)</span>
+            <strong id="scSpeechTimeDisplay">0:00</strong>
+          </div>
+          <div class="sc-speech-progress-track">
+            <div class="sc-speech-progress-bar" id="scSpeechProgressBar"></div>
+          </div>
+          <p class="sc-speech-hint" id="scSpeechHint">Keep speaking! Aim for 1:30 to 2:00 minutes.</p>
+        </div>
       `;
 
       document.getElementById('scPrepTimerBtn')?.addEventListener('click', () => {
         startPrepCountdown(true);
+      });
+      document.getElementById('scManualSpeechClockBtn')?.addEventListener('click', () => {
+        startSpeechClock(true);
       });
     } else if (activePart === 3) {
       const part3 = topic.part3 || {};
@@ -746,6 +1076,8 @@
     // Stop timers
     if (sessionTimerInterval) clearInterval(sessionTimerInterval);
     if (prepTimerInterval) clearInterval(prepTimerInterval);
+    if (speechTimerInterval) clearInterval(speechTimerInterval);
+    if (vadAnimId) cancelAnimationFrame(vadAnimId);
 
     // Stop active peer call
     if (activeCall) {
@@ -761,7 +1093,41 @@
       feedbackPartnerName.textContent = currentPartner.name;
     }
 
+    awardedPraiseBadges.clear();
+    document.querySelectorAll('.sc-praise-btn').forEach(btn => btn.classList.remove('selected'));
+
     feedbackModal.style.display = 'flex';
+  }
+
+  function submitFeedbackAndReturn(findNext = false) {
+    const band = document.getElementById('scFeedbackBand')?.value || '6.5';
+    const activeStar = document.querySelectorAll('.sc-star-btn.active').length || 5;
+    const badgesArray = Array.from(awardedPraiseBadges);
+
+    // Send praise badge via activeDataConn if open
+    if (activeDataConn && activeDataConn.open && badgesArray.length) {
+      badgesArray.forEach(b => activeDataConn.send({ type: 'AWARD_BADGE', badge: b }));
+    }
+
+    // Post feedback to server
+    fetch('/api/speaking-club/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        partnerName: currentPartner?.name,
+        stars: activeStar,
+        band: band,
+        badges: badgesArray
+      })
+    }).catch(() => {});
+
+    // Record our own stats
+    recordSessionCompleted(badgesArray);
+
+    resetToLobby();
+    if (findNext) {
+      startMatchmaking();
+    }
   }
 
   function resetToLobby() {
@@ -770,7 +1136,6 @@
     searchView.style.display = 'none';
     lobbyView.style.display = 'block';
 
-    // Re-verify local preview
     initLocalMedia();
   }
 
@@ -812,6 +1177,17 @@
     nextTopicBtn?.addEventListener('click', nextTopic);
     endCallBtn?.addEventListener('click', endCall);
 
+    // Roadmap stages clicks
+    for (let s = 1; s <= 4; s++) {
+      document.getElementById(`scRoadmapStep${s}`)?.addEventListener('click', () => {
+        setSessionStage(s, true);
+      });
+    }
+
+    // Role switcher buttons
+    roleCandidateBtn?.addEventListener('click', () => setRole('candidate', true));
+    roleExaminerBtn?.addEventListener('click', () => setRole('examiner', true));
+
     // Part tabs
     tabPart1?.addEventListener('click', () => setActivePart(1, true));
     tabPart2?.addEventListener('click', () => setActivePart(2, true));
@@ -844,11 +1220,37 @@
       });
     });
 
+    // Praise badges selection
+    document.querySelectorAll('.sc-praise-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+        const badge = btn.dataset.badge;
+        if (btn.classList.contains('selected')) {
+          awardedPraiseBadges.add(badge);
+        } else {
+          awardedPraiseBadges.delete(badge);
+        }
+      });
+    });
+
     // Feedback modal actions
-    feedbackCloseBtn?.addEventListener('click', resetToLobby);
-    feedbackFindAgainBtn?.addEventListener('click', () => {
-      resetToLobby();
-      startMatchmaking();
+    feedbackCloseBtn?.addEventListener('click', () => submitFeedbackAndReturn(false));
+    feedbackFindAgainBtn?.addEventListener('click', () => submitFeedbackAndReturn(true));
+
+    // Report partner button
+    reportBtn?.addEventListener('click', () => {
+      const reason = prompt('Please describe why you are reporting this session (e.g. Inappropriate behavior, user was absent/AFK, technical issue):');
+      if (reason && reason.trim()) {
+        fetch('/api/speaking-club/report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            partnerName: currentPartner?.name,
+            reason: reason.trim()
+          })
+        }).catch(() => {});
+        alert('Thank you. Your report has been submitted to moderation.');
+      }
     });
 
     // Cleanup on beforeunload

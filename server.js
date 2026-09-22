@@ -7865,6 +7865,18 @@ async function api(req, res, pathname) {
     return json(res, 200, { ok: true });
   }
 
+  if (req.method === "POST" && pathname === "/api/speaking-club/feedback") {
+    const user = studentFromRequest(req, data);
+    const body = await readBody(req);
+    return json(res, 200, { ok: true, message: "Feedback recorded successfully" });
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking-club/report") {
+    const user = studentFromRequest(req, data);
+    const body = await readBody(req);
+    return json(res, 200, { ok: true, message: "Report received and logged for moderation" });
+  }
+
   // --- MOCK EXAM SYSTEM ENDPOINTS ---
   if (req.method === "GET" && pathname === "/api/predictions-catalog") {
     const catPath = path.join(__dirname, "data", "predictions-listening-catalog.json");

@@ -220,5 +220,153 @@
         "How does mental well-being affect a person's physical health and work performance?"
       ]
     }
+  },
+  {
+    "id": "topic-7",
+    "title": "Art, Music & Creative Expression",
+    "category": "Culture & Arts",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Discuss musical preferences, arts, and creative leisure activities.",
+      "questions": [
+        "What genre of music do you listen to most often when you want to relax?",
+        "Have you ever learned to play a musical instrument, or would you like to?",
+        "Do you enjoy visiting art galleries, museums, or exhibitions?",
+        "Did you do drawing or handicrafts when you were in primary school?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe a piece of art, music, or a performance that deeply moved or inspired you.",
+        "points": [
+          "What the piece of art or music was",
+          "Where and when you first saw or heard it",
+          "What feelings or thoughts it provoked in you",
+          "And explain why this artistic piece made such a strong impression."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss public funding for art, traditional vs digital art, and creativity.",
+      "questions": [
+        "Should governments spend public money supporting artists and theatre companies?",
+        "How has digital media and AI changed the creation and appreciation of visual art?",
+        "Why do some people consider creative subjects like music just as important as mathematics?"
+      ]
+    }
+  },
+  {
+    "id": "topic-8",
+    "title": "Social Media & Digital Communication",
+    "category": "Media & Communication",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Discuss online communication and social networking habits.",
+      "questions": [
+        "How many social media platforms do you actively check during the week?",
+        "Do you prefer texting messages or having phone and video calls with friends?",
+        "Have you ever taken a digital detox or turned off notifications for a few days?",
+        "What is the most positive benefit you get from connecting with people online?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe an online community, forum, or social channel that you find valuable.",
+        "points": [
+          "What the community or channel is about",
+          "How you discovered it",
+          "What kind of content or discussions take place there",
+          "And explain why you find being part of this online community worthwhile."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss the impact of algorithms, echo chambers, and online privacy on modern relationships.",
+      "questions": [
+        "Do social networks bring people closer together or make genuine friendships more superficial?",
+        "How can individuals protect themselves from misinformation and biased news online?",
+        "Will virtual reality and avatars replace traditional video meetings in the near future?"
+      ]
+    }
+  },
+  {
+    "id": "topic-9",
+    "title": "Modern Cities & Sustainable Architecture",
+    "category": "Urban Life & Ecology",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Discuss urban surroundings, buildings, and green spaces in towns.",
+      "questions": [
+        "What type of buildings do you see most frequently around where you live?",
+        "Do you prefer living in modern high-rise apartments or traditional houses with yards?",
+        "Are there enough parks and pedestrian areas in your neighbourhood?",
+        "What is one thing you would improve about public transport in your city?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe an impressive modern building or public structure you have visited.",
+        "points": [
+          "Where this building is and what it is used for",
+          "What its architectural design looks like from the outside and inside",
+          "Why you visited this particular building",
+          "And explain what makes this structure remarkable in your opinion."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss city planning, eco-friendly green buildings, and urban population growth.",
+      "questions": [
+        "Why is it essential for future cities to incorporate renewable energy and green roofs into building codes?",
+        "How does the design of public spaces influence social interaction and community happiness?",
+        "What challenges do historic cities face when trying to modernise without losing heritage?"
+      ]
+    }
+  },
+  {
+    "id": "topic-10",
+    "title": "Traditional Festivals, Food & Celebrations",
+    "category": "Society & Traditions",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Discuss cultural celebrations, festive meals, and family holidays.",
+      "questions": [
+        "What is your favourite national festival or holiday celebrated in your country?",
+        "How do families in your culture usually prepare for large holiday meals?",
+        "Do you enjoy celebrating in big crowds or having quiet family dinners?",
+        "Have you ever experienced or participated in a festival from another culture?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe a memorable celebration or special family event you took part in.",
+        "points": [
+          "What the celebration was for and where it happened",
+          "Who attended the event with you",
+          "What special food, music, or customs were observed",
+          "And explain why this celebration was particularly meaningful to you."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss the preservation of cultural heritage and the commercialisation of holidays.",
+      "questions": [
+        "Are younger generations losing touch with ancestral traditions, or are they reinterpreting them?",
+        "Has the commercialisation of holidays changed their original cultural meaning?",
+        "How does food serve as a bridge between different cultures in a globalised world?"
+      ]
+    }
   }
 ]
