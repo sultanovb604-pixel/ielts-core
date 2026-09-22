@@ -1,4 +1,4 @@
-﻿// IELTS Core Full Mock Exams Hub JS
+// IELTS Core Full Mock Exams Hub JS
 (function () {
   'use strict';
 
@@ -84,46 +84,15 @@
     }
 
     cardsGrid.innerHTML = catalog.map(item => {
-      let statusBadge = item.free
-        ? '<span class="mock-status-pill free">Free Mock</span>'
-        : '<span class="mock-status-pill premium">Premium</span>';
+      const statusBadge = '<span class="mock-status-pill soon"><span class="material-symbols-outlined" style="font-size:13px;">hourglass_top</span>Coming Soon</span>';
 
-      if (item.completed) {
-        statusBadge = `<span class="mock-status-pill completed">Completed · Band ${Number(item.latestBand || 0).toFixed(1)}</span>`;
-      }
-
-      let actionButton = '';
-      if (item.locked) {
-        actionButton = `
-          <div class="card-action-group">
-            <button type="button" class="vx-card-btn vx-btn-unlock full-width" onclick="window.showUpgradeModal ? window.showUpgradeModal() : location.href='/english/pricing'">
-              <span class="material-symbols-outlined">lock</span>
-              <span>Unlock with Premium (30 000 UZS / oy)</span>
-              <span aria-hidden="true">&rarr;</span>
-            </button>
-          </div>`;
-      } else if (item.completed) {
-        actionButton = `
-          <div class="card-action-group">
-            <a class="vx-card-btn vx-btn-primary" href="/english/mock-exam?id=${encodeURIComponent(item.id)}">
-              <span class="material-symbols-outlined">replay</span>
-              <span>Retake Mock</span>
-            </a>
-            <a class="vx-card-btn vx-btn-review" href="/english/mock-exam?id=${encodeURIComponent(item.id)}&review=1">
-              <span class="material-symbols-outlined">analytics</span>
-              <span>Review</span>
-            </a>
-          </div>`;
-      } else {
-        actionButton = `
-          <div class="card-action-group">
-            <button type="button" class="vx-card-btn vx-btn-primary full-width" onclick="window.launchMockPreFlight('${escapeHtml(item.id)}', '${escapeHtml(item.title)}')">
-              <span class="material-symbols-outlined">play_arrow</span>
-              <span>Start Full Mock Exam</span>
-              <span aria-hidden="true">&rarr;</span>
-            </button>
-          </div>`;
-      }
+      const actionButton = `
+        <div class="card-action-group">
+          <button type="button" class="vx-card-btn vx-btn-disabled full-width" disabled title="Full Mock testlar hozirda tayyorlanmoqda">
+            <span class="material-symbols-outlined">hourglass_top</span>
+            <span>Coming Soon • In Preparation</span>
+          </button>
+        </div>`;
 
       return `
         <article class="mock-card">
@@ -156,55 +125,11 @@
   }
 
   window.launchMockPreFlight = function (mockId, title) {
-    let modal = document.getElementById('mockPreFlightModal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'mockPreFlightModal';
-      modal.className = 'test-launch-modal';
-      modal.setAttribute('role', 'dialog');
-      modal.setAttribute('aria-modal', 'true');
-      document.body.appendChild(modal);
+    if (window.showToast) {
+      window.showToast('Full Mock testlar hozirda tayyorlanmoqda. Tez kunda ishga tushiriladi!', 'info');
+    } else {
+      alert('Full Mock testlar hozirda tayyorlanmoqda. Tez kunda ishga tushiriladi!');
     }
-
-    modal.innerHTML = `
-      <div class="test-launch-card">
-        <div class="test-launch-header">
-          <div>
-            <span class="eyebrow" style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:var(--v4-blue);text-transform:uppercase;">EXAM INITIATION</span>
-            <h2>${escapeHtml(title)}</h2>
-            <p style="margin:0;font-size:13px;color:var(--v4-muted);">Authentic Cambridge Computer-Delivered IELTS Simulation</p>
-          </div>
-          <button type="button" class="test-launch-close" onclick="document.getElementById('mockPreFlightModal').classList.remove('show')">&times;</button>
-        </div>
-
-        <div style="padding:20px 24px;display:flex;flex-direction:column;gap:14px;">
-          <div style="display:flex;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;font-size:13px;line-height:1.5;">
-            <span class="material-symbols-outlined" style="font-size:24px;color:#1468f3;flex-shrink:0;">headphones</span>
-            <div>
-              <strong>Headphones & Sound Check:</strong>
-              <p style="margin:2px 0 0;color:#64748b;">The Listening section will play authentic audio automatically. Please adjust your computer volume to a comfortable level.</p>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;font-size:13px;line-height:1.5;">
-            <span class="material-symbols-outlined" style="font-size:24px;color:#059669;flex-shrink:0;">timer</span>
-            <div>
-              <strong>Exam Timing & Flow:</strong>
-              <p style="margin:2px 0 0;color:#64748b;">Total exam time is approximately 2 hours and 35 minutes across 3 uninterrupted stages (Listening &rarr; Reading &rarr; Writing).</p>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;padding:16px 24px 22px;justify-content:flex-end;border-top:1px solid #e2e8f0;">
-          <button type="button" class="button secondary" style="padding:0 20px;height:42px;border-radius:10px;font-weight:700;" onclick="document.getElementById('mockPreFlightModal').classList.remove('show')">Cancel</button>
-          <a href="/english/mock-exam?id=${encodeURIComponent(mockId)}" class="button primary" style="padding:0 24px;height:42px;border-radius:10px;font-weight:800;display:inline-flex;align-items:center;gap:6px;text-decoration:none;">
-            <span>Begin Full Mock Exam</span>
-            <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
-          </a>
-        </div>
-      </div>`;
-
-    modal.classList.add('show');
   };
 
   function escapeHtml(str) {

@@ -214,7 +214,7 @@
       {
         title: 'Full Mock Tests (40 Qs)',
         links: [
-          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, isPremium: true },
+          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, badge: 'Soon', isPremium: true },
           { label: 'Full Reading Tests', icon: 'menu_book', href: '/english/materials?skill=reading&collection=full-test', active: isFullReading, badge: '40 Qs' },
           { label: 'Full Listening Tests', icon: 'headphones', href: '/english/materials?skill=listening&collection=full-test', active: isFullListening, badge: '40 Qs' }
         ]
@@ -233,8 +233,8 @@
         links: [
           { label: 'Predictions', icon: 'layers', href: '/english/predictions', active: isPredictions, isPremium: true },
           { label: 'Skill Drills', icon: 'track_changes', href: '/english/practice', active: isSkillTraining },
-          { label: 'Academic Articles', icon: 'article', href: '/english/materials?collection=article', active: isArticles },
-          { label: 'Vocabulary Bank', icon: 'bookmarks', href: '/english/vocabulary', active: isVocabulary, isPremium: true }
+          { label: 'Vocabulary & Phrases', icon: 'auto_stories', href: '/english/materials?collection=vocab', active: isVocab },
+          { label: 'Saved Items', icon: 'bookmark', href: '/english/materials?saved=1', active: isSaved }
         ]
       }
     ];
@@ -243,7 +243,9 @@
 
     const navMarkup = sections.map(sec => {
       const linksHtml = sec.links.map(l => {
-        const rightBadge = l.isPremium ? crownSvg : (l.badge ? `<span class="member-nav-badge">${safe(l.badge)}</span>` : '');
+        const badgeHtml = l.badge ? `<span class="member-nav-badge ${l.badge === 'Soon' ? 'badge-task' : ''}">${safe(l.badge)}</span>` : '';
+        const crownHtml = l.isPremium ? crownSvg : '';
+        const rightBadge = (badgeHtml || crownHtml) ? `<span class="member-nav-right" style="display:inline-flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;">${badgeHtml}${crownHtml}</span>` : '';
         return `<a href="${l.href}"${l.active ? ' aria-current="page"' : ''} title="${safe(l.label)}"><span class="material-symbols-outlined member-nav-icon" aria-hidden="true">${l.icon}</span><span class="member-nav-label">${safe(l.label)}</span>${rightBadge}</a>`;
       }).join('');
       return `<div class="member-nav-group"><span class="member-nav-section-title">${safe(sec.title)}</span>${linksHtml}</div>`;

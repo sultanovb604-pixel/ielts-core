@@ -573,7 +573,8 @@ body.member-sidebar-collapsed .member-sidebar-nav a[aria-current="page"] {
 
 body.member-sidebar-collapsed .member-nav-label,
 body.member-sidebar-collapsed .member-nav-badge,
-body.member-sidebar-collapsed .member-crown-icon {
+body.member-sidebar-collapsed .member-crown-icon,
+body.member-sidebar-collapsed .member-nav-right {
   display: none !important;
 }
 
@@ -1317,8 +1318,9 @@ html[data-theme="dark"] body.member-layout {
   }
 
   body.member-sidebar-collapsed .member-nav-label,
-  body.member-sidebar-collapsed .member-nav-badge {
-    display: inline !important;
+  body.member-sidebar-collapsed .member-nav-badge,
+  body.member-sidebar-collapsed .member-nav-right {
+    display: inline-flex !important;
   }
 
   body.member-sidebar-collapsed .member-sidebar-pro-card {
