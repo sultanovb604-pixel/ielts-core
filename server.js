@@ -5871,7 +5871,7 @@ const speakingClubUserMatch = new Map();
 setInterval(() => {
   const now = Date.now();
   for (let i = speakingClubQueue.length - 1; i >= 0; i--) {
-    if (now - speakingClubQueue[i].joinedAt > 60000) {
+    if (now - speakingClubQueue[i].joinedAt > 600000) {
       speakingClubQueue.splice(i, 1);
     }
   }
@@ -7857,8 +7857,12 @@ async function api(req, res, pathname) {
         topic: match.topic
       });
     }
-    const inQueue = speakingClubQueue.some(q => q.queueId === queueId);
-    return json(res, 200, { status: inQueue ? "waiting" : "expired" });
+    const queueItem = speakingClubQueue.find(q => q.queueId === queueId);
+    if (queueItem) {
+      queueItem.joinedAt = Date.now();
+      return json(res, 200, { status: "waiting", queueId });
+    }
+    return json(res, 200, { status: "waiting", queueId, recovered: true });
   }
 
   if (req.method === "POST" && pathname === "/api/speaking-club/leave") {
@@ -9757,12 +9761,12 @@ const server = http.createServer(async (req, res) => {
     res.setHeader(
       "Content-Security-Policy",
       "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://accounts.google.com https://apis.google.com https://www.gstatic.com https://*.firebaseio.com https://*.firebaseapp.com; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://accounts.google.com https://apis.google.com https://www.gstatic.com https://*.firebaseio.com https://*.firebaseapp.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.gstatic.com; " +
       "font-src 'self' https://fonts.gstatic.com; " +
       "img-src 'self' data: https:; " +
       "frame-src 'self' https://accounts.google.com https://*.firebaseapp.com https://*.firebaseio.com; " +
-      "connect-src 'self' https://accounts.google.com https://apis.google.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;"
+      "connect-src 'self' https://*.peerjs.com wss://*.peerjs.com https://0.peerjs.com wss://0.peerjs.com https://accounts.google.com https://apis.google.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;"
     );
     if (process.env.NODE_ENV === "production") {
       res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");

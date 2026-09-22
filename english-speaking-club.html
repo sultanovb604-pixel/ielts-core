@@ -13,10 +13,10 @@
   <link rel="stylesheet" href="/english-pages.css?v=20260823_999">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260901_009">
   <link rel="stylesheet" href="/english-internal-premium.css?v=20260922_sb_final">
-  <link rel="stylesheet" href="/english-speaking-club.css?v=20260922_episoden_v3">
+  <link rel="stylesheet" href="/english-speaking-club.css?v=20260922_episoden_v4">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
   <!-- PeerJS for WebRTC P2P Voice & Video -->
-  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 </head>
 <body class="app-body materials-page premium-product-page speaking-club-page member-layout">
   <header class="app-header">
@@ -92,6 +92,10 @@
               <small style="color:#94a3b8;font-size:12px;">Your camera will stay off</small>
             </div>
             <div class="sc-preview-badges">
+              <span class="sc-preview-badge" id="scNetworkBadge">
+                <span class="material-symbols-outlined" style="font-size:14px;color:#f59e0b;">sensors</span>
+                <span id="scNetworkStatusText">Connecting...</span>
+              </span>
               <span class="sc-preview-badge" id="scCameraBadge">
                 <span class="material-symbols-outlined" style="font-size:14px;">videocam</span>
                 <span>Camera Ready</span>
@@ -431,6 +435,6 @@
   </footer>
 
   <script src="/english-site.js?v=20260922_sb_final"></script>
-  <script src="/english-speaking-club.js?v=20260922_episoden_v3"></script>
+  <script src="/english-speaking-club.js?v=20260922_episoden_v4"></script>
 </body>
 </html>

@@ -381,6 +381,15 @@ html[data-theme="dark"] .sc-room-banner {
   height: 1px !important;
 }
 
+@keyframes scSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.sc-spin {
+  animation: scSpin 1s linear infinite;
+  display: inline-block;
+}
+
 /* Right Guide Card */
 .sc-guide-list {
   display: flex;

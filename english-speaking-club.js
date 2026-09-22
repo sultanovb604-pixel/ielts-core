@@ -222,9 +222,9 @@
     loadSpeakingStats();
     setupEventListeners();
     fetchStats();
-    await loadTopics();
-    await initLocalMedia();
     initPeer();
+    loadTopics();
+    initLocalMedia();
   }
 
   function checkRoomUrl() {
@@ -484,6 +484,10 @@
 
       myPeer.on('open', id => {
         myPeerId = id;
+        const netBadge = document.getElementById('scNetworkBadge');
+        if (netBadge) {
+          netBadge.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;color:#10b981;">sensors</span><span>Network Ready</span>';
+        }
       });
 
       // Handle Incoming Call from matched partner
@@ -641,17 +645,37 @@
 
   // --- Matchmaking System ---
   async function startMatchmaking() {
+    const originalBtnContent = startMatchBtn.innerHTML;
+
     if (!myPeerId) {
-      alert('Connecting to network. Please wait a moment and try again.');
-      return;
+      startMatchBtn.disabled = true;
+      startMatchBtn.innerHTML = '<span class="material-symbols-outlined sc-spin" style="font-size:20px;">sync</span><span>Connecting to network...</span>';
+
+      let waited = 0;
+      while (!myPeerId && waited < 30) {
+        await new Promise(r => setTimeout(r, 200));
+        waited++;
+      }
+      startMatchBtn.disabled = false;
+      startMatchBtn.innerHTML = originalBtnContent;
+
+      if (!myPeerId) {
+        alert('Network connection is taking longer than usual. Please refresh the page and try again.');
+        return;
+      }
     }
 
     if (!localStream) {
+      startMatchBtn.disabled = true;
+      startMatchBtn.innerHTML = '<span class="material-symbols-outlined sc-spin" style="font-size:20px;">mic</span><span>Starting microphone...</span>';
       try {
         await initLocalMedia();
       } catch (e) {}
+      startMatchBtn.disabled = false;
+      startMatchBtn.innerHTML = originalBtnContent;
+
       if (!localStream) {
-        alert('Microphone access is required for Speaking Club. Please allow microphone access in your browser.');
+        alert('Microphone access is required for Speaking Club. Please enable microphone permissions in your browser.');
         return;
       }
     }
@@ -711,7 +735,32 @@
           stopSearchTimer();
           connectToPartner(data);
         } else if (data.status === 'expired') {
-          cancelMatchmaking();
+          // Seamlessly re-enqueue so user's search session continues uninterrupted
+          try {
+            const reRes = await fetch('/api/speaking-club/queue', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                peerId: myPeerId,
+                mode: selectedMode,
+                level: selectedLevel,
+                name: currentUser.name,
+                avatarUrl: currentUser.avatarUrl,
+                roomCode: currentRoomCode || undefined
+              })
+            });
+            if (reRes.ok) {
+              const reData = await reRes.json();
+              if (reData.status === 'matched') {
+                clearInterval(pollInterval);
+                pollInterval = null;
+                stopSearchTimer();
+                connectToPartner(reData);
+              } else if (reData.status === 'waiting') {
+                activeQueueId = reData.queueId;
+              }
+            }
+          } catch (reErr) {}
         }
       } catch (e) {}
     }, 1500);
