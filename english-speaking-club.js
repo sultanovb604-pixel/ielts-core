@@ -21,6 +21,7 @@
   let pollInterval = null;
   let searchTimerInterval = null;
   let searchStartTime = null;
+  let currentRoomCode = '';
 
   let allTopics = [];
   let currentTopicIndex = 0;
@@ -217,12 +218,40 @@
   // --- Initialization ---
   async function init() {
     loadUser();
+    checkRoomUrl();
     loadSpeakingStats();
     setupEventListeners();
     fetchStats();
     await loadTopics();
     await initLocalMedia();
     initPeer();
+  }
+
+  function checkRoomUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const room = (params.get('room') || '').trim().toLowerCase().slice(0, 32);
+    const banner = document.getElementById('scRoomBanner');
+    const codeEl = document.getElementById('scRoomBannerCode');
+    const leaveBtn = document.getElementById('scLeaveRoomLinkBtn');
+
+    if (room) {
+      currentRoomCode = room;
+      if (banner && codeEl) {
+        codeEl.textContent = room;
+        banner.style.display = 'flex';
+      }
+    } else {
+      currentRoomCode = '';
+      if (banner) banner.style.display = 'none';
+    }
+
+    if (leaveBtn) {
+      leaveBtn.onclick = () => {
+        currentRoomCode = '';
+        history.replaceState(null, '', window.location.pathname);
+        if (banner) banner.style.display = 'none';
+      };
+    }
   }
 
   function loadUser() {
@@ -470,6 +499,20 @@
         incomingCall.on('error', err => {
           console.error('Call error:', err);
         });
+
+        // Fast-path: If still in search view, poll immediately to enter room without waiting
+        if (searchView && searchView.style.display === 'block' && activeQueueId) {
+          fetch('/api/speaking-club/poll?queueId=' + encodeURIComponent(activeQueueId))
+            .then(r => r.json())
+            .then(data => {
+              if (data.status === 'matched') {
+                if (pollInterval) clearInterval(pollInterval);
+                pollInterval = null;
+                stopSearchTimer();
+                connectToPartner(data);
+              }
+            }).catch(() => {});
+        }
       });
 
       // Handle Incoming DataChannel connection
@@ -528,14 +571,18 @@
           break;
         case 'MODE_SYNC':
           if (data.mode === 'audio') {
-            remoteVideo.style.display = 'none';
+            remoteVideo.classList.add('sc-audio-mode-hidden');
             remoteAudioPlaceholder.style.display = 'flex';
           } else {
+            remoteVideo.classList.remove('sc-audio-mode-hidden');
             remoteVideo.style.display = 'block';
             remoteAudioPlaceholder.style.display = 'none';
           }
           if (data.role) {
             setRole(data.role === 'candidate' ? 'examiner' : 'candidate', false);
+          }
+          if (data.name && partnerNameTag) {
+            partnerNameTag.textContent = data.name;
           }
           break;
         case 'LEAVE_CALL':
@@ -599,6 +646,16 @@
       return;
     }
 
+    if (!localStream) {
+      try {
+        await initLocalMedia();
+      } catch (e) {}
+      if (!localStream) {
+        alert('Microphone access is required for Speaking Club. Please allow microphone access in your browser.');
+        return;
+      }
+    }
+
     // Switch view to searching
     lobbyView.style.display = 'none';
     searchView.style.display = 'block';
@@ -618,7 +675,8 @@
           mode: selectedMode,
           level: selectedLevel,
           name: currentUser.name,
-          avatarUrl: currentUser.avatarUrl
+          avatarUrl: currentUser.avatarUrl,
+          roomCode: currentRoomCode || undefined
         })
       });
 
@@ -684,6 +742,14 @@
     const secs = elapsed % 60;
     if (searchElapsedEl) {
       searchElapsedEl.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+    const tipEl = document.getElementById('scSearchTip');
+    if (tipEl) {
+      if (currentRoomCode) {
+        tipEl.innerHTML = `Waiting for your partner to join private room: <strong style="color:#2563eb;font-family:monospace;">${escapeHtml(currentRoomCode)}</strong>`;
+      } else if (elapsed > 25) {
+        tipEl.innerHTML = `Still looking for an available partner... <br><span style="font-size:12px;color:#2563eb;font-weight:600;">Tip: You can invite a friend directly with "Invite Friend (Direct Room)"!</span>`;
+      }
     }
   }
 
@@ -757,10 +823,12 @@
 
   function attachRemoteStream(stream) {
     remoteVideo.srcObject = stream;
+    remoteVideo.play().catch(() => {});
     if (currentPartner && currentPartner.mode === 'audio') {
-      remoteVideo.style.display = 'none';
+      remoteVideo.classList.add('sc-audio-mode-hidden');
       remoteAudioPlaceholder.style.display = 'flex';
     } else {
+      remoteVideo.classList.remove('sc-audio-mode-hidden');
       remoteVideo.style.display = 'block';
       remoteAudioPlaceholder.style.display = 'none';
     }
@@ -1167,6 +1235,26 @@
 
     // Start matching button
     startMatchBtn?.addEventListener('click', startMatchmaking);
+
+    // Invite friend button (Direct Room link)
+    const inviteBtn = document.getElementById('scInviteFriendBtn');
+    inviteBtn?.addEventListener('click', () => {
+      const code = 'ielts-' + Math.random().toString(36).substring(2, 8);
+      const url = `${window.location.origin}/english/speaking-club?room=${code}`;
+      currentRoomCode = code;
+      history.replaceState(null, '', `?room=${code}`);
+      checkRoomUrl();
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          alert(`Private Room created!\n\nDirect link copied to clipboard:\n${url}\n\nSend this link to your partner or friend. When you both click "Find Speaking Partner", you will instantly connect to each other!`);
+        }).catch(() => {
+          prompt('Private Room created! Copy this link and send to your friend:', url);
+        });
+      } else {
+        prompt('Private Room created! Copy this link and send to your friend:', url);
+      }
+    });
 
     // Cancel search button
     cancelSearchBtn?.addEventListener('click', cancelMatchmaking);

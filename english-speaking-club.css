@@ -319,6 +319,68 @@ html[data-theme="dark"] .sc-level-pill {
   transform: translateY(0);
 }
 
+.sc-invite-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+.sc-invite-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--card-subtle, #f1f5f9);
+  color: #2563eb;
+  font-size: 13.5px;
+  font-weight: 700;
+  border: 1px dashed #93c5fd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+.sc-invite-btn:hover {
+  background: #eff6ff;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+}
+html[data-theme="dark"] .sc-invite-btn {
+  background: #1e293b;
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+html[data-theme="dark"] .sc-invite-btn:hover {
+  background: #1e3a8a33;
+}
+
+.sc-room-banner {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+  color: #1e40af;
+}
+html[data-theme="dark"] .sc-room-banner {
+  background: #1e3a8a33;
+  border-color: #1d4ed8;
+  color: #93c5fd;
+}
+
+.sc-audio-mode-hidden {
+  position: absolute !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
 /* Right Guide Card */
 .sc-guide-list {
   display: flex;

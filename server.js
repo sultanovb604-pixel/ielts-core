@@ -7795,9 +7795,14 @@ async function api(req, res, pathname) {
     const level = String(body.level || "any");
     const name = String(user?.name || user?.username || body.name || "Student").trim().slice(0, 40);
     const avatarUrl = String(user?.avatarUrl || body.avatarUrl || "");
+    const roomCode = String(body.roomCode || "").trim().toLowerCase().slice(0, 32);
 
     // Look for waiting peer
-    const candidateIdx = speakingClubQueue.findIndex(q => q.peerId !== peerId);
+    const candidateIdx = speakingClubQueue.findIndex(q => {
+      if (q.peerId === peerId) return false;
+      if (roomCode) return q.roomCode === roomCode;
+      return !q.roomCode;
+    });
     if (candidateIdx !== -1) {
       const partner = speakingClubQueue.splice(candidateIdx, 1)[0];
       const matchId = "m_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
@@ -7808,7 +7813,7 @@ async function api(req, res, pathname) {
         matchId,
         topic,
         createdAt: Date.now(),
-        peerA: { queueId, peerId, mode, name, avatarUrl },
+        peerA: { queueId, peerId, mode, name, avatarUrl, roomCode },
         peerB: partner
       };
 
@@ -7829,7 +7834,7 @@ async function api(req, res, pathname) {
       });
     }
 
-    speakingClubQueue.push({ queueId, peerId, mode, level, name, avatarUrl, joinedAt: Date.now() });
+    speakingClubQueue.push({ queueId, peerId, mode, level, name, avatarUrl, roomCode, joinedAt: Date.now() });
     return json(res, 200, { status: "waiting", queueId });
   }
 

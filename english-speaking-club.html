@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/english-pages.css?v=20260823_999">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260901_009">
   <link rel="stylesheet" href="/english-internal-premium.css?v=20260922_sb_final">
-  <link rel="stylesheet" href="/english-speaking-club.css?v=20260922_episoden_v2">
+  <link rel="stylesheet" href="/english-speaking-club.css?v=20260922_episoden_v3">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
   <!-- PeerJS for WebRTC P2P Voice & Video -->
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -68,6 +68,16 @@
           <span class="sc-stat-sep">·</span>
           <span>🌟 <strong id="scUserBadgesCount">0</strong> Badges</span>
         </div>
+      </div>
+
+      <!-- Direct Room Banner if room param present -->
+      <div id="scRoomBanner" class="sc-room-banner" style="display:none;">
+        <div>
+          <strong>🎯 Private Room Session:</strong>
+          <span id="scRoomBannerCode" style="margin-left:6px;font-family:monospace;font-weight:700;"></span>
+          <p style="margin:2px 0 0;font-size:12px;opacity:0.9;">You will be matched directly with your friend using this room link.</p>
+        </div>
+        <button type="button" class="button small secondary" id="scLeaveRoomLinkBtn" style="white-space:nowrap;padding:4px 10px;font-size:12px;">Use Public Queue</button>
       </div>
 
       <div class="sc-lobby-grid">
@@ -131,6 +141,14 @@
             <span>Find Speaking Partner</span>
             <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
           </button>
+
+          <!-- Direct Room Invite Option -->
+          <div class="sc-invite-row">
+            <button type="button" class="sc-invite-btn" id="scInviteFriendBtn">
+              <span class="material-symbols-outlined" style="font-size:18px;">share</span>
+              <span>Invite Friend (Direct Room)</span>
+            </button>
+          </div>
         </div>
 
         <!-- Right: Speaking Club Etiquette & Rules -->
@@ -158,7 +176,7 @@
               <div class="sc-guide-icon"><span class="material-symbols-outlined" style="font-size:18px;">psychology</span></div>
               <div>
                 <strong>Cambridge Cue Cards:</strong>
-                <p style="margin:2px 0 0;font-size:13px;">Use the on-screen topic cards in sync with your partner. One asks, the other answers, then switch roles.</p>
+                <p style="margin:2px 0 0;font-size:13px;">Synchronized Part 1, 2, and 3 topics keep your practice structured according to real IELTS exam criteria.</p>
               </div>
             </div>
             <div class="sc-guide-item">
@@ -186,7 +204,7 @@
         </div>
         <h2 class="sc-search-title">Matching with an IELTS Partner...</h2>
         <p class="sc-search-timer">Searching time: <strong id="scSearchElapsed">0:00</strong></p>
-        <p style="font-size:13.5px;color:#64748b;margin:0 0 24px;">Please keep this tab open. Your camera and microphone will activate once paired.</p>
+        <p id="scSearchTip" style="font-size:13.5px;color:#64748b;margin:0 0 24px;">Please keep this tab open. Your camera and microphone will activate once paired.</p>
         <button type="button" class="sc-cancel-btn" id="scCancelSearchBtn">
           <span>Cancel Search</span>
         </button>
@@ -413,6 +431,6 @@
   </footer>
 
   <script src="/english-site.js?v=20260922_sb_final"></script>
-  <script src="/english-speaking-club.js?v=20260922_episoden_v2"></script>
+  <script src="/english-speaking-club.js?v=20260922_episoden_v3"></script>
 </body>
 </html>
