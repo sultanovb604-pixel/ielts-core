@@ -9818,9 +9818,7 @@ const server = http.createServer(async (req, res) => {
         return res.end("<!doctype html><title>Test Not Found</title><body style='font-family:sans-serif;padding:40px;text-align:center;'><h2>Prediction test not found</h2><a href='/english/predictions'>&larr; Back to Predictions</a></body>");
       }
 
-      const isFreeItem = targetItem && (targetItem.free === true || targetItem.premium === false || targetItem.id === "pred-l1-01");
-
-      if (!isFreeItem && !isPremium) {
+      if (!isPremium) {
         if (!user) {
           res.writeHead(302, {
             Location: `/english/login?next=${encodeURIComponent(requestUrl.pathname + requestUrl.search)}`,
@@ -9836,6 +9834,9 @@ const server = http.createServer(async (req, res) => {
       }
 
       let content = fs.readFileSync(targetFile, "utf8");
+      content = content.replace(/https:\/\/i\.pinimg\.com\/736x\/88\/93\/a8\/8893a81fed78f6989142a13e3605c45e\.jpg/g, "https://d2snzxottmona5.cloudfront.net/releases/3.46.0/images/logo/ielts.svg");
+      content = content.replace(/@FOZILBEK_IELTS|@MINDLESS_WRITER|@ielts_material_full/gi, "");
+
       const exitLink = '<a href="/english/predictions" style="display:inline-flex;align-items:center;gap:6px;color:var(--primary-color,#1e6de6);text-decoration:none;font-weight:700;font-size:13px;padding:6px 12px;border:1px solid var(--border-color,#e0e0e0);border-radius:8px;background:var(--secondary-bg,#f8f9fa);margin-right:12px;">← Exit to Predictions</a>';
       if (content.includes('<div class="header-left">') && !content.includes('/english/predictions')) {
         content = content.replace('<div class="header-left">', '<div class="header-left">' + exitLink);

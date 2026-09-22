@@ -100,17 +100,11 @@
     );
     const isPremium = isOwner || currentUser?.plan === 'premium';
 
-    cardsGrid.innerHTML = filtered.map(item => {
-      const isFree = item.free === true || item.premium === false || item.id === 'pred-l1-01';
-      const canAccess = isFree || isPremium;
+    const crownIcon = `<svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
 
-      let statusBadge = '';
-      if (isFree) {
-        statusBadge = `<span class="mock-status-pill free" style="background:#ecfdf5;color:#059669;font-weight:700;">FREE TEST</span>`;
-      } else {
-        const crownIcon = `<svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
-        statusBadge = `<span class="mock-status-pill premium">PREMIUM ${crownIcon}</span>`;
-      }
+    cardsGrid.innerHTML = filtered.map(item => {
+      const canAccess = isPremium;
+      const statusBadge = `<span class="mock-status-pill premium">PREMIUM ${crownIcon}</span>`;
 
       const examUrl = `/english/prediction-exam?id=${encodeURIComponent(item.id)}${token ? '&token=' + encodeURIComponent(token) : ''}`;
 
