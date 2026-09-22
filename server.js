@@ -9786,25 +9786,15 @@ const server = http.createServer(async (req, res) => {
     }
     if (pathname === "/english/prediction-exam") {
       const data = await readData();
+      await hydrateRequestUserFromSupabase(req, data);
       const user = studentFromRequest(req, data);
-      if (!user) {
-        res.writeHead(302, {
-          Location: `/english/login?next=${encodeURIComponent(requestUrl.pathname + requestUrl.search)}`,
-          "Cache-Control": "no-store"
-        });
-        return res.end();
-      }
-      if (user.plan !== "premium") {
-        res.writeHead(302, {
-          Location: `/english/pricing?feature=predictions`,
-          "Cache-Control": "no-store"
-        });
-        return res.end();
-      }
+      const isOwner = user && (user.email === ADMIN_EMAIL || user.username === ADMIN_USERNAME || user.username === "sultanovb604" || user.username === "bunyod" || user.role === "admin");
+      const isPremium = isOwner || user?.plan === "premium";
 
       const requestedId = String(requestUrl.searchParams.get("id") || "").trim();
       const requestedFile = String(requestUrl.searchParams.get("file") || "").trim();
       let targetFile = null;
+      let targetItem = null;
 
       const predsDir = path.join(__dirname, "english-listening-predictions");
       const catPath = path.join(__dirname, "data", "predictions-listening-catalog.json");
@@ -9812,9 +9802,9 @@ const server = http.createServer(async (req, res) => {
       if (fs.existsSync(catPath)) {
         try {
           const catalog = JSON.parse(fs.readFileSync(catPath, "utf8"));
-          const item = catalog.find(x => x.id === requestedId || x.fileName === requestedFile);
-          if (item && item.fileName) {
-            targetFile = path.join(predsDir, item.fileName);
+          targetItem = catalog.find(x => x.id === requestedId || x.fileName === requestedFile);
+          if (targetItem && targetItem.fileName) {
+            targetFile = path.join(predsDir, targetItem.fileName);
           }
         } catch (e) {}
       }
@@ -9825,10 +9815,32 @@ const server = http.createServer(async (req, res) => {
 
       if (!targetFile || !fs.existsSync(targetFile)) {
         res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
-        return res.end("<!doctype html><title>Test Not Found</title><body style='font-family:sans-serif;padding:40px;text-align:center;'><h2>Prediction test not found</h2><a href='/english/predictions#listening'>&larr; Back to Predictions</a></body>");
+        return res.end("<!doctype html><title>Test Not Found</title><body style='font-family:sans-serif;padding:40px;text-align:center;'><h2>Prediction test not found</h2><a href='/english/predictions'>&larr; Back to Predictions</a></body>");
       }
 
-      const content = fs.readFileSync(targetFile, "utf8");
+      const isFreeItem = targetItem && (targetItem.free === true || targetItem.premium === false || targetItem.id === "pred-l1-01");
+
+      if (!isFreeItem && !isPremium) {
+        if (!user) {
+          res.writeHead(302, {
+            Location: `/english/login?next=${encodeURIComponent(requestUrl.pathname + requestUrl.search)}`,
+            "Cache-Control": "no-store"
+          });
+          return res.end();
+        }
+        res.writeHead(302, {
+          Location: `/english/pricing?feature=predictions`,
+          "Cache-Control": "no-store"
+        });
+        return res.end();
+      }
+
+      let content = fs.readFileSync(targetFile, "utf8");
+      const exitLink = '<a href="/english/predictions" style="display:inline-flex;align-items:center;gap:6px;color:var(--primary-color,#1e6de6);text-decoration:none;font-weight:700;font-size:13px;padding:6px 12px;border:1px solid var(--border-color,#e0e0e0);border-radius:8px;background:var(--secondary-bg,#f8f9fa);margin-right:12px;">← Exit to Predictions</a>';
+      if (content.includes('<div class="header-left">') && !content.includes('/english/predictions')) {
+        content = content.replace('<div class="header-left">', '<div class="header-left">' + exitLink);
+      }
+
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(content);
     }

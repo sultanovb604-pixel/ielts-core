@@ -8,7 +8,8 @@
     "questionCount": 10,
     "durationMinutes": 10,
     "topic": "Travel & Customer Details",
-    "premium": true
+    "premium": false,
+    "free": true
   },
   {
     "id": "pred-l1-02",
