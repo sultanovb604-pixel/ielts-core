@@ -9766,7 +9766,7 @@ const server = http.createServer(async (req, res) => {
       "font-src 'self' https://fonts.gstatic.com; " +
       "img-src 'self' data: https:; " +
       "frame-src 'self' https://accounts.google.com https://*.firebaseapp.com https://*.firebaseio.com; " +
-      "connect-src 'self' https://*.peerjs.com wss://*.peerjs.com https://0.peerjs.com wss://0.peerjs.com https://accounts.google.com https://apis.google.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;"
+      "connect-src 'self' https://*.peerjs.com wss://*.peerjs.com https://0.peerjs.com wss://0.peerjs.com https://*.metered.ca wss://*.metered.ca https://accounts.google.com https://apis.google.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;"
     );
     if (process.env.NODE_ENV === "production") {
       res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
