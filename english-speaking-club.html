@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="IELTS Core Speaking Club — 1-on-1 live video and audio practice with IELTS study partners, synchronized Cambridge cue cards, and real-time timers.">
+  <title>Speaking Club (1-on-1 Live) | IELTS Core</title>
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
+  <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="/english-pages.css?v=20260823_999">
+  <link rel="stylesheet" href="/english-product-v4.css?v=20260901_009">
+  <link rel="stylesheet" href="/english-internal-premium.css?v=20260922_live_sc1">
+  <link rel="stylesheet" href="/english-speaking-club.css?v=20260922_001">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
+  <!-- PeerJS for WebRTC P2P Voice & Video -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body class="app-body materials-page premium-product-page speaking-club-page">
+  <header class="app-header">
+    <a class="app-brand" href="/english" aria-label="IELTS Core home">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="28" alt="IELTS Core"></span>
+      <span>IELTS CORE</span>
+    </a>
+    <button class="mobile-nav-toggle" type="button" data-mobile-menu aria-label="Open menu" aria-expanded="false">Menu</button>
+    <nav class="app-nav" aria-label="Main navigation">
+      <a href="/english">Home</a>
+      <a href="/english/practice">Practice</a>
+      <a href="/english/mock-tests">Mock Exams</a>
+      <a href="/english/courses">Courses</a>
+      <a href="/english/materials">Materials</a>
+      <a href="/english/pricing">Pricing</a>
+      <a href="/english/account">Dashboard</a>
+    </nav>
+    <div class="app-actions">
+      <a class="plain-link" href="/english/login">Sign in</a>
+      <a class="button primary" href="/english/signup">Start free</a>
+    </div>
+  </header>
+
+  <main class="page materials-shell sc-container">
+    <!-- Breadcrumb Bar -->
+    <nav class="sc-breadcrumb-bar" aria-label="Breadcrumb">
+      <a href="/english/materials"><span class="material-symbols-outlined">home</span> Materials</a>
+      <span class="sep">/</span>
+      <a href="/english/speaking">Speaking Practice</a>
+      <span class="sep">/</span>
+      <span class="current">Speaking Club (1-on-1 Live) <span class="sc-live-pill" style="margin-left:8px;margin-bottom:0;font-size:10px;padding:2px 8px;"><span class="sc-live-dot"></span> LIVE</span></span>
+    </nav>
+
+    <!-- STATE 1: LOBBY & PRE-FLIGHT CHECK -->
+    <section id="scLobbyView">
+      <div class="sc-lobby-hero">
+        <div class="sc-live-pill">
+          <span class="sc-live-dot"></span>
+          <span><strong id="scOnlineCount">24</strong> students online &amp; ready to practice</span>
+        </div>
+        <h1 class="sc-lobby-title">IELTS 1-on-1 Speaking Club</h1>
+        <p class="sc-lobby-sub">Connect with a live speaking partner in video or audio-only mode. Follow synchronized Cambridge IELTS Speaking Part 1, 2, and 3 cue cards and boost your fluency naturally.</p>
+      </div>
+
+      <div class="sc-lobby-grid">
+        <!-- Left: Device Setup & Start -->
+        <div class="sc-card">
+          <!-- Camera/Mic Preview Box -->
+          <div class="sc-preview-wrap">
+            <video id="scLobbyVideo" class="sc-preview-video" autoplay playsinline muted></video>
+            <div id="scLobbyAudioPlaceholder" class="sc-preview-audio-avatar" style="display:none;">
+              <div class="sc-avatar-circle-lg" id="scLobbyAvatarLetter">S</div>
+              <p style="margin:0;font-size:14px;font-weight:700;">Audio-only Mode</p>
+              <small style="color:#94a3b8;font-size:12px;">Your camera will stay off</small>
+            </div>
+            <div class="sc-preview-badges">
+              <span class="sc-preview-badge" id="scCameraBadge">
+                <span class="material-symbols-outlined" style="font-size:14px;">videocam</span>
+                <span>Camera Ready</span>
+              </span>
+              <span class="sc-preview-badge">
+                <span class="material-symbols-outlined" style="font-size:14px;color:#10b981;">mic</span>
+                <span>Microphone</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Live Mic Volume Meter -->
+          <div class="sc-mic-meter-wrap">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#10b981;">graphic_eq</span>
+            <span style="font-size:12px;font-weight:700;color:#64748b;">Mic Level</span>
+            <div class="sc-mic-meter-bar">
+              <div class="sc-mic-meter-fill" id="scMicMeterFill"></div>
+            </div>
+          </div>
+
+          <!-- Mode Selector (Video vs Audio-only) -->
+          <div class="sc-mode-selector">
+            <button type="button" class="sc-mode-btn active" id="scModeVideoBtn">
+              <span class="material-symbols-outlined">videocam</span>
+              <span>Video + Audio</span>
+            </button>
+            <button type="button" class="sc-mode-btn" id="scModeAudioBtn">
+              <span class="material-symbols-outlined">mic</span>
+              <span>Audio Only</span>
+            </button>
+          </div>
+
+          <!-- Target IELTS Band Level -->
+          <div class="sc-level-selector">
+            <span class="sc-level-label">Target Band Preference</span>
+            <div class="sc-level-pills">
+              <button type="button" class="sc-level-pill active" data-level="any">Any Level</button>
+              <button type="button" class="sc-level-pill" data-level="6">Band 6.0 - 6.5</button>
+              <button type="button" class="sc-level-pill" data-level="7">Band 7.0 - 7.5</button>
+              <button type="button" class="sc-level-pill" data-level="8">Band 8.0+</button>
+            </div>
+          </div>
+
+          <!-- Match Action Button -->
+          <button type="button" class="sc-start-btn" id="scStartMatchBtn">
+            <span class="material-symbols-outlined" style="font-size:22px;">bolt</span>
+            <span>Find Speaking Partner</span>
+            <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
+          </button>
+        </div>
+
+        <!-- Right: Speaking Club Etiquette & Rules -->
+        <div class="sc-card">
+          <h2 style="font-size:18px;font-weight:800;margin:0 0 16px;display:flex;align-items:center;gap:8px;">
+            <span class="material-symbols-outlined" style="color:#2563eb;">verified_user</span>
+            <span>Speaking Club Guidelines</span>
+          </h2>
+          <div class="sc-guide-list">
+            <div class="sc-guide-item">
+              <div class="sc-guide-icon"><span class="material-symbols-outlined" style="font-size:18px;">timer</span></div>
+              <div>
+                <strong>10-Minute Sessions:</strong>
+                <p style="margin:2px 0 0;font-size:13px;">Each session is designed as a crisp 10-minute IELTS simulation. Respect your partner's time and speak in turn.</p>
+              </div>
+            </div>
+            <div class="sc-guide-item">
+              <div class="sc-guide-icon"><span class="material-symbols-outlined" style="font-size:18px;">translate</span></div>
+              <div>
+                <strong>English Only:</strong>
+                <p style="margin:2px 0 0;font-size:13px;">Maintain 100% English immersion throughout the call. If you don't know a word, try to paraphrase it!</p>
+              </div>
+            </div>
+            <div class="sc-guide-item">
+              <div class="sc-guide-icon"><span class="material-symbols-outlined" style="font-size:18px;">psychology</span></div>
+              <div>
+                <strong>Cambridge Cue Cards:</strong>
+                <p style="margin:2px 0 0;font-size:13px;">Use the on-screen topic cards in sync with your partner. One asks, the other answers, then switch roles.</p>
+              </div>
+            </div>
+            <div class="sc-guide-item">
+              <div class="sc-guide-icon"><span class="material-symbols-outlined" style="font-size:18px;">sentiment_satisfied</span></div>
+              <div>
+                <strong>Friendly &amp; Constructive:</strong>
+                <p style="margin:2px 0 0;font-size:13px;">Be supportive and polite. After each session, give your partner constructive feedback and an estimated band score.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATE 2: SEARCHING / RADAR VIEW -->
+    <section id="scSearchView" style="display:none;">
+      <div class="sc-card sc-search-wrap">
+        <div class="sc-radar-box">
+          <div class="sc-radar-ring"></div>
+          <div class="sc-radar-ring"></div>
+          <div class="sc-radar-ring"></div>
+          <div class="sc-radar-core">
+            <span class="material-symbols-outlined" style="font-size:36px;">wifi_tethering</span>
+          </div>
+        </div>
+        <h2 class="sc-search-title">Matching with an IELTS Partner...</h2>
+        <p class="sc-search-timer">Searching time: <strong id="scSearchElapsed">0:00</strong></p>
+        <p style="font-size:13.5px;color:#64748b;margin:0 0 24px;">Please keep this tab open. Your camera and microphone will activate once paired.</p>
+        <button type="button" class="sc-cancel-btn" id="scCancelSearchBtn">
+          <span>Cancel Search</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- STATE 3: LIVE IN-CALL 1-ON-1 ROOM -->
+    <section id="scRoomView" style="display:none;">
+      <div class="sc-room-layout">
+        <!-- Left: Audio / Video Media Feeds & Controls -->
+        <div class="sc-stage-wrap">
+          <!-- Remote Partner View -->
+          <div class="sc-remote-view">
+            <video id="scRemoteVideo" class="sc-remote-video" autoplay playsinline></video>
+            <!-- Audio-only fallback representation -->
+            <div id="scRemoteAudioPlaceholder" class="sc-audio-wave-wrap" style="display:none;">
+              <div class="sc-wave-rings">
+                <div class="sc-wave-ring"></div>
+                <div class="sc-wave-ring"></div>
+                <div class="sc-wave-ring"></div>
+                <div class="sc-wave-avatar" id="scRemoteAvatarLetter">P</div>
+              </div>
+              <p id="scRemoteAudioName" style="color:#ffffff;font-size:16px;font-weight:700;margin:0;">Partner</p>
+              <span style="font-size:12px;color:#93c5fd;display:inline-flex;align-items:center;gap:4px;">
+                <span class="material-symbols-outlined" style="font-size:14px;">mic</span> Audio Only Practice
+              </span>
+            </div>
+
+            <!-- Remote Partner Name / Status Tag -->
+            <div class="sc-remote-info">
+              <span class="material-symbols-outlined" style="font-size:14px;color:#10b981;">wifi</span>
+              <span id="scPartnerNameTag">IELTS Partner</span>
+            </div>
+
+            <!-- Local PiP (Picture in Picture) -->
+            <div class="sc-local-pip" id="scLocalPip">
+              <video id="scLocalVideo" class="sc-local-video" autoplay playsinline muted></video>
+              <div id="scLocalAudioPip" class="sc-local-pip-audio" style="display:none;">You (Voice)</div>
+            </div>
+          </div>
+
+          <!-- Bottom Control Dock -->
+          <div class="sc-call-dock">
+            <button type="button" class="sc-dock-btn" id="scToggleMicBtn" title="Mute/Unmute Mic">
+              <span class="material-symbols-outlined">mic</span>
+            </button>
+            <button type="button" class="sc-dock-btn" id="scToggleCamBtn" title="Camera On/Off">
+              <span class="material-symbols-outlined">videocam</span>
+            </button>
+            <button type="button" class="sc-dock-btn" id="scNextTopicBtn" title="Switch to Next IELTS Topic">
+              <span class="material-symbols-outlined">shuffle</span>
+            </button>
+            <button type="button" class="sc-dock-btn end-btn" id="scEndCallBtn" title="Leave Session">
+              <span class="material-symbols-outlined">call_end</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Synchronized IELTS Cue Card & Questions Panel -->
+        <div class="sc-workspace-card">
+          <div class="sc-workspace-header">
+            <div>
+              <span id="scTopicCategory" style="font-size:11px;font-weight:800;color:#2563eb;text-transform:uppercase;letter-spacing:0.05em;">GENERAL LIFE</span>
+              <h2 id="scTopicTitle" style="font-size:17px;font-weight:800;margin:2px 0 0;color:inherit;">Hometown &amp; Daily Life</h2>
+            </div>
+            <div class="sc-session-timer" id="scSessionTimer">
+              <span class="material-symbols-outlined" style="font-size:16px;">timer</span>
+              <span id="scTimerDisplay">10:00</span>
+            </div>
+          </div>
+
+          <!-- Part 1, 2, 3 Tabs -->
+          <div class="sc-parts-nav">
+            <button type="button" class="sc-part-tab active" data-part="1" id="scTabPart1">Part 1 (Intro)</button>
+            <button type="button" class="sc-part-tab" data-part="2" id="scTabPart2">Part 2 (Cue Card)</button>
+            <button type="button" class="sc-part-tab" data-part="3" id="scTabPart3">Part 3 (Discussion)</button>
+          </div>
+
+          <!-- Part Content Containers -->
+          <div id="scPartContent">
+            <!-- Dynamically populated from active topic -->
+          </div>
+
+          <!-- Mini Vocab Chat Tray -->
+          <div class="sc-mini-chat">
+            <div class="sc-chat-messages" id="scChatMessages">
+              <div class="sc-chat-msg" style="color:#64748b;">Tip: Use this quick chat to share spelling of unfamiliar words.</div>
+            </div>
+            <form id="scChatForm" class="sc-chat-input-row">
+              <input type="text" id="scChatInput" class="sc-chat-input" placeholder="Type a word or phrase..." maxlength="120" autocomplete="off">
+              <button type="submit" class="sc-chat-send">
+                <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATE 4: POST-CALL FEEDBACK MODAL -->
+    <div id="scFeedbackModal" class="sc-modal-overlay" style="display:none;">
+      <div class="sc-modal-card">
+        <span class="material-symbols-outlined" style="font-size:48px;color:#f59e0b;">verified</span>
+        <h2 style="font-size:20px;font-weight:800;margin:10px 0 4px;">Session Complete!</h2>
+        <p style="font-size:13.5px;color:#64748b;margin:0 0 16px;">How was your practice with <strong id="scFeedbackPartnerName">your partner</strong>?</p>
+
+        <!-- Star Rating -->
+        <div class="sc-stars-row" id="scStarRow">
+          <button type="button" class="sc-star-btn active" data-star="1">★</button>
+          <button type="button" class="sc-star-btn active" data-star="2">★</button>
+          <button type="button" class="sc-star-btn active" data-star="3">★</button>
+          <button type="button" class="sc-star-btn active" data-star="4">★</button>
+          <button type="button" class="sc-star-btn active" data-star="5">★</button>
+        </div>
+
+        <!-- Band Estimate Selector -->
+        <div style="margin-bottom:20px;text-align:left;">
+          <label style="font-size:12px;font-weight:700;color:#64748b;display:block;margin-bottom:6px;">Estimated Partner IELTS Band:</label>
+          <select id="scFeedbackBand" style="width:100%;padding:10px;border-radius:10px;border:1px solid #cbd5e1;font-size:14px;background:transparent;color:inherit;">
+            <option value="6.0">Band 6.0 (Competent)</option>
+            <option value="6.5" selected>Band 6.5 (Good Competent)</option>
+            <option value="7.0">Band 7.0 (Good User)</option>
+            <option value="7.5">Band 7.5 (Very Good User)</option>
+            <option value="8.0">Band 8.0+ (Expert)</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:center;">
+          <button type="button" class="button secondary" id="scFeedbackCloseBtn" style="padding:10px 18px;border-radius:10px;font-weight:700;">Back to Lobby</button>
+          <button type="button" class="button primary" id="scFeedbackFindAgainBtn" style="padding:10px 22px;border-radius:10px;font-weight:700;">Find Next Partner</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <div class="app-footer-brand">
+      <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core"></span>
+      <strong>IELTS CORE</strong>
+    </div>
+    <p>Independent IELTS preparation. Speaking Club connects students for collaborative live practice.</p>
+  </footer>
+
+  <script src="/english-site.js?v=20260922_live_sc1"></script>
+  <script src="/english-speaking-club.js?v=20260922_001"></script>
+</body>
+</html>

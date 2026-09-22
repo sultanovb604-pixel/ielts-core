@@ -186,6 +186,7 @@
     const isMockTests = activePath === '/english/mock-tests' || activePath === '/english/mock-exam';
     const isPredictions = activePath === '/english/predictions' || activePath === '/english/prediction-exam';
     const isSpeaking = activePath === '/english/speaking' || activePath === '/english/speaking-studio';
+    const isSpeakingClub = activePath === '/english/speaking-club';
     const isWriting = (isMaterials && activeSkill === 'writing') || activePath === '/english/writing-editor' || (activePath === '/english/practice' && activeSkill === 'writing');
     const isArticles = isMaterials && activeCollection === 'article';
     const isVocabulary = activePath === '/english/vocabulary';
@@ -225,7 +226,8 @@
           { label: 'Listening Practice', icon: 'headphones', href: '/english/materials?skill=listening', active: isListening },
           { label: 'Reading Passages', icon: 'menu_book', href: '/english/materials?skill=reading', active: isReading },
           { label: 'Writing Editor', icon: 'edit', href: '/english/materials?skill=writing', active: isWriting },
-          { label: 'Speaking AI', icon: 'mic', href: '/english/speaking', active: isSpeaking }
+          { label: 'Speaking AI', icon: 'mic', href: '/english/speaking', active: isSpeaking },
+          { label: 'Speaking Club (1-on-1)', icon: 'groups', href: '/english/speaking-club', active: isSpeakingClub, badge: 'Live' }
         ]
       },
       {
@@ -243,7 +245,8 @@
 
     const navMarkup = sections.map(sec => {
       const linksHtml = sec.links.map(l => {
-        const badgeHtml = l.badge ? `<span class="member-nav-badge ${l.badge === 'Soon' ? 'badge-task' : ''}">${safe(l.badge)}</span>` : '';
+        const badgeClass = l.badge === 'Soon' ? 'badge-task' : (l.badge === 'Live' ? 'badge-live' : '');
+        const badgeHtml = l.badge ? `<span class="member-nav-badge ${badgeClass}">${safe(l.badge)}</span>` : '';
         const crownHtml = l.isPremium ? crownSvg : '';
         const rightBadge = (badgeHtml || crownHtml) ? `<span class="member-nav-right" style="display:inline-flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0;">${badgeHtml}${crownHtml}</span>` : '';
         return `<a href="${l.href}"${l.active ? ' aria-current="page"' : ''} title="${safe(l.label)}"><span class="material-symbols-outlined member-nav-icon" aria-hidden="true">${l.icon}</span><span class="member-nav-label">${safe(l.label)}</span>${rightBadge}</a>`;

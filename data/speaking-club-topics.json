@@ -1,0 +1,224 @@
+[
+  {
+    "id": "topic-1",
+    "title": "Hometown & Daily Life",
+    "category": "General Life",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Take turns asking each other these introductory questions. Give 2-3 sentence answers.",
+      "questions": [
+        "Where are you from, and what do you like most about your hometown?",
+        "How has your hometown changed since you were a child?",
+        "What is your typical daily routine like on weekdays?",
+        "Do you prefer morning routines or are you more productive at night?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe a place in your hometown that you often recommend to visitors.",
+        "points": [
+          "Where this place is located",
+          "What people can do or see there",
+          "Why you enjoy going there yourself",
+          "And explain why you would recommend it to someone visiting for the first time."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss these broader questions together. Give reasons, examples, and personal perspectives.",
+      "questions": [
+        "Why do many young people choose to move from small towns to big cities?",
+        "How does modern tourism affect traditional local communities?",
+        "Do you think governments should invest more in preserving historical areas or building modern infrastructure?"
+      ]
+    }
+  },
+  {
+    "id": "topic-2",
+    "title": "Technology & Artificial Intelligence",
+    "category": "Science & Tech",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Ask each other about everyday technology habits.",
+      "questions": [
+        "What piece of technology do you use most frequently every day?",
+        "Did you learn to use computers easily when you were younger?",
+        "Do you ever feel that you spend too much time on your smartphone?",
+        "What is an app you downloaded recently that you found useful?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe an AI tool or piece of modern technology that has changed how you study or work.",
+        "points": [
+          "What kind of technology or tool it is",
+          "When and how you first started using it",
+          "What specific tasks it helps you complete",
+          "And explain whether you think it makes people more or less creative."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss the broader impact of AI and digital technology on society.",
+      "questions": [
+        "Will artificial intelligence replace human teachers in the future, or will it only assist them?",
+        "What are some privacy and security concerns associated with digital technology?",
+        "How can parents ensure their children have a healthy balance with screen time?"
+      ]
+    }
+  },
+  {
+    "id": "topic-3",
+    "title": "Education & Career Goals",
+    "category": "Academics & Work",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Exchange thoughts on your studies, work, and learning preferences.",
+      "questions": [
+        "Are you currently studying or working, and what do you enjoy most about it?",
+        "What subject at school was most interesting or challenging for you?",
+        "Do you prefer studying alone in quiet environments or in study groups?",
+        "Why is achieving a high IELTS score important for your future?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe an ambitious goal you have set for your academic or professional future.",
+        "points": [
+          "What the goal is and when you decided on it",
+          "What steps or preparations you must take to achieve it",
+          "What difficulties you might encounter along the way",
+          "And explain how you will feel once you successfully reach this goal."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Explore broader perspectives on education systems and career trends.",
+      "questions": [
+        "Is a university degree still essential for achieving success in today's job market?",
+        "How important is practical work experience compared to theoretical academic knowledge?",
+        "Do you think people in the future will change careers multiple times during their lifetimes?"
+      ]
+    }
+  },
+  {
+    "id": "topic-4",
+    "title": "Environment & Sustainable Living",
+    "category": "Nature & Planet",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Discuss weather, nature, and daily environmental habits.",
+      "questions": [
+        "What is your favourite season of the year and why?",
+        "Do you enjoy spending time in nature, like parks or mountains?",
+        "Do people in your area recycle their household waste regularly?",
+        "Have you noticed changes in the weather patterns in your region over recent years?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe an environmental problem that you think is serious in your country or city.",
+        "points": [
+          "What the problem is (e.g. air quality, waste, water shortage)",
+          "What causes this issue",
+          "How it impacts the everyday lives of residents",
+          "And explain what practical steps individuals or authorities could take to resolve it."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Debate global environmental responsibility and consumer habits.",
+      "questions": [
+        "Who bears greater responsibility for climate change: large corporations or individual citizens?",
+        "How can schools educate children to become more environmentally conscious?",
+        "Are green technologies (like electric cars) affordable and practical enough for widespread adoption?"
+      ]
+    }
+  },
+  {
+    "id": "topic-5",
+    "title": "Travel, Culture & Global Languages",
+    "category": "Travel & Society",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Share your travel experiences and views on learning foreign languages.",
+      "questions": [
+        "Do you enjoy travelling to new places, and what is your favourite mode of travel?",
+        "Which country or city would you most like to visit in the near future?",
+        "Besides English, is there any other language you would love to learn?",
+        "What do you find most challenging when practicing English speaking?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe a memorable journey or trip you took that had a lasting impression on you.",
+        "points": [
+          "Where you went and who accompanied you",
+          "How you travelled there",
+          "What interesting activities you did or people you met",
+          "And explain why this journey stands out in your memory."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss international culture, tourism impact, and global communication.",
+      "questions": [
+        "Why is it valuable for young people to travel or live abroad before starting a career?",
+        "Can international travel help reduce cultural misunderstandings between nations?",
+        "Is there a risk that global communication might cause traditional regional languages to disappear?"
+      ]
+    }
+  },
+  {
+    "id": "topic-6",
+    "title": "Health, Fitness & Well-being",
+    "category": "Lifestyle & Health",
+    "part1": {
+      "title": "Part 1: Warm-up & Introduction (3-4 mins)",
+      "instructions": "Discuss healthy lifestyle habits and sports.",
+      "questions": [
+        "What do you do to maintain your physical health and fitness?",
+        "Do you prefer indoor workouts or exercising in the open air?",
+        "How important is getting adequate sleep for your productivity?",
+        "What is your favourite healthy food or dish?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2: Individual Long Turn (Cue Card)",
+      "instructions": "One person speaks for 1-2 minutes. Click 'Start 1-Min Prep' before speaking.",
+      "cueCard": {
+        "topic": "Describe a healthy habit or activity that you adopted recently.",
+        "points": [
+          "What the habit or activity is",
+          "Why you decided to adopt it",
+          "How easy or difficult it was to stick with it at the beginning",
+          "And explain what positive effects you have noticed in your daily life."
+        ]
+      }
+    },
+    "part3": {
+      "title": "Part 3: Two-way In-depth Discussion (4-5 mins)",
+      "instructions": "Discuss modern health challenges and society's lifestyle trends.",
+      "questions": [
+        "Why are sedentary lifestyles and fast food consumption increasing in modern cities?",
+        "Should governments introduce taxes on unhealthy sugary products to encourage better diets?",
+        "How does mental well-being affect a person's physical health and work performance?"
+      ]
+    }
+  }
+]

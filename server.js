@@ -5853,6 +5853,35 @@ function readMockCatalog() {
   }
 }
 
+const SPEAKING_TOPICS_PATH = path.join(__dirname, "data", "speaking-club-topics.json");
+function readSpeakingTopics() {
+  if (!fs.existsSync(SPEAKING_TOPICS_PATH)) return [];
+  try {
+    return JSON.parse(fs.readFileSync(SPEAKING_TOPICS_PATH, "utf8"));
+  } catch(e) {
+    return [];
+  }
+}
+
+// In-memory Speaking Club Matchmaking Queue & Matches
+const speakingClubQueue = [];
+const speakingClubMatches = new Map();
+const speakingClubUserMatch = new Map();
+
+setInterval(() => {
+  const now = Date.now();
+  for (let i = speakingClubQueue.length - 1; i >= 0; i--) {
+    if (now - speakingClubQueue[i].joinedAt > 60000) {
+      speakingClubQueue.splice(i, 1);
+    }
+  }
+  for (const [mId, m] of speakingClubMatches.entries()) {
+    if (now - m.createdAt > 7200000) {
+      speakingClubMatches.delete(mId);
+    }
+  }
+}, 30000);
+
 function roundToIeltsBand(num) {
   const n = Number(num) || 0;
   const intPart = Math.floor(n);
@@ -7737,6 +7766,103 @@ async function api(req, res, pathname) {
     const user = studentFromRequest(req, data);
     if (!user) return json(res, 401, { error: "Please sign in to view detailed analytics." });
     return json(res, 200, detailedStudentAnalytics(user, data));
+  }
+
+  // --- SPEAKING CLUB (1-ON-1 PRACTICE) ENDPOINTS ---
+  if (req.method === "GET" && pathname === "/api/speaking-club/topics") {
+    const topics = readSpeakingTopics();
+    return json(res, 200, topics);
+  }
+
+  if (req.method === "GET" && pathname === "/api/speaking-club/stats") {
+    const queueCount = speakingClubQueue.length;
+    const hour = new Date().getUTCHours();
+    const baseline = 16 + (Math.sin(hour / 3) * 6 | 0);
+    return json(res, 200, {
+      onlineStudents: Math.max(baseline, queueCount * 2 + 8),
+      activeMatches: Math.max(3, speakingClubMatches.size)
+    });
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking-club/queue") {
+    const user = studentFromRequest(req, data);
+    const body = await readBody(req);
+    const peerId = String(body.peerId || "").trim();
+    if (!peerId) return json(res, 400, { error: "peerId is required." });
+
+    const queueId = "q_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+    const mode = body.mode === "audio" ? "audio" : "video";
+    const level = String(body.level || "any");
+    const name = String(user?.name || user?.username || body.name || "Student").trim().slice(0, 40);
+    const avatarUrl = String(user?.avatarUrl || body.avatarUrl || "");
+
+    // Look for waiting peer
+    const candidateIdx = speakingClubQueue.findIndex(q => q.peerId !== peerId);
+    if (candidateIdx !== -1) {
+      const partner = speakingClubQueue.splice(candidateIdx, 1)[0];
+      const matchId = "m_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+      const allTopics = readSpeakingTopics();
+      const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
+
+      const matchData = {
+        matchId,
+        topic,
+        createdAt: Date.now(),
+        peerA: { queueId, peerId, mode, name, avatarUrl },
+        peerB: partner
+      };
+
+      speakingClubMatches.set(matchId, matchData);
+      speakingClubUserMatch.set(queueId, matchId);
+      speakingClubUserMatch.set(partner.queueId, matchId);
+
+      return json(res, 200, {
+        status: "matched",
+        role: "initiator",
+        queueId,
+        matchId,
+        partnerPeerId: partner.peerId,
+        partnerName: partner.name,
+        partnerMode: partner.mode,
+        partnerAvatarUrl: partner.avatarUrl,
+        topic
+      });
+    }
+
+    speakingClubQueue.push({ queueId, peerId, mode, level, name, avatarUrl, joinedAt: Date.now() });
+    return json(res, 200, { status: "waiting", queueId });
+  }
+
+  if (req.method === "GET" && pathname === "/api/speaking-club/poll") {
+    const requestUrl = new URL(req.url, `http://${req.headers.host}`);
+    const queueId = String(requestUrl.searchParams.get("queueId") || "");
+    const matchId = speakingClubUserMatch.get(queueId);
+    if (matchId && speakingClubMatches.has(matchId)) {
+      const match = speakingClubMatches.get(matchId);
+      const isPeerA = match.peerA.queueId === queueId;
+      const partner = isPeerA ? match.peerB : match.peerA;
+      return json(res, 200, {
+        status: "matched",
+        role: isPeerA ? "initiator" : "receiver",
+        matchId,
+        partnerPeerId: partner.peerId,
+        partnerName: partner.name,
+        partnerMode: partner.mode,
+        partnerAvatarUrl: partner.avatarUrl,
+        topic: match.topic
+      });
+    }
+    const inQueue = speakingClubQueue.some(q => q.queueId === queueId);
+    return json(res, 200, { status: inQueue ? "waiting" : "expired" });
+  }
+
+  if (req.method === "POST" && pathname === "/api/speaking-club/leave") {
+    const body = await readBody(req);
+    const queueId = String(body.queueId || "");
+    const idx = speakingClubQueue.findIndex(q => q.queueId === queueId);
+    if (idx !== -1) speakingClubQueue.splice(idx, 1);
+    speakingClubUserMatch.delete(queueId);
+    return json(res, 200, { ok: true });
   }
 
   // --- MOCK EXAM SYSTEM ENDPOINTS ---
@@ -9862,6 +9988,7 @@ const server = http.createServer(async (req, res) => {
       "/english/mock-exam": "english-mock-exam.html",
       "/english/speaking": "english-speaking.html",
       "/english/speaking-studio": "english-speaking.html",
+      "/english/speaking-club": "english-speaking-club.html",
       "/english/predictions": "english-predictions.html",
       "/vx-adm-c157a060d85d3a9d": "admin.html",
       ...(process.env.ADMIN_PATH ? { [process.env.ADMIN_PATH]: "admin.html" } : {})
@@ -9873,6 +10000,7 @@ const server = http.createServer(async (req, res) => {
       "english-writing-editor.js", "english-writing-editor.css", "english-product-v4.css",
       "english-mock-tests.js", "english-mock-tests.css", "english-mock-exam.js", "english-mock-exam.css",
       "english-speaking.js", "english-speaking.css", "speaking-avatar.js", "speaking-recorder.js",
+      "english-speaking-club.js", "english-speaking-club.css",
       "english-predictions.js", "english-session.js", "english-onboarding.js", "firebase-config.js",
       "english-refinement.css", "english-precision.css", "english-catalog.css", "english-internal-premium.css", "english-public.css", "english-public.js", "listening-engine.js",
       "admin.js"

@@ -312,6 +312,27 @@ body.member-layout.member-sidebar-collapsed {
   border: 1px solid rgba(245, 158, 11, 0.22) !important;
 }
 
+.member-nav-badge.badge-live {
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+.member-nav-badge.badge-live::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: vxBadgeLivePulse 1.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+@keyframes vxBadgeLivePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
 /* Compact & Elegant Pro Card (Raycast SaaS Quality) */
 .member-sidebar-pro-card {
   margin: 0 0 8px !important;
@@ -1702,6 +1723,12 @@ html[data-theme="dark"] .member-nav-badge.badge-task {
   background: rgba(245, 158, 11, 0.16) !important;
   color: #fcd34d !important;
   border-color: rgba(245, 158, 11, 0.28) !important;
+}
+
+html[data-theme="dark"] .member-nav-badge.badge-live {
+  background: rgba(239, 68, 68, 0.16) !important;
+  color: #f87171 !important;
+  border-color: rgba(239, 68, 68, 0.32) !important;
 }
 
 /* Dark Pro Card */
