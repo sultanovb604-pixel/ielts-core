@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="IELTS Core Authentic Exam Predictions - Real Recent CDI Listening Practice Tests">
-  <title>IELTS Predictions (2026 Authentic CDI) | IELTS Core</title>
+  <meta name="description" content="IELTS Core Authentic Exam Predictions for September – October 2026 across Listening, Reading, Writing, and Speaking modules.">
+  <title>IELTS Exam Predictions (September – October 2026) | IELTS Core</title>
   <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
   <script>if(!localStorage.getItem('vortex-english-token'))location.replace('/english/login?next='+encodeURIComponent(location.pathname+location.search))</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +17,146 @@
   <link rel="stylesheet" href="/english-internal-premium.css?v=20260921_full_mock_v1">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
   <style>
+    /* 4-Module Navigation Grid */
+    .pred-module-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 24px 0 28px;
+    }
+    @media (max-width: 1024px) {
+      .pred-module-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
+    @media (max-width: 640px) {
+      .pred-module-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+    }
+    .pred-module-card {
+      appearance: none;
+      text-align: left;
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      color: inherit;
+      font-family: inherit;
+    }
+    html[data-theme="dark"] .pred-module-card {
+      background: #0f172a;
+      border-color: #1e293b;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    .pred-module-card:hover {
+      transform: translateY(-2px);
+      border-color: #93c5fd;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.12);
+    }
+    html[data-theme="dark"] .pred-module-card:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 10px 24px rgba(59, 130, 246, 0.18);
+    }
+    .pred-module-card.active {
+      border-color: #2563eb;
+      background: #f0f7ff;
+      box-shadow: 0 10px 28px rgba(37, 99, 235, 0.16);
+    }
+    html[data-theme="dark"] .pred-module-card.active {
+      background: #13233e;
+      border-color: #3b82f6;
+      box-shadow: 0 10px 28px rgba(59, 130, 246, 0.25);
+    }
+    .pred-module-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      width: fit-content;
+      transition: all 0.2s ease;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    html[data-theme="dark"] .pred-module-badge {
+      background: rgba(37, 99, 235, 0.2);
+      color: #93c5fd;
+      border-color: rgba(37, 99, 235, 0.4);
+    }
+    .pred-module-card.active .pred-module-badge {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+    .pred-module-body {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pred-module-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      color: #2563eb;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    html[data-theme="dark"] .pred-module-icon-wrap {
+      background: #1e293b;
+      color: #60a5fa;
+    }
+    .pred-module-card.active .pred-module-icon-wrap {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .pred-module-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .pred-module-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    html[data-theme="dark"] .pred-module-title {
+      color: #f8fafc;
+    }
+    .pred-module-card.active .pred-module-title {
+      color: #1d4ed8;
+    }
+    html[data-theme="dark"] .pred-module-card.active .pred-module-title {
+      color: #93c5fd;
+    }
+    .pred-module-desc {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 500;
+    }
+    html[data-theme="dark"] .pred-module-desc {
+      color: #94a3b8;
+    }
+
+    /* Sub Tabs & Filter Controls */
     .predictions-tabs {
       display: flex;
       flex-wrap: wrap;
@@ -74,6 +214,8 @@
     .pred-tab-btn.active .pred-tab-badge {
       background: rgba(255, 255, 255, 0.25);
     }
+
+    /* Cards & Features */
     .pred-card-topic {
       font-size: 12.5px;
       color: #64748b;
@@ -142,6 +284,17 @@
       border-color: #3b82f6;
       box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
     }
+    .pred-panel {
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .pred-panel.active-panel {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body class="app-body materials-page premium-product-page mock-tests-page">
@@ -172,76 +325,615 @@
     <nav class="vx-breadcrumb-bar" aria-label="Breadcrumb">
       <a href="/english/materials"><span class="material-symbols-outlined">home</span> Materials</a>
       <span class="sep">/</span>
-      <span class="current">Predictions (2026 Authentic CDI)</span>
+      <span class="current">Predictions (September – October 2026)</span>
     </nav>
 
     <!-- Header Hero Banner -->
     <section class="mock-hero-card">
       <div class="mock-hero-content">
-        <div class="mock-hero-pill">
-          <span class="material-symbols-outlined">auto_awesome</span>
-          <span>Authentic 2026 Exam Predictions</span>
+        <div class="mock-hero-pill" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;">
+          <span class="material-symbols-outlined">calendar_month</span>
+          <span>September – October 2026 Exam Predictions</span>
         </div>
-        <h1 class="mock-hero-title">IELTS Listening Exam Predictions</h1>
-        <p class="mock-hero-desc">Practice with genuine exam questions sourced from recent IELTS Computer-Delivered test sittings worldwide. Experience authentic Cambridge CDI interface, high-fidelity audio, instant automated grading, and comprehensive explanation transcripts.</p>
+        <h1 class="mock-hero-title">IELTS Exam Predictions</h1>
+        <p class="mock-hero-desc">Targeted authentic examination materials curated specifically for candidates sitting their tests in <strong>September and October 2026</strong> across Listening, Reading, Writing, and Speaking modules.</p>
         <div class="mock-hero-meta">
           <div class="mock-meta-item">
-            <span class="material-symbols-outlined">layers</span>
-            <span><strong>18 Authentic Sets:</strong> Parts 1, 2, 3 &amp; 4</span>
+            <span class="material-symbols-outlined">calendar_month</span>
+            <span><strong>Target Window:</strong> September &amp; October 2026</span>
           </div>
           <div class="mock-meta-item">
-            <span class="material-symbols-outlined">headphones</span>
-            <span><strong>Audio &amp; CDI Engine:</strong> Real exam conditions</span>
+            <span class="material-symbols-outlined">category</span>
+            <span><strong>4 Modules:</strong> Listening, Reading, Writing &amp; Speaking</span>
           </div>
           <div class="mock-meta-item">
-            <span class="material-symbols-outlined">verified</span>
-            <span><strong>Instant Grading:</strong> Full answer keys &amp; script</span>
+            <span class="material-symbols-outlined">workspace_premium</span>
+            <span><strong>Authentic CDI:</strong> Real Exam Conditions &amp; Grading</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Filter Tabs Section -->
-    <div class="predictions-tabs" id="predictionTabs" role="tablist" aria-label="Filter predictions by part">
-      <button class="pred-tab-btn active" data-part="all" role="tab" aria-selected="true">
-        <span>All Predictions</span>
-        <span class="pred-tab-badge" id="tabCountAll">18</span>
+    <!-- 4-Module Selector Navigation -->
+    <nav class="pred-module-grid" role="tablist" aria-label="Select prediction module">
+      <!-- 1. Listening -->
+      <button type="button" class="pred-module-card active" data-module="listening" role="tab" aria-selected="true" id="modTabListening">
+        <div class="pred-module-badge">
+          <span class="material-symbols-outlined" style="font-size:14px;">calendar_month</span>
+          <span>September – October</span>
+        </div>
+        <div class="pred-module-body">
+          <div class="pred-module-icon-wrap">
+            <span class="material-symbols-outlined">headphones</span>
+          </div>
+          <div class="pred-module-info">
+            <div class="pred-module-title">Listening Predictions</div>
+            <div class="pred-module-desc">18 Authentic Tests • Parts 1–4</div>
+          </div>
+        </div>
       </button>
-      <button class="pred-tab-btn" data-part="1" role="tab" aria-selected="false">
-        <span>Part 1</span>
-        <span class="pred-tab-badge" id="tabCountP1">3</span>
+
+      <!-- 2. Reading -->
+      <button type="button" class="pred-module-card" data-module="reading" role="tab" aria-selected="false" id="modTabReading">
+        <div class="pred-module-badge">
+          <span class="material-symbols-outlined" style="font-size:14px;">calendar_month</span>
+          <span>September – October</span>
+        </div>
+        <div class="pred-module-body">
+          <div class="pred-module-icon-wrap">
+            <span class="material-symbols-outlined">menu_book</span>
+          </div>
+          <div class="pred-module-info">
+            <div class="pred-module-title">Reading Predictions</div>
+            <div class="pred-module-desc">High-Frequency Passages &amp; Keys</div>
+          </div>
+        </div>
       </button>
-      <button class="pred-tab-btn" data-part="2" role="tab" aria-selected="false">
-        <span>Part 2</span>
-        <span class="pred-tab-badge" id="tabCountP2">3</span>
+
+      <!-- 3. Writing -->
+      <button type="button" class="pred-module-card" data-module="writing" role="tab" aria-selected="false" id="modTabWriting">
+        <div class="pred-module-badge">
+          <span class="material-symbols-outlined" style="font-size:14px;">calendar_month</span>
+          <span>September – October</span>
+        </div>
+        <div class="pred-module-body">
+          <div class="pred-module-icon-wrap">
+            <span class="material-symbols-outlined">edit_note</span>
+          </div>
+          <div class="pred-module-info">
+            <div class="pred-module-title">Writing Predictions</div>
+            <div class="pred-module-desc">Task 1 &amp; 2 Predicted Topics</div>
+          </div>
+        </div>
       </button>
-      <button class="pred-tab-btn" data-part="3" role="tab" aria-selected="false">
-        <span>Part 3</span>
-        <span class="pred-tab-badge" id="tabCountP3">2</span>
+
+      <!-- 4. Speaking -->
+      <button type="button" class="pred-module-card" data-module="speaking" role="tab" aria-selected="false" id="modTabSpeaking">
+        <div class="pred-module-badge">
+          <span class="material-symbols-outlined" style="font-size:14px;">calendar_month</span>
+          <span>September – October</span>
+        </div>
+        <div class="pred-module-body">
+          <div class="pred-module-icon-wrap">
+            <span class="material-symbols-outlined">record_voice_over</span>
+          </div>
+          <div class="pred-module-info">
+            <div class="pred-module-title">Speaking Predictions</div>
+            <div class="pred-module-desc">New Topic Rotation &amp; Cue Cards</div>
+          </div>
+        </div>
       </button>
-      <button class="pred-tab-btn" data-part="4" role="tab" aria-selected="false">
-        <span>Part 4</span>
-        <span class="pred-tab-badge" id="tabCountP4">10</span>
-      </button>
+    </nav>
+
+    <!-- ================= PANEL 1: LISTENING ================= -->
+    <div class="pred-panel active-panel" id="listeningPanel" role="tabpanel" aria-labelledby="modTabListening">
+      <!-- Filter Tabs Section -->
+      <div class="predictions-tabs" id="predictionTabs" role="tablist" aria-label="Filter predictions by part">
+        <button class="pred-tab-btn active" data-part="all" role="tab" aria-selected="true">
+          <span>All Predictions</span>
+          <span class="pred-tab-badge" id="tabCountAll">18</span>
+        </button>
+        <button class="pred-tab-btn" data-part="1" role="tab" aria-selected="false">
+          <span>Part 1</span>
+          <span class="pred-tab-badge" id="tabCountP1">3</span>
+        </button>
+        <button class="pred-tab-btn" data-part="2" role="tab" aria-selected="false">
+          <span>Part 2</span>
+          <span class="pred-tab-badge" id="tabCountP2">3</span>
+        </button>
+        <button class="pred-tab-btn" data-part="3" role="tab" aria-selected="false">
+          <span>Part 3</span>
+          <span class="pred-tab-badge" id="tabCountP3">2</span>
+        </button>
+        <button class="pred-tab-btn" data-part="4" role="tab" aria-selected="false">
+          <span>Part 4</span>
+          <span class="pred-tab-badge" id="tabCountP4">10</span>
+        </button>
+      </div>
+
+      <!-- Available Predictions Grid -->
+      <section class="mock-catalog-section">
+        <div class="section-title-wrap">
+          <div class="title-with-icon">
+            <span class="material-symbols-outlined icon-glow">headphones</span>
+            <h2 id="predCatalogTitle">Listening Exam Predictions (September – October 2026)</h2>
+          </div>
+          <p class="section-sub">Authentic recent test questions predicted for September and October 2026 test-takers. Headset recommended for listening focus.</p>
+        </div>
+
+        <div class="mock-cards-grid" id="predictionsCardsGrid">
+          <div class="loading-state">
+            <div class="loading-card"><span></span><span></span><span></span></div>
+            <div class="loading-card"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <!-- Available Predictions Grid -->
-    <section class="mock-catalog-section">
-      <div class="section-title-wrap">
-        <div class="title-with-icon">
-          <span class="material-symbols-outlined icon-glow">layers</span>
-          <h2 id="predCatalogTitle">All Listening Prediction Tests</h2>
+    <!-- ================= PANEL 2: READING ================= -->
+    <div class="pred-panel" id="readingPanel" role="tabpanel" aria-labelledby="modTabReading">
+      <section class="mock-catalog-section">
+        <div class="section-title-wrap">
+          <div class="title-with-icon">
+            <span class="material-symbols-outlined icon-glow">menu_book</span>
+            <h2>Reading Exam Predictions (September – October 2026)</h2>
+          </div>
+          <p class="section-sub">High-probability reading themes, passage archetypes, and question sets forecasted for September and October 2026 test sittings.</p>
         </div>
-        <p class="section-sub">Select a prediction section to begin. Headset recommended for listening focus.</p>
-      </div>
 
-      <div class="mock-cards-grid" id="predictionsCardsGrid">
-        <div class="loading-state">
-          <div class="loading-card"><span></span><span></span><span></span></div>
-          <div class="loading-card"><span></span><span></span><span></span></div>
+        <div class="mock-cards-grid">
+          <!-- Card 1 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/materials?skill=reading" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">science</span>
+                PASSAGE 1 • ACADEMIC
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Coral Reef Restoration &amp; Marine Biology</h3>
+              <p class="pred-card-topic">Environmental Science • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">quiz</span>
+                  <span><strong>13 Questions:</strong> True / False / Not Given &amp; Flow Chart</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>~20 min</strong> recommended timing</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">highlight</span>
+                  <span>Authentic Cambridge CDI split-screen with highlighting</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/materials?skill=reading" class="pred-btn-start">
+                <span>Practice Reading Material</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/materials?skill=reading" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">location_city</span>
+                PASSAGE 2 • ACADEMIC
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Urban Design &amp; Smart Metropolitan Planning</h3>
+              <p class="pred-card-topic">Engineering &amp; Demographics • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">quiz</span>
+                  <span><strong>13 Questions:</strong> Matching Headings &amp; Word Bank</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>~20 min</strong> recommended timing</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">fact_check</span>
+                  <span>Automated band calculation with explanation review</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/materials?skill=reading" class="pred-btn-start">
+                <span>Practice Reading Material</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/materials?skill=reading" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">psychology</span>
+                PASSAGE 3 • ACADEMIC
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Cognitive Psychology &amp; Multilingual Memory</h3>
+              <p class="pred-card-topic">Neuroscience &amp; Linguistics • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">quiz</span>
+                  <span><strong>14 Questions:</strong> Multiple Choice (A–D) &amp; Yes / No / NG</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>~20 min</strong> recommended timing</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">verified</span>
+                  <span>Full explanation keys &amp; paragraph locator map</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/materials?skill=reading" class="pred-btn-start">
+                <span>Practice Reading Material</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/materials?skill=reading" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">work</span>
+                GENERAL TRAINING • SECTION 2
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Workplace Health Protocols &amp; Employment Leave</h3>
+              <p class="pred-card-topic">General Training Context • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">quiz</span>
+                  <span><strong>14 Questions:</strong> Short Answer &amp; Sentence Matching</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>~20 min</strong> recommended timing</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">fact_check</span>
+                  <span>Instant validation with word limit checking</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/materials?skill=reading" class="pred-btn-start">
+                <span>Practice Reading Material</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+
+    <!-- ================= PANEL 3: WRITING ================= -->
+    <div class="pred-panel" id="writingPanel" role="tabpanel" aria-labelledby="modTabWriting">
+      <section class="mock-catalog-section">
+        <div class="section-title-wrap">
+          <div class="title-with-icon">
+            <span class="material-symbols-outlined icon-glow">edit_note</span>
+            <h2>Writing Exam Predictions (September – October 2026)</h2>
+          </div>
+          <p class="section-sub">High-probability Task 1 charts and Task 2 essay questions appearing frequently in September and October 2026 test administrations.</p>
+        </div>
+
+        <div class="mock-cards-grid">
+          <!-- Card 1 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/writing-editor?task=task1" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">bar_chart</span>
+                TASK 1 • ACADEMIC
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Renewable Energy Share by Country (2010–2025)</h3>
+              <p class="pred-card-topic">Bar Chart &amp; Dynamic Trends • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">edit</span>
+                  <span><strong>150+ Words:</strong> Overview + 2 detailed comparison bodies</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>20 min</strong> exam timer simulation</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">auto_awesome</span>
+                  <span>Instant AI band evaluation (Task Achievement, Lexical, Coherence)</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/writing-editor?task=task1" class="pred-btn-start">
+                <span>Practice in AI Writing Editor</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/writing-editor?task=task1" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">schema</span>
+                TASK 1 • ACADEMIC
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Seawater Desalination &amp; Filtration Process</h3>
+              <p class="pred-card-topic">Linear Industrial Process • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">edit</span>
+                  <span><strong>150+ Words:</strong> Multi-stage passive sequencing structures</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>20 min</strong> exam timer simulation</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">verified</span>
+                  <span>Band 9 Model Answer &amp; cohesive connectors bank</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/writing-editor?task=task1" class="pred-btn-start">
+                <span>Practice in AI Writing Editor</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/writing-editor?task=task2" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">article</span>
+                TASK 2 • ESSAY
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Artificial Intelligence in the Modern Workforce</h3>
+              <p class="pred-card-topic">Opinion Essay (To What Extent) • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">edit</span>
+                  <span><strong>250+ Words:</strong> Clear thesis, nuanced counter-claim, examples</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>40 min</strong> timed essay practice</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">auto_awesome</span>
+                  <span>Full 4-criterion band feedback with grammar correction</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/writing-editor?task=task2" class="pred-btn-start">
+                <span>Practice in AI Writing Editor</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/writing-editor?task=task2" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">article</span>
+                TASK 2 • ESSAY
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Space Exploration vs. Local Environmental Issues</h3>
+              <p class="pred-card-topic">Discuss Both Views &amp; Opinion • September – October 2026 Prediction</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">edit</span>
+                  <span><strong>250+ Words:</strong> Balanced arguments with personal stance</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>40 min</strong> timed essay practice</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">verified</span>
+                  <span>Band 9 Model Essay &amp; high-level academic vocabulary</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/writing-editor?task=task2" class="pred-btn-start">
+                <span>Practice in AI Writing Editor</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <!-- ================= PANEL 4: SPEAKING ================= -->
+    <div class="pred-panel" id="speakingPanel" role="tabpanel" aria-labelledby="modTabSpeaking">
+      <section class="mock-catalog-section">
+        <div class="section-title-wrap">
+          <div class="title-with-icon">
+            <span class="material-symbols-outlined icon-glow">record_voice_over</span>
+            <h2>Speaking Exam Predictions (September – October 2026)</h2>
+          </div>
+          <p class="section-sub">Official September – December 2026 rotation topic pool with predicted Part 1 warm-up topics and high-frequency Part 2 &amp; 3 cue cards.</p>
+        </div>
+
+        <div class="mock-cards-grid">
+          <!-- Card 1 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/speaking" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">mic</span>
+                PART 1 • ROTATION
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Daily Commuting, Mobile Apps &amp; Morning Habits</h3>
+              <p class="pred-card-topic">High-Frequency Warm-up Questions • Sept – Oct 2026 Rotation</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">forum</span>
+                  <span><strong>12 Core Questions:</strong> Natural 2–3 sentence answers</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">record_voice_over</span>
+                  <span>AI Voice recognition with real-time speech evaluation</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">speed</span>
+                  <span>Pronunciation &amp; fluency pacing indicators</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/speaking" class="pred-btn-start">
+                <span>Practice in AI Speaking Studio</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/speaking" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">campaign</span>
+                PART 2 &amp; 3 • CUE CARD
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Describe a tough decision with a successful result</h3>
+              <p class="pred-card-topic">Personal Experience &amp; Leadership • Sept – Oct 2026 Predicted Pool</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>1 min prep + 2 min speech:</strong> Built-in timing bell</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">psychology</span>
+                  <span>Part 3 follow-up debate: risk assessment, regret, advice</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">verified</span>
+                  <span>Band 8.5 audio model response &amp; transcript</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/speaking" class="pred-btn-start">
+                <span>Practice in AI Speaking Studio</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/speaking" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">campaign</span>
+                PART 2 &amp; 3 • CUE CARD
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Describe an unusual skill you learned from someone</h3>
+              <p class="pred-card-topic">Learning &amp; Mentorship • Sept – Oct 2026 Predicted Pool</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>1 min prep + 2 min speech:</strong> Structure checklist</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">psychology</span>
+                  <span>Part 3 follow-up debate: traditional skills, online tutorials</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">verified</span>
+                  <span>Idiomatic phrase bank &amp; grammatical variety guide</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/speaking" class="pred-btn-start">
+                <span>Practice in AI Speaking Studio</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="mock-card pred-card-interactive" data-action-url="/english/speaking" tabindex="0" role="button">
+            <div class="mock-card-top">
+              <span class="mock-code-tag">
+                <span class="material-symbols-outlined" style="font-size:14px;">campaign</span>
+                PART 2 &amp; 3 • CUE CARD
+              </span>
+              <span class="mock-status-pill premium">PREMIUM <svg style="display:inline-block;vertical-align:-2px;margin-left:4px;" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.735H5.81a1 1 0 0 1-.957-.735L2.02 6.02a.5.5 0 0 1 .798-.52l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg></span>
+            </div>
+            <div class="mock-card-body">
+              <h3 class="mock-card-title">Describe a crowded public facility or park you visited</h3>
+              <p class="pred-card-topic">Public Spaces &amp; Social Life • Sept – Oct 2026 Predicted Pool</p>
+              <div class="pred-card-features">
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">timer</span>
+                  <span><strong>1 min prep + 2 min speech:</strong> Sensory adjective guide</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">psychology</span>
+                  <span>Part 3 follow-up debate: urban density, noise pollution, greenspace</span>
+                </div>
+                <div class="pred-feat-item">
+                  <span class="material-symbols-outlined">verified</span>
+                  <span>Band 8.5 audio model response &amp; transcript</span>
+                </div>
+              </div>
+            </div>
+            <div class="mock-card-actions">
+              <a href="/english/speaking" class="pred-btn-start">
+                <span>Practice in AI Speaking Studio</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer class="app-footer">
@@ -253,6 +945,6 @@
   </footer>
 
   <script src="/english-site.js?v=20260921_full_mock_v1"></script>
-  <script src="/english-predictions.js?v=20260922_v3"></script>
+  <script src="/english-predictions.js?v=20260922_v4"></script>
 </body>
 </html>

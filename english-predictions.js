@@ -76,9 +76,9 @@
 
     if (catalogTitle) {
       if (currentFilter === 'all') {
-        catalogTitle.textContent = `All Listening Prediction Tests (${filtered.length})`;
+        catalogTitle.textContent = `Listening Exam Predictions (September – October 2026) (${filtered.length})`;
       } else {
-        catalogTitle.textContent = `Part ${currentFilter} Prediction Tests (${filtered.length})`;
+        catalogTitle.textContent = `Part ${currentFilter} Listening Predictions (${filtered.length})`;
       }
     }
 
@@ -136,11 +136,11 @@
 
           <div class="mock-card-body">
             <h3 class="mock-card-title">${escapeHtml(item.title)}</h3>
-            <p class="pred-card-topic">${escapeHtml(item.topic || 'Authentic Exam Sitting')}</p>
-
+            <p class="pred-card-topic">${escapeHtml(item.topic || 'Authentic Exam Sitting')} • September – October 2026</p>
+            
             <div class="pred-card-features">
               <div class="pred-feat-item">
-                <span class="material-symbols-outlined">format_list_numbered</span>
+                <span class="material-symbols-outlined">quiz</span>
                 <span><strong>${item.questionCount || 10} Questions</strong> (CDI Formats)</span>
               </div>
               <div class="pred-feat-item">
@@ -218,7 +218,102 @@
     });
   }
 
+  function initModuleTabs() {
+    const moduleCards = document.querySelectorAll('.pred-module-card');
+    const panels = {
+      listening: document.getElementById('listeningPanel'),
+      reading: document.getElementById('readingPanel'),
+      writing: document.getElementById('writingPanel'),
+      speaking: document.getElementById('speakingPanel')
+    };
+
+    function switchModule(modName) {
+      if (!panels[modName]) modName = 'listening';
+
+      moduleCards.forEach(c => {
+        const isMatch = c.getAttribute('data-module') === modName;
+        c.classList.toggle('active', isMatch);
+        c.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      });
+
+      Object.keys(panels).forEach(key => {
+        if (panels[key]) {
+          const isActive = key === modName;
+          panels[key].classList.toggle('active-panel', isActive);
+          panels[key].style.display = isActive ? 'block' : 'none';
+        }
+      });
+
+      try {
+        if ((location.hash || '').replace('#', '').toLowerCase() !== modName) {
+          history.replaceState(null, '', '#' + modName);
+        }
+      } catch (_) {}
+    }
+
+    moduleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const mod = card.getAttribute('data-module');
+        switchModule(mod);
+      });
+    });
+
+    // Handle static cards in reading, writing, speaking
+    ['readingPanel', 'writingPanel', 'speakingPanel'].forEach(panelId => {
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+      panel.querySelectorAll('.mock-card').forEach(card => {
+        card.addEventListener('click', e => {
+          const isOwner = currentUser && (
+            currentUser.email === 'sultanovb604@gmail.com' ||
+            currentUser.username === 'sultanovb604' ||
+            currentUser.username === 'bunyod' ||
+            currentUser.role === 'admin'
+          );
+          const isPremium = isOwner || currentUser?.plan === 'premium';
+
+          if (!isPremium) {
+            e.preventDefault();
+            if (typeof window.showUpgradeModal === 'function') {
+              window.showUpgradeModal();
+            } else {
+              location.href = '/english/pricing?feature=predictions';
+            }
+            return;
+          }
+
+          const actionUrl = card.getAttribute('data-action-url');
+          if (actionUrl && !e.target.closest('a')) {
+            window.location.href = actionUrl;
+          }
+        });
+
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+          }
+        });
+      });
+    });
+
+    const initialHash = (location.hash || '').replace('#', '').toLowerCase();
+    if (['listening', 'reading', 'writing', 'speaking'].includes(initialHash)) {
+      switchModule(initialHash);
+    } else {
+      switchModule('listening');
+    }
+
+    window.addEventListener('hashchange', () => {
+      const newHash = (location.hash || '').replace('#', '').toLowerCase();
+      if (['listening', 'reading', 'writing', 'speaking'].includes(newHash)) {
+        switchModule(newHash);
+      }
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    initModuleTabs();
     initTabs();
     loadPredictions();
   });
