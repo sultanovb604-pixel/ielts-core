@@ -213,6 +213,12 @@
         links: overviewLinks
       },
       {
+        title: 'Live Practice (1-on-1)',
+        links: [
+          { label: 'Speaking Club (1-on-1)', icon: 'groups', href: '/english/speaking-club', active: isSpeakingClub, badge: 'Live' }
+        ]
+      },
+      {
         title: 'Full Mock Tests (40 Qs)',
         links: [
           { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, badge: 'Soon', isPremium: true },
@@ -226,8 +232,7 @@
           { label: 'Listening Practice', icon: 'headphones', href: '/english/materials?skill=listening', active: isListening },
           { label: 'Reading Passages', icon: 'menu_book', href: '/english/materials?skill=reading', active: isReading },
           { label: 'Writing Editor', icon: 'edit', href: '/english/materials?skill=writing', active: isWriting },
-          { label: 'Speaking AI', icon: 'mic', href: '/english/speaking', active: isSpeaking },
-          { label: 'Speaking Club (1-on-1)', icon: 'groups', href: '/english/speaking-club', active: isSpeakingClub, badge: 'Live' }
+          { label: 'Speaking AI', icon: 'mic', href: '/english/speaking', active: isSpeaking }
         ]
       },
       {
