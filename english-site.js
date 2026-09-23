@@ -218,6 +218,7 @@
     const isPredictions = activePath === '/english/predictions' || activePath === '/english/prediction-exam';
     const isSpeaking = activePath === '/english/speaking' || activePath === '/english/speaking-studio';
     const isSpeakingClub = activePath === '/english/speaking-club';
+    const isInstructor = activePath === '/english/instructor';
     const isWriting = (isMaterials && activeSkill === 'writing') || activePath === '/english/writing-editor' || (activePath === '/english/practice' && activeSkill === 'writing');
     const isArticles = isMaterials && activeCollection === 'article';
     const isVocabulary = activePath === '/english/vocabulary';
@@ -244,6 +245,12 @@
       {
         title: isTeacher ? 'Instructor' : 'Overview',
         links: overviewLinks
+      },
+      {
+        title: 'AI Mentorship (24/7)',
+        links: [
+          { label: 'AI IELTS Instructor', icon: 'psychology', href: '/english/instructor', active: isInstructor, badge: 'AI 24/7' }
+        ]
       },
       {
         title: 'Live Practice (1-on-1)',

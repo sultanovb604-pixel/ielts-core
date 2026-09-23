@@ -8353,11 +8353,14 @@ async function api(req, res, pathname) {
 
   // --- GOOGLE GEMINI REAL AI MULTI-MODEL POOL ENGINE ---
   const GEMINI_MODELS_POOL = [
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
+    'gemini-3.6-flash',
+    'gemini-3.7-flash',
+    'gemini-3.5-flash',
+    'gemini-flash-latest',
     'gemini-2.5-flash',
-    'gemini-1.5-pro',
-    'gemini-flash-latest'
+    'gemini-3.1-flash-lite',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash'
   ];
 
   async function queryGeminiApi(payload, geminiKey) {
@@ -8367,7 +8370,7 @@ async function api(req, res, pathname) {
     for (const model of GEMINI_MODELS_POOL) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 15000);
+      const timer = setTimeout(() => controller.abort(), 7500);
 
       try {
         const response = await fetch(url, {
@@ -8381,8 +8384,11 @@ async function api(req, res, pathname) {
           const apiRes = await response.json();
           const rawText = apiRes?.candidates?.[0]?.content?.parts?.[0]?.text;
           if (rawText) {
+            let textToParse = rawText.trim();
+            if (textToParse.startsWith('```json')) textToParse = textToParse.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+            else if (textToParse.startsWith('```')) textToParse = textToParse.replace(/^```\s*/, '').replace(/```\s*$/, '').trim();
             try {
-              return JSON.parse(rawText);
+              return JSON.parse(textToParse);
             } catch(e) {
               return { replyText: rawText.trim() };
             }
@@ -8918,6 +8924,468 @@ Return ONLY valid JSON in this schema:
     if (!user) return json(res, 401, { error: "Please sign in." });
     const attempts = (data.speakingAttempts || []).filter(a => a.studentId === user.id);
     return json(res, 200, attempts);
+  }
+
+  // =========================================================================
+  // IELTS CORE AI INSTRUCTOR (CAMBRIDGE MASTER TUTOR & DIAGNOSTIC ENGINE)
+  // =========================================================================
+
+  const IELTS_INSTRUCTOR_SYSTEM_PROMPT = `You are 'Master IELTS Instructor' (IELTS Core AI Murabbiy) — an elite Cambridge-certified IELTS Master Examiner and Tutor with 15+ years of experience helping candidates achieve Band 7.5 to 9.0 on IELTS Core (ieltscore.org).
+
+STRICT SCOPE & GUARDRAILS:
+1. ONLY IELTS: You specialize EXCLUSIVELY in IELTS Academic and General Training (Reading, Listening, Writing Task 1, Writing Task 2, and Speaking Parts 1-3).
+2. GUARDRAIL: If the student asks about any subject unrelated to IELTS, English language proficiency, or study skills, you must politely decline and guide them back:
+   Example: "Men sizning maxsus IELTS murabbiyingizman. Keling, diqqatimizni IELTS imtihoniga (Listening, Reading, Writing, Speaking) tayyorgarlikka qaratamiz. Qaysi bo'limdan boshlaymiz?"
+3. DUAL-LANGUAGE FLUENCY:
+   - If the student writes in Uzbek, respond in encouraging, natural, academic Uzbek, while keeping standard IELTS terminology in English ('True/False/Not Given', 'Matching Headings', 'Distractor', 'Skimming', 'Task Response', 'Coherence & Cohesion', 'Lexical Resource', 'Grammatical Range & Accuracy').
+   - If the student writes in English, respond in elegant, academic Cambridge English.
+4. CAMBRIDGE CRITERIA & BAND ACCURACY:
+   - For Writing, evaluate based on official descriptors: Task Achievement/Response, Coherence & Cohesion, Lexical Resource, Grammatical Range & Accuracy.
+   - For Speaking, evaluate: Fluency & Coherence, Lexical Resource, Grammatical Range & Accuracy, Pronunciation.
+   - For Reading & Listening, focus on active techniques: locating keywords, parallel phrasing (synonyms), avoiding extreme qualifiers (always, never, only), signposting words, word limit compliance.
+5. PEDAGOGICAL STRUCTURE:
+   - Always be encouraging, constructive, and highly practical.
+   - Break strategies into clear bullet points or numbered steps.
+   - Include concrete Band 8+ examples, templates, or collocations where relevant.
+   - Finish each answer with a motivating tip and a suggested next practice step.
+
+Return ONLY a valid JSON object matching this schema:
+{
+  "reply": "Your full formatted markdown response",
+  "suggestedPrompts": ["Keyingi eng dolzarb savol 1", "Savol 2", "Savol 3"],
+  "recommendedAction": {
+    "title": "Nomzodga tavsiya etiladigan test nomi",
+    "url": "/english/materials?skill=reading&collection=full-test"
+  },
+  "focusSkill": "reading"
+}`;
+
+  function generateSmartIeltsInstructorReply(message, studentContext = {}) {
+    const clean = String(message || "").trim();
+    const lower = clean.toLowerCase();
+
+    const isUzbek = /[a-z'ʻʼ‘`]*\b(salom|qanday|qilay|qilsam|yordam|kerak|qiynalyapman|ayt|bering|xatolar|reja|tavsiya|nimadan|nima|maslahat|oqish|eshitish|insho|gapirish|mening|baholang|zaif|nuqta|natija)\b/i.test(lower);
+
+    // 1. Off-topic Guardrail
+    if (/(bifshteks|retsept|ovqat|pishirish|kino|futbol|messi|ronaldo|ob-havo|bitcoin|kripto|dasturlash|python|javascript|react|css kod|oyun|minecraft|pubg|f1 poyga|sevgi|qo'shiq ayt|anecdote|hazil ayt)/i.test(lower) && !/(ielts|reading|listening|writing|speaking|english|vocab|band|cambridge)/i.test(lower)) {
+      if (isUzbek) {
+        return {
+          reply: `> [!IMPORTANT]\n> **IELTS Diqqat Markazi:** Men sizning shaxsiy IELTS AI Murabbiyingizman. Mening asosiy vazifam sizning IELTS (Listening, Reading, Writing, Speaking) natijangizni oshirishdir.\n\nKeling, vaqtimizni bekor ketkazmay, yuqori Band (7.5+) olishga qaratilgan amaliyotga o'tamiz. Qaysi yo'nalish bo'yicha yordam kerak?\n\n* **Reading:** True/False/Not Given, Matching Headings, Time Management\n* **Listening:** Distractorlar, Section 3-4 murakkab savollari\n* **Writing:** Task 1 & Task 2 uchun Band 7+ shablonlar va PEEL usuli\n* **Speaking:** Part 2 Cue card va ravon nutq texnikalari`,
+          suggestedPrompts: [
+            "Reading: TFNG strategiyasini o'rgating",
+            "Writing Task 2 uchun Band 7.5+ shablon bering",
+            "Mening natijalarimni tahlil qiling"
+          ],
+          recommendedAction: { title: "Full Mock Testlar kutubxonasi", url: "/english/materials" },
+          focusSkill: "all"
+        };
+      }
+      return {
+        reply: `> [!IMPORTANT]\n> **IELTS Focus:** I am your dedicated IELTS Master Instructor. I exclusively assist with Cambridge IELTS preparation across Listening, Reading, Writing, and Speaking.\n\nLet's keep our complete focus on maximizing your IELTS Band Score! Which skill or strategy would you like to master today?`,
+        suggestedPrompts: [
+          "How to master True, False, Not Given?",
+          "Writing Task 2: Band 7.5+ Structure",
+          "Listening Section 3 distractor tactics"
+        ],
+        recommendedAction: { title: "Practice Tests Library", url: "/english/materials" },
+        focusSkill: "all"
+      };
+    }
+
+    // 2. Greetings
+    if (/^(salom|assalomu|hey|hi|hello|good morning|good afternoon|good evening|qalesiz|start|boshladik)/i.test(lower) && clean.length < 35) {
+      const studentName = studentContext.studentName || (isUzbek ? "nomzod" : "candidate");
+      if (isUzbek) {
+        return {
+          reply: `### Assalomu alaykum, ${studentName}! Men IELTS Core Shaxsiy AI Murabbiyingizman 🎓\n\nMen sizga Cambridge IELTS standartlari bo'yicha **Band 7.5 - 9.0** darajasiga chiqishingizda yo'l ko'rsataman. 24/7 davomida:\n\n* 🎯 **Zaif nuqtalaringizni aniqlayman:** Test natijalaringizni chuqur tahlil qilib, eng ko'p ball yo'qotayotgan joylaringizni ko'rsataman;\n* 📖 **Reading & Listening:** Tuzoq savollarni (TFNG, Headings, Section 3 distractors) yechish algoritmlarini o'rgataman;\n* ✍️ **Writing Task 1 & 2:** Band 7+ tuzilmalar, PEEL usuli va akademik collocations beraman;\n* 🎙️ **Speaking:** Part 1, 2, 3 uchun ravon nutq va boy so'z birikmalarini mashq qildiramiz.\n\n**Hozir qaysi bo'lim yoki savol turi bo'yicha qiynalyapsiz?** Quyidagi tezkor tugmalardan birini tanlang:`,
+          suggestedPrompts: [
+            "Readingda True/False/Not Given da adashyapman",
+            "Writing Task 2: 7.0+ insho tuzilishi qanday?",
+            "Listening Section 3 tuzoqlaridan qanday qutulaman?",
+            "Menga 30 kunlik IELTS tayyorgarlik rejasi tuzib bering"
+          ],
+          recommendedAction: { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+          focusSkill: "all"
+        };
+      }
+      return {
+        reply: `### Welcome, ${studentName}! I am your IELTS Core Master Instructor 🎓\n\nI am here to guide your journey to **Band 7.5 - 9.0** using official Cambridge evaluation standards. Available 24/7 to help you:\n\n* 🎯 **Analyze and eliminate error patterns** across Reading, Listening, Writing, and Speaking;\n* 📖 **Master trick question types** (True/False/Not Given, Matching Headings, Section 3 distractors);\n* ✍️ **Structure high-scoring essays** using the PEEL paragraph framework and Band 8+ academic lexical resource;\n* 🎙️ **Excel in Speaking** with Part 2 fluency frameworks and idiom collocations.\n\n**Which specific skill or question type would you like to tackle right now?**`,
+        suggestedPrompts: [
+          "Master True / False / Not Given rules",
+          "Writing Task 2: 4-Paragraph Band 7.5+ Blueprint",
+          "How to avoid traps in Listening Section 3",
+          "Give me a 30-day intensive IELTS study plan"
+        ],
+        recommendedAction: { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+        focusSkill: "all"
+      };
+    }
+
+    // 3. Weakness Analysis & Diagnostic
+    if (/zaif|nuqta|tahlil|kamchilik|xato|natija|diagnostik|analiz|weakness|mistake|score|profil/i.test(lower)) {
+      const hasData = studentContext.isLoggedIn && (studentContext.totalAttempts > 0 || (studentContext.weakAreas && studentContext.weakAreas.length > 0));
+      if (isUzbek) {
+        if (hasData) {
+          const weakList = studentContext.weakAreas && studentContext.weakAreas.length > 0
+            ? studentContext.weakAreas.map(w => `* ⚠️ **${w}**`).join("\n")
+            : "* Test natijalaringiz barqaror. Asosiy e'tiborni murakkab savollarga qarating.";
+
+          return {
+            reply: `### 📊 Shaxsiy IELTS Natijalar Tahlili\n\nSizning platformadagi test urinishlaringiz asosida quyidagi ko'rsatkichlar aniqlandi:\n\n* 🏆 **Taxminiy Umumiy Band:** **${studentContext.predictedBand || '6.5'}**\n* 📖 **Reading o'rtacha ball:** **${studentContext.readingAvgBand || '6.0'}**\n* 🎧 **Listening o'rtacha ball:** **${studentContext.listeningAvgBand || '6.5'}**\n* 📝 **Jami bajarilgan testlar:** **${studentContext.totalAttempts || 0} ta**\n\n#### 🎯 Eng ko'p ball yo'qotilayotgan zaif nuqtalar:\n${weakList}\n\n#### 🚀 3 Bosqichli Yechim Rejasi:\n1. **Faqat zaif savol turlari bo'yicha drill mashqlar qiling:** Avval butun testni emas, faqat xato qilayotgan savollaringizni (masalan, TFNG yoki Matching Headings) alohida ishlang.\n2. **Xatolar daftari (Error Log):** Nega xato qilganingizni yozib boring — so'zni bilmadingizmi, sinonimni topa olmadingizmi yoki shoshildingizmi?\n3. **Haftasiga 2 ta to'liq Full Test:** Vaqt bosimi ostida ishlang.`,
+            suggestedPrompts: [
+              "True/False/Not Given bo'yicha mashq qilamiz",
+              "Matching Headings strategiyasini bering",
+              "Listening Section 3 dagi xatolarni to'g'irlash"
+            ],
+            recommendedAction: { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+            focusSkill: "reading"
+          };
+        } else {
+          return {
+            reply: `### 📊 Diagnostika Uchun Test Bajarish Tavsiya Etiladi\n\nHozircha profilingizda yetarli test urinishlari saqlanmagan yoki siz tizimga kirmagansiz.\n\nSizning aniq zaif nuqtalaringizni (masalan, qaysi savol turida ko'p adashayotganingizni) tahlil qilishim uchun platformamizda bitta **Reading** yoki **Listening** Full Testini bajarishni tavsiya qilaman. Shundan so'ng men har bir xatongizni batafsil ko'rib beraman!`,
+            suggestedPrompts: [
+              "Hozir Reading Full Testini boshlayman",
+              "Listening Full Testini boshlayman",
+              "Umumiy IELTS strategiyalari haqida gaplashamiz"
+            ],
+            recommendedAction: { title: "Reading Full Test 01 ni boshlash", url: "/english/materials?skill=reading&collection=full-test" },
+            focusSkill: "reading"
+          };
+        }
+      } else {
+        return {
+          reply: `### 📊 Student Diagnostic Analysis\n\n* **Estimated Band:** **${studentContext.predictedBand || '6.5'}**\n* **Reading Avg:** **${studentContext.readingAvgBand || '6.0'}**\n* **Listening Avg:** **${studentContext.listeningAvgBand || '6.5'}**\n\nTo identify your precise error patterns, take a full diagnostic mock test on the platform.`,
+          suggestedPrompts: [
+            "Take Reading Full Test 01",
+            "Take Listening Full Test 01",
+            "Master TFNG techniques"
+          ],
+          recommendedAction: { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+          focusSkill: "reading"
+        };
+      }
+    }
+
+    // 4. True / False / Not Given
+    if (/tfng|true.*false|not given|yes.*no.*not given|haqiqat.*yolg'on/i.test(lower)) {
+      if (isUzbek) {
+        return {
+          reply: `### 🎯 Reading: True / False / Not Given Bo'yicha Cambridge Masterclass\n\nIELTS nomzodlarining **70% dan ortig'i** eng ko'p xatoni *FALSE* va *NOT GIVEN* orasidagi farqda qiladi. Keling, buni aniq qoidalar bilan yechamiz:\n\n---\n\n#### 1. Oltin Qoida (Aniq Farqlar):\n* **TRUE (To'g'ri):** Matnda berilgan ma'lumot savoldagi fikrni **100% tasdiqlaydi** (sinonimlar va parafraza orqali).\n* **FALSE (Yolg'on):** Matnda berilgan ma'lumot savoldagi fikrga **to'g'ridan-to'g'ri qarama-qarshi** (faktlar bir-birini inkor qiladi).\n* **NOT GIVEN (Berilmagan):** Matnda bu haqda to'liq ma'lumot yo'q. Ehtimol hayotda shundaydir, lekin **faqat matnga suyanib uni isbotlab yoki inkor qilib bo'lmaydi**!\n\n#### 2. Cambridge Examiner Tuzoqlari:\n1. **100% Modifikatorlar (Extreme Qualifiers):** Savolda *always, all, completely, only, never, impossible* so'zlari kelsa, o'ta ehtiyot bo'ling. Matnda "most people" deb kelsa, savolda "all people" deyilsa — bu **FALSE**!\n2. **Sinonimlar zanjiri:** Savoldagi kalit so'zlarni matndan qidiring, lekin so'zma-so'z emas, ma'nodoshi (paraphrase) orqali toping.\n3. **Savollar ketma-ketligi:** TFNG savollari matnda **xronologik tartibda** keladi. Agar 3-savolni topsangiz, 4-savol albatta undan keyin keladi.\n\n#### 💡 Tavsiya etiladigan amaliyot:\nHozir IELTS Core dagi haqiqiy testda ushbu qoidalarni sinab ko'ring:`,
+          suggestedPrompts: [
+            "FALSE va NOT GIVEN ga aniq misol keltiring",
+            "Matching Headings savollarini qanday tez yechish mumkin?",
+            "Readingda vaqt yetmayapti, nima qilay?"
+          ],
+          recommendedAction: { title: "Reading Full Test 01 (TFNG Mashqi)", url: "/english/materials?skill=reading&collection=full-test" },
+          focusSkill: "reading"
+        };
+      }
+      return {
+        reply: `### 🎯 Reading Mastery: True / False / Not Given Strategy Guide\n\nOver 70% of IELTS candidates lose points distinguishing between **FALSE** and **NOT GIVEN**. Here is the definitive Cambridge examiner framework:\n\n---\n\n#### 1. The Core Benchmark:\n* **TRUE:** The passage directly and unequivocally agrees with the statement (via paraphrasing/synonyms).\n* **FALSE:** The passage directly **contradicts** the statement (provides opposing facts).\n* **NOT GIVEN:** The passage neither confirms nor contradicts. Even if it sounds true in real life, **if the text doesn't provide enough evidence, it is NOT GIVEN**.\n\n#### 2. Critical Traps to Avoid:\n1. **Extreme Qualifiers:** Watch out for *all, always, completely, only, never, indispensable*. If text says "many species", and statement says "all species" &rarr; **FALSE**.\n2. **Chronological Flow:** Questions follow the text in sequential order. If you found Q1 and Q3, Q2 is in between.\n3. **Do not over-think:** If you have to make 3 logical leaps to justify a statement, it is **NOT GIVEN**.\n\n#### 💡 Recommended Practice:\nTest these rules on an authentic 40-question Reading test on IELTS Core:`,
+        suggestedPrompts: [
+          "Give me a clear FALSE vs NOT GIVEN example passage",
+          "How to tackle Matching Headings questions?",
+          "How to manage 60 minutes in Reading?"
+        ],
+        recommendedAction: { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+        focusSkill: "reading"
+      };
+    }
+
+    // 5. Matching Headings
+    if (/heading|sarlavha|paragraf|matching heading/i.test(lower)) {
+      if (isUzbek) {
+        return {
+          reply: `### 📌 Matching Headings: Band 8+ Texnikasi\n\nMatching Headings — Readingdagi eng ko'p vaqt oluvchi va adashtiruvchi savol turi. Mana uni 100% to'g'ri ishlash qoidalari:\n\n1. **Oldin Headings ro'yxatini o'qing va kalit so'zlarni belgilang:** Har bir headingning bir-biridan farqlanib turuvchi asosiy so'zini (farqini) aniqlang.\n2. **Topic Sentence va Concluding Sentenceni o'qing:** Paragrafning birinchi 1-2 jumlasi va oxirgi jumlasi ko'pincha butun paragrafning mohiyatini beradi.\n3. **So'zma-so'z mos kelish tuzog'i (Distractor):** Examinerlar ko'pincha headingdagi so'zni paragraf ichiga ataylab joylashtiradi, lekin paragrafning umumiy mazmuni boshqa bo'ladi! Hech qachon faqat 1 ta so'z bir xilligiga qarab heading tanlamang.\n4. **Ikkilansangiz, o'tkazib yuboring:** Qolgan paragraflarni topganingizdan keyin variantlar kamayadi va to'g'ri javob yaqqol ko'rinadi!`,
+          suggestedPrompts: [
+            "Readingda vaqtni qanday taqsimlash kerak?",
+            "Summary completion savollarini ishlash usuli",
+            "TFNG bo'yicha maslahat"
+          ],
+          recommendedAction: { title: "Reading Passages Mashqlari", url: "/english/materials?skill=reading" },
+          focusSkill: "reading"
+        };
+      }
+      return {
+        reply: `### 📌 Matching Headings: Band 8+ Framework\n\n1. **Analyze Headings First:** Underline distinguishing keywords across all heading options.\n2. **Target Topic & Concluding Sentences:** The first and last sentences of a paragraph deliver the central theme in 80% of academic texts.\n3. **Beware of Word-Matching Traps:** Cambridge examiners frequently insert exact words from wrong headings into distractor paragraphs. Match the **overall meaning**, never single words.\n4. **Elimination Strategy:** Cross out used headings as you proceed to narrow down ambiguous choices.`,
+        suggestedPrompts: [
+          "How to manage time in IELTS Reading",
+          "Master True / False / Not Given",
+          "Multiple Choice Questions in Reading"
+        ],
+        recommendedAction: { title: "Reading Passages", url: "/english/materials?skill=reading" },
+        focusSkill: "reading"
+      };
+    }
+
+    // 6. Writing Task 2 (Essay)
+    if (/task 2|insho|essay|writing.*shablon|writing.*tuzilish|peel|agree.*disagree/i.test(lower)) {
+      if (isUzbek) {
+        return {
+          reply: `### ✍️ Writing Task 2: Band 7.5+ 4-Paragraf Shablon va PEEL Usuli\n\nTask 2 da **250+ so'z** yozish kerak va u umumiy Writing balingizning **66% ini** tashkil qiladi. Examinerlar sizdan qat'iy mantiqiy tuzilma talab qiladi:\n\n---\n\n#### 🏛️ 4-Paragraf Standart Tuzilishi:\n\n* **1. Introduction (35-45 so'z):**\n  * *Sentence 1 (Paraphrase):* Mavzuni o'z so'zlaringiz bilan qayta yozing.\n  * *Sentence 2 (Thesis / Clear Position):* O'z pozitsiyangizni va 2 ta asosiy dalilingizni aniq bildiring.\n\n* **2. Body 1 (PEEL usuli - 90-100 so'z):**\n  * **P (Point):** Asosiy fikr (Topic sentence) — *First and foremost, ...*\n  * **E (Explanation):** Nega shundayligini tushuntiring — *This is primarily because...*\n  * **E (Example):** Aniq fakt yoki hayotiy misol — *For instance, recent research illustrates that...*\n  * **L (Link):** Mavzuga qayta bog'lash — *Consequently, it is evident that...*\n\n* **3. Body 2 (PEEL usuli - 90-100 so'z):**\n  * Ikkinchi asosiy dalilni xuddi shu PEEL tartibida rivojlantiring — *Furthermore, another compelling factor is...*\n\n* **4. Conclusion (30-40 so'z):**\n  * Thesisni yangi so'zlar bilan qaytaring va xulosa qiling — *In conclusion, while X is acknowledged, I firmly maintain that Y because A and B.*\n  * ⚠️ *Muhim:* Xulosada hech qachon yangi g'oya qo'shmang!\n\n#### 💎 Band 8+ Akademik Lug'atlar:\n* *Foydali:* highly advantageous, paramount, indispensable\n* *Zararli:* detrimental, counterproductive, exacerbate\n* *Sabab-oqibat:* consequently, stem from, trigger, precipitate`,
+          suggestedPrompts: [
+            "Discuss both views essay shabloni qanday?",
+            "Writing Task 1 da Overview qanday yoziladi?",
+            "Inshoimni tekshirib bering"
+          ],
+          recommendedAction: { title: "IELTS Writing Editor da insho yozish", url: "/english/writing-editor" },
+          focusSkill: "writing"
+        };
+      }
+      return {
+        reply: `### ✍️ Writing Task 2: Band 7.5+ 4-Paragraph Blueprint & PEEL Method\n\nTask 2 carries **two-thirds of your total Writing score**. Examiners assess Task Response, Coherence & Cohesion, Lexical Resource, and Grammatical Range & Accuracy.\n\n---\n\n#### 🏛️ The 4-Paragraph Master Structure:\n\n1. **Introduction (35-45 words):**\n   - *Sentence 1 (Paraphrase):* Restate the prompt with academic synonyms.\n   - *Sentence 2 (Thesis statement):* State your direct, unambiguous position.\n\n2. **Body Paragraph 1 (PEEL framework - 90-100 words):**\n   - **P (Point):** Clear topic sentence (*A principal argument in favor of...*)\n   - **E (Explanation):** Deep mechanical reasoning (*This is largely attributable to...*)\n   - **E (Example):** Concrete illustration (*For instance, empirical evidence from...*)\n   - **L (Link):** Connect back to your thesis (*Hence, the impact is undeniable.*)\n\n3. **Body Paragraph 2 (PEEL framework - 90-100 words):**\n   - Second major supporting idea (*Furthermore, an equally significant dimension is...*)\n\n4. **Conclusion (30-40 words):**\n   - Synthesize arguments and restate thesis (*To conclude, although..., I firmly maintain that...*).\n   - ⚠️ *Never introduce new arguments in the conclusion.*\n\n#### 💎 High-Band Academic Collocations:\n* *Crucial factor:* a paramount consideration\n* *Cause negative impact:* exert a detrimental influence\n* *Aggravate problems:* exacerbate existing disparities`,
+        suggestedPrompts: [
+          "How to write a Discussion (Discuss both views) essay?",
+          "Writing Task 1 Academic Overview formula",
+          "Review an essay draft"
+        ],
+        recommendedAction: { title: "IELTS Writing Editor", url: "/english/writing-editor" },
+        focusSkill: "writing"
+      };
+    }
+
+    // 7. Listening Strategies
+    if (/listening|eshitish|audio|section 3|section 4|map|distractor/i.test(lower)) {
+      if (isUzbek) {
+        return {
+          reply: `### 🎧 IELTS Listening: 40/40 ga Eltuvchi Cambridge Qoidalari\n\nListeningda har bir xato qimmatga tushadi. Mana eng xavfli tuzoqlar va ularni yengish yo'llari:\n\n1. **Section 1 (Shaxsiy ma'lumotlar):** Ism, telefon, sana, manzil va harfma-harf aytiladigan so'zlar (spelling). *A vs E vs I* yoki *B vs P* harflari talaffuziga o'ta diqqatli bo'ling.\n2. **Section 2 (Xaritalar va rejalar):** Yo'nalish so'zlarini biling: *clockwise, opposite, diagonally, adjacent to, straight ahead, just past the...*\n3. **Section 3 (Fikr o'zgarishi tuzog'i - Distractor):** Suhbatdoshlar ko'pincha avval bir variantni aytadi: *"Let's book the seminar on Tuesday... Oh wait, Professor Brown won't be available, so Thursday is better."* Oxirgi kelishilgan variantni eshiting!\n4. **Section 4 (Akademik leksiya):** Pause bo'lmaydi! Ko'zlaringiz doim 2 ta savol oldinda yursin. So'z chegarasiga (*NO MORE THAN TWO WORDS*) qat'iy amal qiling va **birlik/ko'plik (-s/-es)** qo'shimchasini tekshiring!`,
+          suggestedPrompts: [
+            "Listening Section 3 da Multiple Choice qanday ishlanadi?",
+            "Xarita (Map labelling) bo'yicha maslahat",
+            "Listening Full Testini boshlaymiz"
+          ],
+          recommendedAction: { title: "Listening Full Test 01", url: "/english/materials?skill=listening&collection=full-test" },
+          focusSkill: "listening"
+        };
+      }
+      return {
+        reply: `### 🎧 IELTS Listening: Cambridge 40/40 Examination Strategies\n\n1. **Section 1 (Form Filling & Spelling):** Double-check vowel confusion (*A vs E vs I*) and number sequences.\n2. **Section 2 (Map & Plan Labelling):** Anchor your focus to the starting point ("You are here") and track directional prepositions (*adjacent to, situated directly opposite, nestled between*).\n3. **Section 3 (The Distractor & Mind-Change Trap):** Speakers deliberately suggest an option only to reject it seconds later (*"I was leaning toward option A, but in retrospect, option C is far more viable"*). Wait for final consensus.\n4. **Section 4 (Monologue Lecture):** No pause between questions 31-40! Keep your eyes 2 questions ahead and strictly audit singular vs plural noun endings.`,
+        suggestedPrompts: [
+          "How to handle Multiple Choice in Listening?",
+          "Map Labelling tips",
+          "Take a full Listening Test"
+        ],
+        recommendedAction: { title: "Listening Full Test 01", url: "/english/materials?skill=listening&collection=full-test" },
+        focusSkill: "listening"
+      };
+    }
+
+    // 8. Speaking
+    if (/speaking|gapirish|part 2|cue card|part 1|part 3|fluency|ravonlik/i.test(lower)) {
+      if (isUzbek) {
+        return {
+          reply: `### 🎙️ IELTS Speaking: Band 8.0 Ravonlik va Cue Card Texnikasi\n\nSpeakingda grammatik xatodan ko'ra **gap to'xtab qolishi (hesitation)** balingizni tezroq tushiradi. Examinerlar sizning tabiiy oqimingizni (Fluency) baholaydi.\n\n---\n\n#### ⏱️ Part 2 (Cue Card) 1-Daqiqa Tayyorgarlik Qoidasi:\nKo'pchilik 1 daqiqada butun gaplarni yozishga urinib adashadi. Buning o'rniga **PPF (Past, Present, Future)** yoki **4-Nuqta** usulini qo'llang:\n1. **Who / What:** Kim yoki nima haqida (1-2 ta noyob kalit so'z);\n2. **When / Where:** Qachon va qayerda ro'y bergan;\n3. **Why:** Nega aynan bu voqea esda qolarli;\n4. **Feeling / Reflection:** Hissiyotlaringiz va kelajakdagi xulosa.\n\n#### 🗣️ Tabiiy Pauza To'ldiruvchilari (Filler Phrases):\nTo'xtab qolmaslik uchun examinerga shunday jumlalarni ayting:\n* *"That's a rather intriguing question..."*\n* *"To be completely honest, I haven't given it much thought before, but..."*\n* *"Looking at it from another angle..."*\n\nPlatformamizdagi **Speaking AI Studio** da hozir sinab ko'ring:`,
+          suggestedPrompts: [
+            "Speaking Part 3 uchun qanday javob berish kerak?",
+            "Speakingda Band 8 idiomalarni bering",
+            "Speaking AI Studio ga o'tish"
+          ],
+          recommendedAction: { title: "IELTS Speaking AI Studio", url: "/english/speaking" },
+          focusSkill: "speaking"
+        };
+      }
+      return {
+        reply: `### 🎙️ IELTS Speaking: Band 8.0 Fluency & Part 2 Mastery\n\nFluency & Coherence carries 25% of your Speaking mark. Hesitation and self-correction penalize your score more severely than minor grammatical slips.\n\n---\n\n#### ⏱️ Part 2 Cue Card: The 1-Minute Framework (PPF System):\nDo not write complete sentences during prep time. Write 4 anchor keywords using the **Past, Present, Future (PPF)** formula:\n1. **Past Context:** How it initiated / Historical context\n2. **Present Reality:** Current significance / Key specific details\n3. **Future Outlook:** What it leads to / Future personal perspective\n\n#### 🗣️ High-Scoring Conversational Fillers:\n* *"That is a multifaceted issue; in my view..."*\n* *"If I were to pinpoint the primary reason, it would be..."*\n* *"To put it into perspective..."*`,
+        suggestedPrompts: [
+          "How to expand Part 3 answers?",
+          "High-Band idioms for Speaking",
+          "Launch Speaking AI Studio"
+        ],
+        recommendedAction: { title: "Speaking AI Studio", url: "/english/speaking" },
+        focusSkill: "speaking"
+      };
+    }
+
+    // 9. Study Plan
+    if (/reja|plan|30 kun|jadval|tayyorgarlik|qayerdan boshlash|study plan/i.test(lower)) {
+      if (isUzbek) {
+        return {
+          reply: `### 📅 30 Kunlik Intensiv IELTS Tayyorgarlik Rejasi (Band 7.5+)\n\nHar kuni 2-3 soat vaqt ajratgan holda quyidagi tizim bo'yicha shug'ullaning:\n\n* **1-Hafta: Diagnostika & Reading Texnikalari**\n  * 1 ta Reading Full Test va 1 ta Listening Full Test (boshlang'ich darajani bilish uchun);\n  * TFNG va Matching Headings savollarini chuqur o'rganish va 50 ta yangi akademik collocation yodlash.\n* **2-Hafta: Listening & Writing Task 1**\n  * Har kuni 1 ta Listening bo'limi (ayniqsa Section 3-4 distractorlar);\n  * Task 1 grafiklarni guruhlash, Trend so'zlari va 4 ta namunaviy Overview yozish.\n* **3-Hafta: Writing Task 2 & Speaking Part 2**\n  * Har 2 kunda 1 ta to'liq Task 2 insho (PEEL strukturasida) yozish;\n  * Har kuni 2 tadan Cue Card mavzusini 2 daqiqa tinimsiz gapirib audio yozib olish.\n* **4-Hafta: To'liq CDI Mock Simulyatsiyasi & Xatolar Ustida Ish**\n  * Haqiqiy imtihon vaqtida (ertalab 09:00 da) to'liq 3 soatlik mock test topshirish;\n  * Xatolar daftarchasidagi barcha xatolarni qayta tahlil qilish.\n\nBugundan nimadan boshlaymiz?`,
+          suggestedPrompts: [
+            "1-bosqich: Reading Full Test 01 ni boshlash",
+            "Writing Task 2 insho shablonini ko'rib chiqish",
+            "Speaking AI da mashq qilish"
+          ],
+          recommendedAction: { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+          focusSkill: "all"
+        };
+      }
+      return {
+        reply: `### 📅 30-Day Intensive IELTS Roadmap (Target: Band 7.5+)\n\n* **Week 1:** Diagnostic Baseline & Reading Mechanics (TFNG, Matching Headings, Error Log creation)\n* **Week 2:** Listening Nuance & Writing Task 1 (Section 3 distractors, Overview formula, trend vocabulary)\n* **Week 3:** Writing Task 2 (PEEL method, Academic lexical collocations) & Speaking Part 2 PPF drills\n* **Week 4:** Timed CDI Full Mock Simulations & Error Elimination under exam conditions.`,
+        suggestedPrompts: [
+          "Start Reading Full Test 01",
+          "Review Writing Task 2 blueprint",
+          "Practice Speaking AI"
+        ],
+        recommendedAction: { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+        focusSkill: "all"
+      };
+    }
+
+    // 10. General IELTS advice default
+    if (isUzbek) {
+      return {
+        reply: `### IELTS Tayyorgarligi Bo'yicha Maslahat 💡\n\nSiz kiritgan so'rov bo'yicha IELTS Cambridge standartlaridagi asosiy tavsiya:\n\n* **IELTS da muvaffaqiyat siri:** Faqat ko'p test yechishda emas, balki **har bir xatoni chuqur tahlil qilishda**dir.\n* Har kuni bitta passiv ko'nikma (Reading yoki Listening) va bitta faol ko'nikma (Writing yoki Speaking) bilan shug'ullaning.\n\nSizga aynan qaysi yo'nalish bo'yicha batafsil yo'l-yo'riq yoki namuna kerak?`,
+        suggestedPrompts: [
+          "Reading: TFNG va Headings strategiyalari",
+          "Writing: Task 2 Band 7.5 shabloni",
+          "Listening: Section 3 tuzoqlari",
+          "Speaking: Part 2 Cue card mashqi"
+        ],
+        recommendedAction: { title: "IELTS Core Testlar Kutubxonasi", url: "/english/materials" },
+        focusSkill: "all"
+      };
+    }
+    return {
+      reply: `### Cambridge IELTS Strategic Guidance 💡\n\nThe key to exceeding Band 7.5 lies in targeted deliberate practice and systematic error tracking rather than passive volume.\n\nPair one receptive skill (Reading or Listening) with one productive skill (Writing or Speaking) each study session.\n\nWhich section should we focus on right now?`,
+      suggestedPrompts: [
+        "Reading: TFNG & Headings strategies",
+        "Writing: Task 2 Band 7.5 blueprint",
+        "Listening: Section 3 distractors",
+        "Speaking: Part 2 Cue Card drills"
+      ],
+      recommendedAction: { title: "IELTS Core Materials", url: "/english/materials" },
+      focusSkill: "all"
+    };
+  }
+
+  async function callGeminiIeltsInstructor(userMessage, history = [], studentContext = {}, geminiKey) {
+    const key = geminiKey || getActiveGeminiKey();
+
+    let contextSnippet = "";
+    if (studentContext && studentContext.isLoggedIn) {
+      contextSnippet = `\n[STUDENT PERFORMANCE CONTEXT: Name: "${studentContext.studentName || 'Student'}", Predicted Overall Band: ${studentContext.predictedBand || 'Unknown'}, Reading Avg Band: ${studentContext.readingAvgBand || 'N/A'}, Listening Avg Band: ${studentContext.listeningAvgBand || 'N/A'}, Weak areas: ${(studentContext.weakAreas || []).join(', ') || 'None identified yet'}]`;
+    }
+
+    if (key) {
+      const contents = [];
+      if (Array.isArray(history) && history.length > 0) {
+        history.slice(-6).forEach(h => {
+          contents.push({
+            role: h.role === 'model' ? 'model' : 'user',
+            parts: [{ text: String(h.text || h.message || '') }]
+          });
+        });
+      }
+      contents.push({
+        role: "user",
+        parts: [{ text: `${contextSnippet ? contextSnippet + '\n\n' : ''}Student: "${userMessage}"` }]
+      });
+
+      const geminiRes = await queryGeminiApi({
+        systemInstruction: { parts: [{ text: IELTS_INSTRUCTOR_SYSTEM_PROMPT }] },
+        contents,
+        generationConfig: { responseMimeType: "application/json", temperature: 0.4 }
+      }, key);
+
+      if (geminiRes && (geminiRes.reply || geminiRes.replyText)) {
+        return {
+          isGeminiPowered: true,
+          reply: geminiRes.reply || geminiRes.replyText,
+          suggestedPrompts: Array.isArray(geminiRes.suggestedPrompts) && geminiRes.suggestedPrompts.length > 0
+            ? geminiRes.suggestedPrompts
+            : ["Reading: True/False/Not Given qoidasi", "Writing Task 2 Band 7+ shablon", "Mening zaif nuqtalarimni tahlil qiling"],
+          recommendedAction: geminiRes.recommendedAction || { title: "Reading Full Test 01", url: "/english/materials?skill=reading&collection=full-test" },
+          focusSkill: geminiRes.focusSkill || "all"
+        };
+      }
+    }
+
+    // High-performance intelligent Cambridge fallback
+    const fallback = generateSmartIeltsInstructorReply(userMessage, studentContext);
+    return {
+      isGeminiPowered: false,
+      ...fallback
+    };
+  }
+
+  if (req.method === "POST" && pathname === "/api/instructor/chat") {
+    const user = studentFromRequest(req, data);
+    const body = await readBody(req);
+    const message = String(body.message || "").trim();
+    if (!message) return json(res, 400, { error: "Message is required." });
+
+    const history = Array.isArray(body.history) ? body.history : [];
+    const geminiKey = getActiveGeminiKey();
+
+    let studentContext = {};
+    if (user) {
+      try {
+        const analytics = detailedStudentAnalytics(user, data);
+        const weakReading = (analytics.reading?.questionTypes || []).filter(q => q.total > 0 && q.accuracy < 70).map(q => `${q.name} (${q.accuracy}% to'g'ri)`);
+        const weakListening = [];
+        if (analytics.listening?.sections?.part3 < 70) weakListening.push("Listening Part 3 (Akademik suhbat)");
+        if (analytics.listening?.sections?.part4 < 70) weakListening.push("Listening Part 4 (Leksiya/Ma'ruza)");
+
+        studentContext = {
+          isLoggedIn: true,
+          studentName: user.name || user.username || "Candidate",
+          predictedBand: analytics.overall?.predictedBand || null,
+          readingAvgBand: analytics.reading?.averageBand || null,
+          listeningAvgBand: analytics.listening?.averageBand || null,
+          writingAvgBand: analytics.overall?.writingAvgBand || null,
+          totalAttempts: analytics.overall?.totalAttempts || 0,
+          weakAreas: [...weakReading, ...weakListening]
+        };
+      } catch (err) {
+        studentContext = { isLoggedIn: true, studentName: user.name || "Candidate" };
+      }
+    } else {
+      studentContext = { isLoggedIn: false, studentName: "Guest Student" };
+    }
+
+    const result = await callGeminiIeltsInstructor(message, history, studentContext, geminiKey);
+    return json(res, 200, {
+      ok: true,
+      ...result,
+      studentSummary: studentContext
+    });
+  }
+
+  if (req.method === "GET" && pathname === "/api/instructor/diagnostic") {
+    const user = studentFromRequest(req, data);
+    if (!user) {
+      return json(res, 200, {
+        isLoggedIn: false,
+        message: "Sign in to view your personalized IELTS weakness diagnostic.",
+        defaultTopics: [
+          { skill: "reading", topic: "True / False / Not Given", badge: "High Priority" },
+          { skill: "reading", topic: "Matching Headings", badge: "Tricky" },
+          { skill: "listening", topic: "Section 3 Distractors", badge: "Trap" },
+          { skill: "writing", topic: "Task 2 PEEL Structure", badge: "Band 7.5+" }
+        ]
+      });
+    }
+
+    try {
+      const analytics = detailedStudentAnalytics(user, data);
+      const weakReading = (analytics.reading?.questionTypes || []).filter(q => q.total > 0 && q.accuracy < 75).sort((a, b) => a.accuracy - b.accuracy);
+      const weakListening = [];
+      const sections = analytics.listening?.sections || {};
+      if (sections.part3 && sections.part3 < 75) weakListening.push({ name: "Listening Section 3 (Discussion)", accuracy: sections.part3 });
+      if (sections.part4 && sections.part4 < 75) weakListening.push({ name: "Listening Section 4 (Lecture)", accuracy: sections.part4 });
+      if (sections.part2 && sections.part2 < 75) weakListening.push({ name: "Listening Section 2 (Maps & Monologue)", accuracy: sections.part2 });
+
+      return json(res, 200, {
+        isLoggedIn: true,
+        studentName: user.name || user.username || "Candidate",
+        predictedOverallBand: analytics.overall?.predictedBand || 6.5,
+        readingBand: analytics.reading?.averageBand || null,
+        listeningBand: analytics.listening?.averageBand || null,
+        writingBand: analytics.overall?.writingAvgBand || null,
+        totalAttempts: analytics.overall?.totalAttempts || 0,
+        weakReadingTypes: weakReading,
+        weakListeningSections: weakListening,
+        recommendedTests: [
+          { title: "IELTS Full Reading Test 01", skill: "reading", url: "/english/materials?skill=reading&collection=full-test" },
+          { title: "IELTS Full Listening Test 01", skill: "listening", url: "/english/materials?skill=listening&collection=full-test" },
+          { title: "IELTS Academic Writing Editor", skill: "writing", url: "/english/writing-editor" },
+          { title: "IELTS AI Speaking Studio", skill: "speaking", url: "/english/speaking" }
+        ]
+      });
+    } catch (e) {
+      return json(res, 500, { error: "Failed to generate diagnostic" });
+    }
   }
 
   // --- TEACHER & INVITATION ENDPOINTS ---
@@ -10284,6 +10752,7 @@ const server = http.createServer(async (req, res) => {
       "/english/speaking": "english-speaking.html",
       "/english/speaking-studio": "english-speaking.html",
       "/english/speaking-club": "english-speaking-club.html",
+      "/english/instructor": "english-instructor.html",
       "/english/predictions": "english-predictions.html",
       "/vx-adm-c157a060d85d3a9d": "admin.html",
       ...(process.env.ADMIN_PATH ? { [process.env.ADMIN_PATH]: "admin.html" } : {})
@@ -10296,6 +10765,7 @@ const server = http.createServer(async (req, res) => {
       "english-mock-tests.js", "english-mock-tests.css", "english-mock-exam.js", "english-mock-exam.css",
       "english-speaking.js", "english-speaking.css", "speaking-avatar.js", "speaking-recorder.js",
       "english-speaking-club.js", "english-speaking-club.css",
+      "english-instructor.js", "english-instructor.css",
       "english-predictions.js", "english-session.js", "english-onboarding.js", "firebase-config.js",
       "english-refinement.css", "english-precision.css", "english-catalog.css", "english-internal-premium.css", "english-public.css", "english-public.js", "listening-engine.js",
       "admin.js"

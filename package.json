@@ -5,7 +5,7 @@
   "description": "IELTS Core learning platform",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check english-auth.js && node --check english-site.js && node --check english-account.js && node --check english-materials.js && node --check english-lesson.js && node --check english-vocabulary.js && node --check admin.js && node --check scripts/qa-listening-flow.js && node --check scripts/qa-reading-flow.js",
+    "check": "node --check server.js && node --check english-auth.js && node --check english-site.js && node --check english-account.js && node --check english-materials.js && node --check english-lesson.js && node --check english-vocabulary.js && node --check english-instructor.js && node --check admin.js && node --check scripts/qa-listening-flow.js && node --check scripts/qa-reading-flow.js",
     "qa:reading": "node scripts/qa-reading-flow.js",
     "qa:listening": "node scripts/qa-listening-flow.js",
     "qa:public": "node scripts/qa-public-design.js",
