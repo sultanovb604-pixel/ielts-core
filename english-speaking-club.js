@@ -831,6 +831,12 @@
     // Sound chime alert!
     playChime('matchFound');
 
+    activeQueueId = null;
+    if (pollInterval) {
+      clearInterval(pollInterval);
+      pollInterval = null;
+    }
+
     currentPartner = {
       peerId: matchData.partnerPeerId,
       name: matchData.partnerName || 'Speaking Partner',
@@ -860,7 +866,12 @@
     // Set topic from server match or pick first
     if (matchData.topic) {
       const idx = allTopics.findIndex(t => t.id === matchData.topic.id);
-      currentTopicIndex = idx !== -1 ? idx : 0;
+      if (idx !== -1) {
+        currentTopicIndex = idx;
+      } else {
+        allTopics.unshift(matchData.topic);
+        currentTopicIndex = 0;
+      }
     }
     renderTopic();
 
@@ -873,18 +884,34 @@
 
     // If we are initiator, initiate WebRTC call and DataConnection
     if (matchData.role === 'initiator') {
-      const call = myPeer.call(currentPartner.peerId, localStream);
-      activeCall = call;
-      call.on('stream', remoteStream => {
-        attachRemoteStream(remoteStream);
-      });
-      call.on('close', () => {
-        handlePartnerDisconnected();
-      });
+      function initiateMediaCall() {
+        if (!myPeer || !currentPartner?.peerId || !localStream) return;
+        const call = myPeer.call(currentPartner.peerId, localStream);
+        activeCall = call;
+        call.on('stream', remoteStream => {
+          attachRemoteStream(remoteStream);
+        });
+        call.on('close', () => {
+          handlePartnerDisconnected();
+        });
+        call.on('error', err => {
+          console.warn('Call error:', err);
+        });
+      }
+
+      initiateMediaCall();
 
       const conn = myPeer.connect(currentPartner.peerId);
       activeDataConn = conn;
       setupDataConn(conn);
+
+      // Auto-retry media call after 3 seconds if remote stream is not yet established
+      setTimeout(() => {
+        if (roomView.style.display === 'block' && (!remoteVideo.srcObject || remoteVideo.paused)) {
+          console.log('Retrying WebRTC media connection to partner...');
+          initiateMediaCall();
+        }
+      }, 3000);
     }
   }
 

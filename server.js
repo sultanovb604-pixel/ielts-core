@@ -176,6 +176,9 @@ const ADMIN_PIN = String(process.env.ADMIN_PIN || "123456").trim();
 const EXPLICIT_SESSION_SECRET = String(process.env.SESSION_SECRET || "").trim();
 const SESSION_SECRET = EXPLICIT_SESSION_SECRET || (IS_PRODUCTION ? "" : crypto.createHash("sha256").update(`${ROOT}:vortex-student-session-v1`).digest("hex"));
 const FIREBASE_API_KEY = String(process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLqqG3VoJPSxmqOjsPIaGtKVEus").trim();
+const FIREBASE_PROJECT_ID = String(process.env.FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT || "ieltscorecom").trim();
+const FIRESTORE_PROJECT_ID = FIREBASE_PROJECT_ID;
+const FIRESTORE_API_KEY = FIREBASE_API_KEY;
 if (!SESSION_SECRET && IS_PRODUCTION) console.error("ERROR: SESSION_SECRET is not configured; authenticated API routes are disabled until it is set.");
 if (!ADMIN_EMAIL && IS_PRODUCTION) console.warn("WARNING: ADMIN_EMAIL is not configured; Google-based admin login is disabled.");
 if (!ADMIN_PASSWORD && IS_PRODUCTION) console.warn("WARNING: ADMIN_PASSWORD is not configured; password-based admin login is disabled.");
@@ -5863,7 +5866,7 @@ function readSpeakingTopics() {
   }
 }
 
-// In-memory Speaking Club Matchmaking Queue & Matches
+// Distributed Speaking Club Matchmaking Queue (Google Firestore + Memory Fallback)
 const speakingClubQueue = [];
 const speakingClubMatches = new Map();
 const speakingClubUserMatch = new Map();
@@ -5881,6 +5884,339 @@ setInterval(() => {
     }
   }
 }, 30000);
+
+function objToFirestoreFields(obj) {
+  const fields = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === undefined || v === null) continue;
+    if (typeof v === "string") fields[k] = { stringValue: v };
+    else if (typeof v === "number") fields[k] = Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v };
+    else if (typeof v === "boolean") fields[k] = { booleanValue: v };
+    else if (typeof v === "object") fields[k] = { stringValue: JSON.stringify(v) };
+  }
+  return fields;
+}
+
+function firestoreDocToObj(doc) {
+  if (!doc || !doc.fields) return null;
+  const obj = {};
+  for (const [k, v] of Object.entries(doc.fields)) {
+    if (v.stringValue !== undefined) {
+      obj[k] = v.stringValue;
+    } else if (v.integerValue !== undefined) {
+      obj[k] = parseInt(v.integerValue, 10);
+    } else if (v.doubleValue !== undefined) {
+      obj[k] = Number(v.doubleValue);
+    } else if (v.booleanValue !== undefined) {
+      obj[k] = v.booleanValue;
+    }
+  }
+  return obj;
+}
+
+async function scGetDoc(queueId) {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue/${encodeURIComponent(queueId)}?key=${FIRESTORE_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return firestoreDocToObj(data);
+  } catch (_) {
+    return null;
+  }
+}
+
+async function scSaveDoc(queueId, obj) {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue/${encodeURIComponent(queueId)}?key=${FIRESTORE_API_KEY}`;
+    const payload = { fields: objToFirestoreFields(obj) };
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    return res.ok;
+  } catch (_) {
+    return false;
+  }
+}
+
+async function scDeleteDoc(queueId) {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue/${encodeURIComponent(queueId)}?key=${FIRESTORE_API_KEY}`;
+    await fetch(url, { method: "DELETE" }).catch(() => {});
+  } catch (_) {}
+}
+
+async function scListDocs() {
+  try {
+    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue?key=${FIRESTORE_API_KEY}`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.documents || []).map(firestoreDocToObj).filter(Boolean);
+  } catch (_) {
+    return [];
+  }
+}
+
+// In-memory fallback functions
+function scMemoryEnqueue(item) {
+  const now = Date.now();
+  const candidateIdx = speakingClubQueue.findIndex(q => {
+    if (q.peerId === item.peerId) return false;
+    if (now - q.joinedAt > 120000) return false;
+    if (item.roomCode) return q.roomCode === item.roomCode;
+    return !q.roomCode;
+  });
+  if (candidateIdx !== -1) {
+    const partner = speakingClubQueue.splice(candidateIdx, 1)[0];
+    const matchId = "m_" + now + "_" + Math.random().toString(36).substring(2, 7);
+    const allTopics = readSpeakingTopics();
+    const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
+    const matchData = {
+      matchId,
+      topic,
+      createdAt: now,
+      peerA: { queueId: item.queueId, peerId: item.peerId, mode: item.mode, name: item.name, avatarUrl: item.avatarUrl, roomCode: item.roomCode },
+      peerB: partner
+    };
+    speakingClubMatches.set(matchId, matchData);
+    speakingClubUserMatch.set(item.queueId, matchId);
+    speakingClubUserMatch.set(partner.queueId, matchId);
+    return {
+      status: "matched",
+      role: "initiator",
+      queueId: item.queueId,
+      matchId,
+      partnerPeerId: partner.peerId,
+      partnerName: partner.name || "Speaking Partner",
+      partnerMode: partner.mode || "video",
+      partnerAvatarUrl: partner.avatarUrl || "",
+      topic
+    };
+  }
+  speakingClubQueue.push({ ...item, status: "waiting", joinedAt: now });
+  return { status: "waiting", queueId: item.queueId };
+}
+
+function scMemoryPoll(queueId) {
+  const matchId = speakingClubUserMatch.get(queueId);
+  if (matchId && speakingClubMatches.has(matchId)) {
+    const match = speakingClubMatches.get(matchId);
+    const isPeerA = match.peerA.queueId === queueId;
+    const partner = isPeerA ? match.peerB : match.peerA;
+    return {
+      status: "matched",
+      role: isPeerA ? "initiator" : "receiver",
+      matchId,
+      partnerPeerId: partner.peerId,
+      partnerName: partner.name || "Speaking Partner",
+      partnerMode: partner.mode || "video",
+      partnerAvatarUrl: partner.avatarUrl || "",
+      topic: match.topic
+    };
+  }
+  const item = speakingClubQueue.find(q => q.queueId === queueId);
+  if (item) {
+    item.joinedAt = Date.now();
+    return { status: "waiting", queueId };
+  }
+  return { status: "waiting", queueId, recovered: true };
+}
+
+function scMemoryLeave(queueId) {
+  const idx = speakingClubQueue.findIndex(q => q.queueId === queueId);
+  if (idx !== -1) speakingClubQueue.splice(idx, 1);
+  speakingClubUserMatch.delete(queueId);
+}
+
+// Distributed Matchmaking Actions
+async function scEnqueue(item) {
+  if (!FIRESTORE_CONFIGURED) return scMemoryEnqueue(item);
+  try {
+    const now = Date.now();
+    const docs = await scListDocs();
+
+    // Clean up stale docs (> 2 mins old) in background
+    for (const d of docs) {
+      if (d.joinedAt && (now - d.joinedAt > 120000)) {
+        scDeleteDoc(d.queueId).catch(() => {});
+      }
+    }
+
+    // Filter valid waiting candidates
+    const validWaiting = docs.filter(d => {
+      if (d.status !== "waiting") return false;
+      if (d.peerId === item.peerId) return false;
+      if (now - (d.joinedAt || 0) > 120000) return false;
+      if (item.roomCode) return d.roomCode === item.roomCode;
+      return !d.roomCode;
+    });
+
+    if (validWaiting.length > 0) {
+      const partner = validWaiting[0];
+      const matchId = "m_" + now + "_" + Math.random().toString(36).substring(2, 7);
+      const allTopics = readSpeakingTopics();
+      const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
+
+      // Update partner document to matched (role: receiver)
+      const partnerUpdate = {
+        queueId: partner.queueId,
+        peerId: partner.peerId,
+        name: partner.name || "Student",
+        mode: partner.mode || "video",
+        avatarUrl: partner.avatarUrl || "",
+        roomCode: partner.roomCode || "",
+        status: "matched",
+        role: "receiver",
+        matchId: matchId,
+        partnerPeerId: item.peerId,
+        partnerName: item.name,
+        partnerMode: item.mode,
+        partnerAvatarUrl: item.avatarUrl,
+        topicJson: JSON.stringify(topic),
+        matchedAt: now
+      };
+      await scSaveDoc(partner.queueId, partnerUpdate);
+
+      return {
+        status: "matched",
+        role: "initiator",
+        queueId: item.queueId,
+        matchId: matchId,
+        partnerPeerId: partner.peerId,
+        partnerName: partner.name || "Speaking Partner",
+        partnerMode: partner.mode || "video",
+        partnerAvatarUrl: partner.avatarUrl || "",
+        topic: topic
+      };
+    }
+
+    // No partner yet, save current user as waiting
+    const newDoc = {
+      queueId: item.queueId,
+      peerId: item.peerId,
+      mode: item.mode,
+      level: item.level,
+      name: item.name,
+      avatarUrl: item.avatarUrl,
+      roomCode: item.roomCode || "",
+      status: "waiting",
+      joinedAt: now,
+      updatedAt: now
+    };
+    await scSaveDoc(item.queueId, newDoc);
+    return { status: "waiting", queueId: item.queueId };
+  } catch (err) {
+    console.error("Firestore scEnqueue fallback notice:", err.message);
+    return scMemoryEnqueue(item);
+  }
+}
+
+async function scPoll(queueId) {
+  if (!FIRESTORE_CONFIGURED) return scMemoryPoll(queueId);
+  try {
+    const doc = await scGetDoc(queueId);
+    if (doc) {
+      if (doc.status === "matched") {
+        let topic = null;
+        if (doc.topicJson) {
+          try { topic = JSON.parse(doc.topicJson); } catch (_) {}
+        }
+        scDeleteDoc(queueId).catch(() => {});
+        return {
+          status: "matched",
+          role: doc.role || "receiver",
+          matchId: doc.matchId,
+          partnerPeerId: doc.partnerPeerId,
+          partnerName: doc.partnerName || "Speaking Partner",
+          partnerMode: doc.partnerMode || "video",
+          partnerAvatarUrl: doc.partnerAvatarUrl || "",
+          topic: topic
+        };
+      }
+
+      // If still waiting, check if another waiting peer is available
+      const now = Date.now();
+      const docs = await scListDocs();
+      const candidate = docs.find(d => {
+        if (d.queueId === queueId) return false;
+        if (d.peerId === doc.peerId) return false;
+        if (d.status !== "waiting") return false;
+        if (now - (d.joinedAt || 0) > 120000) return false;
+        if (doc.roomCode) return d.roomCode === doc.roomCode;
+        return !d.roomCode;
+      });
+
+      if (candidate) {
+        const matchId = "m_" + now + "_" + Math.random().toString(36).substring(2, 7);
+        const allTopics = readSpeakingTopics();
+        const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
+
+        await scSaveDoc(candidate.queueId, {
+          ...candidate,
+          status: "matched",
+          role: "receiver",
+          matchId: matchId,
+          partnerPeerId: doc.peerId,
+          partnerName: doc.name,
+          partnerMode: doc.mode,
+          partnerAvatarUrl: doc.avatarUrl,
+          topicJson: JSON.stringify(topic),
+          matchedAt: now
+        });
+
+        scDeleteDoc(queueId).catch(() => {});
+
+        return {
+          status: "matched",
+          role: "initiator",
+          matchId: matchId,
+          partnerPeerId: candidate.peerId,
+          partnerName: candidate.name || "Speaking Partner",
+          partnerMode: candidate.mode || "video",
+          partnerAvatarUrl: candidate.avatarUrl || "",
+          topic: topic
+        };
+      }
+
+      return { status: "waiting", queueId };
+    }
+    return scMemoryPoll(queueId);
+  } catch (err) {
+    console.error("Firestore scPoll fallback notice:", err.message);
+    return scMemoryPoll(queueId);
+  }
+}
+
+async function scLeave(queueId) {
+  if (FIRESTORE_CONFIGURED) {
+    try { await scDeleteDoc(queueId); } catch (_) {}
+  }
+  scMemoryLeave(queueId);
+}
+
+async function scStats() {
+  let activeWaiting = 0;
+  if (FIRESTORE_CONFIGURED) {
+    try {
+      const docs = await scListDocs();
+      const now = Date.now();
+      activeWaiting = docs.filter(d => d.status === "waiting" && now - (d.joinedAt || 0) <= 120000).length;
+    } catch (_) {
+      activeWaiting = speakingClubQueue.length;
+    }
+  } else {
+    activeWaiting = speakingClubQueue.length;
+  }
+  const hour = new Date().getUTCHours();
+  const baseline = 18 + (Math.sin(hour / 3) * 6 | 0);
+  return {
+    onlineStudents: Math.max(baseline, activeWaiting * 2 + 12),
+    activeMatches: Math.max(4, activeWaiting + 3)
+  };
+}
 
 function roundToIeltsBand(num) {
   const n = Number(num) || 0;
@@ -6004,8 +6340,6 @@ let isSyncingDb = false;
 const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
 const SUPABASE_KEY = String(process.env.SUPABASE_KEY || "").trim();
 const SUPABASE_CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_KEY);
-const FIRESTORE_PROJECT_ID = String(process.env.FIREBASE_PROJECT_ID || "").trim();
-const FIRESTORE_API_KEY = String(process.env.FIREBASE_API_KEY || "").trim();
 const FIRESTORE_CONFIGURED = Boolean(FIRESTORE_PROJECT_ID && FIRESTORE_API_KEY);
 const DURABLE_STORAGE_CONFIGURED = Boolean(SUPABASE_CONFIGURED || DATABASE_URL || FIRESTORE_CONFIGURED);
 if (Boolean(SUPABASE_URL) !== Boolean(SUPABASE_KEY)) console.error("ERROR: SUPABASE_URL and SUPABASE_KEY must both be configured.");
@@ -7775,13 +8109,8 @@ async function api(req, res, pathname) {
   }
 
   if (req.method === "GET" && pathname === "/api/speaking-club/stats") {
-    const queueCount = speakingClubQueue.length;
-    const hour = new Date().getUTCHours();
-    const baseline = 16 + (Math.sin(hour / 3) * 6 | 0);
-    return json(res, 200, {
-      onlineStudents: Math.max(baseline, queueCount * 2 + 8),
-      activeMatches: Math.max(3, speakingClubMatches.size)
-    });
+    const stats = await scStats();
+    return json(res, 200, stats);
   }
 
   if (req.method === "POST" && pathname === "/api/speaking-club/queue") {
@@ -7797,80 +8126,25 @@ async function api(req, res, pathname) {
     const avatarUrl = String(user?.avatarUrl || body.avatarUrl || "");
     const roomCode = String(body.roomCode || "").trim().toLowerCase().slice(0, 32);
 
-    // Look for waiting peer
-    const candidateIdx = speakingClubQueue.findIndex(q => {
-      if (q.peerId === peerId) return false;
-      if (roomCode) return q.roomCode === roomCode;
-      return !q.roomCode;
-    });
-    if (candidateIdx !== -1) {
-      const partner = speakingClubQueue.splice(candidateIdx, 1)[0];
-      const matchId = "m_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
-      const allTopics = readSpeakingTopics();
-      const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
-
-      const matchData = {
-        matchId,
-        topic,
-        createdAt: Date.now(),
-        peerA: { queueId, peerId, mode, name, avatarUrl, roomCode },
-        peerB: partner
-      };
-
-      speakingClubMatches.set(matchId, matchData);
-      speakingClubUserMatch.set(queueId, matchId);
-      speakingClubUserMatch.set(partner.queueId, matchId);
-
-      return json(res, 200, {
-        status: "matched",
-        role: "initiator",
-        queueId,
-        matchId,
-        partnerPeerId: partner.peerId,
-        partnerName: partner.name,
-        partnerMode: partner.mode,
-        partnerAvatarUrl: partner.avatarUrl,
-        topic
-      });
-    }
-
-    speakingClubQueue.push({ queueId, peerId, mode, level, name, avatarUrl, roomCode, joinedAt: Date.now() });
-    return json(res, 200, { status: "waiting", queueId });
+    const matchResult = await scEnqueue({ queueId, peerId, mode, level, name, avatarUrl, roomCode });
+    return json(res, 200, matchResult);
   }
 
   if (req.method === "GET" && pathname === "/api/speaking-club/poll") {
     const requestUrl = new URL(req.url, `http://${req.headers.host}`);
     const queueId = String(requestUrl.searchParams.get("queueId") || "");
-    const matchId = speakingClubUserMatch.get(queueId);
-    if (matchId && speakingClubMatches.has(matchId)) {
-      const match = speakingClubMatches.get(matchId);
-      const isPeerA = match.peerA.queueId === queueId;
-      const partner = isPeerA ? match.peerB : match.peerA;
-      return json(res, 200, {
-        status: "matched",
-        role: isPeerA ? "initiator" : "receiver",
-        matchId,
-        partnerPeerId: partner.peerId,
-        partnerName: partner.name,
-        partnerMode: partner.mode,
-        partnerAvatarUrl: partner.avatarUrl,
-        topic: match.topic
-      });
-    }
-    const queueItem = speakingClubQueue.find(q => q.queueId === queueId);
-    if (queueItem) {
-      queueItem.joinedAt = Date.now();
-      return json(res, 200, { status: "waiting", queueId });
-    }
-    return json(res, 200, { status: "waiting", queueId, recovered: true });
+    if (!queueId) return json(res, 400, { error: "queueId is required." });
+
+    const pollResult = await scPoll(queueId);
+    return json(res, 200, pollResult);
   }
 
   if (req.method === "POST" && pathname === "/api/speaking-club/leave") {
     const body = await readBody(req);
     const queueId = String(body.queueId || "");
-    const idx = speakingClubQueue.findIndex(q => q.queueId === queueId);
-    if (idx !== -1) speakingClubQueue.splice(idx, 1);
-    speakingClubUserMatch.delete(queueId);
+    if (queueId) {
+      await scLeave(queueId);
+    }
     return json(res, 200, { ok: true });
   }
 
