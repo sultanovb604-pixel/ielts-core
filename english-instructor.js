@@ -1,11 +1,11 @@
 /* ==========================================================================
-   IELTS CORE AI INSTRUCTOR — CLIENT LOGIC
+   IELTS CORE AI MENTOR — CLIENT CONTROLLER
    ========================================================================== */
 
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'ielts_instructor_chat_history_v1';
+  const STORAGE_KEY = 'ielts_core_mentor_chat_v2';
   let chatHistory = [];
   let isSending = false;
   let recognition = null;
@@ -24,12 +24,18 @@
 
   // Diagnostic DOM Elements
   const diagEstBand = document.getElementById('diagEstBand');
+  const diagStatusBadge = document.getElementById('diagStatusBadge');
+  const diagZeroState = document.getElementById('diagZeroState');
+  const diagSkillsBreakdown = document.getElementById('diagSkillsBreakdown');
+  const diagWeakHeading = document.getElementById('diagWeakHeading');
   const readingBar = document.getElementById('readingBar');
   const readingVal = document.getElementById('readingVal');
   const listeningBar = document.getElementById('listeningBar');
   const listeningVal = document.getElementById('listeningVal');
   const writingBar = document.getElementById('writingBar');
   const writingVal = document.getElementById('writingVal');
+  const speakingBar = document.getElementById('speakingBar');
+  const speakingVal = document.getElementById('speakingVal');
   const diagWeakList = document.getElementById('diagWeakList');
 
   // --- SAFE HTML ESCAPE ---
@@ -48,7 +54,7 @@
     if (!md) return '';
     let text = String(md);
 
-    // Escape raw HTML except allowed safe structures
+    // Escape raw HTML
     text = escapeHtml(text);
 
     // Headings
@@ -67,10 +73,16 @@
     text = text.replace(/^&gt;\s*\[!(IMPORTANT|NOTE|TIP|WARNING)\]\s*(.*$)/gim, '<blockquote class="alert-$1"><strong>$1:</strong> $2');
     text = text.replace(/^&gt;\s*(.*$)/gim, '<blockquote>$1</blockquote>');
 
+    // Markdown Links: [label](url)
+    text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, url) => {
+      const isExternal = /^https?:\/\//i.test(url);
+      const target = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return `<a href="${url}" class="chat-inline-link"${target}>${label}</a>`;
+    });
+
     // Unordered lists
     text = text.replace(/^\s*\*\s+(.*$)/gim, '<li>$1</li>');
     text = text.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
-    // Consolidate adjacent </ul><ul>
     text = text.replace(/<\/ul>\s*<ul>/g, '');
 
     // Paragraphs
@@ -90,18 +102,14 @@
     const name = studentName ? `, ${studentName}` : '';
     return {
       role: 'model',
-      text: `### Assalomu alaykum${name}! Men sizning shaxsiy IELTS AI Murabbiyingizman 🎓\n\nMen sizga Cambridge IELTS standartlari bo'yicha **Band 7.5 - 9.0** natijasiga erishishingizda 24/7 yordam beraman:\n\n* 🎯 **Zaif nuqtalaringizni tahlil qilaman:** Test natijalaringizni chuqur tahlil qilib, xatolaringiz sababini ko'rsataman;\n* 📖 **Reading & Listening:** True/False/Not Given, Matching Headings va distractorlarni yechish sirlarini o'rgataman;\n* ✍️ **Writing Task 1 & 2:** Band 7+ shablonlar, PEEL usuli va akademik lug'atlar beraman;\n* 🎙️ **Speaking:** Part 1, 2, 3 uchun ravon nutq va boy idiomalar bilan shug'ullanamiz.\n\n**Hozir qaysi bo'lim yoki savol turi bo'yicha qiynalyapsiz?** Quyidagi mavzulardan birini tanlang yoki savolingizni yozing:`,
+      text: `### Assalomu alaykum${name}! Men IELTS Core AI Murabbiyingizman 🎓\n\nMen sizga rasmiy IELTS baholash standartlari (Band Descriptors) asosida **Band 7.5 - 9.0** natijasiga erishishingizda 24/7 yordam beraman:\n\n* ✍️ **Writing Task 1 & 2:** 4-paragrafli PEEL shablonlar, Overview yozish formulasi va Band 8+ akademik lug'atlar;\n* 📖 **Reading:** True/False/Not Given, Matching Headings va vaqtni to'g'ri taqsimlash;\n* 🎧 **Listening:** Section 3-4 distractorlari va xarita savollari;\n* 🎙️ **Speaking:** Part 2 Cue card uchun 1 daqiqalik PPF rejasi va tabiiy ravonlik.\n\n**Hozir qaysi mavzu yoki savol turi bo'yicha yordam kerak?** Quyidagi tezkor tugmalardan birini tanlang yoki savolingizni yozing:`,
       suggestedPrompts: [
-        "Reading: TFNG sirlari",
-        "Writing Task 2: Band 7.5+ PEEL",
-        "Listening: Section 3 Distractorlar",
-        "Speaking: Cue Card 1-minut rejasi",
-        "Mening natijalarimni tahlil qiling"
-      ],
-      recommendedAction: {
-        title: "IELTS Full Reading Test 01",
-        url: "/english/materials?skill=reading&collection=full-test"
-      }
+        "Writing Task 2 uchun Band 7.5+ 4-paragrafli PEEL shablonini bering",
+        "Reading: True/False/Not Given da qanday xato qilmaslik mumkin?",
+        "Matching Headings savollarini tez va to'g'ri ishlash qoidalari qanday?",
+        "Listening Section 3 tuzoqlaridan qanday o'taman?",
+        "Menga 30 kunlik intensiv IELTS tayyorgarlik rejasi tuzib bering"
+      ]
     };
   }
 
@@ -119,14 +127,13 @@
       }
     } catch (e) {}
 
-    // Initial default welcome message
+    // Default honest welcome
     chatHistory = [getWelcomeMessage()];
     renderAllMessages();
   }
 
   function saveChatHistory() {
     try {
-      // Keep up to last 25 messages to maintain storage efficiency
       const sliced = chatHistory.slice(-25);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(sliced));
     } catch (e) {}
@@ -150,23 +157,7 @@
       ? `<div class="msg-avatar"><img src="/assets/ielts-core-mark.png" alt="IELTS Core"></div>`
       : `<div class="msg-avatar"><span class="user-initial material-symbols-outlined">person</span></div>`;
 
-    let bodyHtml = renderMarkdown(msg.text);
-
-    // Optional Recommended Action Card
-    if (isModel && msg.recommendedAction && msg.recommendedAction.url) {
-      bodyHtml += `
-        <div class="test-action-card">
-          <div class="action-card-text">
-            <strong>🎯 Tavsiya etiladigan amaliyot: ${escapeHtml(msg.recommendedAction.title || 'IELTS Practice Test')}</strong>
-            <span>Ushbu test orqali o'rganilgan strategiyani amalda mustahkamlang</span>
-          </div>
-          <a href="${escapeHtml(msg.recommendedAction.url)}" class="btn-action-card">
-            <span>Testga o'tish</span>
-            <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
-          </a>
-        </div>
-      `;
-    }
+    const bodyHtml = renderMarkdown(msg.text);
 
     msgEl.innerHTML = `
       ${avatarHtml}
@@ -265,7 +256,7 @@
       removeTypingIndicator();
 
       if (!res.ok) {
-        throw new Error(`Server returned HTTP ${res.status}`);
+        throw new Error(`Server xatosi (HTTP ${res.status})`);
       }
 
       const data = await res.json();
@@ -273,8 +264,7 @@
 
       const modelMsg = {
         role: 'model',
-        text: replyText,
-        recommendedAction: data.recommendedAction || null
+        text: replyText
       };
 
       chatHistory.push(modelMsg);
@@ -295,11 +285,11 @@
       removeTypingIndicator();
       const errorMsg = {
         role: 'model',
-        text: `> [!WARNING]\n> **Xatolik:** Server bilan aloqada uzilish yuz berdi (${escapeHtml(err.message)}). Qayta urinib ko'ring yoki quyidagi tayyor mavzulardan birini tanlang.`,
+        text: `> [!WARNING]\n> **Aloqa xatoligi:** Server bilan bog'lanishda muammo yuz berdi (${escapeHtml(err.message)}). Qayta urinib ko'ring yoki quyidagi tayyor mavzulardan birini tanlang.`,
         suggestedPrompts: [
+          "Writing Task 2 uchun Band 7.5+ 4-paragrafli PEEL shablonini bering",
           "Reading: TFNG strategiyasini tushuntiring",
-          "Writing Task 2 uchun Band 7.5 shablon bering",
-          "Listening Section 3 bo'yicha maslahat"
+          "Matching Headings savollarini tez yechish usuli"
         ]
       };
       chatHistory.push(errorMsg);
@@ -325,31 +315,79 @@
   }
 
   function applyDiagnosticData(data) {
-    if (!data) return;
+    const hasAttempts = data && data.isLoggedIn && Number(data.totalAttempts) > 0;
+
+    if (!hasAttempts) {
+      if (diagStatusBadge) {
+        diagStatusBadge.textContent = "Boshlang'ich";
+        diagStatusBadge.className = "badge-status-dot neutral";
+      }
+      if (diagEstBand) diagEstBand.textContent = "—";
+      if (diagZeroState) diagZeroState.style.display = "block";
+      if (diagSkillsBreakdown) diagSkillsBreakdown.style.display = "none";
+      if (diagWeakHeading) diagWeakHeading.textContent = "Dolzarb Savol Turlari";
+      return;
+    }
+
+    // Student has test attempts
+    if (diagStatusBadge) {
+      diagStatusBadge.textContent = `Faol (${data.totalAttempts} ta test)`;
+      diagStatusBadge.className = "badge-status-dot active";
+    }
+
+    if (diagZeroState) diagZeroState.style.display = "none";
+    if (diagSkillsBreakdown) diagSkillsBreakdown.style.display = "flex";
 
     if (diagEstBand) {
-      diagEstBand.textContent = data.predictedOverallBand || data.predictedBand || '6.5';
+      diagEstBand.textContent = data.predictedOverallBand || data.predictedBand || '—';
     }
 
     if (readingVal && readingBar) {
-      const rBand = data.readingBand || data.readingAvgBand || 6.5;
-      readingVal.textContent = rBand;
-      const pct = Math.min(100, Math.max(30, (rBand / 9.0) * 100));
-      readingBar.style.width = `${pct}%`;
+      const rBand = data.readingBand || null;
+      if (rBand) {
+        readingVal.textContent = rBand;
+        const pct = Math.min(100, Math.max(15, (rBand / 9.0) * 100));
+        readingBar.style.width = `${pct}%`;
+      } else {
+        readingVal.textContent = "—";
+        readingBar.style.width = "0%";
+      }
     }
 
     if (listeningVal && listeningBar) {
-      const lBand = data.listeningBand || data.listeningAvgBand || 7.0;
-      listeningVal.textContent = lBand;
-      const pct = Math.min(100, Math.max(30, (lBand / 9.0) * 100));
-      listeningBar.style.width = `${pct}%`;
+      const lBand = data.listeningBand || null;
+      if (lBand) {
+        listeningVal.textContent = lBand;
+        const pct = Math.min(100, Math.max(15, (lBand / 9.0) * 100));
+        listeningBar.style.width = `${pct}%`;
+      } else {
+        listeningVal.textContent = "—";
+        listeningBar.style.width = "0%";
+      }
     }
 
     if (writingVal && writingBar) {
-      const wBand = data.writingBand || data.writingAvgBand || 6.5;
-      writingVal.textContent = wBand;
-      const pct = Math.min(100, Math.max(30, (wBand / 9.0) * 100));
-      writingBar.style.width = `${pct}%`;
+      const wBand = data.writingBand || null;
+      if (wBand) {
+        writingVal.textContent = wBand;
+        const pct = Math.min(100, Math.max(15, (wBand / 9.0) * 100));
+        writingBar.style.width = `${pct}%`;
+      } else {
+        writingVal.textContent = "—";
+        writingBar.style.width = "0%";
+      }
+    }
+
+    if (speakingVal && speakingBar) {
+      const sBand = data.speakingBand || null;
+      if (sBand) {
+        speakingVal.textContent = sBand;
+        const pct = Math.min(100, Math.max(15, (sBand / 9.0) * 100));
+        speakingBar.style.width = `${pct}%`;
+      } else {
+        speakingVal.textContent = "—";
+        speakingBar.style.width = "0%";
+      }
     }
 
     // Dynamic Weak Spots list
@@ -359,16 +397,18 @@
       const allWeaks = [...weakReading, ...weakListening];
 
       if (allWeaks.length > 0) {
+        if (diagWeakHeading) diagWeakHeading.textContent = "Aniqlangan Zaif Nuqtalar";
         diagWeakList.innerHTML = '';
         allWeaks.slice(0, 4).forEach(item => {
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'weak-chip';
-          const prompt = `${item.name} bo'yicha xatolarim ko'p. Buni Cambridge qoidalari bo'yicha qanday to'g'irlasam bo'ladi?`;
+          const prompt = `${item.name} bo'yicha xatolarim ko'p. Buni rasmiy mezonlar bo'yicha qanday to'g'irlasam bo'ladi?`;
           btn.setAttribute('data-prompt', prompt);
           btn.innerHTML = `
+            <span class="weak-dot warning"></span>
             <span class="weak-name">${escapeHtml(item.name)}</span>
-            <span class="weak-action">Ask Mentor &rarr;</span>
+            <span class="weak-badge">${item.accuracy ? item.accuracy + '%' : 'Zaif'}</span>
           `;
           btn.addEventListener('click', () => sendPrompt(prompt));
           diagWeakList.appendChild(btn);
@@ -388,7 +428,7 @@
     recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'uz-UZ'; // Can fallback or auto-detect
+    recognition.lang = 'uz-UZ';
 
     recognition.onstart = () => {
       isVoiceActive = true;
@@ -454,42 +494,29 @@
       });
     }
 
-    // Reset Chat
+    // Clear history button
     if (btnClear) {
       btnClear.addEventListener('click', () => {
-        if (confirm("Haqiqatan ham suhbat tarixini tozalab, boshidan boshlamoqchimisiz?")) {
+        if (confirm("Suhbat tarixini tozalashni xohlaysizmi?")) {
+          localStorage.removeItem(STORAGE_KEY);
           chatHistory = [getWelcomeMessage()];
-          saveChatHistory();
           renderAllMessages();
-          if (window.showToast) window.showToast("Suhbat yangilandi", "info");
         }
       });
     }
 
-    // Mobile Sidebar Toggle
+    // Toggle sidebar on mobile / compact view
     if (btnToggleSidebar && sidebarPanel) {
       btnToggleSidebar.addEventListener('click', () => {
-        sidebarPanel.classList.toggle('is-open');
-      });
-
-      // Close sidebar if clicking outside
-      sidebarPanel.addEventListener('click', (e) => {
-        if (e.target === sidebarPanel && sidebarPanel.classList.contains('is-open')) {
-          sidebarPanel.classList.remove('is-open');
-        }
+        sidebarPanel.classList.toggle('panel-open');
       });
     }
 
-    // Attach click listeners to static chips & shortcuts
-    document.querySelectorAll('[data-prompt]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const prompt = e.currentTarget.getAttribute('data-prompt');
-        if (prompt) {
-          sendPrompt(prompt);
-          if (sidebarPanel && sidebarPanel.classList.contains('is-open')) {
-            sidebarPanel.classList.remove('is-open');
-          }
-        }
+    // Delegate static prompt clicks across sidebar and track
+    document.querySelectorAll('[data-prompt]').forEach(el => {
+      el.addEventListener('click', () => {
+        const prompt = el.getAttribute('data-prompt');
+        if (prompt) sendPrompt(prompt);
       });
     });
   }

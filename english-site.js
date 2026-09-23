@@ -249,7 +249,7 @@
       {
         title: 'AI Mentorship (24/7)',
         links: [
-          { label: 'AI IELTS Instructor', icon: 'psychology', href: '/english/instructor', active: isInstructor, badge: 'AI 24/7' }
+          { label: 'AI IELTS Mentor', icon: 'psychology', href: '/english/instructor', active: isInstructor, badge: 'AI 24/7' }
         ]
       },
       {

@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="uz">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="IELTS Core AI Instructor — 24/7 Cambridge IELTS Master Tutor for Reading, Listening, Writing, and Speaking with personalized error diagnostics and test strategies.">
-  <title>AI IELTS Instructor (24/7 Mentor) | IELTS Core</title>
+  <meta name="description" content="IELTS Core AI Mentor — Reading, Listening, Writing va Speaking bo'yicha 24/7 shaxsiy murabbiy. Rasmiy IELTS mezonlari asosida zaif nuqtalarni bartaraf etish.">
+  <title>IELTS Core AI Mentor (24/7 Shaxsiy Murabbiy) | IELTS Core</title>
   <script>document.documentElement.dataset.theme=localStorage.getItem('vortex-english-theme')==='dark'?'dark':'light'</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/english-pages.css?v=20260823_999">
   <link rel="stylesheet" href="/english-product-v4.css?v=20260901_009">
   <link rel="stylesheet" href="/english-internal-premium.css?v=20260922_sb_final">
-  <link rel="stylesheet" href="/english-instructor.css?v=20260923_v1">
+  <link rel="stylesheet" href="/english-instructor.css?v=20260923_v2">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
 </head>
 <body class="app-body materials-page premium-product-page member-layout instructor-page">
@@ -27,7 +27,7 @@
       <a href="/english">Home</a>
       <a href="/english/practice">Practice</a>
       <a href="/english/mock-tests">Mock Exams</a>
-      <a href="/english/instructor" aria-current="page">AI Instructor</a>
+      <a href="/english/instructor" aria-current="page">AI Mentor</a>
       <a href="/english/materials">Materials</a>
       <a href="/english/pricing">Pricing</a>
       <a href="/english/account">Dashboard</a>
@@ -43,75 +43,93 @@
     <nav class="vx-breadcrumb-bar" aria-label="Breadcrumb">
       <a href="/english/materials"><span class="material-symbols-outlined">home</span> Materials</a>
       <span class="sep">/</span>
-      <span class="current">AI IELTS Instructor <span class="badge-ai-pill">AI 24/7</span></span>
+      <span class="current">IELTS Core AI Mentor <span class="badge-ai-pill">24/7 Faol</span></span>
     </nav>
 
     <!-- Workspace Grid -->
     <div class="instructor-workspace">
       <!-- Left Panel: Student Diagnostic & Quick Strategy Hub -->
       <aside class="instructor-sidebar-panel" id="instructorSidebarPanel">
+        <!-- Diagnostic Card -->
         <div class="diagnostic-card" id="diagnosticCard">
           <div class="diag-header">
             <div class="diag-title-wrap">
               <span class="material-symbols-outlined icon-blue">analytics</span>
-              <h3>Performance Diagnostic</h3>
+              <h3>Diagnostik Holat</h3>
             </div>
-            <span class="badge-live-dot" title="Real-time test tracking">Live</span>
+            <span class="badge-status-dot" id="diagStatusBadge">Yuklanmoqda...</span>
           </div>
 
           <div class="diag-band-overview" id="diagBandOverview">
             <div class="band-stat-box">
-              <span class="stat-label">Estimated Band</span>
-              <strong class="stat-val" id="diagEstBand">6.5</strong>
+              <span class="stat-label">Hozirgi Band</span>
+              <strong class="stat-val" id="diagEstBand">—</strong>
             </div>
             <div class="band-stat-box">
-              <span class="stat-label">Target Band</span>
+              <span class="stat-label">Maqsadli Band</span>
               <strong class="stat-val highlight" id="diagTargetBand">7.5+</strong>
             </div>
           </div>
 
-          <!-- Skill Mini Bars -->
-          <div class="diag-skills-breakdown" id="diagSkillsBreakdown">
+          <!-- Zero State Prompt (visible when student has 0 tests) -->
+          <div class="diag-zero-state" id="diagZeroState">
+            <p class="diag-zero-desc">Shaxsiy kuchli va zaif nuqtalaringizni aniqlash uchun kamida 1 ta to'liq test topshiring.</p>
+            <a href="/english/materials?skill=reading&collection=full-test" class="btn-start-diag">
+              <span class="material-symbols-outlined">play_arrow</span>
+              <span>Reading Test 01</span>
+            </a>
+          </div>
+
+          <!-- Skill Mini Bars (populated when attempts exist) -->
+          <div class="diag-skills-breakdown" id="diagSkillsBreakdown" style="display: none;">
             <div class="skill-mini-row">
               <span class="skill-mini-name">Reading</span>
-              <div class="skill-mini-bar"><div class="skill-mini-fill reading" id="readingBar" style="width: 70%;"></div></div>
-              <strong class="skill-mini-val" id="readingVal">6.5</strong>
+              <div class="skill-mini-bar"><div class="skill-mini-fill reading" id="readingBar" style="width: 0%;"></div></div>
+              <strong class="skill-mini-val" id="readingVal">—</strong>
             </div>
             <div class="skill-mini-row">
               <span class="skill-mini-name">Listening</span>
-              <div class="skill-mini-bar"><div class="skill-mini-fill listening" id="listeningBar" style="width: 75%;"></div></div>
-              <strong class="skill-mini-val" id="listeningVal">7.0</strong>
+              <div class="skill-mini-bar"><div class="skill-mini-fill listening" id="listeningBar" style="width: 0%;"></div></div>
+              <strong class="skill-mini-val" id="listeningVal">—</strong>
             </div>
             <div class="skill-mini-row">
               <span class="skill-mini-name">Writing</span>
-              <div class="skill-mini-bar"><div class="skill-mini-fill writing" id="writingBar" style="width: 65%;"></div></div>
-              <strong class="skill-mini-val" id="writingVal">6.5</strong>
+              <div class="skill-mini-bar"><div class="skill-mini-fill writing" id="writingBar" style="width: 0%;"></div></div>
+              <strong class="skill-mini-val" id="writingVal">—</strong>
             </div>
             <div class="skill-mini-row">
               <span class="skill-mini-name">Speaking</span>
-              <div class="skill-mini-bar"><div class="skill-mini-fill speaking" id="speakingBar" style="width: 65%;"></div></div>
-              <strong class="skill-mini-val" id="speakingVal">6.5</strong>
+              <div class="skill-mini-bar"><div class="skill-mini-fill speaking" id="speakingBar" style="width: 0%;"></div></div>
+              <strong class="skill-mini-val" id="speakingVal">—</strong>
             </div>
           </div>
 
-          <!-- Identified Weak Spots -->
+          <!-- Identified Weak Spots / High-Impact Topics -->
           <div class="diag-weak-section">
             <h4 class="diag-subheading">
-              <span class="material-symbols-outlined" style="font-size:16px;color:#f59e0b;">error_outline</span>
-              <span>Identified Weak Spots</span>
+              <span class="material-symbols-outlined" style="font-size:16px;color:#f59e0b;">flag</span>
+              <span id="diagWeakHeading">Dolzarb Savol Turlari</span>
             </h4>
             <div class="diag-weak-list" id="diagWeakList">
-              <button type="button" class="weak-chip" data-prompt="True / False / Not Given savollarida xatolarim ko'p. Qanday to'g'irlasam bo'ladi?">
+              <button type="button" class="weak-chip" data-prompt="Reading: True, False va Not Given orasidagi farqni misollar bilan tushuntiring">
+                <span class="weak-dot reading"></span>
                 <span class="weak-name">True / False / Not Given</span>
-                <span class="weak-action">Ask Mentor &rarr;</span>
+                <span class="material-symbols-outlined weak-arrow">arrow_forward</span>
               </button>
-              <button type="button" class="weak-chip" data-prompt="Matching Headings savollarini tez va aniq yechish sirlarini bering.">
+              <button type="button" class="weak-chip" data-prompt="Matching Headings savollarini tez va to'g'ri ishlash qoidalari qanday?">
+                <span class="weak-dot reading"></span>
                 <span class="weak-name">Matching Headings</span>
-                <span class="weak-action">Ask Mentor &rarr;</span>
+                <span class="material-symbols-outlined weak-arrow">arrow_forward</span>
               </button>
-              <button type="button" class="weak-chip" data-prompt="Listening Section 3 da variantlar tez almashib ketadi, distractorlardan qanday saqlanaman?">
-                <span class="weak-name">Listening Section 3 Distractors</span>
-                <span class="weak-action">Ask Mentor &rarr;</span>
+              <button type="button" class="weak-chip" data-prompt="Listening Section 3 distractorlaridan qanday saqlanish mumkin?">
+                <span class="weak-dot listening"></span>
+                <span class="weak-name">Listening Section 3 Distractorlar</span>
+                <span class="material-symbols-outlined weak-arrow">arrow_forward</span>
+              </button>
+              <button type="button" class="weak-chip" data-prompt="Writing Task 2 uchun Band 7.5+ 4-paragrafli PEEL shablonini bering">
+                <span class="weak-dot writing"></span>
+                <span class="weak-name">Writing Task 2 PEEL Shablon</span>
+                <span class="material-symbols-outlined weak-arrow">arrow_forward</span>
               </button>
             </div>
           </div>
@@ -121,12 +139,12 @@
         <div class="strategy-shortcuts-card">
           <h4 class="diag-subheading">
             <span class="material-symbols-outlined" style="font-size:16px;color:#1468f3;">school</span>
-            <span>Master Strategy Drills</span>
+            <span>Tezkor Strategiyalar</span>
           </h4>
           <div class="shortcuts-grid">
             <button type="button" class="shortcut-btn" data-prompt="Reading: True, False va Not Given orasidagi farqni misollar bilan tushuntiring">
               <span class="shortcut-icon">📖</span>
-              <span>TFNG Mastery</span>
+              <span>TFNG Qoidasi</span>
             </button>
             <button type="button" class="shortcut-btn" data-prompt="Writing Task 2 uchun Band 7.5+ 4-paragrafli PEEL shablonini bering">
               <span class="shortcut-icon">✍️</span>
@@ -134,11 +152,11 @@
             </button>
             <button type="button" class="shortcut-btn" data-prompt="Speaking Part 2 Cue card uchun 1 daqiqada PPF (Past, Present, Future) rejasini qanday tuzaman?">
               <span class="shortcut-icon">🎙️</span>
-              <span>Speaking Cue Card</span>
+              <span>Cue Card PPF</span>
             </button>
             <button type="button" class="shortcut-btn" data-prompt="Menga 30 kunlik intensiv IELTS tayyorgarlik rejasi tuzib bering">
               <span class="shortcut-icon">📅</span>
-              <span>30-Day Plan</span>
+              <span>30 Kunlik Reja</span>
             </button>
           </div>
         </div>
@@ -147,71 +165,72 @@
         <div class="practice-hub-card">
           <div class="practice-hub-header">
             <span class="material-symbols-outlined" style="font-size:16px;color:#10b981;">task_alt</span>
-            <span>Recommended Exams</span>
+            <span>Tavsiya Etiladigan Testlar</span>
           </div>
           <div class="practice-hub-links">
             <a href="/english/materials?skill=reading&collection=full-test" class="practice-hub-link">
               <span class="material-symbols-outlined" style="font-size:15px;color:#1468f3;">menu_book</span>
-              <span>IELTS Full Reading Tests (40 Qs)</span>
+              <span>IELTS Reading Full Testlar (40 ta savol)</span>
             </a>
             <a href="/english/materials?skill=listening&collection=full-test" class="practice-hub-link">
               <span class="material-symbols-outlined" style="font-size:15px;color:#1468f3;">headphones</span>
-              <span>IELTS Full Listening Tests (40 Qs)</span>
+              <span>IELTS Listening Full Testlar (40 ta savol)</span>
             </a>
             <a href="/english/writing-editor" class="practice-hub-link">
               <span class="material-symbols-outlined" style="font-size:15px;color:#1468f3;">edit_note</span>
-              <span>Academic Writing Editor</span>
+              <span>Akademik Writing Muharriri</span>
             </a>
             <a href="/english/speaking" class="practice-hub-link">
               <span class="material-symbols-outlined" style="font-size:15px;color:#1468f3;">mic</span>
-              <span>Speaking AI Studio</span>
+              <span>Speaking AI Mashg'ulot Studio</span>
             </a>
           </div>
         </div>
       </aside>
 
-      <!-- Main Column: Dedicated AI IELTS Instructor Chat Stream -->
+      <!-- Main Column: Dedicated AI IELTS Mentor Chat Stream -->
       <section class="instructor-chat-panel">
         <header class="chat-header">
           <div class="chat-instructor-meta">
             <div class="instructor-avatar-wrap">
-              <img src="/assets/ielts-core-mark.png" alt="IELTS Core AI Instructor" class="instructor-avatar-img">
-              <span class="status-indicator online" title="Online 24/7"></span>
+              <img src="/assets/ielts-core-mark.png" alt="IELTS Core AI Mentor" class="instructor-avatar-img">
+              <span class="status-indicator online" title="24/7 Faol"></span>
             </div>
             <div class="instructor-info">
               <div class="instructor-name-row">
-                <h2>IELTS Core AI Instructor</h2>
-                <span class="verified-badge" title="Official Cambridge Pedagogy"><span class="material-symbols-outlined">verified</span> Cambridge Certified</span>
+                <h2>IELTS Core AI Mentor</h2>
+                <span class="verified-badge" title="Rasmiy IELTS Band Descriptors standartlari asosida"><span class="material-symbols-outlined">verified</span> Rasmiy IELTS Mezonlari</span>
               </div>
-              <p class="instructor-role-text">24/7 Personal Mentor • Reading, Listening, Writing &amp; Speaking Specialist</p>
+              <p class="instructor-role-text">24/7 Shaxsiy Murabbiy • Reading, Listening, Writing &amp; Speaking</p>
             </div>
           </div>
           <div class="chat-header-actions">
-            <button type="button" class="btn-chat-action" id="btnToggleSidebar" title="Toggle diagnostic sidebar">
+            <button type="button" class="btn-chat-action" id="btnToggleSidebar" title="Diagnostika panelini ko'rsatish/yashirish">
               <span class="material-symbols-outlined">dashboard_customize</span>
-              <span class="btn-text">Diagnostic</span>
+              <span class="btn-text">Diagnostika</span>
             </button>
-            <button type="button" class="btn-chat-action" id="btnClearChat" title="Clear conversation history">
+            <button type="button" class="btn-chat-action" id="btnClearChat" title="Suhbat tarixini tozalash">
               <span class="material-symbols-outlined">restart_alt</span>
-              <span class="btn-text">Reset</span>
+              <span class="btn-text">Yangilash</span>
             </button>
           </div>
         </header>
 
         <!-- Message Stream -->
         <div class="chat-messages-container" id="chatMessagesContainer">
-          <!-- Initial Welcome Message will be dynamically injected by JS or fallback -->
+          <!-- Dynamic chat messages -->
         </div>
 
         <!-- Interactive Quick Prompt Chips -->
         <div class="quick-chips-wrapper" id="quickChipsWrapper">
           <div class="quick-chips-track" id="quickChipsTrack">
+            <button type="button" class="chip-item" data-prompt="Writing Task 2 uchun Band 7.5+ 4-paragrafli PEEL shablonini bering">Writing Task 2: Band 7.5+ PEEL</button>
             <button type="button" class="chip-item" data-prompt="Reading: True/False/Not Given da qanday xato qilmaslik mumkin?">Reading: TFNG sirlari</button>
-            <button type="button" class="chip-item" data-prompt="Writing Task 2: 7.5+ insho strukturasini bering">Writing Task 2: Band 7.5+ PEEL</button>
+            <button type="button" class="chip-item" data-prompt="Matching Headings savollarini tez va to'g'ri ishlash qoidalari qanday?">Reading: Matching Headings</button>
             <button type="button" class="chip-item" data-prompt="Listening Section 3 tuzoqlaridan qanday o'taman?">Listening: Section 3 Distractorlar</button>
-            <button type="button" class="chip-item" data-prompt="Speaking Part 2 Cue card uchun qanday tayyorlanish kerak?">Speaking: Cue Card 1-minut rejasi</button>
+            <button type="button" class="chip-item" data-prompt="Speaking Part 2 Cue card uchun 1 daqiqada PPF rejasini qanday tuzaman?">Speaking: Cue Card PPF</button>
+            <button type="button" class="chip-item" data-prompt="Menga 30 kunlik intensiv IELTS tayyorgarlik rejasi tuzib bering">30 kunlik o'qish rejasi</button>
             <button type="button" class="chip-item" data-prompt="Mening oxirgi test natijalarimni tahlil qilib, zaif joylarimni ayting">Zaif nuqtalarimni tahlil qilish</button>
-            <button type="button" class="chip-item" data-prompt="Menga 30 kunlik IELTS rejasi tuzib bering">30 kunlik o'qish rejasi</button>
           </div>
         </div>
 
@@ -221,7 +240,7 @@
             <textarea
               id="chatMessageInput"
               class="chat-textarea"
-              placeholder="IELTS bo'yicha qiynalayotgan joyingizni yozing (masalan: 'TFNG savollarida adashyapman')..."
+              placeholder="IELTS bo'yicha qiynalayotgan joyingizni yozing (masalan: 'Task 2 PEEL shablonini bering' yoki 'TFNG qoidalari')..."
               rows="1"
               maxlength="2000"
               required
@@ -236,7 +255,7 @@
             </div>
           </form>
           <div class="chat-input-hint">
-            <span>Faqat IELTS imtihoniga yo'naltirilgan rasmiy Cambridge maslahatlari. Enter — yuborish, Shift+Enter — yangi qator.</span>
+            <span>Rasmiy IELTS baholash mezonlari asosidagi maslahatlar. Enter — yuborish, Shift+Enter — yangi qator.</span>
           </div>
         </div>
       </section>
@@ -248,10 +267,10 @@
       <span class="app-mark"><img src="/assets/ielts-core-mark.png" height="24" alt="IELTS Core"></span>
       <strong>IELTS CORE</strong>
     </div>
-    <p>Official Cambridge IELTS Standards AI Mentorship. Practice scores are estimates.</p>
+    <p>IELTS Core ta'limiy platformasi rasmiy IELTS Band Descriptors baholash mezonlari asosida yo'l-yo'riq beradi. Mustaqil tayyorgarlik vositasi hisoblanadi.</p>
   </footer>
 
-  <script src="/english-site.js?v=20260923_inst_v1"></script>
-  <script src="/english-instructor.js?v=20260923_inst_v1"></script>
+  <script src="/english-site.js?v=20260923_inst_v2"></script>
+  <script src="/english-instructor.js?v=20260923_inst_v2"></script>
 </body>
 </html>
