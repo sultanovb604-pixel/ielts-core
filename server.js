@@ -236,7 +236,7 @@ function normalizeReadingText(source) {
 function readingQuestionNumbers(source) {
   const normalized = normalizeReadingText(source);
   const questions = new Set();
-  const rangePattern = /Questions?\s*(?:<[^>]+>|\s|:)*?(\d{1,2})\s*(?:-|–|—|to)\s*(\d{1,2})/gi;
+  const rangePattern = /Questions?\s*(?:<[^>]+>|\s|:)*?(\d{1,2})\s*(?:-|–|—|to|and|&)\s*(\d{1,2})/gi;
   for (const match of normalized.matchAll(rangePattern)) {
     const start = Number(match[1]);
     const end = Number(match[2]);
@@ -246,6 +246,15 @@ function readingQuestionNumbers(source) {
   }
   const fieldPattern = /(?:id|name|data-question|data-q)=["'](?:q(?:uestion)?[_-]?|question-)?(\d{1,2})["']/gi;
   for (const match of normalized.matchAll(fieldPattern)) questions.add(Number(match[1]));
+
+  const rangeFieldPattern = /(?:id|name|data-question|data-q)=["'](?:q(?:uestion)?[_-]?|question-)?(\d{1,2})_(\d{1,2})["']/gi;
+  for (const match of normalized.matchAll(rangeFieldPattern)) {
+    const start = Number(match[1]);
+    const end = Number(match[2]);
+    if (start > 0 && end >= start && end - start <= 50) {
+      for (let number = start; number <= end; number += 1) questions.add(number);
+    }
+  }
   return questions;
 }
 
@@ -377,7 +386,11 @@ function scoreReadingAnswers(material, answers, detailed = false) {
     const numericKey = normalizedKey.replace(/^q/, "");
     const range = numericKey.match(/^(\d+)_(\d+)$/);
     const candidates = [normalizedKey, numericKey, `q${numericKey}`];
-    if (range) candidates.push(`q${range[1]}`, range[1]);
+    if (range) {
+      for (let r = Number(range[1]); r <= Number(range[2]); r++) {
+        candidates.push(`q${r}`, String(r));
+      }
+    }
     const actual = candidates.flatMap(candidate => submitted.get(candidate) || []);
     const expected = (Array.isArray(rawExpected) ? rawExpected : [rawExpected]).map(normalizeExamAnswer).filter(Boolean);
     if (range) {

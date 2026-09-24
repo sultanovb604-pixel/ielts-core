@@ -132,7 +132,8 @@ function scoreListeningAnswers(material, answers = [], detailed = true) {
   if (!detailed) return boundedCorrect;
 
   const incorrectQuestions = [];
-  const startQ = totalQuestions === 20 && material.id.includes("drill-02") || material.id.includes("drill-04") || material.id.includes("drill-06") || material.id.includes("drill-08") ? 21 : 1;
+  const isDrill34 = ["drill-02", "drill-04", "drill-06", "drill-08"].some(d => (material.id || "").includes(d));
+  const startQ = totalQuestions === 20 && isDrill34 ? 21 : 1;
   const endQ = startQ + totalQuestions - 1;
 
   for (let q = startQ; q <= endQ; q++) {
