@@ -4,14 +4,12 @@
  */
 (() => {
   // Elements
-  const card = document.getElementById('pricingInteractiveCard');
+  const stageContainer = document.getElementById('pricingStage');
   const canvas = document.getElementById('celebrationCanvas');
-  const stepDots = document.querySelectorAll('[data-step-dot]');
-  const stepConnectors = document.querySelectorAll('.step-connector');
   const replayBtn = document.getElementById('replayBtn');
   const token = localStorage.getItem('vortex-english-token');
 
-  if (!card) return;
+  if (!stageContainer) return;
 
   let currentStage = 0;
   const maxStage = 5;
@@ -258,49 +256,29 @@
   // =========================================================================
   function renderStage(stage) {
     currentStage = stage;
-    card.setAttribute('data-stage', stage);
+    stageContainer.setAttribute('data-stage', stage);
 
     // Update views
     for (let i = 0; i <= maxStage; i++) {
-      const view = card.querySelector(`.stage-${i}-view`);
+      const view = stageContainer.querySelector(`.stage-${i}-view`);
       if (view) {
         view.hidden = (i !== stage);
       }
     }
 
-    // Update Stepper
-    stepDots.forEach(dot => {
-      const stepIdx = parseInt(dot.getAttribute('data-step-dot'), 10);
-      dot.classList.remove('active', 'passed');
-      if (stepIdx === stage || (stage === 5 && stepIdx === 4)) {
-        dot.classList.add('active');
-      } else if (stepIdx < stage) {
-        dot.classList.add('passed');
-      }
-    });
-
-    stepConnectors.forEach((conn, idx) => {
-      conn.classList.toggle('passed', idx < stage);
-    });
-
     // Sound and animation effects per stage
     if (stage === 1) {
       // First guess
-      card.classList.remove('card-shake-anim');
     } else if (stage === 2 || stage === 3 || stage === 4) {
-      // Rejection shakes
+      // Rejection audio cue
       playRejectionSound();
-      card.classList.remove('card-shake-anim');
-      void card.offsetWidth; // Force reflow
-      card.classList.add('card-shake-anim');
     } else if (stage === 5) {
       // THE GRAND CELEBRATION!
-      card.classList.remove('card-shake-anim');
       playCelebrationFanfare();
       celebration.start();
 
       // Smooth scroll so the grand reveal is centered comfortably
-      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      stageContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -310,23 +288,23 @@
     }
   }
 
-  // Click on the interactive card advances to next stage
-  card.addEventListener('click', event => {
-    // If in stage 5, don't advance further, let buttons handle clicks
-    if (currentStage >= maxStage) return;
-
-    // Advance
-    advanceStage();
-  });
-
-  // Keyboard accessibility: Enter or Space triggers card action
-  card.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      if (currentStage < maxStage) {
-        event.preventDefault();
+  // Explicit buttons for each stage
+  for (let s = 0; s < maxStage; s++) {
+    const btn = document.getElementById(`stageBtn${s}`);
+    if (btn) {
+      btn.addEventListener('click', event => {
+        event.stopPropagation();
         advanceStage();
-      }
+      });
     }
+  }
+
+  // Allow clicking anywhere within the stage section (before stage 5) to advance
+  stageContainer.addEventListener('click', event => {
+    if (currentStage >= maxStage) return;
+    // Don't double trigger if clicked on an actual button or link
+    if (event.target.closest('button') || event.target.closest('a')) return;
+    advanceStage();
   });
 
   // Replay Game Button
@@ -335,7 +313,7 @@
       event.stopPropagation();
       celebration.stop();
       renderStage(0);
-      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      stageContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
 
