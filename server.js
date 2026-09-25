@@ -652,7 +652,7 @@ function readingPersistenceMarkup(material, user, requestedMode) {
   const totalQuestions = Number(material.questionCount) || 40;
   const passageCount = Number(material.passageCount) || (material.materialKind === "full-test" ? 3 : 1);
   const durationSeconds = material.materialKind === "full-test" ? 3600 : (passageCount > 1 ? passageCount * 1200 : 1200);
-  const isPremium = user?.plan === "premium";
+  const isPremium = true;
   const answerKey = readingAnswerKey(material);
   const config = JSON.stringify({
     id: material.id,
@@ -661,8 +661,8 @@ function readingPersistenceMarkup(material, user, requestedMode) {
     passageCount: passageCount,
     durationSeconds: durationSeconds,
     materialKind: material.materialKind || "full-test",
-    isPremium: isPremium,
-    userPlan: user?.plan || "free",
+    isPremium: true,
+    userPlan: "premium",
     answerKey: answerKey || {}
   }).replace(/</g, "\\u003c");
 
@@ -6569,7 +6569,7 @@ function userToSupabaseRow(user) {
     username: user.username || user.email || `user_${String(user.id).slice(0, 6)}`,
     password_hash: encodeSupabaseAuth(user),
     role: user.role === "teacher" ? "teacher" : "student",
-    plan: user.plan === "premium" ? "premium" : "free",
+    plan: "premium",
     expires_at: isoDate(user.planExpiresAt, "2099-12-31T23:59:59.000Z"),
     created_at: isoDate(user.createdAt, new Date().toISOString())
   };
@@ -6578,9 +6578,6 @@ function userToSupabaseRow(user) {
 function userFromSupabaseRow(row, existing) {
   const auth = decodeSupabaseAuth(row.password_hash);
   const legacyHashMatches = existing && existing.passwordHash && existing.passwordHash === auth.passwordHash;
-  const hasEncodedPlanExpiry = Object.prototype.hasOwnProperty.call(auth, "planExpiresAt");
-  const remoteExpiry = String(row.expires_at || "");
-  const isNoExpirySentinel = remoteExpiry.startsWith("2099-12-31T23:59:59");
   return {
     ...(existing || {}),
     ...auth,
@@ -6590,8 +6587,8 @@ function userFromSupabaseRow(row, existing) {
     passwordHash: auth.passwordHash || existing?.passwordHash || "",
     salt: auth.salt || (legacyHashMatches ? existing.salt : ""),
     role: row.role === "teacher" ? "teacher" : "student",
-    plan: row.plan === "premium" ? "premium" : "free",
-    planExpiresAt: hasEncodedPlanExpiry ? auth.planExpiresAt : (row.plan === "premium" && !isNoExpirySentinel ? row.expires_at : null),
+    plan: "premium",
+    planExpiresAt: null,
     grade: auth.grade || existing?.grade || "beginner",
     createdAt: row.created_at || existing?.createdAt || new Date().toISOString()
   };
@@ -7743,7 +7740,7 @@ async function api(req, res, pathname) {
         avatarUrl,
         learning,
         goal,
-        plan: "free",
+        plan: "premium",
         authProvider: "google",
         grade: "beginner",
         createdAt: new Date().toISOString()
@@ -7755,6 +7752,7 @@ async function api(req, res, pathname) {
       if (!student.googleId) { student.googleId = uid; student.authProvider = "google"; changed = true; }
       if (!student.email) { student.email = email; changed = true; }
       if (!student.avatarUrl && avatarUrl) { student.avatarUrl = avatarUrl; changed = true; }
+      if (student.plan !== "premium") { student.plan = "premium"; changed = true; }
       if (changed) await writeData(data);
     }
 
@@ -7827,7 +7825,7 @@ async function api(req, res, pathname) {
           googleSub: String(profile.sub),
           authProvider: "google",
           avatarUrl: /^https:\/\//.test(String(profile.picture || "")) ? String(profile.picture) : "",
-          plan: "free",
+          plan: "premium",
           grade: "beginner",
           learning: savedState.learning,
           goal: savedState.goal,
@@ -7839,7 +7837,7 @@ async function api(req, res, pathname) {
         user.googleSub = String(profile.sub);
         user.authProvider = user.passwordHash ? "password+google" : "google";
         user.avatarUrl = /^https:\/\//.test(String(profile.picture || "")) ? String(profile.picture) : (user.avatarUrl || "");
-        user.plan = user.plan === "premium" ? "premium" : "free";
+        user.plan = "premium";
       }
       await writeData(data);
       const ticket = issueScopedToken("google-login", { userId: user.id, next: savedState.next }, 2 * 60 * 1000);
@@ -7876,7 +7874,7 @@ async function api(req, res, pathname) {
       if (existingRemoteUser) return json(res, 409, { error: "That username is already taken." });
     }
     const salt = crypto.randomBytes(16).toString("hex");
-    const user = { id: crypto.randomUUID(), name, username, role, grade, learning, goal, plan: "free", authProvider: "password", salt, passwordHash: passwordHash(password, salt), createdAt: new Date().toISOString() };
+    const user = { id: crypto.randomUUID(), name, username, role, grade, learning, goal, plan: "premium", authProvider: "password", salt, passwordHash: passwordHash(password, salt), createdAt: new Date().toISOString() };
     data.users.push(user);
     try {
       await writeData(data);
@@ -8212,13 +8210,13 @@ async function api(req, res, pathname) {
 
   if (req.method === "GET" && pathname === "/api/mock-catalog") {
     const user = studentFromRequest(req, data);
-    const isPremium = user?.plan === "premium";
+    const isPremium = true;
     const catalog = readMockCatalog().map(m => {
       const userAttempts = (data.mockAttempts || []).filter(att => user && att.studentId === user.id && att.mockId === m.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
       const latestAttempt = userAttempts[0] || null;
       return {
         ...m,
-        locked: !m.free && !isPremium,
+        locked: false,
         completed: Boolean(latestAttempt),
         latestBand: latestAttempt ? latestAttempt.overallBand : null,
         attemptCount: userAttempts.length
@@ -10538,8 +10536,8 @@ const mime = {
 };
 
 function listeningPersistenceMarkup(user) {
-  const isPremium = user?.plan === "premium";
-  const config = JSON.stringify({ id: LISTENING_MATERIAL.id, title: LISTENING_MATERIAL.title, isPremium, userPlan: user?.plan || "free" }).replace(/</g, "\\u003c");
+  const isPremium = true;
+  const config = JSON.stringify({ id: LISTENING_MATERIAL.id, title: LISTENING_MATERIAL.title, isPremium: true, userPlan: "premium" }).replace(/</g, "\\u003c");
   return `
 <style id="vortex-listening-save-styles">
   #vortex-listening-save{position:fixed;z-index:2147483646;right:18px;bottom:74px;display:flex;max-width:360px;align-items:center;gap:12px;padding:13px 15px;border:1px solid #a9dfc5;border-radius:12px;color:#086846;background:rgba(255,255,255,.97);box-shadow:0 16px 42px rgba(10,31,67,.2);font:600 13px/1.35 Arial,sans-serif;transform:translateY(18px);opacity:0;pointer-events:none;transition:.22s ease}#vortex-listening-save.show{transform:translateY(0);opacity:1;pointer-events:auto}#vortex-listening-save.error{border-color:#f1c2bd;color:#a32920}#vortex-listening-save a{color:inherit;font-weight:800}@media(max-width:640px){#vortex-listening-save{right:10px;bottom:74px;left:10px;max-width:none}}
@@ -10737,7 +10735,7 @@ const server = http.createServer(async (req, res) => {
       await hydrateRequestUserFromSupabase(req, data);
       const user = studentFromRequest(req, data);
       const isOwner = user && (user.email === ADMIN_EMAIL || user.username === ADMIN_USERNAME || user.username === "sultanovb604" || user.username === "bunyod" || user.role === "admin");
-      const isPremium = isOwner || user?.plan === "premium";
+      const isPremium = true;
 
       const requestedId = String(requestUrl.searchParams.get("id") || "").trim();
       const requestedFile = String(requestUrl.searchParams.get("file") || "").trim();
@@ -10764,21 +10762,6 @@ const server = http.createServer(async (req, res) => {
       if (!targetFile || !fs.existsSync(targetFile)) {
         res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
         return res.end("<!doctype html><title>Test Not Found</title><body style='font-family:sans-serif;padding:40px;text-align:center;'><h2>Prediction test not found</h2><a href='/english/predictions'>&larr; Back to Predictions</a></body>");
-      }
-
-      if (!isPremium) {
-        if (!user) {
-          res.writeHead(302, {
-            Location: `/english/login?next=${encodeURIComponent(requestUrl.pathname + requestUrl.search)}`,
-            "Cache-Control": "no-store"
-          });
-          return res.end();
-        }
-        res.writeHead(302, {
-          Location: `/english/pricing?feature=predictions`,
-          "Cache-Control": "no-store"
-        });
-        return res.end();
       }
 
       let content = fs.readFileSync(targetFile, "utf8");

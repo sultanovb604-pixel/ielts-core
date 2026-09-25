@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1672,13 +1672,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const isPractice = urlParams.get('mode') === 'practice';
     const isReview = urlParams.get('review') === 'true' || location.hash === '#review';
     let isPremiumUser = false;
-    try {
-        const rawUser = localStorage.getItem('vortex-english-user');
-        if (rawUser) {
-            const parsed = JSON.parse(rawUser);
-            if (parsed && parsed.plan === 'premium') isPremiumUser = true;
-        }
-    } catch(e) {}
+    var isPremiumUser = true;
 
     if (!isPractice && !isReview && !isPremiumUser) {
         const lockModal = document.getElementById('vortexRealExamLockModal');

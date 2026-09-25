@@ -399,16 +399,16 @@
 
   const renderUser = user => {
     currentUser = user;
-    const isPremium = user.plan === 'premium';
-    const activeBadgeId = user.statusBadge || (isPremium ? 'verified' : null);
-    const badgeHtml = isPremium && activeBadgeId ? getBadgeHtml(activeBadgeId, 19) : '';
+    const isPremium = true;
+    const activeBadgeId = user.statusBadge || 'verified';
+    const badgeHtml = getBadgeHtml(activeBadgeId, 19);
 
     const nameEl = document.querySelector('#accountName');
     if (nameEl) nameEl.textContent = user.name || 'Candidate';
     const statusBadgeEl = document.querySelector('#accountStatusEmojiBadge');
     if (statusBadgeEl) {
       statusBadgeEl.innerHTML = badgeHtml;
-      statusBadgeEl.style.display = isPremium && activeBadgeId ? 'inline-flex' : 'none';
+      statusBadgeEl.style.display = 'inline-flex';
     }
 
     const isTeacher = user.role === 'teacher';
@@ -423,16 +423,11 @@
 
     const planSpan = document.querySelector('#accountPlanStatus');
     if (planSpan) {
-      if (isPremium) {
-        planSpan.className = 'account-status is-premium active';
-        planSpan.innerHTML = `
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:#f59e0b;flex-shrink:0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          <span>Premium Member</span>
-        `;
-      } else {
-        planSpan.className = 'account-status';
-        planSpan.innerHTML = `<i></i><span>Free Account</span>`;
-      }
+      planSpan.className = 'account-status is-premium active';
+      planSpan.innerHTML = `
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:#f59e0b;flex-shrink:0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>Premium Member</span>
+      `;
     }
 
     const userBar = document.querySelector('#dashboardUserBar') || document.querySelector('.dashboard-user-bar');
@@ -831,7 +826,7 @@
 
   function updateTgPreview() {
     if (!currentUser) return;
-    const isPrem = currentUser.plan === 'premium';
+    const isPrem = true;
     const previewHeader = document.querySelector('#tgPreviewHeaderBar');
     const previewName = document.querySelector('#tgPreviewName');
     const previewBadge = document.querySelector('#tgPreviewBadge');
@@ -845,15 +840,9 @@
     if (previewBadge) previewBadge.innerHTML = getBadgeHtml(selectedBadge, 20);
 
     if (previewStatusPill) {
-      if (isPrem) {
-        previewStatusPill.className = 'account-status is-premium active';
-        previewStatusPill.style.cssText = 'margin-left:auto;font-size:10.5px;padding:4px 10px;';
-        previewStatusPill.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;color:#f59e0b;">workspace_premium</span><span>Premium</span>';
-      } else {
-        previewStatusPill.className = 'account-status is-free';
-        previewStatusPill.style.cssText = 'margin-left:auto;font-size:10.5px;padding:4px 8px;background:#fef3c7;color:#b45309;border:1px solid #fde68a;border-radius:6px;display:inline-flex;align-items:center;gap:4px;';
-        previewStatusPill.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;">visibility</span><span>Sinov Ko\'rinishi</span>';
-      }
+      previewStatusPill.className = 'account-status is-premium active';
+      previewStatusPill.style.cssText = 'margin-left:auto;font-size:10.5px;padding:4px 10px;';
+      previewStatusPill.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;color:#f59e0b;">workspace_premium</span><span>Premium</span>';
     }
 
     if (previewHeader) {
@@ -865,13 +854,12 @@
   function renderTgBadgesGrid() {
     const grid = document.querySelector('#tgBadgesList');
     if (!grid) return;
-    const isPrem = currentUser && currentUser.plan === 'premium';
+    const isPrem = true;
     grid.innerHTML = TG_BADGES.map(b => {
       const isSelected = selectedBadge === b.id;
-      const proBadgeHtml = !isPrem ? `<span class="tg-pro-pill" style="position:absolute;top:6px;right:6px;font-size:9.5px;font-weight:800;background:#fef3c7;color:#b45309;padding:1px 5px;border-radius:4px;display:inline-flex;align-items:center;gap:2px;"><span class="material-symbols-outlined" style="font-size:10px;">lock</span>PRO</span>` : '';
+      const proBadgeHtml = '';
       return `
         <div class="tg-badge-item ${isSelected ? 'is-selected' : ''}" data-badge-id="${b.id}" style="position:relative;border:${isSelected ? '2px solid #1468f3' : '1px solid #e2e8f0'};background:${isSelected ? '#eff6ff' : '#ffffff'};border-radius:12px;padding:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;transition:all 0.15s ease;">
-          ${proBadgeHtml}
           <span class="material-symbols-outlined" style="font-size:26px;color:${b.color};">${b.icon}</span>
           <strong style="font-size:12px;color:#0f172a;margin-top:2px;">${escape(b.name)}</strong>
           <small style="font-size:10.5px;color:#64748b;line-height:1.2;">${escape(b.desc)}</small>
@@ -890,13 +878,12 @@
   function renderTgWallpapersGrid() {
     const grid = document.querySelector('#tgWallpapersList');
     if (!grid) return;
-    const isPrem = currentUser && currentUser.plan === 'premium';
+    const isPrem = true;
     grid.innerHTML = TG_WALLPAPERS.map(w => {
       const isSelected = selectedWallpaper === w.id;
-      const proBadgeHtml = (!isPrem && w.id !== 'default') ? `<span class="tg-pro-pill" style="position:absolute;top:6px;right:6px;font-size:9.5px;font-weight:800;background:#fef3c7;color:#b45309;padding:1px 5px;border-radius:4px;display:inline-flex;align-items:center;gap:2px;"><span class="material-symbols-outlined" style="font-size:10px;">lock</span>PRO</span>` : '';
+      const proBadgeHtml = '';
       return `
         <div class="tg-wp-item ${isSelected ? 'is-selected' : ''}" data-wp-id="${w.id}" style="position:relative;border:${isSelected ? '2px solid #1468f3' : '1px solid #e2e8f0'};background:#ffffff;border-radius:12px;padding:10px;cursor:pointer;transition:all 0.15s ease;display:flex;flex-direction:column;gap:6px;">
-          ${proBadgeHtml}
           <div style="height:44px;border-radius:8px;background:${w.preview};border:1px solid rgba(0,0,0,0.1);display:flex;align-items:center;justify-content:center;">
             ${isSelected ? '<span class="material-symbols-outlined" style="font-size:20px;color:#ffffff;text-shadow:0 1px 3px rgba(0,0,0,0.6);">check_circle</span>' : ''}
           </div>
@@ -918,27 +905,22 @@
 
   function openTelegramModal() {
     if (!currentUser) return;
-    const isPrem = currentUser.plan === 'premium';
+    const isPrem = true;
     selectedBadge = currentUser.statusBadge || 'verified';
     selectedWallpaper = currentUser.profileWallpaper || 'default';
 
     const lockedNotice = document.querySelector('#tgPremiumLockedNotice');
-    if (lockedNotice) lockedNotice.style.display = isPrem ? 'none' : 'flex';
+    if (lockedNotice) lockedNotice.style.display = 'none';
 
     if (saveTgBtn) {
-      if (isPrem) {
-        saveTgBtn.style.background = '#1468f3';
-        saveTgBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">check</span><span>Saqlash va qo\'llash</span>';
-      } else {
-        saveTgBtn.style.background = 'linear-gradient(135deg, #d97706, #b45309)';
-        saveTgBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">workspace_premium</span><span>Premiumga o\'tish va saqlash</span>';
-      }
+      saveTgBtn.style.background = '#1468f3';
+      saveTgBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">check</span><span>Saqlash va qo\'llash</span>';
     }
 
     updateTgPreview();
     renderTgBadgesGrid();
     renderTgWallpapersGrid();
-
+  }
     if (tgModal) tgModal.style.display = 'flex';
   }
 
@@ -977,11 +959,6 @@
 
   saveTgBtn?.addEventListener('click', async () => {
     if (!currentUser) return;
-    if (currentUser.plan !== 'premium') {
-      showToast("Telegram nishonlarini saqlash uchun Premium tarifiga yo'naltirilmoqda…", "info");
-      setTimeout(() => { window.location.href = '/english/pricing'; }, 800);
-      return;
-    }
 
     try {
       saveTgBtn.disabled = true;
@@ -1051,13 +1028,10 @@
       cachedSubmissionsList = submissionsRes || [];
 
       const user = session.user;
-      const isPremium = user.plan === 'premium';
       detailedData = analyticsRes;
 
-      if (isPremium) {
-        document.body.classList.add('user-is-premium');
-        document.documentElement.classList.add('user-is-premium');
-      }
+      document.body.classList.add('user-is-premium');
+      document.documentElement.classList.add('user-is-premium');
 
       renderUser(user);
 
@@ -1307,7 +1281,7 @@
       // Handle Question-Type Diagnostics
       const diagOverlay = document.querySelector('#diagnosticsLockedOverlay');
       if (diagOverlay) {
-        diagOverlay.style.display = isPremium ? 'none' : 'grid';
+        diagOverlay.style.display = 'none';
       }
 
       if (results.length > 0) {

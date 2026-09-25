@@ -176,8 +176,8 @@
         if (nameEl) nameEl.textContent = safe(String(user.name || user.username || 'Student').trim());
         const subEl = existingSidebar.querySelector('.member-profile-info small');
         if (subEl) {
-          subEl.textContent = user.email ? safe(String(user.email).trim()) : (user.username ? `@${safe(user.username)}` : (user.plan === 'premium' ? 'Premium Member' : 'Free Account'));
-          subEl.className = user.plan === 'premium' ? 'plan-premium' : 'plan-free';
+          subEl.textContent = user.email ? safe(String(user.email).trim()) : (user.username ? `@${safe(user.username)}` : 'Premium Member');
+          subEl.className = 'plan-premium';
         }
         const profileLink = existingSidebar.querySelector('.member-sidebar-profile');
         if (profileLink) {
@@ -299,9 +299,9 @@
       return `<div class="member-nav-group"><span class="member-nav-section-title">${safe(sec.title)}</span>${linksHtml}</div>`;
     }).join('');
 
-    const planLabel = isGuest ? 'Guest Access' : (user?.plan === 'premium' ? 'Premium Member' : 'Free Account');
+    const planLabel = isGuest ? 'Guest Access' : 'Premium Member';
     const userName = isGuest ? 'Guest Student' : safe(String(user?.name || user?.username || 'Student').trim());
-    const userSubtitle = !isGuest ? (user?.email ? safe(String(user.email).trim()) : (user?.username ? `@${safe(user.username)}` : planLabel)) : 'Sign in to save scores';
+    const userSubtitle = !isGuest ? (user?.email ? safe(String(user.email).trim()) : (user?.username ? `@${safe(user.username)}` : 'Premium Member')) : 'Sign in to save scores';
     const avatarUrl = !isGuest && /^https:\/\//.test(String(user?.avatarUrl || '')) ? String(user?.avatarUrl) : '';
     const avatarContent = avatarUrl ? `<img src="${safe(avatarUrl)}" alt="">` : (isGuest ? '<span class="material-symbols-outlined" style="font-size:18px;">person</span>' : safe(userName.charAt(0).toUpperCase()));
 
@@ -331,7 +331,7 @@
             <span class="member-avatar">${avatarContent}</span>
             <span class="member-profile-info">
               <strong>${userName}</strong>
-              <small class="${isGuest ? 'plan-guest' : (user?.plan === 'premium' ? 'plan-premium' : 'plan-free')}">${userSubtitle}</small>
+              <small class="${isGuest ? 'plan-guest' : 'plan-premium'}">${userSubtitle}</small>
             </span>
             <span class="material-symbols-outlined member-profile-arrow" aria-hidden="true">unfold_more</span>
           </a>

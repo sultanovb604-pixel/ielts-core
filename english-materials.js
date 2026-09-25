@@ -407,8 +407,8 @@
 
     // Render Cards Grid (Screenshot 4 format)
     list.innerHTML = visible.map(item => {
-      const isFree = item.access === 'free' || item.free === true;
-      const isLocked = item.locked;
+      const isFree = true;
+      const isLocked = false;
       const isCompleted = item.completed;
       const isFull = item.materialKind === 'full-test' || inferCollection(item) === 'full-test';
       const pNum = item.passageNumber || (item.skill === 'listening' ? item.partNumber : 1) || 1;
