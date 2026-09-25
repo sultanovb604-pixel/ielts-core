@@ -545,6 +545,17 @@
 
       myPeer.on('error', err => {
         console.warn('Peer error:', err);
+        if (myPeer && !myPeer.destroyed && myPeer.disconnected) {
+          try { myPeer.reconnect(); } catch (_) {}
+        }
+      });
+
+      myPeer.on('disconnected', () => {
+        try {
+          if (myPeer && !myPeer.destroyed) {
+            myPeer.reconnect();
+          }
+        } catch (_) {}
       });
     } catch (e) {
       console.error('Failed to initialize PeerJS:', e);
@@ -666,6 +677,11 @@
     const originalBtnContent = startMatchBtn.innerHTML;
 
     if (!myPeerId) {
+      if (myPeer && myPeer.disconnected && !myPeer.destroyed) {
+        try { myPeer.reconnect(); } catch (_) {}
+      } else if (!myPeer || myPeer.destroyed) {
+        initPeer();
+      }
       startMatchBtn.disabled = true;
       startMatchBtn.innerHTML = '<span class="material-symbols-outlined sc-spin" style="font-size:20px;">sync</span><span>Connecting to network...</span>';
 
@@ -699,6 +715,8 @@
     }
 
     // Switch view to searching
+    const aiFallbackEl = document.getElementById('scSearchAiFallback');
+    if (aiFallbackEl) aiFallbackEl.style.display = 'none';
     lobbyView.style.display = 'none';
     searchView.style.display = 'block';
     roomView.style.display = 'none';
@@ -798,6 +816,13 @@
       activeQueueId = null;
     }
 
+    const aiFallbackEl = document.getElementById('scSearchAiFallback');
+    if (aiFallbackEl) aiFallbackEl.style.display = 'none';
+    const tipEl = document.getElementById('scSearchTip');
+    if (tipEl) {
+      tipEl.innerHTML = `Boshqa bir onlayn o'quvchi "Random Partner Match" tugmasini bosgan zahoti tizim sizlarni avtomatik ravishda bir xonaga ulaydi.`;
+    }
+
     searchView.style.display = 'none';
     lobbyView.style.display = 'block';
   }
@@ -811,11 +836,13 @@
       searchElapsedEl.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
     const tipEl = document.getElementById('scSearchTip');
+    const aiFallbackEl = document.getElementById('scSearchAiFallback');
     if (tipEl) {
       if (currentRoomCode) {
-        tipEl.innerHTML = `Waiting for your partner to join private room: <strong style="color:#2563eb;font-family:monospace;">${escapeHtml(currentRoomCode)}</strong>`;
-      } else if (elapsed > 25) {
-        tipEl.innerHTML = `Still looking for an available partner... <br><span style="font-size:12px;color:#2563eb;font-weight:600;">Tip: You can invite a friend directly with "Invite Friend (Direct Room)"!</span>`;
+        tipEl.innerHTML = `Maxsus xona uchun do'stingizni kutyapsiz: <strong style="color:#2563eb;font-family:monospace;">${escapeHtml(currentRoomCode)}</strong>`;
+      } else if (elapsed > 18) {
+        if (aiFallbackEl) aiFallbackEl.style.display = 'block';
+        tipEl.innerHTML = `Boshqa onlayn talaba kutilmoqda... Agar kutishni xohlamasangiz, Cambridge AI bilan hoziroq mashq qilishingiz mumkin:`;
       }
     }
   }

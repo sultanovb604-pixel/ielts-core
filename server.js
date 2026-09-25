@@ -179,6 +179,9 @@ const FIREBASE_API_KEY = String(process.env.FIREBASE_API_KEY || "AIzaSyALJ7J_QLq
 const FIREBASE_PROJECT_ID = String(process.env.FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT || "ieltscorecom").trim();
 const FIRESTORE_PROJECT_ID = FIREBASE_PROJECT_ID;
 const FIRESTORE_API_KEY = FIREBASE_API_KEY;
+const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
+const SUPABASE_KEY = String(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || "").trim();
+const SUPABASE_CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_KEY);
 if (!SESSION_SECRET && IS_PRODUCTION) console.error("ERROR: SESSION_SECRET is not configured; authenticated API routes are disabled until it is set.");
 if (!ADMIN_EMAIL && IS_PRODUCTION) console.warn("WARNING: ADMIN_EMAIL is not configured; Google-based admin login is disabled.");
 if (!ADMIN_PASSWORD && IS_PRODUCTION) console.warn("WARNING: ADMIN_PASSWORD is not configured; password-based admin login is disabled.");
@@ -5898,79 +5901,17 @@ setInterval(() => {
   }
 }, 30000);
 
-function objToFirestoreFields(obj) {
-  const fields = {};
-  for (const [k, v] of Object.entries(obj)) {
-    if (v === undefined || v === null) continue;
-    if (typeof v === "string") fields[k] = { stringValue: v };
-    else if (typeof v === "number") fields[k] = Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v };
-    else if (typeof v === "boolean") fields[k] = { booleanValue: v };
-    else if (typeof v === "object") fields[k] = { stringValue: JSON.stringify(v) };
-  }
-  return fields;
-}
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function firestoreDocToObj(doc) {
-  if (!doc || !doc.fields) return null;
-  const obj = {};
-  for (const [k, v] of Object.entries(doc.fields)) {
-    if (v.stringValue !== undefined) {
-      obj[k] = v.stringValue;
-    } else if (v.integerValue !== undefined) {
-      obj[k] = parseInt(v.integerValue, 10);
-    } else if (v.doubleValue !== undefined) {
-      obj[k] = Number(v.doubleValue);
-    } else if (v.booleanValue !== undefined) {
-      obj[k] = v.booleanValue;
-    }
-  }
-  return obj;
-}
-
-async function scGetDoc(queueId) {
+async function sbScCleanStale() {
+  if (!SUPABASE_CONFIGURED) return;
   try {
-    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue/${encodeURIComponent(queueId)}?key=${FIRESTORE_API_KEY}`;
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    const data = await res.json();
-    return firestoreDocToObj(data);
-  } catch (_) {
-    return null;
-  }
-}
-
-async function scSaveDoc(queueId, obj) {
-  try {
-    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue/${encodeURIComponent(queueId)}?key=${FIRESTORE_API_KEY}`;
-    const payload = { fields: objToFirestoreFields(obj) };
-    const res = await fetch(url, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    return res.ok;
-  } catch (_) {
-    return false;
-  }
-}
-
-async function scDeleteDoc(queueId) {
-  try {
-    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue/${encodeURIComponent(queueId)}?key=${FIRESTORE_API_KEY}`;
-    await fetch(url, { method: "DELETE" }).catch(() => {});
+    const twoMinsAgo = new Date(Date.now() - 120000).toISOString();
+    await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?mock_id=eq.speaking_club_queue&created_at=lt.${twoMinsAgo}`, {
+      method: "DELETE",
+      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+    }).catch(() => {});
   } catch (_) {}
-}
-
-async function scListDocs() {
-  try {
-    const url = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents/speaking_club_queue?key=${FIRESTORE_API_KEY}`;
-    const res = await fetch(url);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return (data.documents || []).map(firestoreDocToObj).filter(Boolean);
-  } catch (_) {
-    return [];
-  }
 }
 
 // In-memory fallback functions
@@ -6046,177 +5987,260 @@ function scMemoryLeave(queueId) {
 
 // Distributed Matchmaking Actions
 async function scEnqueue(item) {
-  if (!FIRESTORE_CONFIGURED) return scMemoryEnqueue(item);
+  if (!SUPABASE_CONFIGURED) return scMemoryEnqueue(item);
   try {
     const now = Date.now();
-    const docs = await scListDocs();
+    const twoMinsAgo = new Date(now - 120000).toISOString();
 
-    // Clean up stale docs (> 2 mins old) in background
-    for (const d of docs) {
-      if (d.joinedAt && (now - d.joinedAt > 120000)) {
-        scDeleteDoc(d.queueId).catch(() => {});
-      }
-    }
+    // Clean up stale rows in background
+    sbScCleanStale().catch(() => {});
 
-    // Filter valid waiting candidates
-    const validWaiting = docs.filter(d => {
-      if (d.status !== "waiting") return false;
+    // 1. Fetch valid waiting candidates
+    const queryUrl = `${SUPABASE_URL}/rest/v1/mock_attempts?mock_id=eq.speaking_club_queue&mock_title=eq.waiting&created_at=gt.${twoMinsAgo}&order=created_at.asc`;
+    const listRes = await fetch(queryUrl, {
+      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+    });
+    const waitingList = await listRes.json();
+
+    const validCandidates = (Array.isArray(waitingList) ? waitingList : []).filter(row => {
+      const d = row.listening_data || {};
       if (d.peerId === item.peerId) return false;
-      if (now - (d.joinedAt || 0) > 120000) return false;
       if (item.roomCode) return d.roomCode === item.roomCode;
       return !d.roomCode;
     });
 
-    if (validWaiting.length > 0) {
-      const partner = validWaiting[0];
+    for (const partnerRow of validCandidates) {
+      const partner = partnerRow.listening_data || {};
       const matchId = "m_" + now + "_" + Math.random().toString(36).substring(2, 7);
       const allTopics = readSpeakingTopics();
       const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
 
-      // Update partner document to matched (role: receiver)
-      const partnerUpdate = {
-        queueId: partner.queueId,
-        peerId: partner.peerId,
-        name: partner.name || "Student",
-        mode: partner.mode || "video",
-        avatarUrl: partner.avatarUrl || "",
-        roomCode: partner.roomCode || "",
+      const matchDetails = {
         status: "matched",
         role: "receiver",
-        matchId: matchId,
+        matchId,
         partnerPeerId: item.peerId,
         partnerName: item.name,
         partnerMode: item.mode,
         partnerAvatarUrl: item.avatarUrl,
-        topicJson: JSON.stringify(topic),
+        topic,
         matchedAt: now
       };
-      await scSaveDoc(partner.queueId, partnerUpdate);
 
-      return {
-        status: "matched",
-        role: "initiator",
-        queueId: item.queueId,
-        matchId: matchId,
-        partnerPeerId: partner.peerId,
-        partnerName: partner.name || "Speaking Partner",
-        partnerMode: partner.mode || "video",
-        partnerAvatarUrl: partner.avatarUrl || "",
-        topic: topic
-      };
+      // Atomic conditional update: only succeeds if mock_title is still 'waiting'
+      const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?id=eq.${partnerRow.id}&mock_title=eq.waiting`, {
+        method: "PATCH",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify({
+          mock_title: "matched",
+          writing_data: matchDetails
+        })
+      });
+
+      if (updateRes.ok) {
+        const updatedRows = await updateRes.json().catch(() => []);
+        if (Array.isArray(updatedRows) && updatedRows.length > 0) {
+          return {
+            status: "matched",
+            role: "initiator",
+            queueId: item.queueId,
+            matchId,
+            partnerPeerId: partner.peerId,
+            partnerName: partner.name || "Speaking Partner",
+            partnerMode: partner.mode || "video",
+            partnerAvatarUrl: partner.avatarUrl || "",
+            topic
+          };
+        }
+      }
     }
 
-    // No partner yet, save current user as waiting
-    const newDoc = {
-      queueId: item.queueId,
-      peerId: item.peerId,
-      mode: item.mode,
-      level: item.level,
-      name: item.name,
-      avatarUrl: item.avatarUrl,
-      roomCode: item.roomCode || "",
-      status: "waiting",
-      joinedAt: now,
-      updatedAt: now
+    // No partner yet, insert current user as waiting
+    const rowId = item.queueId;
+    const queueRow = {
+      id: rowId,
+      student_id: null,
+      mock_id: "speaking_club_queue",
+      mock_title: "waiting",
+      overall_band: 0,
+      listening_data: {
+        queueId: rowId,
+        peerId: item.peerId,
+        name: item.name,
+        mode: item.mode,
+        level: item.level,
+        avatarUrl: item.avatarUrl,
+        roomCode: item.roomCode || "",
+        joinedAt: now
+      },
+      reading_data: {},
+      writing_data: {},
+      created_at: new Date(now).toISOString()
     };
-    await scSaveDoc(item.queueId, newDoc);
-    return { status: "waiting", queueId: item.queueId };
+
+    const insRes = await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(queueRow)
+    });
+
+    if (!insRes.ok) {
+      console.warn("Supabase scEnqueue insert failed:", insRes.status);
+      return scMemoryEnqueue(item);
+    }
+
+    return { status: "waiting", queueId: rowId };
   } catch (err) {
-    console.error("Firestore scEnqueue fallback notice:", err.message);
+    console.error("scEnqueue Supabase error, falling back to memory:", err.message);
     return scMemoryEnqueue(item);
   }
 }
 
 async function scPoll(queueId) {
-  if (!FIRESTORE_CONFIGURED) return scMemoryPoll(queueId);
+  if (!SUPABASE_CONFIGURED || !UUID_REGEX.test(queueId)) return scMemoryPoll(queueId);
   try {
-    const doc = await scGetDoc(queueId);
-    if (doc) {
-      if (doc.status === "matched") {
-        let topic = null;
-        if (doc.topicJson) {
-          try { topic = JSON.parse(doc.topicJson); } catch (_) {}
-        }
-        scDeleteDoc(queueId).catch(() => {});
-        return {
-          status: "matched",
-          role: doc.role || "receiver",
-          matchId: doc.matchId,
-          partnerPeerId: doc.partnerPeerId,
-          partnerName: doc.partnerName || "Speaking Partner",
-          partnerMode: doc.partnerMode || "video",
-          partnerAvatarUrl: doc.partnerAvatarUrl || "",
-          topic: topic
-        };
-      }
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?id=eq.${queueId}&limit=1`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+    });
+    if (!res.ok) return scMemoryPoll(queueId);
+    const rows = await res.json();
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return scMemoryPoll(queueId);
+    }
 
-      // If still waiting, check if another waiting peer is available
-      const now = Date.now();
-      const docs = await scListDocs();
-      const candidate = docs.find(d => {
-        if (d.queueId === queueId) return false;
-        if (d.peerId === doc.peerId) return false;
-        if (d.status !== "waiting") return false;
-        if (now - (d.joinedAt || 0) > 120000) return false;
-        if (doc.roomCode) return d.roomCode === doc.roomCode;
-        return !d.roomCode;
+    const row = rows[0];
+    if (row.mock_title === "matched") {
+      const match = row.writing_data || {};
+      fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?id=eq.${queueId}`, {
+        method: "DELETE",
+        headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+      }).catch(() => {});
+
+      return {
+        status: "matched",
+        role: match.role || "receiver",
+        matchId: match.matchId,
+        partnerPeerId: match.partnerPeerId,
+        partnerName: match.partnerName || "Speaking Partner",
+        partnerMode: match.partnerMode || "video",
+        partnerAvatarUrl: match.partnerAvatarUrl || "",
+        topic: match.topic
+      };
+    }
+
+    // If still waiting, check if another waiting peer is available
+    const now = Date.now();
+    const twoMinsAgo = new Date(now - 120000).toISOString();
+    const myData = row.listening_data || {};
+
+    const listRes = await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?mock_id=eq.speaking_club_queue&mock_title=eq.waiting&created_at=gt.${twoMinsAgo}&order=created_at.asc`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+    });
+    const waitingList = await listRes.json();
+
+    const candidate = (Array.isArray(waitingList) ? waitingList : []).find(r => {
+      if (r.id === queueId) return false;
+      const d = r.listening_data || {};
+      if (d.peerId === myData.peerId) return false;
+      if (myData.roomCode) return d.roomCode === myData.roomCode;
+      return !d.roomCode;
+    });
+
+    if (candidate) {
+      const partner = candidate.listening_data || {};
+      const matchId = "m_" + now + "_" + Math.random().toString(36).substring(2, 7);
+      const allTopics = readSpeakingTopics();
+      const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
+
+      const matchDetails = {
+        status: "matched",
+        role: "receiver",
+        matchId,
+        partnerPeerId: myData.peerId,
+        partnerName: myData.name,
+        partnerMode: myData.mode,
+        partnerAvatarUrl: myData.avatarUrl,
+        topic,
+        matchedAt: now
+      };
+
+      const updateRes = await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?id=eq.${candidate.id}&mock_title=eq.waiting`, {
+        method: "PATCH",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify({
+          mock_title: "matched",
+          writing_data: matchDetails
+        })
       });
 
-      if (candidate) {
-        const matchId = "m_" + now + "_" + Math.random().toString(36).substring(2, 7);
-        const allTopics = readSpeakingTopics();
-        const topic = allTopics.length ? allTopics[Math.floor(Math.random() * allTopics.length)] : null;
+      if (updateRes.ok) {
+        const updated = await updateRes.json().catch(() => []);
+        if (Array.isArray(updated) && updated.length > 0) {
+          fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?id=eq.${queueId}`, {
+            method: "DELETE",
+            headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+          }).catch(() => {});
 
-        await scSaveDoc(candidate.queueId, {
-          ...candidate,
-          status: "matched",
-          role: "receiver",
-          matchId: matchId,
-          partnerPeerId: doc.peerId,
-          partnerName: doc.name,
-          partnerMode: doc.mode,
-          partnerAvatarUrl: doc.avatarUrl,
-          topicJson: JSON.stringify(topic),
-          matchedAt: now
-        });
-
-        scDeleteDoc(queueId).catch(() => {});
-
-        return {
-          status: "matched",
-          role: "initiator",
-          matchId: matchId,
-          partnerPeerId: candidate.peerId,
-          partnerName: candidate.name || "Speaking Partner",
-          partnerMode: candidate.mode || "video",
-          partnerAvatarUrl: candidate.avatarUrl || "",
-          topic: topic
-        };
+          return {
+            status: "matched",
+            role: "initiator",
+            queueId,
+            matchId,
+            partnerPeerId: partner.peerId,
+            partnerName: partner.name || "Speaking Partner",
+            partnerMode: partner.mode || "video",
+            partnerAvatarUrl: partner.avatarUrl || "",
+            topic
+          };
+        }
       }
-
-      return { status: "waiting", queueId };
     }
-    return scMemoryPoll(queueId);
+
+    return { status: "waiting", queueId };
   } catch (err) {
-    console.error("Firestore scPoll fallback notice:", err.message);
+    console.error("scPoll Supabase error, falling back to memory:", err.message);
     return scMemoryPoll(queueId);
   }
 }
 
 async function scLeave(queueId) {
-  if (FIRESTORE_CONFIGURED) {
-    try { await scDeleteDoc(queueId); } catch (_) {}
+  if (SUPABASE_CONFIGURED && UUID_REGEX.test(queueId)) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?id=eq.${queueId}`, {
+        method: "DELETE",
+        headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+      }).catch(() => {});
+    } catch (_) {}
   }
   scMemoryLeave(queueId);
 }
 
 async function scStats() {
   let activeWaiting = 0;
-  if (FIRESTORE_CONFIGURED) {
+  if (SUPABASE_CONFIGURED) {
     try {
-      const docs = await scListDocs();
-      const now = Date.now();
-      activeWaiting = docs.filter(d => d.status === "waiting" && now - (d.joinedAt || 0) <= 120000).length;
+      const twoMinsAgo = new Date(Date.now() - 120000).toISOString();
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/mock_attempts?select=id&mock_id=eq.speaking_club_queue&mock_title=eq.waiting&created_at=gt.${twoMinsAgo}`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY }
+      });
+      if (res.ok) {
+        const rows = await res.json();
+        if (Array.isArray(rows)) activeWaiting = rows.length;
+      }
     } catch (_) {
       activeWaiting = speakingClubQueue.length;
     }
@@ -6350,9 +6374,6 @@ function loadInitialState() {
 let inMemoryData = loadInitialState();
 let inMemoryCachedAt = Date.now();
 let isSyncingDb = false;
-const SUPABASE_URL = String(process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
-const SUPABASE_KEY = String(process.env.SUPABASE_KEY || "").trim();
-const SUPABASE_CONFIGURED = Boolean(SUPABASE_URL && SUPABASE_KEY);
 const FIRESTORE_CONFIGURED = Boolean(FIRESTORE_PROJECT_ID && FIRESTORE_API_KEY);
 const DURABLE_STORAGE_CONFIGURED = Boolean(SUPABASE_CONFIGURED || DATABASE_URL || FIRESTORE_CONFIGURED);
 if (Boolean(SUPABASE_URL) !== Boolean(SUPABASE_KEY)) console.error("ERROR: SUPABASE_URL and SUPABASE_KEY must both be configured.");
@@ -8155,7 +8176,7 @@ async function api(req, res, pathname) {
     const peerId = String(body.peerId || "").trim();
     if (!peerId) return json(res, 400, { error: "peerId is required." });
 
-    const queueId = "q_" + Date.now() + "_" + Math.random().toString(36).substring(2, 7);
+    const queueId = crypto.randomUUID();
     const mode = body.mode === "audio" ? "audio" : "video";
     const level = String(body.level || "any");
     const name = String(user?.name || user?.username || body.name || "Student").trim().slice(0, 40);
