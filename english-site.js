@@ -255,13 +255,13 @@
       {
         title: 'Live Practice (1-on-1)',
         links: [
-          { label: 'Speaking Club (1-on-1)', icon: 'groups', href: '/english/speaking-club', active: isSpeakingClub, badge: 'Live' }
+          { label: 'Speaking Club', icon: 'groups', href: '/english/speaking-club', active: isSpeakingClub, badge: 'Live' }
         ]
       },
       {
         title: 'Full Mock Tests (40 Qs)',
         links: [
-          { label: 'Full Mock Exams (CDI)', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, badge: 'Soon', isPremium: true },
+          { label: 'Full Mock Exams', icon: 'quiz', href: '/english/mock-tests', active: isMockTests, badge: 'Soon' },
           { label: 'Full Reading Tests', icon: 'menu_book', href: '/english/materials?skill=reading&collection=full-test', active: isFullReading, badge: '40 Qs' },
           { label: 'Full Listening Tests', icon: 'headphones', href: '/english/materials?skill=listening&collection=full-test', active: isFullListening, badge: '40 Qs' }
         ]
@@ -278,7 +278,7 @@
       {
         title: 'Study Tools',
         links: [
-          { label: 'Predictions', icon: 'layers', href: '/english/predictions', active: isPredictions, isPremium: true },
+          { label: 'Predictions', icon: 'layers', href: '/english/predictions', active: isPredictions },
           { label: 'Skill Drills', icon: 'track_changes', href: '/english/practice', active: isSkillTraining },
           { label: 'Vocabulary & Phrases', icon: 'auto_stories', href: '/english/materials?collection=vocab', active: isVocab },
           { label: 'Saved Items', icon: 'bookmark', href: '/english/materials?saved=1', active: isSaved }
@@ -490,9 +490,9 @@
     const mountTestLaunchModal = () => {
       if (document.querySelector('#testLaunchModal')) return;
 
-      const isPremium = user && user.plan === 'premium';
-      const realModeDisabled = !isPremium ? 'disabled' : '';
-      const realModeLock = !isPremium ? '<span class="material-symbols-outlined" style="font-size:14px; margin-left:8px; color: #f43f5e;">lock</span>' : '';
+      const isPremium = true;
+      const realModeDisabled = '';
+      const realModeLock = '';
 
       const modal = document.createElement('div');
       modal.className = 'test-launch-modal';

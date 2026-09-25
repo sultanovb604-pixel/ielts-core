@@ -3693,7 +3693,7 @@ html[data-theme="dark"] .chart-card-head h2 {
    Modern LMS Student Workspace Sidebar & Layout (World-Class Redesign)
    ========================================================================== */
 body.member-layout {
-  padding-left: 260px !important;
+  padding-left: 275px !important;
   transition: padding-left 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 }
@@ -3706,7 +3706,7 @@ body.member-layout.member-sidebar-collapsed {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 260px;
+  width: 275px;
   height: 100vh;
   height: 100dvh;
   z-index: 9999;
