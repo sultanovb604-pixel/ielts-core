@@ -530,6 +530,11 @@ body.member-layout.member-sidebar-collapsed {
   line-height: 1.2 !important;
 }
 
+.member-profile-info small.plan-premium {
+  color: #2563eb !important;
+  font-weight: 600 !important;
+}
+
 .member-profile-arrow {
   color: #94a3b8 !important;
   font-size: 18px !important;

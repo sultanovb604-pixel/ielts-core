@@ -176,13 +176,14 @@
         if (nameEl) nameEl.textContent = safe(String(user.name || user.username || 'Student').trim());
         const subEl = existingSidebar.querySelector('.member-profile-info small');
         if (subEl) {
-          subEl.textContent = user.email ? safe(String(user.email).trim()) : (user.username ? `@${safe(user.username)}` : 'Premium Member');
+          subEl.textContent = 'Premium Member';
           subEl.className = 'plan-premium';
         }
         const profileLink = existingSidebar.querySelector('.member-sidebar-profile');
         if (profileLink) {
           profileLink.classList.remove('is-guest-profile');
           profileLink.href = '/english/account';
+          profileLink.title = `${user.name || 'Student'} (${user.email || user.username || 'Premium'})`;
         }
       } else {
         const nameEl = existingSidebar.querySelector('.member-profile-info strong');
@@ -301,7 +302,7 @@
 
     const planLabel = isGuest ? 'Guest Access' : 'Premium Member';
     const userName = isGuest ? 'Guest Student' : safe(String(user?.name || user?.username || 'Student').trim());
-    const userSubtitle = !isGuest ? (user?.email ? safe(String(user.email).trim()) : (user?.username ? `@${safe(user.username)}` : 'Premium Member')) : 'Sign in to save scores';
+    const userSubtitle = !isGuest ? 'Premium Member' : 'Sign in to save scores';
     const avatarUrl = !isGuest && /^https:\/\//.test(String(user?.avatarUrl || '')) ? String(user?.avatarUrl) : '';
     const avatarContent = avatarUrl ? `<img src="${safe(avatarUrl)}" alt="">` : (isGuest ? '<span class="material-symbols-outlined" style="font-size:18px;">person</span>' : safe(userName.charAt(0).toUpperCase()));
 
