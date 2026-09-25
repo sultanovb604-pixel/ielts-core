@@ -126,9 +126,10 @@
 
     burst(x, y, color) {
       const count = 60 + Math.floor(Math.random() * 30);
+      const scale = Math.max(1, Math.min(this.width / 1400, 2.2));
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = 2.5 + Math.random() * 6.5;
+        const speed = (2.5 + Math.random() * 6.5) * Math.min(scale, 1.4);
         const c = Math.random() > 0.3 ? color : this.palette[Math.floor(Math.random() * this.palette.length)];
         const isConfetti = Math.random() > 0.45;
 
@@ -137,7 +138,7 @@
           y,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          size: isConfetti ? (4 + Math.random() * 4) : (2 + Math.random() * 2.5),
+          size: isConfetti ? (4.5 + Math.random() * 4.5) * scale : (2.5 + Math.random() * 2.5) * scale,
           color: c,
           alpha: 1,
           decay: 0.011 + Math.random() * 0.015,
@@ -288,6 +289,12 @@
     }
   }
 
+  function previousStage() {
+    if (currentStage > 0 && currentStage < maxStage) {
+      renderStage(currentStage - 1);
+    }
+  }
+
   // Explicit buttons for each stage
   for (let s = 0; s < maxStage; s++) {
     const btn = document.getElementById(`stageBtn${s}`);
@@ -299,12 +306,36 @@
     }
   }
 
-  // Allow clicking anywhere within the stage section (before stage 5) to advance
+  // Allow clicking/tapping anywhere within the stage section (before stage 5) to advance
   stageContainer.addEventListener('click', event => {
     if (currentStage >= maxStage) return;
     // Don't double trigger if clicked on an actual button or link
     if (event.target.closest('button') || event.target.closest('a')) return;
     advanceStage();
+  });
+
+  // Presentation Clicker (Remote) & Keyboard Support for Electronic Whiteboards & Monitors
+  document.addEventListener('keydown', event => {
+    const activeTag = document.activeElement ? document.activeElement.tagName : '';
+    if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
+
+    // Next Slide / Advance: Space, Enter, ArrowRight, ArrowDown, PageDown
+    const nextKeys = ['Space', 'Enter', 'ArrowRight', 'ArrowDown', 'PageDown'];
+    if (nextKeys.includes(event.code) || nextKeys.includes(event.key) || event.key === ' ') {
+      if (currentStage < maxStage) {
+        event.preventDefault();
+        advanceStage();
+      }
+    }
+
+    // Previous Slide / Back: ArrowLeft, ArrowUp, PageUp, Backspace
+    const prevKeys = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'];
+    if (prevKeys.includes(event.code) || prevKeys.includes(event.key)) {
+      if (currentStage > 0 && currentStage < maxStage) {
+        event.preventDefault();
+        previousStage();
+      }
+    }
   });
 
   // Replay Game Button
