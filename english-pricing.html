@@ -3,21 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pricing & Plans | IELTS Core</title>
-  <meta name="description" content="Simple, transparent pricing for IELTS Core. Unlock computer-delivered Reading and Listening practice, estimated band scoring, and study tools.">
+  <title>Pricing & Plans | IELTS Core — 100% Free</title>
+  <meta name="description" content="What does IELTS Core cost? Discover why official Cambridge-quality IELTS preparation with 40 reading tests, 31 listening tests, and AI evaluation is 100% free for everyone.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="/english-product-v4.css">
   <link rel="stylesheet" href="/english-pages.css">
-  <link rel="stylesheet" href="/english-pricing.css">
+  <link rel="stylesheet" href="/english-pricing.css?v=20260925_celebrate">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon-framed.svg">
   <link rel="stylesheet" href="/english-refinement.css?v=20260907">
   <link rel="stylesheet" href="/english-internal-premium.css?v=20260922_sb_final">
   <link rel="stylesheet" href="/english-public.css?v=20260922a">
 </head>
 <body class="public-site refined-public premium-product-page pricing-page">
+  <canvas id="celebrationCanvas" class="celebration-canvas" aria-hidden="true"></canvas>
+
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="app-header refined-header">
     <a class="app-brand" href="/english" aria-label="IELTS Core home"><img src="/assets/ielts-core-mark.png" width="38" height="38" alt=""><span>IELTS CORE</span></a>
@@ -35,21 +37,359 @@
   </header>
 
   <main id="main" class="v4-shell pricing-container">
-<section class="pricing-hero"><p class="page-kicker">PREMIUM PRACTICE</p><h1 class="pricing-title">Choose your practice plan.</h1><p class="pricing-subtitle">Choose how long you want to practise. Pay once, with no automatic renewal.</p><a href="/english/signup">Try free practice first →</a></section>
-<section class="pricing-grid individual-grid" id="pricingCardsGrid" aria-label="Compare Premium durations">
-<article class="pricing-card" data-plan-card="1"><div class="pricing-card-top-tag" style="background:#dc2626;color:#ffffff;font-weight:700;">EARLY ACCESS OFFER</div><div class="pricing-card-header"><h2>Starter</h2><p class="plan-duration">30 days of Premium access</p><div class="plan-price-row"><span style="text-decoration:line-through;color:#94a3b8;font-size:1.15rem;margin-right:8px;font-weight:600;">59,000</span><strong class="price-value">30,000</strong><span class="price-currency">UZS</span></div><p class="plan-billed-note">One payment · Special offer for the first 10 students</p></div><div class="pricing-card-action"><button type="button" class="button secondary large pricing-select-btn" onclick="window.selectPricingTier(1, 30000)">Choose 1 month →</button></div><ul class="plan-summary"><li>Reading &amp; Listening practice tests</li><li>Estimated band scores &amp; attempt review</li><li>Personal vocabulary notebook</li></ul></article>
-<article class="pricing-card featured" data-plan-card="3"><div class="pricing-card-top-tag popular">Save 17%</div><div class="pricing-card-header"><h2>Intensive</h2><p class="plan-duration">90 days of Premium access</p><div class="plan-price-row"><strong class="price-value">75,000</strong><span class="price-currency">UZS</span></div><p class="plan-billed-note">One payment · 25,000 UZS / month</p></div><div class="pricing-card-action"><button type="button" class="button primary large pricing-select-btn" onclick="window.selectPricingTier(3, 75000)">Choose 3 months →</button></div><ul class="plan-summary"><li>Reading &amp; Listening practice tests</li><li>Estimated band scores &amp; attempt review</li><li>Personal vocabulary notebook</li></ul></article>
-<article class="pricing-card" data-plan-card="6"><div class="pricing-card-top-tag">Save 25%</div><div class="pricing-card-header"><h2>Mastery</h2><p class="plan-duration">180 days of Premium access</p><div class="plan-price-row"><strong class="price-value">135,000</strong><span class="price-currency">UZS</span></div><p class="plan-billed-note">One payment · 22,500 UZS / month</p></div><div class="pricing-card-action"><button type="button" class="button secondary large pricing-select-btn" onclick="window.selectPricingTier(6, 135000)">Choose 6 months →</button></div><ul class="plan-summary"><li>Reading &amp; Listening practice tests</li><li>Estimated band scores &amp; attempt review</li><li>Personal vocabulary notebook</li></ul></article></section>
-<section class="payment-explainer" aria-labelledby="paymentTitle"><p class="page-kicker">WHAT HAPPENS NEXT</p><h2 id="paymentTitle">A clear path to Premium.</h2><ol><li><strong>Choose your duration.</strong> Your selection opens a message to support on Telegram.</li><li><strong>Confirm payment details.</strong> Support explains the available payment methods.</li><li><strong>Receive confirmation.</strong> Access starts after support verifies your payment.</li></ol><p>Payments are arranged with support. There is no automatic card charge on this page.</p></section>
-<section class="pricing-promo-section"><div class="promo-box"><div class="promo-box-copy"><div><h2>Have a promo code?</h2><p>Enter the code provided by your teacher or support.</p></div></div><form class="promo-box-form" id="pricingPromoForm"><label class="sr-only" for="pricingPromoInput">Promo code</label><input id="pricingPromoInput" placeholder="Enter your code" required autocomplete="off"><button type="submit" class="button primary" id="pricingPromoBtn">Apply code</button></form></div><p class="promo-feedback" id="pricingPromoFeedback" role="status" aria-live="polite" hidden></p></section>
-<section class="pricing-business-section"><p class="page-kicker">FOR TEACHERS &amp; LEARNING CENTRES</p><h2>Prepare together.</h2><p>Group pricing is available from 20,000 UZS per student per month for groups of 10 or more. Contact support to confirm eligibility and arrange access for your group or mock centre.</p><a class="button secondary" href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">Discuss group access →</a></section>
-<section class="refined-faq"><h2>Before you choose</h2><details><summary>Can I try the platform for free?</summary><p>Yes. Create a free account to explore starter materials. Premium opens additional practice resources.</p></details><details><summary>Will my plan renew automatically?</summary><p>No. Each plan is a one-time payment for the selected duration.</p></details><details><summary>How is Premium activated?</summary><p>Contact <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">@ieltscoreadmin</a>, confirm payment details, and send your receipt to support. Activation follows payment verification; support will confirm when access is ready.</p></details><details><summary>Are these official IELTS results?</summary><p>No. IELTS Core is an independent preparation platform. Practice band scores are estimates, not official test results.</p></details></section></main>
+    <!-- Hero Header -->
+    <section class="pricing-hero">
+      <div class="pricing-pill-badge">
+        <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+        <span>CAMBRIDGE STANDARDS · OPEN ACCESS</span>
+      </div>
+      <h1 class="pricing-title">What do you think it costs?</h1>
+      <p class="pricing-subtitle">
+        40 Computer-Delivered Reading Tests · 31 Listening Tests with authentic audio · Cambridge AI Speaking Examiner · Writing Feedback · 24/7 AI Mentor. Tap below to find out.
+      </p>
+    </section>
 
-  <footer class="app-footer">IELTS Core · Independent IELTS preparation. <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">Contact support</a></footer>
+    <!-- Interactive Guessing Arena -->
+    <section class="interactive-stage-section" aria-label="Interactive Pricing Reveal">
+      <!-- Steps Progress -->
+      <div class="interactive-stepper" aria-hidden="true">
+        <div class="step-dot active" data-step-dot="0"><span>1</span></div>
+        <div class="step-connector"></div>
+        <div class="step-dot" data-step-dot="1"><span>2</span></div>
+        <div class="step-connector"></div>
+        <div class="step-dot" data-step-dot="2"><span>3</span></div>
+        <div class="step-connector"></div>
+        <div class="step-dot" data-step-dot="3"><span>4</span></div>
+        <div class="step-connector"></div>
+        <div class="step-dot celebration-dot" data-step-dot="4"><span>🎉</span></div>
+      </div>
+
+      <!-- Main Interactive Card -->
+      <div class="interactive-card-wrapper">
+        <div class="interactive-card" id="pricingInteractiveCard" data-stage="0" tabindex="0" role="button" aria-live="polite">
+          
+          <!-- STAGE 0: The Mystery Initial State -->
+          <div class="stage-view stage-0-view">
+            <div class="card-kicker-badge">
+              <span class="material-symbols-outlined">help_center</span>
+              <span>THE BIG QUESTION</span>
+            </div>
+            <div class="stage-icon-circle">
+              <span class="material-symbols-outlined mystery-icon">question_mark</span>
+            </div>
+            <h2 class="stage-headline">What do you think is the monthly fee?</h2>
+            <p class="stage-desc">
+              With full Cambridge CD-IELTS tests, high-bitrate audio, AI Speaking Examiner &amp; detailed band diagnostics... what should it cost?
+            </p>
+            <div class="stage-action-box">
+              <button type="button" class="stage-action-btn primary pulse-hint" id="stageBtn0">
+                <span>Guess the Price</span>
+                <span class="material-symbols-outlined">ads_click</span>
+              </button>
+            </div>
+            <span class="tap-hint-text">👆 Tap anywhere on the card to begin</span>
+          </div>
+
+          <!-- STAGE 1: 50,000 UZS? -->
+          <div class="stage-view stage-1-view" hidden>
+            <div class="card-kicker-badge">
+              <span class="material-symbols-outlined">search</span>
+              <span>GUESS #1</span>
+            </div>
+            <div class="price-display-wrapper">
+              <div class="price-figure">50,000</div>
+              <div class="price-meta">
+                <span class="price-curr">UZS</span>
+                <span class="price-per">/ month?</span>
+              </div>
+            </div>
+            <p class="stage-desc">
+              That's about the cost of a coffee and a sandwich in Tashkent. Could all 40 reading tests and AI Speaking really be 50,000 UZS?
+            </p>
+            <div class="stage-action-box">
+              <button type="button" class="stage-action-btn primary" id="stageBtn1">
+                <span>Is it 50,000 UZS? Tap to check</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STAGE 2: NOPE! 100,000 UZS? -->
+          <div class="stage-view stage-2-view" hidden>
+            <div class="rejection-stamp">
+              <span class="material-symbols-outlined">cancel</span>
+              <span>NOPE! NOT 50,000 UZS!</span>
+            </div>
+            <div class="card-kicker-badge">
+              <span class="material-symbols-outlined">trending_up</span>
+              <span>GUESS #2</span>
+            </div>
+            <div class="price-display-wrapper">
+              <div class="price-figure">100,000</div>
+              <div class="price-meta">
+                <span class="price-curr">UZS</span>
+                <span class="price-per">/ month?</span>
+              </div>
+            </div>
+            <p class="stage-desc">
+              Maybe 100,000 UZS? With full authentic British audio tracks, automated band scoring, and real Cambridge time constraints?
+            </p>
+            <div class="stage-action-box">
+              <button type="button" class="stage-action-btn primary" id="stageBtn2">
+                <span>Is it 100,000 UZS? Check again</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STAGE 3: STILL NO! 200,000 UZS? -->
+          <div class="stage-view stage-3-view" hidden>
+            <div class="rejection-stamp error-shake">
+              <span class="material-symbols-outlined">close</span>
+              <span>STILL NO! NOT EVEN CLOSE!</span>
+            </div>
+            <div class="card-kicker-badge">
+              <span class="material-symbols-outlined">bolt</span>
+              <span>GUESS #3</span>
+            </div>
+            <div class="price-display-wrapper">
+              <div class="price-figure">200,000</div>
+              <div class="price-meta">
+                <span class="price-curr">UZS</span>
+                <span class="price-per">/ month?</span>
+              </div>
+            </div>
+            <p class="stage-desc">
+              Most standard IELTS learning centres charge 600,000 to 1,200,000 UZS every month... Surely IELTS Core must be at least 200,000 UZS?
+            </p>
+            <div class="stage-action-box">
+              <button type="button" class="stage-action-btn primary" id="stageBtn3">
+                <span>Is it 200,000 UZS? Check now</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STAGE 4: SUSPENSE BUILDUP -->
+          <div class="stage-view stage-4-view" hidden>
+            <div class="rejection-stamp dramatic-stamp">
+              <span class="material-symbols-outlined">block</span>
+              <span>NO! WRONG AGAIN! NOT 200,000 EITHER!</span>
+            </div>
+            <div class="suspense-icon-ring">
+              <span class="material-symbols-outlined suspense-sparkle">auto_awesome</span>
+            </div>
+            <h2 class="stage-headline suspense-title">So what is the real price of IELTS Core?</h2>
+            <p class="stage-desc suspense-desc">
+              Prepare yourself for the honest truth. No subscriptions, no credit cards, no fake trial periods.
+            </p>
+            <div class="stage-action-box">
+              <button type="button" class="stage-action-btn truth-reveal-btn" id="stageBtn4">
+                <span>REVEAL THE TRUTH</span>
+                <span class="material-symbols-outlined">celebration</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STAGE 5: THE GRAND SALYUT & 100% FREE REVEAL -->
+          <div class="stage-view stage-5-view" hidden>
+            <div class="celebration-ribbon">
+              <span class="material-symbols-outlined">military_tech</span>
+              <span>100% BEPUL · BUTUN UMIRGA · FOR EVERYONE</span>
+            </div>
+
+            <div class="free-hero-display">
+              <div class="free-zero-value">0 <span class="zero-curr">UZS</span></div>
+              <h2 class="free-grand-title">100% FREE. FOR EVERYONE. FOREVER.</h2>
+            </div>
+
+            <p class="free-manifesto-text">
+              <strong>Sifatli taʼlim hech qachon pulga bogʻliq boʻlmasligi kerak.</strong> Oʻzbekistondagi har bir iqtidorli talaba va oʻquvchining orzularini qoʻllab-quvvatlash uchun barcha 40 ta Reading, 31 ta Listening, Cambridge AI Speaking Examiner va tahlillar <strong>100% mutlaqo bepul!</strong>
+            </p>
+
+            <div class="included-value-grid">
+              <div class="included-value-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <div>
+                  <strong>40 ta Toʻliq CD-IELTS Reading Testi</strong>
+                  <p>1,600+ original Cambridge savoli, aniq band hisobi va tahlillar</p>
+                </div>
+              </div>
+              <div class="included-value-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <div>
+                  <strong>31 ta Toʻliq Listening Testi</strong>
+                  <p>Haqiqiy britancha audio fayllar, transkriptlar va tezkor javoblar</p>
+                </div>
+              </div>
+              <div class="included-value-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <div>
+                  <strong>Cambridge AI Speaking Examiner</strong>
+                  <p>Part 1, 2, 3 jonli ovozli suhbat va rasmiy Cambridge mezonlari</p>
+                </div>
+              </div>
+              <div class="included-value-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <div>
+                  <strong>Writing Editor &amp; PEEL Diagnostics</strong>
+                  <p>Task 1 va Task 2 insholari uchun real vaqt tahlili va band tavsiyalari</p>
+                </div>
+              </div>
+              <div class="included-value-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <div>
+                  <strong>24/7 AI IELTS Master Mentor</strong>
+                  <p>Har qanday strategiya, xatolar tahlili va murakkab lugʻat tushuntirishlari</p>
+                </div>
+              </div>
+              <div class="included-value-item">
+                <span class="material-symbols-outlined check-icon">check_circle</span>
+                <div>
+                  <strong>Cheksiz Urinishlar &amp; Shaxsiy Kabinet</strong>
+                  <p>Hech qanday cheklov yoʻq: xohlagancha qayta topshiring va rivojlaning</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="celebration-actions">
+              <a href="/english/materials?level=ielts&collection=full-test" class="button primary large celebration-start-btn">
+                <span>Hozir Bepul Boshlash</span>
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+              <button type="button" class="button secondary replay-game-btn" id="replayBtn">
+                <span class="material-symbols-outlined">replay</span>
+                <span>Oʻyinni qaytadan koʻrish</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Free Section (Mission) -->
+    <section class="free-mission-section">
+      <div class="section-kicker">BIZNING PRINSIPIMIZ</div>
+      <h2 class="section-title">Nega IELTS Core 100% Bepul?</h2>
+      <div class="mission-cards-grid">
+        <article class="mission-card">
+          <div class="mission-card-icon"><span class="material-symbols-outlined">diversity_3</span></div>
+          <h3>Teng Imkoniyatlar</h3>
+          <p>Oʻquvchilar va talabalar uchun yuqori sifatli xalqaro darajadagi taʼlim oila byudjetiga ogʻirlik qilmasligi kerak. Biz taʼlimni hamma uchun teng ochib beramiz.</p>
+        </article>
+        <article class="mission-card">
+          <div class="mission-card-icon"><span class="material-symbols-outlined">verified_user</span></div>
+          <h3>Aldov va Yashirin Toʻlovlarsiz</h3>
+          <p>Bizda “bepul deb aldab, 2 kundan keyin karta soʻrash” yoʻq. Platformadagi barcha simulyatsiyalar, audio va AI yordamchilari doimo bepul qoladi.</p>
+        </article>
+        <article class="mission-card">
+          <div class="mission-card-icon"><span class="material-symbols-outlined">rocket_launch</span></div>
+          <h3>Katta Marralar Sari</h3>
+          <p>Xorijiy nufuzli universitetlar, davlat grantlari va global martabaga intilayotgan yoshlarimiz 8.0+ band toʻplashi uchun eng mukammal texnologiya.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Transparent Comparison -->
+    <section class="price-comparison-section">
+      <div class="section-kicker">HALOL TAQQOSLASH</div>
+      <h2 class="section-title">Oʻquv Markazlari vs IELTS Core</h2>
+      <div class="comparison-card-wrapper">
+        <table class="comparison-clean-table">
+          <thead>
+            <tr>
+              <th scope="col">Xususiyat</th>
+              <th scope="col" class="th-dimmed">Oddiy IELTS Markazlari</th>
+              <th scope="col" class="th-highlighted">IELTS Core (Siz uchun)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Oylik Toʻlov</th>
+              <td class="td-dimmed">600,000 – 1,200,000 UZS / oy</td>
+              <td class="td-highlighted"><strong>0 UZS (100% BEPUL)</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">Kompyuterli (CD-IELTS) Reading</th>
+              <td class="td-dimmed">Koʻpincha qogʻozda yoki 2-3 ta test</td>
+              <td class="td-highlighted"><strong>40 ta Toʻliq CD-IELTS Testlari</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">Listening Testlari</th>
+              <td class="td-dimmed">Klassda umumiy kolonka orqali</td>
+              <td class="td-highlighted"><strong>31 ta Test, Shaxsiy Britancha Audio</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">Speaking Mashgʻulotlari</th>
+              <td class="td-dimmed">Navbat kutish, haftada 1-2 marta</td>
+              <td class="td-highlighted"><strong>24/7 AI Speaking Examiner (Cambridge)</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">Writing Tekshiruvi</th>
+              <td class="td-dimmed">3-5 kunda qoʻlda tekshirish</td>
+              <td class="td-highlighted"><strong>Tezkor PEEL &amp; Mezonlar Tahlili</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">Foydalanish Vaqti</th>
+              <td class="td-dimmed">Faqat dars jadvali vaqtida</td>
+              <td class="td-highlighted"><strong>Istalgan vaqt, istalgan qurilmada 24/7</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="pricing-faq-section" aria-labelledby="faqTitle">
+      <div class="section-kicker">SAVOLLARINGIZ BORMI?</div>
+      <h2 id="faqTitle" class="section-title">Tez-tez Soʻraladigan Savollar</h2>
+      <div class="faq-accordion">
+        <details class="faq-item" open>
+          <summary>Rostdan ham barcha 40 ta Reading va 31 ta Listening bepulmi?</summary>
+          <p>Ha, mutlaqo 100% bepul. Barcha toʻliq imtihonlar, audio yozuvlar, tushuntirishlar va AI baholash vositalari roʻyxatdan oʻtgan har bir oʻquvchi uchun toʻliq ochiq.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Kelajakda platforma pullik boʻlib qolmaydimi?</summary>
+          <p>IELTS Core oʻquvchilarni qoʻllab-quvvatlash uchun yaratilgan. Barcha asosiy imtihon materiallari, simulyatorlar va mashgʻulotlar butunlay bepul boʻlib qoladi.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Boshlash uchun bank kartasi maʼlumotlari kerakmi?</summary>
+          <p>Yoʻq! Hech qanday karta raqami yoki toʻlov maʼlumotlari talab qilinmaydi. Shunchaki elektron pochtangiz yoki Google hisobingiz orqali 5 soniyada kirasiz va darhol mashgʻulotni boshlaysiz.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Natijalar rasmiy IELTS imtihoniga qanchalik yaqin?</summary>
+          <p>Platformadagi interfeys, vaqt hisoblagichi, shriftlar, savol turlari va scoring jadvallari rasmiy Cambridge Computer-Delivered IELTS standartlari asosida ishlab chiqilgan. Bu sizga haqiqiy imtihon kunidagi hayajonni yengish va eng yuqori natijaga erishish imkonini beradi.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Promo code / Partner Access (discreet bottom box) -->
+    <section class="pricing-promo-section">
+      <div class="promo-box">
+        <div class="promo-box-copy">
+          <div>
+            <h3>Oʻqituvchi yoki Oʻquv Markazimisiz?</h3>
+            <p>Oʻquvchilaringiz guruhini birgalikda kuzatish yoki maxsus promo-kod boʻlsa, bu yerda faollashtiring.</p>
+          </div>
+        </div>
+        <form class="promo-box-form" id="pricingPromoForm">
+          <label class="sr-only" for="pricingPromoInput">Promo code</label>
+          <input id="pricingPromoInput" placeholder="Kodni kiriting..." autocomplete="off">
+          <button type="submit" class="button primary" id="pricingPromoBtn">Faollashtirish</button>
+        </form>
+      </div>
+      <p class="promo-feedback" id="pricingPromoFeedback" role="status" aria-live="polite" hidden></p>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    IELTS Core · Independent IELTS preparation. <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener noreferrer">Contact support</a>
+  </footer>
 
   <script src="/english-public.js?v=20260922a"></script>
   <script src="/english-site.js?v=20260922_sb_final"></script>
-  <script src="/english-pricing.js?v=20260907"></script>
-<script src="/english-session.js?v=20260908"></script>
+  <script src="/english-pricing.js?v=20260925_celebrate"></script>
+  <script src="/english-session.js?v=20260908"></script>
 </body>
 </html>

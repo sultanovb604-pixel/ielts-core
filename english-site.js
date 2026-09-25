@@ -641,7 +641,7 @@
     mountTestLaunchModal();
   };
 
-  // Global Premium Upgrade Modal
+  // Global Free Access Modal (Replaces old upgrade modal)
   window.showUpgradeModal = function() {
     let modal = document.querySelector('#ieltsUpgradeModal');
     if (!modal) {
@@ -649,48 +649,29 @@
       modal.id = 'ieltsUpgradeModal';
       modal.innerHTML = `
         <div class="upgrade-modal-backdrop" style="position:fixed;inset:0;background:rgba(15,23,42,0.75);backdrop-filter:blur(4px);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;">
-          <div class="upgrade-modal-card" style="background:#ffffff;border-radius:16px;max-width:580px;width:100%;padding:32px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);position:relative;max-height:90vh;overflow-y:auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1e293b;">
+          <div class="upgrade-modal-card" style="background:#ffffff;border-radius:20px;max-width:520px;width:100%;padding:36px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);position:relative;max-height:90vh;overflow-y:auto;font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1e293b;text-align:center;">
             <button id="closeUpgradeModal" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:22px;color:#94a3b8;cursor:pointer;">✕</button>
-            <div style="text-align:center;margin-bottom:24px;">
-              <span style="display:inline-block;padding:4px 12px;border-radius:20px;background:#fef3c7;color:#d97706;font-weight:800;font-size:12px;margin-bottom:8px;">★ IELTS CORE PREMIUM</span>
-              <h2 style="font-size:24px;font-weight:800;color:#0f172a;margin:0 0 8px 0;">Unlock Unlimited IELTS Prep</h2>
-              <p style="font-size:14px;color:#64748b;margin:0;">Get full access to 40+ computer-delivered practice tests, answer explanations, and detailed score diagnostics.</p>
+            <div style="margin-bottom:20px;">
+              <span style="display:inline-block;padding:5px 14px;border-radius:20px;background:#ecfdf5;color:#059669;font-weight:800;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;">🎉 100% BEPUL VA CHEKSIZ</span>
+              <h2 style="font-size:26px;font-weight:900;color:#0f172a;margin:0 0 10px 0;letter-spacing:-0.03em;">Barcha Materiallar Ochiq!</h2>
+              <p style="font-size:15px;color:#475569;line-height:1.6;margin:0;">IELTS Core platformasidagi barcha 40 ta Reading, 31 ta Listening imtihonlari va AI vositalari barcha talabalar uchun <strong>100% mutlaqo bepul</strong> taqdim etiladi!</p>
             </div>
             
-            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:12px;margin-bottom:24px;">
-              <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center;background:#f8fafc;position:relative;">
-                <span style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;white-space:nowrap;">EARLY BIRD · 50%</span>
-                <div style="font-size:12px;font-weight:700;color:#64748b;margin-top:2px;">1 MONTH</div>
-                <div style="font-size:19px;font-weight:800;color:#0f172a;margin:6px 0;">
-                  <del style="color:#94a3b8;font-size:13px;font-weight:600;margin-right:4px;">59 000</del>30 000 UZS
-                </div>
-                <small style="color:#059669;font-weight:700;">For the first 10 students</small>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:18px;margin-bottom:24px;text-align:left;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:14px;font-weight:700;color:#0f172a;">
+                <span style="color:#059669;">✓</span> 40 ta Toʻliq Kompyuterli Reading Testlari
               </div>
-              <div style="border:2px solid #2563eb;border-radius:12px;padding:16px;text-align:center;background:#eff6ff;position:relative;">
-                <span style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:10px;">MOST POPULAR</span>
-                <div style="font-size:12px;font-weight:700;color:#2563eb;">3 MONTHS</div>
-                <div style="font-size:20px;font-weight:800;color:#0f172a;margin:6px 0;">75 000 UZS</div>
-                <small style="color:#2563eb;font-weight:700;">25 000 / month</small>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:14px;font-weight:700;color:#0f172a;">
+                <span style="color:#059669;">✓</span> 31 ta Toʻliq Listening Testlari & Britancha Audio
               </div>
-              <div style="border:1.5px solid #e2e8f0;border-radius:12px;padding:16px;text-align:center;background:#f8fafc;">
-                <div style="font-size:12px;font-weight:700;color:#64748b;">6 MONTHS</div>
-                <div style="font-size:20px;font-weight:800;color:#0f172a;margin:6px 0;">135 000 UZS</div>
-                <small style="color:#64748b;">Best value</small>
+              <div style="display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:#0f172a;">
+                <span style="color:#059669;">✓</span> Cambridge AI Speaking & Writing Examiner
               </div>
             </div>
 
-            <div style="background:#f1f5f9;border-radius:12px;padding:16px;margin-bottom:20px;">
-              <label style="display:block;font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">HAVE AN ACTIVATION PROMO CODE?</label>
-              <div style="display:flex;gap:8px;">
-                <input id="modalPromoCodeInput" type="text" placeholder="e.g. IELTS9, CORE2026" style="flex:1;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;font-size:13.5px;font-weight:700;text-transform:uppercase;">
-                <button id="modalApplyCodeBtn" style="padding:8px 16px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Activate</button>
-              </div>
-              <p id="modalPromoMessage" style="margin:6px 0 0 0;font-size:12px;"></p>
-            </div>
-
-            <div style="text-align:center;">
-              <a href="https://t.me/ieltscoreadmin" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:#2563eb;color:#fff;border-radius:10px;font-weight:700;text-decoration:none;font-size:14.5px;">
-                <span>Get Instant Access via Telegram (@ieltscoreadmin)</span>
+            <div>
+              <a href="/english/materials?level=ielts&collection=full-test" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 24px;background:#059669;color:#fff;border-radius:12px;font-weight:800;text-decoration:none;font-size:15px;box-shadow:0 4px 14px rgba(5,150,105,0.3);">
+                <span>Mashgʻulotni Boshlash (0 UZS)</span>
                 <span>→</span>
               </a>
             </div>

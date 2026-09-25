@@ -7149,9 +7149,8 @@ function passwordHash(password, salt) {
 }
 
 function isUserPremium(user) {
-  if (!user || user.plan !== "premium") return false;
-  if (!user.planExpiresAt) return true;
-  return new Date(user.planExpiresAt).getTime() > Date.now();
+  // IELTS Core is 100% Free for all students worldwide!
+  return true;
 }
 
 function safeUser(user) {
@@ -7526,8 +7525,8 @@ async function api(req, res, pathname) {
   if (req.method === "GET" && pathname === "/api/resources") {
     const user = studentFromRequest(req, data);
     const catalog = readReadingCatalog().map(item => {
-      const locked = item.access === "premium" && user?.plan !== "premium";
-      const accessible = { ...item, locked, href: locked ? "" : `/english/reading-exam?id=${encodeURIComponent(item.id)}` };
+      const locked = false;
+      const accessible = { ...item, locked, href: `/english/reading-exam?id=${encodeURIComponent(item.id)}` };
       if (!user) return accessible;
       const attempts = data.readingAttempts.filter(attempt => attempt.studentId === user.id && attempt.materialId === item.id);
       const best = attempts.sort((a, b) => b.points - a.points || b.createdAt.localeCompare(a.createdAt))[0];
@@ -7535,11 +7534,11 @@ async function api(req, res, pathname) {
       return { ...accessible, completed: attempts.length > 0, attemptCount: attempts.length, bestPoints: best?.points ?? null, bestBand: best?.band ?? null, lastAttemptAt: latest?.createdAt || null };
     });
     const listeningCatalog = readListeningCatalog().map(item => {
-      const locked = item.access === "premium" && user?.plan !== "premium";
+      const locked = false;
       const accessible = {
         ...item,
         locked,
-        href: locked ? "" : `/english/listening-exam?id=${encodeURIComponent(item.id)}`
+        href: `/english/listening-exam?id=${encodeURIComponent(item.id)}`
       };
       if (!user) return accessible;
       const attempts = data.listeningAttempts.filter(attempt => attempt.studentId === user.id && attempt.materialId === item.id);
@@ -7578,9 +7577,9 @@ async function api(req, res, pathname) {
     const learningContent = readEnglishContentCatalog().map(item => ({
       ...item,
       interactive: item.collection === "article" && Boolean(readArticleReader(item.id)),
-      locked: item.access === "premium" && user?.plan !== "premium"
+      locked: false
     }));
-    const storedResources = data.resources.map(item => ({ ...item, locked: item.access === "premium" && user?.plan !== "premium" }));
+    const storedResources = data.resources.map(item => ({ ...item, locked: false }));
     return json(res, 200, [...catalog, ...listeningCatalog, ...writingTopics, ...learningContent, ...storedResources]);
   }
   if (req.method === "GET" && pathname === "/api/writing/topics") {
@@ -8242,9 +8241,7 @@ async function api(req, res, pathname) {
     const mockItem = readMockCatalog().find(m => m.id === mockId);
     if (!mockItem) return json(res, 404, { error: "Mock test not found." });
 
-    if (!mockItem.free && (!user || user.plan !== "premium")) {
-      return json(res, 403, { error: "This Mock Exam requires IELTS Core Premium." });
-    }
+    // Mock exams are 100% free for all students!
 
     const lMaterial = readListeningCatalog().find(item => item.id === mockItem.listening.id || item.fileName === mockItem.listening.fileName);
     let lSource = "";
@@ -8282,9 +8279,7 @@ async function api(req, res, pathname) {
     const mockItem = readMockCatalog().find(m => m.id === mockId);
     if (!mockItem) return json(res, 404, { error: "Mock test not found." });
 
-    if (!mockItem.free && user.plan !== "premium") {
-      return json(res, 403, { error: "This Mock Test requires a Premium account." });
-    }
+    // Mock submissions are 100% free!
 
     // 1. Grade Listening
     let listeningScore = 0;
@@ -10675,7 +10670,6 @@ const server = http.createServer(async (req, res) => {
       if (!user) { res.writeHead(401, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }); return res.end("Sign in to open this material."); }
       const item = readEnglishContentCatalog(true).find(resource => resource.id === requestUrl.searchParams.get("id"));
       if (!item || !item.file) { res.writeHead(404); return res.end("File not found"); }
-      if (item.access === "premium" && user.plan !== "premium") { res.writeHead(402, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }); return res.end("Premium required"); }
       const file = path.join(CONTENT_DIR, item.file);
       if (!fs.existsSync(file)) { res.writeHead(404); return res.end("File not found on disk"); }
       res.setHeader('Content-Disposition', 'attachment; filename="' + path.basename(item.file) + '"');
@@ -10695,19 +10689,7 @@ const server = http.createServer(async (req, res) => {
       if (!material) { res.writeHead(404); return res.end("Reading material not found."); }
       const data = await readData();
       const user = studentFromRequest(req, data);
-      const activeUser = user || { id: "guest", name: "Candidate", plan: "free" };
-      if (!material.free && activeUser.plan !== "premium") {
-        if (!user) {
-          res.writeHead(302, { Location: `/english/login?next=${encodeURIComponent(requestUrl.pathname + requestUrl.search)}`, "Cache-Control": "no-store" });
-          return res.end();
-        }
-        res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-        return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium material</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Premium Reading material</h1><p>This full test is available with the Premium plan.</p><a href="/english/materials?level=ielts&skill=reading">Back to materials</a></main></body></html>');
-      }
-      if (requestUrl.searchParams.get("mode") === "real" && activeUser.plan !== "premium") {
-        res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-        return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium required</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Real Exam Mode is Locked</h1><p>Real Exam Mode is a premium feature. Please upgrade your plan or use Practice mode.</p><a href="/english/materials">Back to materials</a></main></body></html>');
-      }
+      const activeUser = user || { id: "guest", name: "Candidate", plan: "premium" };
       const file = path.join(READING_MATERIALS_DIR, material.fileName);
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
       return res.end(sanitizeReadingHtml(fs.readFileSync(file, "utf8"), material, activeUser, requestUrl.searchParams.get("mode")));
@@ -10734,24 +10716,12 @@ const server = http.createServer(async (req, res) => {
     if (pathname === "/english/listening-exam" || pathname === "/english-exam.html" || pathname === "/english/exam") {
       const data = await readData();
       const user = studentFromRequest(req, data);
-      const activeUser = user || { id: "guest", name: "Candidate", plan: "free" };
+      const activeUser = user || { id: "guest", name: "Candidate", plan: "premium" };
       const requestedId = String(requestUrl.searchParams.get("id") || "listening-full-test-01");
       const material = readListeningCatalog().find(item => item.id === requestedId) || LISTENING_MATERIAL;
       if (!material) {
         res.writeHead(404);
         return res.end("Listening material not found.");
-      }
-      if (material.access === "premium" && activeUser.plan !== "premium") {
-        if (!user) {
-          res.writeHead(302, { Location: `/english/login?next=${encodeURIComponent(requestUrl.pathname + requestUrl.search)}`, "Cache-Control": "no-store" });
-          return res.end();
-        }
-        res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-        return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium material</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Premium Listening material</h1><p>This full test is available with the Premium plan.</p><a href="/english/materials?level=ielts&skill=listening">Back to materials</a></main></body></html>');
-      }
-      if (requestUrl.searchParams.get("mode") === "real" && activeUser.plan !== "premium") {
-        res.writeHead(402, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" });
-        return res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Premium required</title><body style="font-family:Arial,sans-serif;display:grid;min-height:100vh;place-items:center;margin:0;background:#f7f8fa;color:#1b2435"><main style="max-width:520px;padding:32px;text-align:center"><h1>Real Exam Mode is Locked</h1><p>Real Exam Mode is a premium feature. Please upgrade your plan or use Practice mode.</p><a href="/english/materials">Back to materials</a></main></body></html>');
       }
       const testFile = material.fileName ? path.join(LISTENING_MATERIALS_DIR, material.fileName) : ENGLISH_EXAM_SOURCE;
       if (!fs.existsSync(testFile)) {
