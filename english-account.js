@@ -15,8 +15,10 @@
   const hasNumber = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
   const withToken = (rawHref, extraParams = {}) => {
     const url = new URL(rawHref || '/english/materials?level=ielts&collection=full-test', location.origin);
-    if (url.origin === location.origin && ['/english/reading-exam', '/english/exam'].includes(url.pathname)) {
-      url.searchParams.set('token', token);
+    if (url.origin === location.origin) {
+      if (['/english/reading-exam', '/english/exam'].includes(url.pathname)) {
+        url.searchParams.set('token', token);
+      }
       for (const [k, v] of Object.entries(extraParams)) {
         url.searchParams.set(k, v);
       }
@@ -83,7 +85,6 @@
     }
 
     renderScoreTrend(chartResults);
-    renderOutcomeChart(chartResults, chartProgress);
   };
 
   const prepareCanvas = canvas => {

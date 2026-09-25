@@ -6357,7 +6357,7 @@ const FIRESTORE_CONFIGURED = Boolean(FIRESTORE_PROJECT_ID && FIRESTORE_API_KEY);
 const DURABLE_STORAGE_CONFIGURED = Boolean(SUPABASE_CONFIGURED || DATABASE_URL || FIRESTORE_CONFIGURED);
 if (Boolean(SUPABASE_URL) !== Boolean(SUPABASE_KEY)) console.error("ERROR: SUPABASE_URL and SUPABASE_KEY must both be configured.");
 if (IS_PRODUCTION && !DURABLE_STORAGE_CONFIGURED) console.error("ERROR: No durable database is configured; state-changing API routes are disabled.");
-const SUPABASE_CACHE_MS = 120_000; // 2 minutes cache TTL to avoid continuous remote roundtrips
+const SUPABASE_CACHE_MS = 5_000;
 let supabaseLastReadAt = 0;
 let supabaseLastWriteAt = 0;
 let supabaseLastError = "";
@@ -6433,14 +6433,31 @@ async function readData() {
   return await syncStateFromDb();
 }
 
-async function writeData(data) {
+async function writeData(data, { deleteMissingTables = [] } = {}) {
   if (IS_PRODUCTION && !DURABLE_STORAGE_CONFIGURED) {
     const storageError = new Error("The database is not configured. Please try again later.");
     storageError.code = "STORAGE_NOT_CONFIGURED";
     throw storageError;
   }
+  if (SUPABASE_CONFIGURED) {
+    const snapshot = normalizeData(JSON.parse(JSON.stringify(data)));
+    const pendingWrite = supabaseWriteQueue.catch(() => {}).then(() => syncStateToSupabase(snapshot, deleteMissingTables));
+    supabaseWriteQueue = pendingWrite;
+    try {
+      await pendingWrite;
+    } catch (err) {
+      inMemoryCachedAt = 0;
+      const persistenceError = new Error("The database is temporarily unavailable. Please try again.");
+      persistenceError.code = "PERSISTENCE_UNAVAILABLE";
+      persistenceError.cause = err;
+      throw persistenceError;
+    }
+  }
+
   inMemoryData = data;
-  inMemoryCachedAt = Date.now();
+  // A different function instance may have written another student's result.
+  // Reload Supabase on the next read instead of trusting this process-local snapshot.
+  inMemoryCachedAt = SUPABASE_CONFIGURED ? 0 : Date.now();
 
   try {
     const tmpFile = DATA_FILE + ".tmp";
@@ -6448,20 +6465,6 @@ async function writeData(data) {
     fs.renameSync(tmpFile, DATA_FILE);
   } catch (_) {
     try { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2)); } catch (e) {}
-  }
-
-  if (SUPABASE_CONFIGURED) {
-    const snapshot = normalizeData(JSON.parse(JSON.stringify(data)));
-    const pendingWrite = supabaseWriteQueue.catch(() => {}).then(() => syncStateToSupabase(snapshot));
-    supabaseWriteQueue = pendingWrite;
-    try {
-      // await pendingWrite;
-    } catch (err) {
-      const persistenceError = new Error("The database is temporarily unavailable. Please try again.");
-      persistenceError.code = "PERSISTENCE_UNAVAILABLE";
-      persistenceError.cause = err;
-      throw persistenceError;
-    }
   }
 
   // Secondary compatibility backups. Supabase is the durable source of truth when configured.
@@ -6616,9 +6619,9 @@ function attemptFromSupabaseRow(row, existing) {
     studentId: row.student_id,
     materialId: row.material_id,
     points: finiteNumber(row.points),
-    correct: finiteNumber(row.points),
-    total: finiteNumber(row.total_questions),
-    band: finiteNumber(row.band),
+    correct: finiteNumber(packed?.correct, finiteNumber(row.points)),
+    total: finiteNumber(packed?.total, finiteNumber(row.total_questions)),
+    band: packed?.band === null ? null : finiteNumber(packed?.band ?? row.band),
     answers: packed?.answers ?? row.answers,
     createdAt: row.created_at
   };
@@ -6831,17 +6834,13 @@ async function syncStateFromSupabase(baseData) {
   for (const { definition, rows } of remoteCollections) {
     const localRows = Array.isArray(state[definition.stateKey]) ? state[definition.stateKey] : [];
     const localById = new Map(localRows.map(item => [String(item.id), item]));
-    const remoteIds = new Set();
     const convertedRemoteRows = rows.map(row => {
       const id = String(row.id);
-      remoteIds.add(id);
       return definition.fromRow(row, localById.get(id));
     });
-    const merged = [...convertedRemoteRows];
-    for (const localRow of localRows) {
-      if (!remoteIds.has(String(localRow.id))) merged.push(localRow);
-    }
-    state[definition.stateKey] = merged;
+    // Supabase is authoritative. Merging process-local rows here resurrected
+    // attempts whose background write had failed on a serverless instance.
+    state[definition.stateKey] = convertedRemoteRows;
     supabaseFingerprints.set(definition.table, new Map(convertedRemoteRows.map(row => {
       const canonical = definition.toRow(row);
       return [String(canonical.id), supabaseFingerprint(canonical)];
@@ -6852,12 +6851,12 @@ async function syncStateFromSupabase(baseData) {
   return state;
 }
 
-async function writeSupabaseTable(definition, stateRows) {
+async function writeSupabaseTable(definition, stateRows, { deleteMissing = false } = {}) {
   const previous = supabaseFingerprints.get(definition.table) || new Map();
   const currentRows = stateRows.map(definition.toRow);
   const currentIds = new Set(currentRows.map(row => String(row.id)));
   const changedRows = currentRows.filter(row => previous.get(String(row.id)) !== supabaseFingerprint(row));
-  const deletedIds = [...previous.keys()].filter(id => !currentIds.has(id));
+  const deletedIds = deleteMissing ? [...previous.keys()].filter(id => !currentIds.has(id)) : [];
 
   for (let index = 0; index < changedRows.length; index += 100) {
     const batch = changedRows.slice(index, index + 100);
@@ -6871,26 +6870,35 @@ async function writeSupabaseTable(definition, stateRows) {
     const batch = deletedIds.slice(index, index + 100).join(",");
     await supabaseRequest(`${definition.table}?id=in.(${batch})`, { method: "DELETE" });
   }
-  supabaseFingerprints.set(definition.table, new Map(currentRows.map(row => [String(row.id), supabaseFingerprint(row)])));
+  const nextFingerprints = new Map(deleteMissing ? [] : previous);
+  currentRows.forEach(row => nextFingerprints.set(String(row.id), supabaseFingerprint(row)));
+  supabaseFingerprints.set(definition.table, nextFingerprints);
 }
 
-async function syncStateToSupabase(stateData) {
+async function syncStateToSupabase(stateData, deleteMissingTables = []) {
   if (!SUPABASE_CONFIGURED || !stateData) return;
   try {
     const definitions = supabaseTableDefinitions();
+    const deletions = new Set(deleteMissingTables);
     const usersDefinition = definitions.find(definition => definition.stateKey === "users");
     const users = Array.isArray(stateData.users) ? stateData.users : [];
     const userIds = new Set(users.map(user => String(user.id)));
 
     // Users must exist before child rows because Supabase enforces foreign keys.
-    await writeSupabaseTable(usersDefinition, users);
+    if (!deletions.has("users")) {
+      await writeSupabaseTable(usersDefinition, users);
+    }
     await Promise.all(definitions.filter(definition => definition !== usersDefinition).map(definition => {
       const rows = Array.isArray(stateData[definition.stateKey]) ? stateData[definition.stateKey] : [];
       const validRows = rows.filter(row => userIds.has(String(row.studentId)));
       const orphanCount = rows.length - validRows.length;
       if (orphanCount > 0) console.warn(`Supabase skipped ${orphanCount} orphaned ${definition.stateKey} row(s).`);
-      return writeSupabaseTable(definition, validRows);
+      return writeSupabaseTable(definition, validRows, { deleteMissing: deletions.has(definition.table) });
     }));
+    // Delete child rows first so foreign-key constraints do not block user deletion.
+    if (deletions.has("users")) {
+      await writeSupabaseTable(usersDefinition, users, { deleteMissing: true });
+    }
     supabaseLastWriteAt = Date.now();
     supabaseLastError = "";
   } catch (err) {
@@ -7496,7 +7504,24 @@ async function api(req, res, pathname) {
       code: "SESSION_SECRET_NOT_CONFIGURED"
     });
   }
-  const data = await readData();
+  const isReadOnlyAiRequest = req.method === "POST" && [
+    "/api/speaking/ai-turn",
+    "/api/speaking/grade-full-exam",
+    "/api/speaking/generate-question"
+  ].includes(pathname);
+  const needsFreshState = SUPABASE_CONFIGURED && (
+    (req.method !== "GET" && !isReadOnlyAiRequest) ||
+    pathname === "/api/resources" ||
+    pathname.startsWith("/api/student/") ||
+    pathname === "/api/listening-attempts/latest" ||
+    pathname === "/api/reading-attempts/latest"
+  );
+  const currentData = needsFreshState ? await syncStateFromDb() : await readData();
+  if (needsFreshState && supabaseLastError) {
+    return json(res, 503, { error: "The database is temporarily unavailable. Please try again." });
+  }
+  // Never mutate the process cache before the durable write succeeds.
+  const data = req.method === "GET" ? currentData : normalizeData(JSON.parse(JSON.stringify(currentData)));
   await hydrateRequestUserFromSupabase(req, data);
   if (req.method === "GET" && pathname === "/api/resources") {
     const user = studentFromRequest(req, data);
@@ -7689,7 +7714,8 @@ async function api(req, res, pathname) {
     const id = pathname.split("/").pop();
     const index = data.vocabulary.findIndex(item => item.id === id && item.studentId === user.id);
     if (index < 0) return json(res, 404, { error: "Vocabulary item not found." });
-    data.vocabulary.splice(index, 1); await writeData(data);
+    data.vocabulary.splice(index, 1);
+    await writeData(data, { deleteMissingTables: ["vocabulary_bank"] });
     return json(res, 200, { ok: true });
   }
   if (req.method === "POST" && pathname === "/api/auth/firebase-google") {
@@ -8366,25 +8392,23 @@ async function api(req, res, pathname) {
   }
 
   // --- GOOGLE GEMINI REAL AI MULTI-MODEL POOL ENGINE ---
-  const GEMINI_MODELS_POOL = [
-    'gemini-3.6-flash',
-    'gemini-3.7-flash',
-    'gemini-3.5-flash',
-    'gemini-flash-latest',
-    'gemini-2.5-flash',
-    'gemini-3.1-flash-lite',
-    'gemini-2.0-flash',
-    'gemini-1.5-flash'
-  ];
+  const GEMINI_MODELS_POOL = [...new Set([
+    String(process.env.GEMINI_MODEL || '').trim(),
+    'gemini-3.5-flash-lite',
+    'gemini-2.5-flash'
+  ].filter(Boolean))];
 
   async function queryGeminiApi(payload, geminiKey) {
     const key = geminiKey || getActiveGeminiKey();
     if (!key) return null;
 
+    const deadline = Date.now() + 14_000;
     for (const model of GEMINI_MODELS_POOL) {
+      const remaining = deadline - Date.now();
+      if (remaining < 1_000) break;
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 7500);
+      const timer = setTimeout(() => controller.abort(), Math.min(6_500, remaining));
 
       try {
         const response = await fetch(url, {
@@ -8393,7 +8417,7 @@ async function api(req, res, pathname) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
-        clearTimeout(timer);
+        if (response.status === 400 || response.status === 401 || response.status === 403) return null;
         if (response.ok) {
           const apiRes = await response.json();
           const rawText = apiRes?.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -8409,6 +8433,8 @@ async function api(req, res, pathname) {
           }
         }
       } catch (err) {
+        // Use the next configured model or the site's non-AI fallback.
+      } finally {
         clearTimeout(timer);
       }
     }
@@ -10398,13 +10424,16 @@ Return ONLY a valid JSON object matching this schema:
     data.readingAttempts = (data.readingAttempts || []).filter(a => a.studentId !== studentId);
     data.listeningAttempts = (data.listeningAttempts || []).filter(a => a.studentId !== studentId);
     data.writingSubmissions = (data.writingSubmissions || []).filter(w => w.studentId !== studentId);
+    data.speakingAttempts = (data.speakingAttempts || []).filter(a => a.studentId !== studentId);
+    data.mockAttempts = (data.mockAttempts || []).filter(a => a.studentId !== studentId);
+    data.vocabulary = (data.vocabulary || []).filter(item => item.studentId !== studentId);
     data.cohortMembers = (data.cohortMembers || []).filter(cm => cm.studentId !== studentId);
 
     for (const [token, session] of studentSessions.entries()) {
       if (session.id === studentId) studentSessions.delete(token);
     }
 
-    await writeData(data);
+    await writeData(data, { deleteMissingTables: ["users", "reading_attempts", "listening_attempts", "writing_submissions", "speaking_attempts", "mock_attempts", "vocabulary_bank"] });
     return json(res, 200, { ok: true, message: `Account "${student.username}" successfully deleted.` });
   }
   if (req.method === "POST" && pathname === "/api/admin/clean-test-users") {
@@ -10459,13 +10488,16 @@ Return ONLY a valid JSON object matching this schema:
     data.readingAttempts = (data.readingAttempts || []).filter(a => !testUserIds.has(a.studentId));
     data.listeningAttempts = (data.listeningAttempts || []).filter(a => !testUserIds.has(a.studentId));
     data.writingSubmissions = (data.writingSubmissions || []).filter(w => !testUserIds.has(w.studentId));
+    data.speakingAttempts = (data.speakingAttempts || []).filter(a => !testUserIds.has(a.studentId));
+    data.mockAttempts = (data.mockAttempts || []).filter(a => !testUserIds.has(a.studentId));
+    data.vocabulary = (data.vocabulary || []).filter(item => !testUserIds.has(item.studentId));
     data.cohortMembers = (data.cohortMembers || []).filter(cm => !testUserIds.has(cm.studentId));
 
     for (const [token, session] of studentSessions.entries()) {
       if (testUserIds.has(session.id)) studentSessions.delete(token);
     }
 
-    await writeData(data);
+    await writeData(data, { deleteMissingTables: ["users", "reading_attempts", "listening_attempts", "writing_submissions", "speaking_attempts", "mock_attempts", "vocabulary_bank"] });
     return json(res, 200, {
       ok: true,
       deletedCount: testUserIds.size,

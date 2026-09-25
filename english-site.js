@@ -271,7 +271,7 @@
         links: [
           { label: 'Listening Practice', icon: 'headphones', href: '/english/materials?skill=listening', active: isListening },
           { label: 'Reading Passages', icon: 'menu_book', href: '/english/materials?skill=reading', active: isReading },
-          { label: 'Writing Editor', icon: 'edit', href: '/english/materials?skill=writing', active: isWriting },
+          { label: 'Writing Editor', icon: 'edit', href: '/english/writing-editor', active: isWriting },
           { label: 'Speaking AI', icon: 'mic', href: '/english/speaking', active: isSpeaking }
         ]
       },

@@ -448,7 +448,6 @@
 
   async function evaluateTurnResponse(overrideText) {
     const finalTurnSpeech = (overrideText || currentTurnTranscript || "I shared my thoughts with you.").trim();
-    if (avatar && avatar.chatTextInput) avatar.chatTextInput.value = '';
     fullSessionTranscript.push({
       role: 'user',
       text: finalTurnSpeech,
@@ -456,9 +455,12 @@
       transcript: finalTurnSpeech
     });
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 18_000);
     try {
       const res = await fetch('/api/speaking/ai-turn', {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mode: activeMode,
@@ -470,7 +472,10 @@
         })
       });
 
+      if (!res.ok) throw new Error('Speaking service is temporarily unavailable.');
       const data = await res.json();
+      if (!data || data.ok !== true) throw new Error('Speaking service did not return a valid response.');
+      if (avatar && avatar.chatTextInput) avatar.chatTextInput.value = '';
       if (avatar) avatar.hideCandidateLiveSpeech();
 
       if (activeMode === 'exam') {
@@ -522,8 +527,13 @@
         if (avatar.nextTurnBtn) avatar.nextTurnBtn.style.display = 'none';
       }
     } catch (e) {
-      avatar.setState('idle');
-      if (avatar) avatar.hideCandidateLiveSpeech();
+      if (fullSessionTranscript.at(-1)?.role === 'user' && fullSessionTranscript.at(-1)?.text === finalTurnSpeech) {
+        fullSessionTranscript.pop();
+      }
+      if (avatar) avatar.setState('idle');
+      if (avatar) avatar.showCandidateLiveSpeech('The examiner could not connect. Your answer is still in the text box; please try again.');
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
@@ -557,9 +567,12 @@
     avatar.showCandidateLiveSpeech('Grading speaking performance across all criteria...');
 
     let evaluation = null;
+    const gradingController = new AbortController();
+    const gradingTimeout = setTimeout(() => gradingController.abort(), 18_000);
     try {
       const res = await fetch('/api/speaking/grade-full-exam', {
         method: 'POST',
+        signal: gradingController.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mode: activeMode,
@@ -575,6 +588,8 @@
       }
     } catch(e) {
       console.warn('Grading error:', e);
+    } finally {
+      clearTimeout(gradingTimeout);
     }
 
     if (!evaluation) {
